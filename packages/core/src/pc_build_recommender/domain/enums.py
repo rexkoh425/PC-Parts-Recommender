@@ -1,7 +1,6 @@
 """Shared enumerations for the PC build recommendation domain."""
 
 from __future__ import annotations
-from __future__ import annotations
 
 from enum import StrEnum
 
