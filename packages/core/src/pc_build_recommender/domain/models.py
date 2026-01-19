@@ -355,4 +355,176 @@ class BuildPreferences(DomainModel):
             raise ValueError(f"brands cannot be both preferred and excluded: {sorted(overlap)}")
         return self
 
-# TODO: rest of this module still to come.
+
+class BuildRequestSpec(DomainModel):
+    budget_sgd: Annotated[Decimal, Field(gt=0, decimal_places=2)]
+    workloads: list[WorkloadPreference] = Field(min_length=1)
+    existing_products: list[ExistingComponent] = Field(default_factory=list)
+    requirements: BuildRequirements = Field(default_factory=BuildRequirements)
+    preferences: BuildPreferences = Field(default_factory=BuildPreferences)
+    performance_target: str | None = Field(default=None, min_length=1, max_length=200)
+    raw_query: str | None = None
+    requested_profiles: list[BuildPreset] = Field(
+        default_factory=lambda: [
+            BuildPreset.BEST_OVERALL,
+            BuildPreset.BEST_VALUE,
+            BuildPreset.HIGHEST_PERFORMANCE,
+        ]
+    )
+
+    @model_validator(mode="after")
+    def request_is_unambiguous(self) -> BuildRequestSpec:
+        workload_names = [workload.name for workload in self.workloads]
+        if len(set(workload_names)) != len(workload_names):
+            raise ValueError("workload names must be unique")
+        weight_sum = math.fsum(workload.weight for workload in self.workloads)
+        if not math.isclose(weight_sum, 1.0, rel_tol=0, abs_tol=1e-6):
+            raise ValueError(f"workload weights must sum to 1.0, got {weight_sum:.8f}")
+
+        existing_categories = [component.category for component in self.existing_products]
+        if len(set(existing_categories)) != len(existing_categories):
+            raise ValueError("only one existing product may be retained per category")
+        existing_ids = [component.product_id for component in self.existing_products]
+        if len(set(existing_ids)) != len(existing_ids):
+            raise ValueError("existing product IDs must be unique")
+        if len(set(self.requested_profiles)) != len(self.requested_profiles):
+            raise ValueError("requested_profiles must be unique")
+        if not 1 <= len(self.requested_profiles) <= 5:
+            raise ValueError("between one and five build profiles must be requested")
+        return self
+
+
+class CompatibilityCheck(DomainModel):
+    rule_id: str | None = None
+    status: CompatVerdict
+    message: str = Field(min_length=1)
+    component_ids: list[str] = Field(default_factory=list)
+
+
+class BuildComponentSelection(DomainModel):
+    category: ComponentKind
+    product_id: str = Field(min_length=1)
+    listing_id: str | None = None
+    canonical_name: str = Field(min_length=1)
+    price_sgd: Money
+    component_score: Score
+    selection_reason: str = Field(min_length=1)
+    performance_signals: list[WorkloadPerformanceSignal] = Field(default_factory=list)
+
+    @field_validator("performance_signals")
+    @classmethod
+    def performance_workloads_are_unique(
+        cls, signals: list[WorkloadPerformanceSignal]
+    ) -> list[WorkloadPerformanceSignal]:
+        workloads = [signal.workload for signal in signals]
+        if len(workloads) != len(set(workloads)):
+            raise ValueError("component performance workloads must be unique")
+        return signals
+
+
+class ComponentAlternative(DomainModel):
+    category: ComponentKind
+    product_id: str = Field(min_length=1)
+    listing_id: str | None = None
+    canonical_name: str = Field(min_length=1)
+    price_delta_sgd: Decimal
+    performance_delta: float | None = None
+    explanation: str = Field(min_length=1)
+
+
+class BuildRecommendation(DomainModel):
+    build_id: str = Field(default_factory=lambda: new_id("build"), min_length=1)
+    profile: BuildPreset
+    total_price_sgd: Money
+    overall_score: Score
+    components: list[BuildComponentSelection]
+    workload_scores: dict[WorkloadLabel, Score] = Field(default_factory=dict)
+    compatibility_status: CompatVerdict
+    compatibility_checks: list[CompatibilityCheck] = Field(default_factory=list)
+    estimated_power_watts: float | None = Field(default=None, ge=0)
+    warnings: list[str] = Field(default_factory=list)
+    explanation: list[str] = Field(default_factory=list)
+    alternatives: list[ComponentAlternative] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def build_is_complete_and_compatible(self) -> BuildRecommendation:
+        categories = [component.category for component in self.components]
+        if len(set(categories)) != len(categories):
+            raise ValueError("a build cannot select multiple components in one category")
+        selected_categories = set(categories)
+        required_categories = set(ComponentKind)
+        if selected_categories != required_categories:
+            missing = sorted(
+                category.value for category in required_categories - selected_categories
+            )
+            unexpected = sorted(
+                category.value for category in selected_categories - required_categories
+            )
+            detail = f"missing={missing}"
+            if unexpected:
+                detail += f", unexpected={unexpected}"
+            raise ValueError(
+                f"a returned build must contain exactly all eight categories ({detail})"
+            )
+
+        hard_outcomes = {CompatVerdict.FAIL, CompatVerdict.UNKNOWN}
+        if self.compatibility_status in hard_outcomes:
+            raise ValueError("returned builds cannot have FAIL or UNKNOWN compatibility status")
+        hard_checks = [
+            check for check in self.compatibility_checks if check.status in hard_outcomes
+        ]
+        if hard_checks:
+            raise ValueError("returned builds cannot contain FAIL or UNKNOWN compatibility checks")
+        if self.compatibility_status == CompatVerdict.PASS and any(
+            check.status == CompatVerdict.WARNING for check in self.compatibility_checks
+        ):
+            raise ValueError("a passing build cannot contain WARNING compatibility checks")
+        return self
+
+
+class BuildGenerationResponse(DomainModel):
+    request_id: str = Field(min_length=1)
+    data_version: str = Field(min_length=1)
+    ranking_model: str = Field(min_length=1)
+    rule_version: str = Field(min_length=1)
+    builds: list[BuildRecommendation] = Field(max_length=5)
+    infeasibility_reasons: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def empty_results_are_explained(self) -> BuildGenerationResponse:
+        if not self.builds and not self.infeasibility_reasons:
+            raise ValueError("empty build responses require an infeasibility explanation")
+        build_ids = [build.build_id for build in self.builds]
+        if len(set(build_ids)) != len(build_ids):
+            raise ValueError("build IDs must be unique")
+        return self
+
+
+class InteractionRecord(DomainModel):
+    event_id: str = Field(default_factory=lambda: new_id("event"), min_length=1)
+    session_id: str = Field(min_length=1)
+    user_id: str | None = None
+    query_id: str | None = None
+    product_id: str | None = None
+    build_id: str | None = None
+    event_type: InteractionType
+    rank_position: int | None = Field(default=None, ge=1)
+    model_version: str | None = None
+    data_version: str | None = None
+    rule_version: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+    created_at: datetime = Field(default_factory=utc_now)
+
+    @model_validator(mode="after")
+    def ranked_events_identify_a_result(self) -> InteractionRecord:
+        if self.rank_position is not None and self.product_id is None and self.build_id is None:
+            raise ValueError("ranked events must reference a product or build")
+        return self
+
+
+# Compact aliases for API and optimiser integrations.
+Product = MasterProduct
+Listing = RetailerOffering
+BuildRequest = BuildRequestSpec
+BuildResponse = BuildGenerationResponse
+BuildComponent = BuildComponentSelection
