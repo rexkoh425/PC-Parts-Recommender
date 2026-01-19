@@ -192,4 +192,167 @@ class PerformanceEstimate(DomainModel):
             raise ValueError("predicted performance values require model_version")
         return self
 
+
+class WorkloadPerformanceSignal(DomainModel):
+    """Request-scoped measured or model-derived component performance evidence."""
+
+    workload: WorkloadLabel
+    metric: str = Field(min_length=1)
+    unit: str | None = None
+    score: float | None = Field(default=None, ge=0)
+    relative_score: float = Field(ge=0)
+    basis: Literal["observed", "predicted", "relative"]
+    confidence: Literal["observed", "high", "medium", "low"]
+    decision: Literal[
+        "observed_benchmark",
+        "precise_model_prediction",
+        "model_not_promotion_eligible",
+        "input_outside_training_contract",
+        "model_not_promotion_eligible_and_input_outside_training_contract",
+        "precise_predictions_disabled",
+        "precise_predictions_disabled_and_input_outside_training_contract",
+    ]
+    model_version: str | None = None
+    supporting_sources: list[str] = Field(default_factory=list)
+    supporting_benchmark_ids: list[str] = Field(default_factory=list)
+    lower_score: float | None = Field(default=None, ge=0)
+    upper_score: float | None = Field(default=None, ge=0)
+
+    @model_validator(mode="after")
+    def basis_has_truthful_provenance(self) -> WorkloadPerformanceSignal:
+        numeric_values = [self.relative_score]
+        numeric_values.extend(
+            value for value in (self.score, self.lower_score, self.upper_score) if value is not None
+        )
+        if not all(math.isfinite(value) for value in numeric_values):
+            raise ValueError("performance signal values must be finite")
+        if self.basis == "observed":
+            if self.score is None:
+                raise ValueError("observed performance requires a score")
+            if self.model_version is not None:
+                raise ValueError("observed performance cannot claim a model version")
+            if not self.supporting_sources or not self.supporting_benchmark_ids:
+                raise ValueError("observed performance requires benchmark provenance")
+        elif self.model_version is None:
+            raise ValueError("model-derived performance requires model_version")
+        if self.basis == "observed" and self.confidence != "observed":
+            raise ValueError("observed performance requires observed confidence")
+        if self.basis != "observed" and self.confidence == "observed":
+            raise ValueError("model-derived performance cannot claim observed confidence")
+        if self.basis == "relative" and self.score is not None:
+            raise ValueError("relative performance cannot expose a precise score")
+        if self.basis == "predicted" and self.score is None:
+            raise ValueError("predicted performance requires a precise score")
+        if (self.lower_score is None) != (self.upper_score is None):
+            raise ValueError("prediction interval bounds must be supplied together")
+        if self.lower_score is not None and self.upper_score is not None:
+            if self.basis != "predicted" or self.score is None:
+                raise ValueError("only predicted performance may expose an interval")
+            if not self.lower_score <= self.score <= self.upper_score:
+                raise ValueError("prediction interval must contain the score")
+        if self.basis == "predicted" and self.lower_score is None:
+            raise ValueError("predicted performance requires a calibrated interval")
+        if self.basis != "predicted" and self.lower_score is not None:
+            raise ValueError("only predicted performance may expose an interval")
+        if self.basis == "observed" and self.decision != "observed_benchmark":
+            raise ValueError("observed performance requires the observed_benchmark decision")
+        if self.basis == "predicted" and self.decision != "precise_model_prediction":
+            raise ValueError("predicted performance requires the precise_model_prediction decision")
+        if self.basis == "relative" and self.decision not in {
+            "model_not_promotion_eligible",
+            "input_outside_training_contract",
+            "model_not_promotion_eligible_and_input_outside_training_contract",
+            "precise_predictions_disabled",
+            "precise_predictions_disabled_and_input_outside_training_contract",
+        }:
+            raise ValueError("relative performance requires a bounded fallback decision")
+        return self
+
+
+class CompatibilityRule(DomainModel):
+    rule_id: str = Field(default_factory=lambda: new_id("rule"), min_length=1)
+    rule_version: str = Field(min_length=1)
+    left_category: ComponentKind
+    right_category: ComponentKind
+    rule_type: str = Field(min_length=1)
+    severity: CompatVerdict
+    required_fields: list[str] = Field(default_factory=list)
+    message_template: str = Field(min_length=1)
+    evidence_source: str = Field(min_length=1)
+    effective_from: datetime
+
+
+class ReviewNote(DomainModel):
+    """One short, permitted and citable statement about a canonical product.
+
+    The bounded fields prevent the catalogue from becoming an unbounded
+    review-text store. Source-specific rights and release binding are checked
+    by the processed-catalog loader before an instance reaches public serving.
+    """
+
+    evidence_id: str = Field(
+        default_factory=lambda: new_id("evidence"), min_length=1, max_length=80
+    )
+    product_id: str = Field(min_length=1, max_length=80)
+    aspect: str = Field(min_length=1, max_length=80)
+    sentiment: float = Field(ge=-1, le=1)
+    evidence_text: str = Field(min_length=1, max_length=500)
+    source_url: str = Field(min_length=1, max_length=2048)
+    published_at: datetime | None = None
+    confidence: Probability
+
+
+class SearchQuery(DomainModel):
+    query_id: str = Field(default_factory=lambda: new_id("query"), min_length=1)
+    raw_query: str | None = None
+    structured_constraints: dict[str, Any] = Field(default_factory=dict)
+    created_at: datetime = Field(default_factory=utc_now)
+
+
+class WorkloadPreference(DomainModel):
+    name: WorkloadLabel
+    weight: float = Field(gt=0, le=1)
+
+
+class ExistingComponent(DomainModel):
+    category: ComponentKind
+    product_id: str = Field(min_length=1)
+    listing_id: str | None = None
+    purchase_price_sgd: Money | None = None
+
+
+class BuildRequirements(DomainModel):
+    minimum_gpu_vram_gb: int | None = Field(default=None, ge=1)
+    minimum_memory_gb: int | None = Field(default=None, ge=1)
+    storage_gb: int | None = Field(default=None, ge=1)
+    required_memory_type: MemoryType | None = None
+    required_motherboard_form_factor: MotherboardFormFactor | None = None
+    wifi_required: bool = False
+    case_size: CaseSize | None = None
+    in_stock_only: bool = True
+
+
+class BuildPreferences(DomainModel):
+    noise: str | None = None
+    upgradeability: str | None = None
+    power_efficiency: str | None = None
+    preferred_brands: list[str] = Field(default_factory=list)
+    excluded_brands: list[str] = Field(default_factory=list)
+
+    @field_validator("preferred_brands", "excluded_brands")
+    @classmethod
+    def brands_are_unique(cls, brands: list[str]) -> list[str]:
+        if len({brand.casefold() for brand in brands}) != len(brands):
+            raise ValueError("brand lists must not contain duplicates")
+        return brands
+
+    @model_validator(mode="after")
+    def preferred_and_excluded_do_not_overlap(self) -> BuildPreferences:
+        preferred = {brand.casefold() for brand in self.preferred_brands}
+        excluded = {brand.casefold() for brand in self.excluded_brands}
+        overlap = preferred & excluded
+        if overlap:
+            raise ValueError(f"brands cannot be both preferred and excluded: {sorted(overlap)}")
+        return self
+
 # TODO: rest of this module still to come.
