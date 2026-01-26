@@ -1,0 +1,360 @@
+schema_version: pc-build-recommender.source-registry.v1
+verified_on: 2026-07-22
+sources:
+  buildcores_open_db:
+    kind: canonical_component_catalogue
+    access: public_git_archive
+    source_url: https://github.com/buildcores/buildcores-open-db
+    download_url: https://github.com/buildcores/buildcores-open-db/archive/6a64ab14fb1ab1bc1f3030d36b70bddcc2afeb0f.zip
+    pinned_version: 6a64ab14fb1ab1bc1f3030d36b70bddcc2afeb0f
+    licence: ODC-By-1.0
+    attribution_required: true
+    training_eligible: true
+    published_claims_eligible: true
+    model_serving_eligible: true
+    serving_attribution_notice: >-
+      Contains information from BuildCores OpenDB, made available under the
+      ODC Attribution License v1.0: https://opendatacommons.org/licenses/by/1-0/
+    access_note: >-
+      Community-maintained specifications. Verify compatibility-critical fields against
+      manufacturer evidence and retain extraction confidence. This source contains no prices.
+      A derived model may be served only when the required attribution notice remains visible on
+      every public output that uses this catalogue evidence.
+
+  blender_open_data:
+    kind: cpu_gpu_render_benchmarks
+    access: public_snapshot
+    source_url: https://opendata.blender.org/
+    download_url: https://opendata.blender.org/snapshots/opendata-latest.zip
+    version_policy: content_sha256
+    licence: CC0-1.0
+    attribution_required: false
+    training_eligible: true
+    published_claims_eligible: true
+    access_note: >-
+      The latest URL changes content over time. Pin every run by SHA-256 and retain Blender
+      version, scene, compute backend, operating system, and whether the score is render time
+      or samples per minute.
+
+  mlperf_inference_v6:
+    kind: ai_inference_benchmarks
+    access: public_git_raw_file
+    source_url: https://github.com/mlcommons/inference_results_v6.0
+    download_url: https://raw.githubusercontent.com/mlcommons/inference_results_v6.0/4d3916ac9cf474b679cdfcf492d43a0559418ad1/summary_results.json
+    pinned_version: 4d3916ac9cf474b679cdfcf492d43a0559418ad1
+    licence: Apache-2.0
+    attribution_required: true
+    training_eligible: true
+    published_claims_eligible: true
+    access_note: >-
+      Results are system-level. Only available, error-free, one-node, one-accelerator rows
+      are eligible for component-attributed performance modelling.
+
+  zenodo_er_dn7_transfer:
+    kind: external_product_entity_resolution_transfer_benchmark
+    access: public_versioned_dataset_deposit
+    source_url: https://zenodo.org/records/8164151
+    download_url: https://zenodo.org/api/records/8164151/files/Dn7.zip/content
+    pinned_version: v3
+    doi: 10.5281/zenodo.8164151
+    expected_sha256: 3e3fd6951ab4c4ed6aa741c2594d3ab496b63aeca6b41b8a1e639bc6d9895980
+    licence: CC-BY-4.0
+    creator: George Papadakis, University of Athens
+    attribution_required: true
+    redistribution_eligible: true
+    training_eligible: true
+    training_scope: entity_resolution_transfer_benchmark_only
+    published_claims_eligible: true
+    published_claims_scope: external_transfer_benchmark_only
+    pc_retailer_training_eligible: false
+    pc_retailer_production_claims_eligible: false
+    access_note: >-
+      Dn7 is an external consumer-product matching benchmark. Its labels may be used to
+      exercise and report the entity-resolution pipeline only as a transfer benchmark.
+      They do not validate duplicate matching for Singapore PC-retailer listings and must
+      not be mixed into PC-domain production metrics. Retain creator attribution and DOI.
+
+  dynacore_controlled_pdf:
+    kind: development_only_retailer_price_list
+    access: controlled_local_import
+    source_url: controlled-import://dynacore/2026-07-17
+    expected_sha256: 6e243d7bf1cba090f529b09a9276fac03fedddcadb8c11cf9ce7ec1e674bb9ba
+    licence: no-open-data-licence-established
+    attribution_required: true
+    training_eligible: false
+    published_claims_eligible: false
+    redistribution_eligible: false
+    data_use_rights:
+      rights_status: barred_no_written_permission
+      consent_reference: null
+      retention_days: 0
+      deletion_required_on_termination: false
+      deletion_sla_days: null
+      may_display: false
+      may_cache: false
+      may_store_history: false
+      may_redistribute: false
+      may_embed: false
+      may_train: false
+      may_derive: false
+    access_note: >-
+      Development-only. Do not redistribute, train models, or use rows in published metric
+      claims without written permission. The parser accepts only the reviewed PDF fingerprint
+      and records coordinate provenance; stock remains UNKNOWN.
+
+  bizgram_controlled_pdf:
+    kind: development_only_retailer_price_list
+    parser_version: bizgram-controlled-pdf-2026-07-21-layout-v1
+    access: controlled_local_import_only
+    scheduled_fetch: false
+    source_url: controlled-import://bizgram/2026-07-21
+    public_download_page: https://www.bizgram.com/pricelist-download/
+    expected_sha256: 011bcf9471b9aefb4747d7fd9486680af71282c67016dac87698a90ca5f76c12
+    licence: no-open-data-licence-established
+    attribution_required: true
+    production_catalog_eligible: false
+    price_history_eligible: false
+    training_eligible: false
+    published_claims_eligible: false
+    redistribution_eligible: false
+    data_use_rights:
+      rights_status: barred_no_written_permission
+      consent_reference: null
+      retention_days: 0
+      deletion_required_on_termination: false
+      deletion_sla_days: null
+      may_display: false
+      may_cache: false
+      may_store_history: false
+      may_redistribute: false
+      may_embed: false
+      may_train: false
+      may_derive: false
+    access_note: >-
+      Quarantined local-file parser only; there is no network or scheduled fetch path.
+      The exact PDF fingerprint and nine-page layout are pinned, parsing is bounded and
+      line-streamed by page, ambiguous rows enter a reject queue, and stock remains UNKNOWN.
+      No rows may enter the public catalogue, price history, embeddings, models, evaluation
+      claims, or redistributed artifacts without written permission from Bizgram.
+
+  dynacore_web_research:
+    kind: exact_url_schema_org_product_offer_crawl
+    template: governed_web_product
+    access: reviewed_allowlisted_https_pages
+    source_url: https://dynacoretech.com/
+    allowed_hosts:
+      - dynacoretech.com
+    licence: no-open-data-licence-established
+    usage_scope: internal_research
+    training_eligible: false
+    published_claims_eligible: false
+    redistribution_eligible: false
+    retention_maintenance:
+      engine: governed_web_receipts_v2
+      required: true
+      maximum_interval_minutes: 60
+    access_note: >-
+      Research-only governed-web observations. Keep this registry entry after acquisition
+      authority expires so the independent receipt engine continues lifecycle enforcement.
+
+  consented_retailer_csv:
+    kind: retailer_listing_template
+    access: controlled_local_import
+    source_url: supplied-per-feed
+    version_policy: content_sha256
+    licence: supplied-per-feed
+    attribution_required: supplied-per-feed
+    training_eligible: false
+    published_claims_eligible: false
+    data_use_rights:
+      rights_status: requires_per_feed_contract
+      contract_reference: supplied-per-feed
+      contract_version_url: supplied-per-feed
+      consent_effective_on: supplied-per-feed
+      consent_expires_on: supplied-per-feed
+      retention_days: supplied-per-feed
+      deletion_required_on_termination: supplied-per-feed
+      deletion_sla_days: supplied-per-feed
+      territories: supplied-per-feed
+      may_display: false
+      may_cache: false
+      may_store_history: false
+      may_redistribute: false
+      may_embed: false
+      may_train: false
+      may_derive: false
+    access_note: >-
+      A concrete retailer, consent reference, source URL, and access note are mandatory.
+      Every per-feed policy must explicitly grant display, caching, retained price history,
+      derivation, redistribution, embeddings, and training separately, plus territory,
+      retention, termination-deletion, and deletion-SLA terms. All template rights fail closed.
+
+source_templates:
+  awin_authorized_local_feed:
+    kind: authorized_retailer_product_feed
+    parser_version: awin-local-csv-stream-v1
+    access: controlled_local_import_only
+    scheduled_fetch: false
+    source_url: awin://advertisers/supplied-per-policy/feeds/supplied-per-policy
+    version_policy: content_sha256_and_signed_policy
+    licence: supplied-per-policy
+    attribution_required: supplied-per-policy
+    production_catalog_eligible: false
+    training_eligible: false
+    published_claims_eligible: false
+    redistribution_eligible: false
+    requirements:
+      - already_downloaded_authorized_local_csv_or_gzip
+      - detached_ed25519_policy_signature
+      - independently_pinned_trust_root_sha256
+      - exact_advertiser_feed_merchant_host_and_category_mapping
+      - exact_sgd_currency_and_explicit_shipping
+      - bounded_input_decompression_records_rejections_and_output
+      - separate_signed_contract_reference_for_published_claims
+    data_use_rights:
+      rights_status: requires_per_feed_signed_contract
+      contract_reference: supplied-per-policy
+      contract_version_url: supplied-per-policy
+      consent_effective_on: supplied-per-policy
+      consent_expires_on: supplied-per-policy
+      retention_days: supplied-per-policy
+      deletion_required_on_termination: supplied-per-policy
+      deletion_sla_days: supplied-per-policy
+      territories: supplied-per-policy
+      may_display: false
+      may_cache: false
+      may_store_history: false
+      may_redistribute: false
+      may_embed: false
+      may_train: false
+      may_derive: false
+    access_note: >-
+      This is a fail-closed local-import template, not an Awin access grant and not a
+      downloader. No API key, credential-bearing URL, feed, agreement, signature, or trust
+      root is bundled. An authorised issuer must sign exact per-feed rights before ingestion;
+      omitted rights remain denied and XML is not supported by the current adapter.
+
+  governed_web_product:
+    kind: exact_url_schema_org_product_offer_crawl
+    parser_version: schemaorg-product-offer-v3
+    access: reviewed_allowlisted_https_pages
+    source_url: supplied-per-policy
+    version_policy: content_sha256_and_policy_fingerprint
+    licence: supplied-per-policy
+    attribution_required: supplied-per-policy
+    training_eligible: false
+    published_claims_eligible: false
+    requirements:
+      - exact_url_to_component_category_mapping
+      - control_documents_excluded_from_product_mapping
+      - pre_send_public_dns_pinning_and_connected_peer_validation
+      - exact_same_category_redirects
+      - robots_txt_allowance
+      - reviewed_terms_selector_and_versioned_wording_link_semantic_sha256
+      - separate_automated_acquisition_authority
+      - bounded_page_count_bytes_rate_concurrency_and_retention
+      - schema_org_product_and_offer_json_ld
+      - declared_and_embedded_currency_consistency
+      - strict_singapore_does_not_ship_exclusion
+      - source_seller_offer_listing_identity
+    data_use_rights:
+      rights_status: requires_per_source_written_review
+      contract_reference: supplied-per-policy
+      contract_version_url: supplied-per-policy
+      consent_effective_on: supplied-per-policy
+      consent_expires_on: supplied-per-policy
+      retention_days: supplied-per-policy
+      deletion_required_on_termination: true
+      deletion_sla_days: supplied-per-policy
+      territories: supplied-per-policy
+      may_display: false
+      may_cache: false
+      may_store_history: false
+      may_redistribute: false
+      may_embed: false
+      may_train: false
+      may_derive: false
+    access_note: >-
+      This is a fail-closed policy template, not permission to crawl any site. Public pages and
+      permissive robots directives do not grant display, cache, history, derivation, embedding,
+      redistribution, or model-training rights. Internal-research policies must keep every
+      downstream right false and use a maximum 30-day raw-snapshot retention period.
+
+auxiliary_sources:
+  wikidata:
+    kind: identity_aliases
+    access: official_action_api
+    source_url: https://www.wikidata.org/wiki/Help:Data_access
+    api_url: https://www.wikidata.org/w/api.php
+    licence_url: https://www.wikidata.org/wiki/Wikidata:Licensing
+    version_policy: content_sha256
+    parser_version: wikidata-catalogue-enrichment-v3
+    licence: CC0-1.0
+    attribution_required: false
+    redistribution_eligible: true
+    training_eligible: false
+    post_validation_training_scope: identity_and_alias_features_only
+    published_claims_eligible: false
+    compatibility_authoritative: false
+    contains_price_or_stock: false
+    default_record_limit: 100
+    hard_record_limit: 500
+    access_note: >-
+      Candidate-driven enrichment only. Use the official Action API with maxlag=5, a named
+      User-Agent, bounded responses, and no more than five requests per second. Exact part-number
+      (P13802) matches require agreement with a reviewed P176 manufacturer and, where a reviewed
+      category class exists, matching P31 type evidence. GTIN matches remain global. Name-only
+      matches require a reviewed category-specific instance class, a manufacturer statement, and
+      matching brand context; unsupported categories are rejected. Local response fixtures are
+      also ineligible for redistribution. All outputs remain training-ineligible and quarantined
+      until a reviewed catalogue consumer, conflict policy, provenance propagation, and integration
+      evaluation are in place. Wikidata is not authoritative compatibility evidence and this
+      adapter does not collect retailer prices, offers, or stock.
+  pci_id_repository:
+    kind: hardware_identifier_aliases
+    access: public_daily_snapshot
+    source_url: https://pci-ids.ucw.cz/
+    download_url: https://pci-ids.ucw.cz/v2.2/pci.ids.gz
+    plain_download_url: https://pci-ids.ucw.cz/v2.2/pci.ids
+    version_policy: content_sha256
+    licence: BSD-3-Clause
+    upstream_licence_options: GPL-2.0-or-later OR BSD-3-Clause
+    copyright_holders: Martin Mares and Albert Pool
+    third_party_notice: docs/third-party/pci-id-repository-BSD-3-Clause.txt
+    attribution_required: true
+    redistribution_eligible: true
+    training_eligible: false
+    published_claims_eligible: false
+    use_scope: entity_resolution_blocking_only
+    compatibility_authoritative: false
+    contains_price_or_stock: false
+    default_record_limit: 20000
+    access_note: >-
+      Use the upstream BSD 3-Clause option and retain its notice. Prefer the compressed
+      daily snapshot, send the named BuildSignal User-Agent, cache by content SHA-256, and
+      keep downloads operator-triggered. Scan the full bounded snapshot and select a deterministic
+      stratified sample with AMD, NVIDIA, Realtek, and Intel vendor anchors rather than taking a
+      lexicographic prefix. Parsed vendor, device, and subsystem labels may enrich entity-resolution
+      candidate blocking only. They are not canonical products, compatibility evidence, prices,
+      stock observations, training labels, or model metrics.
+
+blocked_or_restricted_sources:
+  pchardware_org:
+    reason: >-
+      Terms updated 2026-05-27 prohibit automated crawling, bulk extraction, mirroring,
+      republication, and API/database access without prior written consent. Do not use its
+      component catalogue or benchmarks as a crawl or training source.
+    hosts:
+      - pchardware.org
+    terms_url: https://pchardware.org/legal/terms/
+    reviewed_on: 2026-07-23
+  open_icecat:
+    reason: The 2026 Open Content License explicitly prohibits ML training.
+  amazon_creators_api:
+    reason: Terms restrict aggregation, ML training, and price caching beyond 24 hours.
+  ebay_browse_api:
+    reason: Production access is limited and retention or price-modelling rights require review.
+  lazada_open_platform:
+    reason: Seller OAuth exposes consenting sellers, not a public Singapore marketplace feed.
+  openbenchmarking_public_results:
+    reason: Benchmark software is GPL, but public result-data reuse terms are not explicit.
