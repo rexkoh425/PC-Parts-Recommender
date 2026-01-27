@@ -94,4 +94,42 @@ a hard requirement removes a candidate or makes the optimisation infeasible.
 
 These are goals, not current inventory or achieved metrics:
 
-<!-- TODO: sections below still to be written. -->
+| Area | MVP target | Portfolio target |
+| --- | ---: | ---: |
+| Canonical products | 750 | 3,000 |
+| Retailer listings | 3,000 across 3 sources | 10,000 across 5 sources |
+| Benchmark observations | 3,000 | 8,000 or more |
+| Labelled duplicate pairs | 1,000 | 2,500 |
+| Judged search scenarios | 75 | 150 |
+| Graded relevance labels | 1,000 | 2,000 or more |
+| Compatibility test builds | 2,000 | 10,000 |
+| Pilot/study users | 5 | 20 |
+
+Model-quality targets are defined in [evaluation-report.md](evaluation-report.md). They may not
+be copied into a résumé or demo as results until the report links a reportable artifact.
+
+## Release slices
+
+1. Foundation: typed schemas, PostgreSQL/pgvector migration, provenance, seed catalogue, API.
+2. Ingestion: permitted sources, immutable snapshots, parsing, listings, prices, quality checks.
+3. Entity resolution and compatibility: conservative matching and deterministic rules.
+4. Retrieval and performance: BM25/vector/RRF plus observed and predicted workload scores.
+5. Ranking and optimisation: query-grouped LambdaMART and exact constrained build selection.
+6. Product experience: full build flow, replacement, saving, comparison, explanations, events.
+7. Evidence: frozen datasets, load tests, controlled user study, data/model cards, public demo.
+
+## Scope exclusions for the first release
+
+Laptops, used parts, custom water cooling, purchasing, detailed thermal simulation, 3D assembly,
+countries outside Singapore, neural price forecasting, and claims of personalisation before
+sufficient per-user history are intentionally excluded.
+
+## Definition of done
+
+The product is portfolio-ready only after the complete browser flow works on current source data,
+every returned build independently passes hard compatibility checks, the optimiser matches
+exhaustive search on reduced catalogues, retrieval/ranking/model baselines use frozen leakage-safe
+splits, latency is measured, provenance and versions are exposed, and every public metric can be
+reproduced from saved artifacts. Passing software tests alone does not establish model quality or
+user impact.
+
