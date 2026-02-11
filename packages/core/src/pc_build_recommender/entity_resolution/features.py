@@ -190,4 +190,102 @@ class PairFeatures:
     def to_dict(self) -> dict[str, float]:
         return {name: float(getattr(self, name)) for name in FEATURE_NAMES}
 
-# TODO: rest of this module still to come.
+
+class PairFeatureExtractor:
+    """Extract reproducible features from typed pair records."""
+
+    feature_names = FEATURE_NAMES
+
+    def extract(
+        self,
+        listing: ListingRow,
+        product: CanonicalProductRecord,
+    ) -> PairFeatures:
+        listing_text = normalize_text(listing.text)
+        product_text = normalize_text(product.text)
+        listing_model_tokens = set(unique_tokens(listing_text)) - _GENERIC_TOKENS
+        product_model_tokens = set(unique_tokens(product_text)) - _GENERIC_TOKENS
+        listing_numbers = set(numeric_tokens(listing_text))
+        product_numbers = set(numeric_tokens(product_text))
+        listing_specs = set(_normalised_attributes(listing.attributes).items())
+        product_specs = set(_normalised_attributes(product.attributes).items())
+        conflicts = find_numeric_conflicts(listing, product)
+        conflict_fields = {conflict.field for conflict in conflicts}
+        numeric_conflict_severity = max(
+            (
+                abs(conflict.listing_value - conflict.product_value)
+                / max(abs(conflict.listing_value), abs(conflict.product_value), 1.0)
+                for conflict in conflicts
+            ),
+            default=0.0,
+        )
+        listing_brand = normalize_text(listing.brand)
+        product_brand = normalize_text(product.brand)
+
+        return PairFeatures(
+            exact_mpn_match=_identifier_match(
+                listing.manufacturer_part_number, product.manufacturer_part_number
+            ),
+            exact_gtin_match=_identifier_match(listing.gtin, product.gtin),
+            brand_match=float(bool(listing_brand) and listing_brand == product_brand),
+            category_match=float(
+                normalize_text(listing.category) == normalize_text(product.category)
+            ),
+            model_token_overlap=_jaccard(listing_model_tokens, product_model_tokens),
+            character_similarity=SequenceMatcher(None, listing_text, product_text).ratio(),
+            numeric_token_agreement=_jaccard(listing_numbers, product_numbers, missing_value=0.5),
+            capacity_agreement=_capacity_agreement(listing, product),
+            form_factor_agreement=_form_factor_agreement(listing, product),
+            specification_overlap=_jaccard(listing_specs, product_specs, missing_value=0.0),
+            embedding_cosine_similarity=_cosine(listing.embedding, product.embedding),
+            relative_price_difference=_relative_price_difference(
+                listing.current_price_sgd, product.price_sgd
+            ),
+            price_missing=float(listing.current_price_sgd is None or product.price_sgd is None),
+            numeric_conflict=float(bool(conflicts)),
+            mpn_mismatch=_identifier_mismatch(
+                listing.manufacturer_part_number, product.manufacturer_part_number
+            ),
+            gtin_mismatch=_identifier_mismatch(listing.gtin, product.gtin),
+            brand_mismatch=float(
+                bool(listing_brand) and bool(product_brand) and listing_brand != product_brand
+            ),
+            numeric_conflict_count=float(len(conflicts)),
+            numeric_conflict_severity=numeric_conflict_severity,
+            capacity_conflict=float(
+                "capacity_gb" in conflict_fields or "vram_gb" in conflict_fields
+            ),
+            module_count_conflict=float("module_count" in conflict_fields),
+            power_conflict=float("wattage_w" in conflict_fields),
+            radiator_conflict=float("radiator_size_mm" in conflict_fields),
+        )
+
+    def transform(
+        self,
+        examples: Iterable[LabelledPair],
+    ) -> NDArray[np.float64]:
+        rows = [self.extract(example.listing, example.product).as_array() for example in examples]
+        if not rows:
+            return np.empty((0, len(FEATURE_NAMES)), dtype=np.float64)
+        return np.vstack(rows)
+
+    def hard_conflict_mask(self, examples: Iterable[LabelledPair]) -> NDArray[np.bool_]:
+        return np.asarray(
+            [bool(find_numeric_conflicts(item.listing, item.product)) for item in examples],
+            dtype=np.bool_,
+        )
+
+
+def validate_feature_matrix(values: Any) -> NDArray[np.float64]:
+    """Validate external feature matrices against the stable feature contract."""
+
+    matrix = np.asarray(values, dtype=np.float64)
+    if matrix.ndim == 1:
+        matrix = matrix.reshape(1, -1)
+    if matrix.ndim != 2 or matrix.shape[1] != len(FEATURE_NAMES):
+        raise ValueError(
+            f"feature matrix must have shape (n, {len(FEATURE_NAMES)}), got {matrix.shape}"
+        )
+    if not np.isfinite(matrix).all():
+        raise ValueError("feature matrix contains NaN or infinite values")
+    return matrix
