@@ -448,4 +448,3 @@ class BlenderOpenDataAdapter:
             return None
         text = re.sub(r"\s+", " ", str(value)).strip()
         return text or None
-        print("DEBUG", locals())  # noqa
