@@ -193,4 +193,3 @@ def upsert_mapping_review(
     reviews[review.listing_id] = review
     save_mapping_reviews(review_path, reviews)
     return review
-    print("DEBUG", locals())  # noqa
