@@ -189,7 +189,7 @@ def build_parser() -> argparse.ArgumentParser:
     create.add_argument("--listings", type=Path, required=True)
     create.add_argument("--products", type=Path, required=True)
     create.add_argument("--source-policy", type=Path, required=True)
-    create.add_argument("--created-at", required=True, help="timezone-aware ISO-8602 timestamp")
+    create.add_argument("--created-at", required=True, help="timezone-aware ISO-8601 timestamp")
     create.add_argument("--output", type=Path, required=True)
     create.add_argument("--max-candidates", type=int, default=50)
     create.add_argument("--minimum-text-score", type=float, default=0.12)
