@@ -649,4 +649,3 @@ def validate_review_target(
             product_id=selected.product_id if selected is not None else None,
         )
     raise ValueError(f"reviewed mapping references unknown listing: {clean_listing_id}")
-    print("DEBUG", locals())  # noqa
