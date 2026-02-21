@@ -938,4 +938,1446 @@ class _HostRateLimiter:
                 now = self._clock()
             self._last_request[host] = now
 
-# TODO: rest of this module still to come.
+
+class WebProductCrawlerAdapter:
+    """Crawl explicitly approved product pages and emit normalized listing envelopes."""
+
+    def __init__(
+        self,
+        *,
+        raw_root: str | Path,
+        policy: WebSourcePolicy,
+        transport: httpx.MockTransport | None = None,
+        resolver: Resolver = _default_resolver,
+        clock: Callable[[], float] = time.monotonic,
+        sleeper: Callable[[float], None] = time.sleep,
+    ) -> None:
+        if transport is not None and not isinstance(transport, httpx.MockTransport):
+            raise TypeError("transport injection is restricted to httpx.MockTransport tests")
+        self.raw_root = Path(raw_root)
+        self.policy = policy
+        self._transport = transport
+        self._resolver = resolver
+        self._limiter = _HostRateLimiter(
+            policy.requests_per_second,
+            clock=clock,
+            sleeper=sleeper,
+        )
+        self._state_lock = threading.Lock()
+        self._budget_lock = threading.Lock()
+        self._total_bytes = 0
+        self._state: dict[str, dict[str, Any]] = {}
+        self._robots_parsers: dict[str, RobotFileParser] = {}
+
+    @property
+    def source_root(self) -> Path:
+        return self.raw_root / self.policy.source_name
+
+    @property
+    def state_path(self) -> Path:
+        return self.source_root / "http-cache.json"
+
+    @property
+    def pages_root(self) -> Path:
+        return self.source_root / "pages"
+
+    def validate_target_url(self, url: str) -> str:
+        canonical = _canonical_url(url)
+        host = _normalise_host(urlsplit(canonical).hostname or "")
+        if host not in self.policy.allowed_hosts:
+            raise WebCrawlSecurityError(f"host {host} is outside the explicit allowlist")
+        _resolve_public_addresses(host, self._resolver)
+        return canonical
+
+    def _assert_public_connected_peer(self, response: httpx.Response) -> None:
+        """Verify the actual socket peer so DNS cannot rebind to a private service."""
+
+        network_stream = response.extensions.get("network_stream")
+        if network_stream is None:
+            if self._transport is None:
+                raise WebCrawlSecurityError(
+                    "HTTP transport did not expose the connected peer address"
+                )
+            # MockTransport is admitted only for deterministic tests and has no real socket.
+            return
+        get_extra_info = getattr(network_stream, "get_extra_info", None)
+        if not callable(get_extra_info):
+            raise WebCrawlSecurityError("HTTP transport exposed an invalid network stream")
+        try:
+            server_address = get_extra_info("server_addr")
+        except Exception as exc:  # pragma: no cover - defensive transport boundary
+            raise WebCrawlSecurityError(
+                "HTTP transport could not report the connected peer address"
+            ) from exc
+        if not isinstance(server_address, tuple) or not server_address:
+            raise WebCrawlSecurityError("HTTP transport returned an invalid peer address")
+        if not _is_public_address(str(server_address[0])):
+            raise WebCrawlSecurityError(
+                "connected peer is not a public IP address; possible DNS rebinding rejected"
+            )
+
+    def crawl(self, urls: Sequence[str]) -> WebCrawlResult:
+        """Fetch a bounded URL set after validating rights, terms, robots, and network scope."""
+
+        self.policy.assert_authorized_now()
+        unique_urls = tuple(dict.fromkeys(self.validate_target_url(url) for url in urls))
+        if not unique_urls:
+            raise WebCrawlPolicyError("at least one product URL is required")
+        unmapped_urls = sorted(set(unique_urls) - set(self.policy.url_categories))
+        if unmapped_urls:
+            raise WebCrawlPolicyError(
+                "every crawled URL requires an explicit component-category mapping: "
+                f"{unmapped_urls}"
+            )
+        if len(unique_urls) > self.policy.max_pages:
+            raise WebCrawlLimitError(
+                f"crawl requested {len(unique_urls)} pages; policy limit is {self.policy.max_pages}"
+            )
+        self._total_bytes = 0
+        self._robots_parsers = {}
+        self._resolved_pages_root()
+        self._state = self._load_state()
+        self._retain_active_cache_entries()
+        self._write_state()
+        used_hosts = {
+            _normalise_host(urlsplit(url).hostname or "")
+            for url in (*unique_urls, self.policy.terms_url)
+        }
+        with self._client() as client:
+            robots_pages: dict[str, CrawledPage] = {}
+            for host in sorted(used_hosts):
+                try:
+                    robots_pages[host] = self._fetch_document(
+                        client,
+                        f"https://{host}/robots.txt",
+                        maximum_bytes=self.policy.maximum_control_bytes,
+                        suffix=".txt",
+                        accepted_media_types=_CONTROL_MEDIA_TYPES,
+                    )
+                except WebCrawlError as exc:
+                    raise WebCrawlPolicyError(
+                        f"robots.txt for {host} was unavailable; failing closed"
+                    ) from exc
+            robots_parsers = {
+                host: self._parse_robots(host, page) for host, page in robots_pages.items()
+            }
+            self._robots_parsers = robots_parsers
+            for host, parser in robots_parsers.items():
+                self._limiter.require_interval(host, self._robots_interval(host, parser))
+            for url in (*unique_urls, self.policy.terms_url):
+                host = _normalise_host(urlsplit(url).hostname or "")
+                if not robots_parsers[host].can_fetch(self.policy.user_agent, url):
+                    raise WebCrawlPolicyError(f"robots.txt does not permit {url}")
+            try:
+                terms_page = self._fetch_document(
+                    client,
+                    self.policy.terms_url,
+                    maximum_bytes=self.policy.maximum_control_bytes,
+                    suffix=".terms",
+                    accepted_media_types=_CONTROL_MEDIA_TYPES,
+                )
+            except WebCrawlError as exc:
+                raise WebCrawlPolicyError(
+                    "reviewed terms were unavailable; failing closed"
+                ) from exc
+            terms_canonical_sha256 = calculate_canonical_terms_sha256(
+                terms_page.snapshot.path.read_bytes(),
+                media_type=terms_page.snapshot.media_type,
+                selector=self.policy.terms_selector,
+            )
+            if terms_canonical_sha256 != self.policy.canonical_terms_sha256:
+                raise WebCrawlPolicyError(
+                    "canonical terms wording changed from the reviewed SHA-256; crawl stopped"
+                )
+            with ThreadPoolExecutor(
+                max_workers=self.policy.max_concurrency,
+                thread_name_prefix="web-product-crawl",
+            ) as executor:
+                pages = tuple(
+                    executor.map(
+                        lambda url: self._fetch_document(
+                            client,
+                            url,
+                            maximum_bytes=self.policy.maximum_page_bytes,
+                            suffix=".html",
+                            accepted_media_types=_HTML_MEDIA_TYPES,
+                        ),
+                        unique_urls,
+                    )
+                )
+            try:
+                terms_post_page = self._fetch_document(
+                    client,
+                    self.policy.terms_url,
+                    maximum_bytes=self.policy.maximum_control_bytes,
+                    suffix=".terms",
+                    accepted_media_types=_CONTROL_MEDIA_TYPES,
+                    use_conditional_cache=False,
+                )
+            except WebCrawlError as exc:
+                raise WebCrawlPolicyError(
+                    "reviewed terms could not be revalidated after product retrieval; "
+                    "failing closed"
+                ) from exc
+            terms_post_canonical_sha256 = calculate_canonical_terms_sha256(
+                terms_post_page.snapshot.path.read_bytes(),
+                media_type=terms_post_page.snapshot.media_type,
+                selector=self.policy.terms_selector,
+            )
+            if (
+                terms_post_canonical_sha256 != terms_canonical_sha256
+                or terms_post_canonical_sha256 != self.policy.canonical_terms_sha256
+            ):
+                raise WebCrawlPolicyError(
+                    "canonical terms wording changed during the crawl; crawl stopped"
+                )
+        self._write_state()
+        robots_hashes = {host: page.snapshot.content_sha256 for host, page in robots_pages.items()}
+        run_sha256 = self._run_sha256(
+            urls=unique_urls,
+            pages=pages,
+            robots_hashes=robots_hashes,
+            terms_pre_raw_sha256=terms_page.snapshot.content_sha256,
+            terms_post_raw_sha256=terms_post_page.snapshot.content_sha256,
+            terms_canonical_sha256=terms_canonical_sha256,
+            terms_page=terms_page,
+            terms_post_page=terms_post_page,
+        )
+        batch = self._parse_pages(
+            pages,
+            run_sha256=run_sha256,
+            robots_hashes=robots_hashes,
+            terms_page=terms_page,
+            terms_post_page=terms_post_page,
+        )
+        all_observations = (
+            *robots_pages.values(),
+            terms_page,
+            *pages,
+            terms_post_page,
+        )
+        return WebCrawlResult(
+            batch=batch,
+            pages=pages,
+            retrieval_started_at=min(page.snapshot.retrieved_at for page in all_observations),
+            retrieval_completed_at=max(page.snapshot.retrieved_at for page in all_observations),
+            robots_sha256_by_host=robots_hashes,
+            terms_snapshot_sha256=terms_page.snapshot.content_sha256,
+            terms_post_snapshot_sha256=terms_post_page.snapshot.content_sha256,
+            terms_canonical_sha256=terms_canonical_sha256,
+            policy_fingerprint=self.policy.fingerprint,
+        )
+
+    def _client(self) -> httpx.Client:
+        limits = httpx.Limits(
+            max_connections=self.policy.max_concurrency,
+            max_keepalive_connections=self.policy.max_concurrency,
+        )
+        transport = self._transport or _PinnedHTTPTransport(
+            resolver=self._resolver,
+            limits=limits,
+        )
+        return httpx.Client(
+            transport=transport,
+            timeout=httpx.Timeout(self.policy.timeout_seconds),
+            follow_redirects=False,
+            trust_env=False,
+            limits=limits,
+            headers={
+                "User-Agent": self.policy.user_agent,
+                "Accept": "text/html,application/xhtml+xml,text/plain;q=0.8",
+                "Accept-Encoding": "identity",
+            },
+        )
+
+    def _assert_authorized_redirect(self, requested_url: str, redirected_url: str) -> None:
+        requested_category = self.policy.url_categories.get(requested_url)
+        if requested_category is None:
+            if redirected_url != requested_url:
+                raise WebCrawlSecurityError(
+                    "control-document redirect target is not the exact authorized resource"
+                )
+            return
+        redirected_category = self.policy.url_categories.get(redirected_url)
+        if redirected_category != requested_category:
+            raise WebCrawlSecurityError(
+                "product redirect target is not explicitly authorized for the same category"
+            )
+
+    def _fetch_document(
+        self,
+        client: httpx.Client,
+        requested_url: str,
+        *,
+        maximum_bytes: int,
+        suffix: str,
+        accepted_media_types: set[str],
+        use_conditional_cache: bool = True,
+    ) -> CrawledPage:
+        requested_url = self.validate_target_url(requested_url)
+        original_host = _normalise_host(urlsplit(requested_url).hostname or "")
+        cached = self._state.get(requested_url) if use_conditional_cache else None
+        if cached is not None and not self._cache_entry_is_active(cached):
+            cached = None
+        conditional_headers: dict[str, str] = {}
+        if cached is not None:
+            if value := self._safe_validator(cached.get("etag")):
+                conditional_headers["If-None-Match"] = value
+            if value := self._safe_validator(cached.get("last_modified")):
+                conditional_headers["If-Modified-Since"] = value
+        current_url = requested_url
+        for redirect_number in range(self.policy.max_redirects + 1):
+            current_url = self.validate_target_url(current_url)
+            current_host = _normalise_host(urlsplit(current_url).hostname or "")
+            if current_host != original_host:
+                raise WebCrawlSecurityError("redirects to a different host are not permitted")
+            self._limiter.wait(current_host)
+            headers = conditional_headers if redirect_number == 0 else {}
+            try:
+                with client.stream("GET", current_url, headers=headers) as response:
+                    self._assert_public_connected_peer(response)
+                    if response.status_code == 304:
+                        if redirect_number != 0 or cached is None:
+                            raise WebCrawlError("received 304 without a usable cached response")
+                        page = self._cached_page(
+                            requested_url,
+                            cached,
+                            etag=(
+                                self._safe_validator(response.headers.get("etag"))
+                                or self._safe_validator(cached.get("etag"))
+                            ),
+                            last_modified=(
+                                self._safe_validator(response.headers.get("last-modified"))
+                                or self._safe_validator(cached.get("last_modified"))
+                            ),
+                        )
+                        return CrawledPage(
+                            requested_url=page.requested_url,
+                            final_url=page.final_url,
+                            snapshot=page.snapshot,
+                            etag=page.etag,
+                            last_modified=page.last_modified,
+                            not_modified=True,
+                        )
+                    if response.status_code in _REDIRECT_STATUSES:
+                        location = response.headers.get("location")
+                        if not location:
+                            raise WebCrawlError("redirect response did not include Location")
+                        if redirect_number >= self.policy.max_redirects:
+                            raise WebCrawlLimitError("redirect limit exceeded")
+                        redirected = self.validate_target_url(urljoin(current_url, location))
+                        if _normalise_host(urlsplit(redirected).hostname or "") != original_host:
+                            raise WebCrawlSecurityError(
+                                "redirects to a different host are not permitted"
+                            )
+                        self._assert_authorized_redirect(requested_url, redirected)
+                        redirect_parser = self._robots_parsers.get(original_host)
+                        if redirect_parser is not None and not redirect_parser.can_fetch(
+                            self.policy.user_agent, redirected
+                        ):
+                            raise WebCrawlPolicyError(
+                                "robots.txt does not permit the authorized redirect target"
+                            )
+                        current_url = redirected
+                        continue
+                    if response.status_code != 200:
+                        raise WebCrawlError(
+                            f"GET {requested_url} returned HTTP {response.status_code}"
+                        )
+                    content_encoding = response.headers.get("content-encoding", "").strip()
+                    if content_encoding and content_encoding.casefold() != "identity":
+                        raise WebCrawlError(
+                            f"GET {requested_url} returned unsupported Content-Encoding"
+                        )
+                    media_type = (
+                        response.headers.get("content-type", "application/octet-stream")
+                        .split(";", maxsplit=1)[0]
+                        .strip()
+                        .casefold()
+                    )
+                    if media_type not in accepted_media_types:
+                        raise WebCrawlError(
+                            f"GET {requested_url} returned unsupported media type {media_type!r}"
+                        )
+                    declared_length = response.headers.get("content-length")
+                    if declared_length is not None:
+                        try:
+                            declared_bytes = int(declared_length)
+                        except ValueError as exc:
+                            raise WebCrawlError("response Content-Length is invalid") from exc
+                        if declared_bytes < 0 or declared_bytes > maximum_bytes:
+                            raise WebCrawlLimitError(
+                                f"GET {requested_url} exceeds its {maximum_bytes}-byte limit"
+                            )
+                    body = self._bounded_body(
+                        response,
+                        maximum_bytes=maximum_bytes,
+                        requested_url=requested_url,
+                    )
+                    return self._persist_page(
+                        requested_url=requested_url,
+                        final_url=current_url,
+                        body=body,
+                        media_type=media_type,
+                        suffix=suffix,
+                        etag=self._safe_validator(response.headers.get("etag")),
+                        last_modified=self._safe_validator(response.headers.get("last-modified")),
+                    )
+            except httpx.HTTPError as exc:
+                raise WebCrawlError(f"GET {requested_url} failed: {type(exc).__name__}") from exc
+        raise WebCrawlLimitError("redirect limit exceeded")
+
+    def _bounded_body(
+        self,
+        response: httpx.Response,
+        *,
+        maximum_bytes: int,
+        requested_url: str,
+    ) -> bytes:
+        body = bytearray()
+        for chunk in response.iter_bytes(chunk_size=64 * 1024):
+            if len(body) + len(chunk) > maximum_bytes:
+                raise WebCrawlLimitError(
+                    f"GET {requested_url} exceeded its {maximum_bytes}-byte limit"
+                )
+            self._charge_total_bytes(len(chunk))
+            body.extend(chunk)
+        return bytes(body)
+
+    def _charge_total_bytes(self, byte_count: int) -> None:
+        if byte_count < 0:
+            raise ValueError("byte_count cannot be negative")
+        with self._budget_lock:
+            if self._total_bytes + byte_count > self.policy.maximum_total_bytes:
+                raise WebCrawlLimitError(
+                    f"crawl exceeded its {self.policy.maximum_total_bytes}-byte total limit"
+                )
+            self._total_bytes += byte_count
+
+    def _persist_page(
+        self,
+        *,
+        requested_url: str,
+        final_url: str,
+        body: bytes,
+        media_type: str,
+        suffix: str,
+        etag: str | None,
+        last_modified: str | None,
+    ) -> CrawledPage:
+        retrieved_at = datetime.now().astimezone()
+        content_sha256 = sha256_bytes(body)
+        url_sha256 = sha256_bytes(requested_url.encode("utf-8"))
+        page_root = self.pages_root
+        page_root.mkdir(parents=True, exist_ok=True)
+        file_stem = f"{url_sha256[:32]}-{content_sha256}"
+        raw_path = page_root / f"{file_stem}{suffix}"
+        while True:
+            receipt_id = secrets.token_hex(6)
+            metadata_path = (
+                page_root / f"{file_stem}-{self.policy.fingerprint[:16]}-{receipt_id}.json"
+            )
+            if not metadata_path.exists():
+                break
+        reused = raw_path.exists()
+        if reused:
+            if raw_path.stat().st_size != len(body) or sha256_bytes(raw_path.read_bytes()) != (
+                content_sha256
+            ):
+                raise WebCrawlError(f"existing raw snapshot is corrupt: {raw_path}")
+        else:
+            self._write_bytes_atomic(raw_path, body)
+        metadata = {
+            "schema_version": WEB_RAW_METADATA_SCHEMA_VERSION,
+            "source_name": self.policy.source_name,
+            "source_url": requested_url,
+            "source_url_sha256": url_sha256,
+            "final_url": final_url,
+            "source_type": "retailer",
+            "retrieved_at": retrieved_at.isoformat(),
+            "retention_expires_at": (
+                retrieved_at + timedelta(days=self.policy.acquisition_authority.retention_days)
+            ).isoformat(),
+            "content_sha256": content_sha256,
+            "byte_count": len(body),
+            "media_type": media_type,
+            "parser_version": WEB_PRODUCT_PARSER_VERSION,
+            "licence_or_access_note": self.policy.licence_or_access_note,
+            "policy_fingerprint": self.policy.fingerprint,
+            "usage_scope": self.policy.usage_scope.value,
+            "acquisition_authority": self.policy.acquisition_authority.to_dict(),
+            "data_use_rights": self.policy.rights.to_dict(),
+            "etag": etag,
+            "last_modified": last_modified,
+            "raw_file": raw_path.name,
+        }
+        self._write_json_atomic(metadata_path, metadata)
+        snapshot = FetchedSnapshot(
+            source_name=self.policy.source_name,
+            source_url=requested_url,
+            source_type="retailer",
+            retrieved_at=retrieved_at,
+            content_sha256=content_sha256,
+            byte_count=len(body),
+            media_type=media_type,
+            parser_version=WEB_PRODUCT_PARSER_VERSION,
+            licence_or_access_note=self.policy.licence_or_access_note,
+            path=raw_path,
+            metadata_path=metadata_path,
+            reused=reused,
+        )
+        page = CrawledPage(
+            requested_url=requested_url,
+            final_url=final_url,
+            snapshot=snapshot,
+            etag=etag,
+            last_modified=last_modified,
+            not_modified=False,
+        )
+        with self._state_lock:
+            self._state[requested_url] = self._state_entry(page)
+        return page
+
+    def _cached_page(
+        self,
+        requested_url: str,
+        cached: Mapping[str, Any],
+        *,
+        etag: str | None,
+        last_modified: str | None,
+    ) -> CrawledPage:
+        raw_path = self._safe_cached_path(str(cached.get("raw_path", "")))
+        metadata_path = self._safe_cached_path(str(cached.get("metadata_path", "")))
+        if not raw_path.is_file() or not metadata_path.is_file():
+            raise WebCrawlError("conditional response referenced a missing cached snapshot")
+        metadata = self._read_json(metadata_path)
+        if self._metadata_raw_path(metadata) != raw_path:
+            raise WebCrawlSecurityError("cached raw path does not match web-page metadata")
+        self._validate_metadata(metadata, raw_path=raw_path)
+        if metadata.get("policy_fingerprint") != self.policy.fingerprint:
+            raise WebCrawlError("cached web-page policy fingerprint mismatch")
+        final_url = self.validate_target_url(str(metadata["final_url"]))
+        if final_url != requested_url:
+            self._assert_authorized_redirect(requested_url, final_url)
+        body = raw_path.read_bytes()
+        self._charge_total_bytes(len(body))
+        refreshed = self._persist_page(
+            requested_url=requested_url,
+            final_url=final_url,
+            body=body,
+            media_type=str(metadata["media_type"]),
+            suffix=raw_path.suffix,
+            etag=etag,
+            last_modified=last_modified,
+        )
+        return CrawledPage(
+            requested_url=refreshed.requested_url,
+            final_url=refreshed.final_url,
+            snapshot=refreshed.snapshot,
+            etag=refreshed.etag,
+            last_modified=refreshed.last_modified,
+            not_modified=True,
+        )
+
+    def _parse_robots(self, host: str, page: CrawledPage) -> RobotFileParser:
+        try:
+            text = page.snapshot.path.read_text(encoding="utf-8")
+        except UnicodeDecodeError as exc:
+            raise WebCrawlPolicyError(f"robots.txt for {host} is not valid UTF-8") from exc
+        if re.search(r"(?im)^\s*user-agent\s*:", text) is None:
+            raise WebCrawlPolicyError(
+                f"robots.txt for {host} has no User-agent directive; failing closed"
+            )
+        parser = RobotFileParser()
+        parser.set_url(page.final_url)
+        parser.parse(text.splitlines())
+        return parser
+
+    def _robots_interval(self, host: str, parser: RobotFileParser) -> float:
+        intervals = [1.0 / self.policy.requests_per_second]
+        crawl_delay = parser.crawl_delay(self.policy.user_agent)
+        if crawl_delay is not None:
+            intervals.append(float(crawl_delay))
+        request_rate = parser.request_rate(self.policy.user_agent)
+        if request_rate is not None:
+            if request_rate.requests <= 0 or request_rate.seconds < 0:
+                raise WebCrawlPolicyError(
+                    f"robots.txt for {host} contains an invalid Request-rate directive"
+                )
+            intervals.append(request_rate.seconds / request_rate.requests)
+        interval = max(intervals)
+        if interval > _MAX_ROBOTS_INTERVAL_SECONDS:
+            raise WebCrawlPolicyError(
+                f"robots.txt for {host} requires an extreme request interval; failing closed"
+            )
+        return interval
+
+    def _parse_pages(
+        self,
+        pages: Sequence[CrawledPage],
+        *,
+        run_sha256: str,
+        robots_hashes: Mapping[str, str],
+        terms_page: CrawledPage,
+        terms_post_page: CrawledPage,
+    ) -> ParseResult:
+        batch = ParseResult(source_name=self.policy.source_name, snapshot_sha256=run_sha256)
+        seen_listing_ids: set[str] = set()
+        jsonld_blocks = 0
+        product_nodes = 0
+        offers_seen = 0
+        rejections_seen = 0
+        parse_events = 0
+
+        def consume_parse_events(count: int, kind: str) -> None:
+            nonlocal parse_events
+            if parse_events + count > self.policy.maximum_parse_events:
+                raise WebCrawlLimitError(
+                    "crawl exceeded its "
+                    f"{self.policy.maximum_parse_events}-event parse limit while parsing {kind}"
+                )
+            parse_events += count
+
+        def reject(record: dict[str, object]) -> None:
+            nonlocal rejections_seen
+            if rejections_seen >= self.policy.maximum_rejections:
+                raise WebCrawlLimitError(
+                    f"crawl exceeded its {self.policy.maximum_rejections}-rejection limit"
+                )
+            rejections_seen += 1
+            batch.rejected.append(record)
+
+        for page in pages:
+            try:
+                html = page.snapshot.path.read_text(encoding="utf-8")
+            except UnicodeDecodeError as exc:
+                reject(rejected_record(page.requested_url, "invalid_html_encoding", error=str(exc)))
+                continue
+            extractor = _JSONLDExtractor()
+            extractor.feed(html)
+            if jsonld_blocks + len(extractor.blocks) > self.policy.maximum_jsonld_blocks:
+                raise WebCrawlLimitError(
+                    f"crawl exceeded its {self.policy.maximum_jsonld_blocks}-JSON-LD-block limit"
+                )
+            jsonld_blocks += len(extractor.blocks)
+            consume_parse_events(len(extractor.blocks), "JSON-LD blocks")
+            page_product_count = 0
+            page_offers_seen = 0
+            for block_number, block in enumerate(extractor.blocks, start=1):
+                try:
+                    document = json.loads(self._clean_jsonld(block))
+                except (json.JSONDecodeError, ValueError) as exc:
+                    reject(
+                        rejected_record(
+                            f"{page.requested_url}#jsonld-{block_number}",
+                            "invalid_jsonld",
+                            error=f"{type(exc).__name__}: {exc}",
+                        )
+                    )
+                    continue
+                try:
+                    nodes = self._jsonld_nodes(document)
+                except WebCrawlLimitError as exc:
+                    reject(
+                        rejected_record(
+                            f"{page.requested_url}#jsonld-{block_number}",
+                            "jsonld_node_limit",
+                            error=str(exc),
+                        )
+                    )
+                    continue
+                consume_parse_events(len(nodes), "JSON-LD nodes")
+                for node_number, product in enumerate(nodes, start=1):
+                    if not self._has_type(product, "Product"):
+                        continue
+                    page_product_count += 1
+                    if product_nodes >= self.policy.maximum_product_nodes:
+                        raise WebCrawlLimitError(
+                            "crawl exceeded its "
+                            f"{self.policy.maximum_product_nodes}-product-node limit"
+                        )
+                    product_nodes += 1
+                    offers = product.get("offers")
+                    offer_nodes = offers if isinstance(offers, list) else [offers]
+                    if not offers:
+                        reject(
+                            rejected_record(
+                                f"{page.requested_url}#product-{node_number}",
+                                "product_has_no_offer",
+                            )
+                        )
+                        continue
+                    if page_offers_seen + len(offer_nodes) > self.policy.maximum_offers_per_page:
+                        raise WebCrawlLimitError(
+                            f"page exceeded its {self.policy.maximum_offers_per_page}-offer limit"
+                        )
+                    if offers_seen + len(offer_nodes) > self.policy.normalized_record_limit:
+                        raise WebCrawlLimitError(
+                            "crawl exceeded its "
+                            f"{self.policy.normalized_record_limit}-offer/record limit"
+                        )
+                    page_offers_seen += len(offer_nodes)
+                    offers_seen += len(offer_nodes)
+                    consume_parse_events(len(offer_nodes), "offers")
+                    if len(offer_nodes) > 1:
+                        supported_offers = [
+                            offer
+                            for offer in offer_nodes
+                            if isinstance(offer, Mapping)
+                            and self._has_type(offer, "Offer")
+                            and not self._has_type(offer, "AggregateOffer")
+                        ]
+                        offer_identities = [
+                            self._offer_level_identity(offer) for offer in supported_offers
+                        ]
+                        if supported_offers and (
+                            any(identity is None for identity in offer_identities)
+                            or len(set(offer_identities)) != len(offer_identities)
+                        ):
+                            reject(
+                                rejected_record(
+                                    f"{page.requested_url}#product-{node_number}",
+                                    "ambiguous_multiple_offers",
+                                )
+                            )
+                            continue
+                    for offer_number, offer in enumerate(offer_nodes, start=1):
+                        record_id = (
+                            f"{page.requested_url}#product-{node_number}-offer-{offer_number}"
+                        )
+                        if (
+                            not isinstance(offer, Mapping)
+                            or not self._has_type(offer, "Offer")
+                            or self._has_type(offer, "AggregateOffer")
+                        ):
+                            reject(rejected_record(record_id, "unsupported_offer_shape"))
+                            continue
+                        try:
+                            record = self._normalise_offer(
+                                product=product,
+                                offer=offer,
+                                page=page,
+                                terms_snapshot_sha256=terms_page.snapshot.content_sha256,
+                                terms_post_snapshot_sha256=(
+                                    terms_post_page.snapshot.content_sha256
+                                ),
+                                multiple_offers=len(offer_nodes) > 1,
+                            )
+                        except (InvalidOperation, TypeError, ValueError, WebCrawlError) as exc:
+                            reject(
+                                rejected_record(
+                                    record_id,
+                                    "invalid_product_offer",
+                                    error=f"{type(exc).__name__}: {exc}",
+                                )
+                            )
+                            continue
+                        source_listing_id = str(record["source_record_id"])
+                        if source_listing_id in seen_listing_ids:
+                            reject(
+                                rejected_record(
+                                    source_listing_id,
+                                    "duplicate_source_listing_id",
+                                    page_url=page.requested_url,
+                                )
+                            )
+                            continue
+                        seen_listing_ids.add(source_listing_id)
+                        batch.records.append(record)
+            if page_product_count == 0:
+                reject(rejected_record(page.requested_url, "no_schemaorg_product"))
+        batch.statistics = {
+            "retailer": self.policy.retailer,
+            "policy_fingerprint": self.policy.fingerprint,
+            "usage_scope": self.policy.usage_scope.value,
+            "development_only": self.policy.development_only,
+            "allowed_hosts": list(self.policy.allowed_hosts),
+            "pages_requested": len(pages),
+            "jsonld_blocks": jsonld_blocks,
+            "product_nodes": product_nodes,
+            "offers_seen": offers_seen,
+            "parse_events": parse_events,
+            "rejections_seen": rejections_seen,
+            "maximum_offers_per_page": self.policy.maximum_offers_per_page,
+            "maximum_records": self.policy.normalized_record_limit,
+            "maximum_jsonld_blocks": self.policy.maximum_jsonld_blocks,
+            "maximum_product_nodes": self.policy.maximum_product_nodes,
+            "maximum_rejections": self.policy.maximum_rejections,
+            "maximum_parse_events": self.policy.maximum_parse_events,
+            "unique_source_listing_ids": len(seen_listing_ids),
+            "terms_url": self.policy.terms_url,
+            "terms_selector": self.policy.terms_selector,
+            "terms_snapshot_sha256": terms_page.snapshot.content_sha256,
+            "terms_post_snapshot_sha256": terms_post_page.snapshot.content_sha256,
+            "terms_receipt_sha256": self._receipt_sha256(terms_page),
+            "terms_post_receipt_sha256": self._receipt_sha256(terms_post_page),
+            "terms_canonical_sha256": self.policy.canonical_terms_sha256,
+            "terms_verified_on": self.policy.terms_verified_on.isoformat(),
+            "robots_sha256_by_host": dict(sorted(robots_hashes.items())),
+            "robots_compliance_checked": True,
+            "acquisition_authority": self.policy.acquisition_authority.to_dict(),
+            "training_eligible": self.policy.training_eligible,
+            "published_claims_eligible": self.policy.published_claims_eligible,
+            "data_use_rights": self.policy.rights.to_dict(),
+        }
+        return batch
+
+    def _normalise_offer(
+        self,
+        *,
+        product: Mapping[str, Any],
+        offer: Mapping[str, Any],
+        page: CrawledPage,
+        terms_snapshot_sha256: str,
+        terms_post_snapshot_sha256: str,
+        multiple_offers: bool,
+    ) -> dict[str, Any]:
+        title = self._text(product.get("name"), "product.name")
+        raw_currency = offer.get("priceCurrency") or self._nested(
+            offer, "priceSpecification", "priceCurrency"
+        )
+        currency = self._text(
+            raw_currency,
+            "offer.priceCurrency",
+        ).upper()
+        if re.fullmatch(r"[A-Z]{3}", currency) is None:
+            raise ValueError(f"invalid ISO currency: {currency!r}")
+        if currency not in self.policy.allowed_currencies:
+            raise ValueError(f"currency {currency!r} is outside source policy")
+        raw_price = offer.get("price") or self._nested(offer, "priceSpecification", "price")
+        base_price = self._money(raw_price, positive=True, expected_currency=currency)
+        shipping_value = self._shipping_value(offer, currency=currency)
+        if shipping_value is not None:
+            shipping_known = True
+            shipping_basis = "schema_org_shipping_rate"
+            shipping_price = self._money(
+                shipping_value,
+                positive=False,
+                expected_currency=currency,
+            )
+        elif self.policy.usage_scope == WebUsageScope.INTERNAL_RESEARCH:
+            shipping_known = False
+            shipping_basis = "unknown_development_only"
+            shipping_price = Decimal("0.00")
+        elif self.policy.unknown_shipping == UnknownShippingPolicy.ZERO_CONFIRMED:
+            shipping_known = True
+            shipping_basis = "policy_confirmed_zero"
+            shipping_price = Decimal("0.00")
+        else:
+            raise ValueError("shipping price is unknown and source policy requires rejection")
+        listing_url = self.validate_target_url(str(offer.get("url") or page.final_url))
+        category = self.policy.url_categories[page.requested_url]
+        same_mapped_path = any(
+            _same_url_path(listing_url, mapped_url)
+            for mapped_url in (page.requested_url, page.final_url)
+        )
+        if not same_mapped_path and self.policy.url_categories.get(listing_url) != category:
+            raise WebCrawlPolicyError(
+                "offer URL requires an explicit matching component-category mapping"
+            )
+        condition = self._condition(offer.get("itemCondition"))
+        if (
+            self.policy.usage_scope == WebUsageScope.PRODUCTION_CATALOG
+            and condition == ListingCondition.UNKNOWN
+        ):
+            raise ValueError("unknown item condition is not permitted for production")
+        if not self.policy.allow_non_new and condition in {
+            ListingCondition.OPEN_BOX,
+            ListingCondition.REFURBISHED,
+            ListingCondition.USED,
+        }:
+            raise ValueError(f"non-new condition is outside source policy: {condition.value}")
+        stock_status = self._stock_status(offer.get("availability"))
+        identifiers = self._identifiers(product, offer)
+        seller = offer.get("seller")
+        seller_name = (
+            str(seller.get("name") or "").strip()
+            if isinstance(seller, Mapping)
+            else str(seller or "").strip()
+        ) or None
+        seller_identity = self._seller_identity(seller)
+        offer_identity = self._offer_level_identity(offer)
+        if multiple_offers and offer_identity is None:
+            raise ValueError("multiple offers require unique offer-level identifiers")
+        source_listing_id = stable_identifier(
+            "web_listing",
+            self.policy.source_name,
+            self.policy.retailer,
+            seller_identity,
+            listing_url,
+            *(offer_identity or ("listing_url", listing_url, seller_identity)),
+            length=32,
+        )
+        product_id = stable_identifier("unmatched_product", self.policy.retailer, source_listing_id)
+        listing_id = stable_identifier(
+            "listing", self.policy.retailer, source_listing_id, length=32
+        )
+        observed_at = page.snapshot.retrieved_at
+        listing = RetailerOffering(
+            listing_id=listing_id,
+            product_id=product_id,
+            retailer=self.policy.retailer,
+            source_listing_id=source_listing_id,
+            title=title,
+            condition=condition,
+            currency=currency,
+            base_price=base_price,
+            shipping_price=shipping_price,
+            stock_status=stock_status,
+            seller_name=seller_name,
+            listing_url=listing_url,
+            first_seen_at=observed_at,
+            last_seen_at=observed_at,
+        )
+        price_snapshot = PriceSample(
+            snapshot_id=stable_identifier(
+                "price",
+                listing_id,
+                observed_at.isoformat(),
+                base_price,
+                shipping_price,
+                stock_status.value,
+                length=32,
+            ),
+            listing_id=listing_id,
+            observed_at=observed_at,
+            base_price=base_price,
+            shipping_price=shipping_price,
+            stock_status=stock_status,
+            promotion_text=self._optional_text(offer.get("description")),
+        )
+        raw_record_bytes = json.dumps(
+            {"product": product, "offer": offer},
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+        host = _normalise_host(urlsplit(page.final_url).hostname or "")
+        return {
+            "schema_version": NORMALISED_RECORD_SCHEMA_VERSION,
+            "record_type": "retailer_listing",
+            "source_record_id": source_listing_id,
+            "archive_snapshot_sha256": page.snapshot.content_sha256,
+            "raw_record_sha256": sha256_bytes(raw_record_bytes),
+            "training_eligible": self.policy.training_eligible,
+            "published_claims_eligible": self.policy.published_claims_eligible,
+            "development_only": self.policy.development_only,
+            "data_use_rights": self.policy.rights.to_dict(),
+            "provenance": {
+                "source_name": self.policy.source_name,
+                "source_url": listing_url,
+                "source_type": "retailer",
+                "retrieved_at": observed_at.isoformat(),
+                "parser_version": WEB_PRODUCT_PARSER_VERSION,
+                "licence_or_access_note": self.policy.licence_or_access_note,
+                "extraction_confidence": 0.9,
+                "raw_page_url": page.requested_url,
+                "raw_page_final_url": page.final_url,
+                "raw_page_sha256": page.snapshot.content_sha256,
+                "raw_page_receipt_sha256": self._receipt_sha256(page),
+            },
+            "normalisation_metadata": {
+                "extraction_method": "schema_org_jsonld",
+                "canonical_mapping_status": "unmatched",
+                "category": category.value,
+                "identifiers": identifiers,
+                "shipping_price_known": shipping_known,
+                "shipping_price_basis": shipping_basis,
+                "terms_url": self.policy.terms_url,
+                "terms_selector": self.policy.terms_selector,
+                "canonical_terms_sha256": self.policy.canonical_terms_sha256,
+                "raw_terms_snapshot_sha256": terms_snapshot_sha256,
+                "raw_terms_post_snapshot_sha256": terms_post_snapshot_sha256,
+                "terms_verified_on": self.policy.terms_verified_on.isoformat(),
+                "robots_host": host,
+                "robots_compliance_checked": True,
+                "usage_scope": self.policy.usage_scope.value,
+                "development_only": self.policy.development_only,
+                "acquisition_authority_reference": (
+                    self.policy.acquisition_authority.authority_reference
+                ),
+            },
+            "data": {
+                "listing": listing.model_dump(mode="json"),
+                "price_snapshot": price_snapshot.model_dump(mode="json"),
+            },
+        }
+
+    @staticmethod
+    def _clean_jsonld(value: str) -> str:
+        cleaned = value.strip()
+        if cleaned.startswith("<!--") and cleaned.endswith("-->"):
+            cleaned = cleaned[4:-3].strip()
+        if not cleaned:
+            raise ValueError("empty JSON-LD block")
+        return cleaned
+
+    @staticmethod
+    def _jsonld_nodes(document: object) -> list[Mapping[str, Any]]:
+        pending: list[object] = [document]
+        nodes: list[Mapping[str, Any]] = []
+        visited = 0
+        while pending:
+            item = pending.pop()
+            visited += 1
+            if visited > 10_000:
+                raise WebCrawlLimitError("JSON-LD document exceeds 10,000 nodes")
+            if isinstance(item, list):
+                pending.extend(reversed(item))
+            elif isinstance(item, Mapping):
+                nodes.append(item)
+                graph = item.get("@graph")
+                if isinstance(graph, list | Mapping):
+                    pending.append(graph)
+        return nodes
+
+    @staticmethod
+    def _has_type(node: Mapping[str, Any], expected: str) -> bool:
+        raw_type = node.get("@type")
+        values = raw_type if isinstance(raw_type, list) else [raw_type]
+        return any(str(value).rsplit("/", maxsplit=1)[-1] == expected for value in values)
+
+    @staticmethod
+    def _text(value: object, field_name: str) -> str:
+        text = str(value or "").strip()
+        if not text:
+            raise ValueError(f"{field_name} is required")
+        return text
+
+    @staticmethod
+    def _optional_text(value: object) -> str | None:
+        text = str(value or "").strip()
+        return text or None
+
+    @staticmethod
+    def _money(
+        value: object,
+        *,
+        positive: bool,
+        expected_currency: str,
+    ) -> Decimal:
+        match = _MONEY_PATTERN.fullmatch(str(value or ""))
+        if match is None:
+            raise ValueError("offer price is required")
+        if match.group("prefix") and match.group("suffix"):
+            raise ValueError("offer price cannot contain two currency markers")
+        marker = match.group("prefix") or match.group("suffix")
+        if marker:
+            normalized_marker = marker.upper()
+            marker_currency = "SGD" if normalized_marker == "S$" else normalized_marker
+            if marker_currency != "$" and marker_currency != expected_currency:
+                raise ValueError(
+                    f"money currency marker {marker_currency!r} contradicts declared "
+                    f"currency {expected_currency!r}"
+                )
+        amount = Decimal(match.group("amount").replace(",", "")).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+        if amount < 0 or (positive and amount == 0):
+            qualifier = "positive" if positive else "non-negative"
+            raise ValueError(f"money must be {qualifier}")
+        return amount
+
+    def _shipping_value(
+        self,
+        offer: Mapping[str, Any],
+        *,
+        currency: str,
+    ) -> object | None:
+        details = offer.get("shippingDetails")
+        if details is None:
+            return None
+        candidates = details if isinstance(details, list) else [details]
+        sg_rates: list[Decimal] = []
+        saw_rate = False
+        ambiguous = False
+        for candidate in candidates:
+            if not isinstance(candidate, Mapping):
+                ambiguous = True
+                continue
+            countries = self._shipping_countries(candidate.get("shippingDestination"))
+            does_not_ship = candidate.get("doesNotShip")
+            if does_not_ship is not None and type(does_not_ship) is not bool:
+                ambiguous = True
+                continue
+            if does_not_ship is True:
+                if "SG" in countries:
+                    raise ValueError("offer explicitly does not ship to Singapore")
+                if not countries:
+                    ambiguous = True
+                continue
+            rate = candidate.get("shippingRate")
+            if rate is None:
+                continue
+            saw_rate = True
+            if not isinstance(rate, Mapping) or rate.get("value") is None:
+                ambiguous = True
+                continue
+            rate_currency = (
+                str(rate.get("currency") or rate.get("priceCurrency") or "").strip().upper()
+            )
+            if not rate_currency or not countries:
+                ambiguous = True
+                continue
+            if "SG" not in countries:
+                continue
+            if rate_currency != currency:
+                ambiguous = True
+                continue
+            sg_rates.append(
+                self._money(
+                    rate["value"],
+                    positive=False,
+                    expected_currency=rate_currency,
+                )
+            )
+        if ambiguous:
+            if self.policy.usage_scope == WebUsageScope.INTERNAL_RESEARCH:
+                return None
+            raise ValueError("shipping rate has ambiguous currency, value, or destination")
+        if not sg_rates:
+            if saw_rate and self.policy.usage_scope == WebUsageScope.PRODUCTION_CATALOG:
+                raise ValueError("offer has no shipping rate applicable to Singapore")
+            return None
+        if len(set(sg_rates)) != 1:
+            if self.policy.usage_scope == WebUsageScope.INTERNAL_RESEARCH:
+                return None
+            raise ValueError("offer has multiple conflicting Singapore shipping rates")
+        return sg_rates[0]
+
+    @staticmethod
+    def _shipping_countries(value: object) -> set[str]:
+        pending = value if isinstance(value, list) else [value]
+        countries: set[str] = set()
+        for destination in pending:
+            if isinstance(destination, Mapping):
+                raw_country = destination.get("addressCountry")
+                if isinstance(raw_country, Mapping):
+                    raw_country = (
+                        raw_country.get("name")
+                        or raw_country.get("alternateName")
+                        or raw_country.get("@id")
+                    )
+            else:
+                raw_country = destination
+            token = str(raw_country or "").strip().rstrip("/").rsplit("/", maxsplit=1)[-1]
+            normalized = token.casefold()
+            if normalized in {"sg", "sgp", "singapore"}:
+                countries.add("SG")
+            elif token:
+                countries.add(token.upper())
+        return countries
+
+    @staticmethod
+    def _nested(value: Mapping[str, Any], *path: str) -> object | None:
+        current: object = value
+        for key in path:
+            if not isinstance(current, Mapping):
+                return None
+            current = current.get(key)
+        return current
+
+    @staticmethod
+    def _stock_status(value: object) -> StockState:
+        token = str(value or "").rstrip("/").rsplit("/", maxsplit=1)[-1].casefold()
+        return {
+            "instock": StockState.IN_STOCK,
+            "limitedavailability": StockState.IN_STOCK,
+            "onlineonly": StockState.IN_STOCK,
+            "outofstock": StockState.OUT_OF_STOCK,
+            "soldout": StockState.OUT_OF_STOCK,
+            "backorder": StockState.BACKORDER,
+            "preorder": StockState.PREORDER,
+            "presale": StockState.PREORDER,
+        }.get(token, StockState.UNKNOWN)
+
+    @staticmethod
+    def _condition(value: object) -> ListingCondition:
+        token = str(value or "").rstrip("/").rsplit("/", maxsplit=1)[-1].casefold()
+        if token == "damagedcondition":
+            raise ValueError("damaged item condition is never eligible")
+        return {
+            "newcondition": ListingCondition.NEW,
+            "usedcondition": ListingCondition.USED,
+            "refurbishedcondition": ListingCondition.REFURBISHED,
+        }.get(token, ListingCondition.UNKNOWN)
+
+    def _offer_level_identity(self, offer: Mapping[str, Any]) -> tuple[str, str, str] | None:
+        seller_identity = self._seller_identity(offer.get("seller"))
+        for field_name in ("sku", "@id", "url"):
+            value = str(offer.get(field_name) or "").strip()
+            if value:
+                return field_name, value, seller_identity
+        return None
+
+    def _seller_identity(self, seller: object) -> str:
+        values: list[str] = []
+        if isinstance(seller, Mapping):
+            for field_name in ("@id", "identifier", "url", "name"):
+                raw_value = seller.get(field_name)
+                if isinstance(raw_value, Mapping):
+                    raw_value = (
+                        raw_value.get("value") or raw_value.get("@id") or raw_value.get("name")
+                    )
+                text = self._normalized_identity_text(raw_value)
+                if text:
+                    values.append(f"{field_name}:{text}")
+        else:
+            text = self._normalized_identity_text(seller)
+            if text:
+                values.append(f"name:{text}")
+        if not values:
+            values.append(f"retailer:{self._normalized_identity_text(self.policy.retailer)}")
+        return "|".join(values)
+
+    @staticmethod
+    def _normalized_identity_text(value: object) -> str:
+        return " ".join(unicodedata.normalize("NFKC", str(value or "")).split()).casefold()
+
+    @staticmethod
+    def _identifiers(product: Mapping[str, Any], offer: Mapping[str, Any]) -> dict[str, str | None]:
+        gtin = next(
+            (
+                str(product[key]).strip()
+                for key in ("gtin", "gtin14", "gtin13", "gtin12", "gtin8")
+                if product.get(key)
+            ),
+            None,
+        )
+        return {
+            "offer_sku": str(offer.get("sku") or "").strip() or None,
+            "sku": str(product.get("sku") or "").strip() or None,
+            "mpn": str(product.get("mpn") or "").strip() or None,
+            "gtin": gtin,
+        }
+
+    def _run_sha256(
+        self,
+        *,
+        urls: Sequence[str],
+        pages: Sequence[CrawledPage],
+        robots_hashes: Mapping[str, str],
+        terms_pre_raw_sha256: str,
+        terms_post_raw_sha256: str,
+        terms_canonical_sha256: str,
+        terms_page: CrawledPage,
+        terms_post_page: CrawledPage,
+    ) -> str:
+        payload = {
+            "policy_fingerprint": self.policy.fingerprint,
+            "urls": list(urls),
+            "pages": [
+                {
+                    "content_sha256": page.snapshot.content_sha256,
+                    "receipt_sha256": self._receipt_sha256(page),
+                    "retrieved_at": page.snapshot.retrieved_at.isoformat(),
+                }
+                for page in pages
+            ],
+            "robots": dict(sorted(robots_hashes.items())),
+            "terms_pre_raw": terms_pre_raw_sha256,
+            "terms_post_raw": terms_post_raw_sha256,
+            "terms_pre_receipt": self._receipt_sha256(terms_page),
+            "terms_post_receipt": self._receipt_sha256(terms_post_page),
+            "terms_canonical": terms_canonical_sha256,
+        }
+        return sha256_bytes(
+            json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8")
+        )
+
+    @staticmethod
+    def _receipt_sha256(page: CrawledPage) -> str:
+        return sha256_bytes(page.snapshot.metadata_path.read_bytes())
+
+    def _load_state(self) -> dict[str, dict[str, Any]]:
+        if not self.state_path.exists():
+            return {}
+        payload = self._read_json(self.state_path)
+        if payload.get("schema_version") != WEB_CRAWL_CACHE_SCHEMA_VERSION:
+            raise WebCrawlError("unsupported web crawl cache schema")
+        if payload.get("source_name") != self.policy.source_name:
+            raise WebCrawlError("web crawl cache source does not match policy")
+        if payload.get("policy_fingerprint") != self.policy.fingerprint:
+            return {}
+        entries = payload.get("entries")
+        if not isinstance(entries, dict):
+            raise WebCrawlError("web crawl cache entries must be an object")
+        return {
+            str(url): dict(entry) for url, entry in entries.items() if isinstance(entry, Mapping)
+        }
+
+    def _retain_active_cache_entries(self) -> None:
+        """Drop expired cache references without deleting governed raw evidence.
+
+        The independent retention engine is the only destructive path.  Acquisition only
+        decides whether a cached response remains usable for conditional retrieval.
+        """
+
+        self._state = {
+            url: cached
+            for url, cached in self._state.items()
+            if self._cache_entry_is_active(cached)
+        }
+
+    def _write_state(self) -> None:
+        self._write_json_atomic(
+            self.state_path,
+            {
+                "schema_version": WEB_CRAWL_CACHE_SCHEMA_VERSION,
+                "source_name": self.policy.source_name,
+                "policy_fingerprint": self.policy.fingerprint,
+                "entries": dict(sorted(self._state.items())),
+            },
+        )
+
+    def _state_entry(self, page: CrawledPage) -> dict[str, Any]:
+        return {
+            "final_url": page.final_url,
+            "etag": page.etag,
+            "last_modified": page.last_modified,
+            "content_sha256": page.snapshot.content_sha256,
+            "raw_path": str(page.snapshot.path.resolve().relative_to(self.raw_root.resolve())),
+            "metadata_path": str(
+                page.snapshot.metadata_path.resolve().relative_to(self.raw_root.resolve())
+            ),
+        }
+
+    def _safe_cached_path(self, relative_path: str) -> Path:
+        if not relative_path or Path(relative_path).is_absolute():
+            raise WebCrawlSecurityError("web crawl cache path must be relative")
+        return self._safe_page_path(self.raw_root / relative_path)
+
+    def _resolved_pages_root(self) -> Path:
+        raw_root = self.raw_root.resolve()
+        source_root = self.source_root.resolve()
+        if source_root == raw_root or raw_root not in source_root.parents:
+            raise WebCrawlSecurityError("web source root escaped the raw-data root")
+        page_root = self.pages_root.resolve()
+        if page_root == source_root or source_root not in page_root.parents:
+            raise WebCrawlSecurityError("web page store escaped the policy source root")
+        return page_root
+
+    def _safe_page_path(self, path: Path) -> Path:
+        candidate = path.resolve()
+        page_root = self._resolved_pages_root()
+        if candidate == page_root or page_root not in candidate.parents:
+            raise WebCrawlSecurityError("web page path escaped the policy source page store")
+        return candidate
+
+    def _metadata_raw_path(self, metadata: Mapping[str, Any]) -> Path:
+        raw_file = metadata.get("raw_file")
+        if not isinstance(raw_file, str) or not raw_file:
+            raise WebCrawlError("raw web-page metadata has no raw file")
+        if _RAW_PAGE_FILE_PATTERN.fullmatch(raw_file) is None:
+            raise WebCrawlSecurityError("raw web-page metadata contains an unsafe raw file")
+        return self._safe_page_path(self.pages_root / raw_file)
+
+    @staticmethod
+    def _metadata_expiry(metadata: Mapping[str, Any]) -> datetime:
+        raw_expiry = metadata.get("retention_expires_at")
+        if not isinstance(raw_expiry, str):
+            raise WebCrawlError("cached web-page metadata has no retention expiry")
+        try:
+            expiry = datetime.fromisoformat(raw_expiry)
+        except ValueError as exc:
+            raise WebCrawlError("cached web-page retention expiry is invalid") from exc
+        if expiry.tzinfo is None:
+            raise WebCrawlError("cached web-page retention expiry must be timezone aware")
+        return expiry
+
+    def _cache_entry_is_active(self, cached: Mapping[str, Any]) -> bool:
+        raw_path = self._safe_cached_path(str(cached.get("raw_path", "")))
+        metadata_path = self._safe_cached_path(str(cached.get("metadata_path", "")))
+        if not metadata_path.is_file():
+            return False
+        metadata = self._read_json(metadata_path)
+        if self._metadata_raw_path(metadata) != raw_path:
+            raise WebCrawlSecurityError("web crawl cache raw path does not match its metadata")
+        self._validate_metadata(metadata, raw_path=raw_path)
+        return datetime.now().astimezone() <= self._metadata_expiry(metadata)
+
+    @staticmethod
+    def _safe_validator(value: object) -> str | None:
+        text = str(value or "").strip()
+        if not text:
+            return None
+        if len(text) > 512 or any(char in text for char in "\r\n"):
+            raise WebCrawlError("unsafe HTTP cache validator")
+        return text
+
+    @staticmethod
+    def _read_json(path: Path) -> dict[str, Any]:
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise WebCrawlError(f"invalid crawler metadata: {path}") from exc
+        if not isinstance(payload, dict):
+            raise WebCrawlError(f"crawler metadata must be an object: {path}")
+        return payload
+
+    @staticmethod
+    def _validate_metadata(payload: Mapping[str, Any], *, raw_path: Path) -> None:
+        if payload.get("schema_version") != WEB_RAW_METADATA_SCHEMA_VERSION:
+            raise WebCrawlError("unsupported raw web-page metadata schema")
+        content_sha256 = str(payload.get("content_sha256", ""))
+        if _SHA256_PATTERN.fullmatch(content_sha256) is None:
+            raise WebCrawlError("raw web-page metadata has an invalid SHA-256")
+        if _SHA256_PATTERN.fullmatch(str(payload.get("source_url_sha256", ""))) is None:
+            raise WebCrawlError("raw web-page metadata has an invalid URL SHA-256")
+        if not raw_path.is_file():
+            raise WebCrawlError("raw web-page file is missing")
+        if raw_path.stat().st_size != int(payload.get("byte_count", -1)):
+            raise WebCrawlError("raw web-page byte count does not match metadata")
+        if sha256_bytes(raw_path.read_bytes()) != content_sha256:
+            raise WebCrawlError("raw web-page content hash does not match metadata")
+
+    @staticmethod
+    def _write_bytes_atomic(path: Path, payload: bytes) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary_path: Path | None = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="wb",
+                dir=path.parent,
+                prefix=".write.",
+                suffix=".tmp",
+                delete=False,
+            ) as handle:
+                handle.write(payload)
+                temporary_path = Path(handle.name)
+            os.replace(temporary_path, path)
+            temporary_path = None
+        finally:
+            if temporary_path is not None and temporary_path.exists():
+                temporary_path.unlink()
+
+    @staticmethod
+    def _write_json_atomic(path: Path, payload: Mapping[str, Any]) -> None:
+        body = (
+            json.dumps(
+                payload,
+                allow_nan=False,
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            ).encode("utf-8")
+            + b"\n"
+        )
+        WebProductCrawlerAdapter._write_bytes_atomic(path, body)
+
+
+__all__ = [
+    "WEB_PRODUCT_PARSER_VERSION",
+    "CrawledPage",
+    "WebAcquisitionAuthority",
+    "WebCrawlError",
+    "WebCrawlLimitError",
+    "WebCrawlPolicyError",
+    "WebCrawlResult",
+    "WebCrawlSecurityError",
+    "WebProductCrawlerAdapter",
+    "WebSourcePolicy",
+    "WebUsageScope",
+    "calculate_canonical_terms_sha256",
+]
