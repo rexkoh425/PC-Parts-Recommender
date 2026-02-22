@@ -1,0 +1,55 @@
+{
+  "actual_device": "cpu",
+  "artifact_format_version": 2,
+  "calibrator": {
+    "coefficient": 0.8320563730914637,
+    "intercept": -1.5522880332841784,
+    "is_fitted": true,
+    "type": "platt"
+  },
+  "fallback_reason": "LightGBMError: GPU Tree Learner was not enabled in this build.\nPlease recompile with CMake option -DUSE_GPU=1",
+  "feature_names": [
+    "exact_mpn_match",
+    "exact_gtin_match",
+    "brand_match",
+    "category_match",
+    "model_token_overlap",
+    "character_similarity",
+    "numeric_token_agreement",
+    "capacity_agreement",
+    "form_factor_agreement",
+    "specification_overlap",
+    "embedding_cosine_similarity",
+    "relative_price_difference",
+    "price_missing",
+    "numeric_conflict",
+    "mpn_mismatch",
+    "gtin_mismatch",
+    "brand_mismatch",
+    "numeric_conflict_count",
+    "numeric_conflict_severity",
+    "capacity_conflict",
+    "module_count_conflict",
+    "power_conflict",
+    "radiator_conflict"
+  ],
+  "is_fitted": true,
+  "model_file": "model.txt",
+  "model_type": "lightgbm_entity_resolver",
+  "parameters": {
+    "colsample_bytree": 1.0,
+    "learning_rate": 0.04,
+    "max_depth": 4,
+    "min_child_samples": 8,
+    "n_estimators": 350,
+    "num_leaves": 7,
+    "scale_pos_weight": 32.16216216216216,
+    "subsample": 1.0
+  },
+  "random_state": 20260722,
+  "requested_device": "auto",
+  "thresholds": {
+    "auto_match": 0.98,
+    "manual_review": 0.8
+  }
+}
