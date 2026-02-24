@@ -23,7 +23,7 @@ from pc_build_recommender.domain.models import PriceSample, RetailerOffering
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
     ParseResult,
-    FetchedSnapshot,
+    RawSnapshot,
     rejected_record,
     sha256_bytes,
     sha256_file,
@@ -146,7 +146,7 @@ class BizgramControlledPDFAdapter:
     def __init__(self, *, raw_root: str | Path) -> None:
         self.raw_root = Path(raw_root)
 
-    def fetch(self, *, pdf_path: str | Path) -> FetchedSnapshot:
+    def fetch(self, *, pdf_path: str | Path) -> RawSnapshot:
         """Snapshot a reviewed local PDF; this method performs no network request."""
 
         source_path = Path(pdf_path).resolve()
@@ -180,7 +180,7 @@ class BizgramControlledPDFAdapter:
             raise ValueError("snapshotted Bizgram PDF fingerprint changed during import")
         return snapshot
 
-    def parse(self, snapshot: FetchedSnapshot) -> ParseResult:
+    def parse(self, snapshot: RawSnapshot) -> ParseResult:
         self._validate_snapshot(snapshot)
         batch = ParseResult(
             source_name=snapshot.source_name,
@@ -320,7 +320,7 @@ class BizgramControlledPDFAdapter:
         return batch
 
     @staticmethod
-    def _validate_snapshot(snapshot: FetchedSnapshot) -> None:
+    def _validate_snapshot(snapshot: RawSnapshot) -> None:
         if snapshot.source_name != "bizgram_controlled_pdf":
             raise ValueError("snapshot source is not the controlled Bizgram adapter")
         if snapshot.source_url != BIZGRAM_SOURCE_URL:
@@ -402,7 +402,7 @@ class BizgramControlledPDFAdapter:
     def _listing_record(
         self,
         *,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
         source_record_id: str,
         title: str,
         price: Decimal,

@@ -19,7 +19,7 @@ from typing import Any, Literal, Protocol
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION
 from pipelines.sources.base import (
     ParseResult,
-    FetchedSnapshot,
+    RawSnapshot,
     SnapshotError,
     fetch_http_snapshot,
     rejected_record,
@@ -169,7 +169,7 @@ def _iter_binary_lines(
 
 def _identifier_record(
     *,
-    snapshot: FetchedSnapshot,
+    snapshot: RawSnapshot,
     line_number: int,
     raw_line: bytes,
     identifier_type: Literal["vendor", "device", "subsystem"],
@@ -456,7 +456,7 @@ class PCIIDRepositoryAdapter:
         snapshot_path: str | Path | None = None,
         snapshot_format: Literal["gzip", "plain"] = "gzip",
         expected_sha256: str | None = None,
-    ) -> FetchedSnapshot:
+    ) -> RawSnapshot:
         if snapshot_format not in {"gzip", "plain"}:
             raise ValueError("snapshot_format must be 'gzip' or 'plain'")
         if expected_sha256 is not None and _SHA256.fullmatch(expected_sha256) is None:
@@ -508,7 +508,7 @@ class PCIIDRepositoryAdapter:
 
     def parse(
         self,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
         *,
         max_records: int = DEFAULT_RECORD_LIMIT,
         maximum_uncompressed_bytes: int = DEFAULT_MAXIMUM_UNCOMPRESSED_BYTES,

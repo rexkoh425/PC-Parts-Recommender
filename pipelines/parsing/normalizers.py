@@ -32,7 +32,7 @@ from pc_build_recommender.domain.enums import (
     StorageInterface,
 )
 from pc_build_recommender.domain.models import MasterProduct, SourceProvenance
-from pipelines.sources.base import FetchedSnapshot, sha256_bytes
+from pipelines.sources.base import RawSnapshot, sha256_bytes
 
 NORMALISED_RECORD_SCHEMA_VERSION = "pc-build-recommender.normalised-record.v1"
 
@@ -456,7 +456,7 @@ def normalise_buildcores_product(
     source_category: str,
     source_record_path: str,
     raw_record_bytes: bytes,
-    snapshot: FetchedSnapshot,
+    snapshot: RawSnapshot,
     commit: str,
 ) -> dict[str, Any]:
     """Map one BuildCores record and validate it through ``MasterProduct``."""

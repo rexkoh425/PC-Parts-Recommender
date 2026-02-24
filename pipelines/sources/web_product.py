@@ -35,7 +35,7 @@ import httpx
 from pc_build_recommender.domain.enums import ComponentKind, ListingCondition, StockState
 from pc_build_recommender.domain.models import PriceSample, RetailerOffering
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
-from pipelines.sources.base import ParseResult, FetchedSnapshot, rejected_record, sha256_bytes
+from pipelines.sources.base import ParseResult, RawSnapshot, rejected_record, sha256_bytes
 from pipelines.sources.rights import DataUse, DataUseRights
 
 WEB_PRODUCT_PARSER_VERSION = "schemaorg-product-offer-v3"
@@ -687,7 +687,7 @@ class WebSourcePolicy:
 class CrawledPage:
     requested_url: str
     final_url: str
-    snapshot: FetchedSnapshot
+    snapshot: RawSnapshot
     etag: str | None
     last_modified: str | None
     not_modified: bool
@@ -1412,7 +1412,7 @@ class WebProductCrawlerAdapter:
             "raw_file": raw_path.name,
         }
         self._write_json_atomic(metadata_path, metadata)
-        snapshot = FetchedSnapshot(
+        snapshot = RawSnapshot(
             source_name=self.policy.source_name,
             source_url=requested_url,
             source_type="retailer",

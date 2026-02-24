@@ -35,7 +35,7 @@ from pipelines.retention.web import (  # noqa: E402
     write_web_processed_retention_receipt,
 )
 from pipelines.sources.awin_feed import AwinLocalFeedAdapter  # noqa: E402
-from pipelines.sources.base import ParseResult, FetchedSnapshot, sha256_file  # noqa: E402
+from pipelines.sources.base import ParseResult, RawSnapshot, sha256_file  # noqa: E402
 from pipelines.sources.bizgram_pdf import BizgramControlledPDFAdapter  # noqa: E402
 from pipelines.sources.blender import BlenderOpenDataAdapter  # noqa: E402
 from pipelines.sources.buildcores import BuildCoresOpenDBAdapter  # noqa: E402
@@ -255,7 +255,7 @@ def _parser() -> argparse.ArgumentParser:
 def _write_and_report(
     *,
     batch: ParseResult,
-    snapshot: FetchedSnapshot,
+    snapshot: RawSnapshot,
     processed_root: Path,
     maximum_rejection_rate: float,
     variant: str | None,
@@ -285,7 +285,7 @@ def _write_and_report(
 
 def _summary(
     *,
-    snapshot: FetchedSnapshot,
+    snapshot: RawSnapshot,
     batch: ParseResult,
     artifacts: ProcessedArtifacts,
     quality_status: str,

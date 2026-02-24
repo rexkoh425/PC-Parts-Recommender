@@ -28,7 +28,7 @@ from pc_build_recommender.entity_resolution import (
     LabelledPair,
 )
 from pipelines.sources.base import (
-    FetchedSnapshot,
+    RawSnapshot,
     SnapshotError,
     fetch_http_snapshot,
     sha256_file,
@@ -234,7 +234,7 @@ class ZenodoEntityMatchingDn7Adapter:
     def __init__(self, *, raw_root: str | Path) -> None:
         self.raw_root = Path(raw_root)
 
-    def fetch(self, *, archive_path: str | Path | None = None) -> FetchedSnapshot:
+    def fetch(self, *, archive_path: str | Path | None = None) -> RawSnapshot:
         if archive_path is None:
             return fetch_http_snapshot(
                 source_name="zenodo_er_dn7",
@@ -265,7 +265,7 @@ class ZenodoEntityMatchingDn7Adapter:
             )
         return snapshot
 
-    def parse(self, snapshot: FetchedSnapshot) -> EntityMatchingSourceDataset:
+    def parse(self, snapshot: RawSnapshot) -> EntityMatchingSourceDataset:
         if snapshot.content_sha256 != ZENODO_DN7_SHA256:
             raise SnapshotError("refusing to parse an unpinned Dn7 snapshot")
         return _parse_archive(snapshot.path)
@@ -482,7 +482,7 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 def materialize_transfer_pairs(
     dataset: EntityMatchingSourceDataset,
-    snapshot: FetchedSnapshot,
+    snapshot: RawSnapshot,
     *,
     processed_root: str | Path,
     seed: int = 20260722,

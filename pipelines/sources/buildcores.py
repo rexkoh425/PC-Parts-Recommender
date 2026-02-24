@@ -10,7 +10,7 @@ from pathlib import Path, PurePosixPath
 from pipelines.parsing.normalizers import BUILDCORES_CATEGORY_MAP, normalise_buildcores_product
 from pipelines.sources.base import (
     ParseResult,
-    FetchedSnapshot,
+    RawSnapshot,
     fetch_http_snapshot,
     rejected_record,
     snapshot_local_file,
@@ -36,7 +36,7 @@ class BuildCoresOpenDBAdapter:
     def __init__(self, *, raw_root: str | Path) -> None:
         self.raw_root = Path(raw_root)
 
-    def fetch(self, *, archive_path: str | Path | None = None) -> FetchedSnapshot:
+    def fetch(self, *, archive_path: str | Path | None = None) -> RawSnapshot:
         if archive_path is not None:
             return snapshot_local_file(
                 source_name="buildcores_open_db",
@@ -62,7 +62,7 @@ class BuildCoresOpenDBAdapter:
 
     def parse(
         self,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
         *,
         categories: Sequence[str] = DEFAULT_CATEGORIES,
         per_category_limit: int | None = 100,

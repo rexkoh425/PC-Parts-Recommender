@@ -61,7 +61,7 @@ def _normalise_suffix(suffix: str) -> str:
 
 
 @dataclass(frozen=True, slots=True)
-class FetchedSnapshot:
+class RawSnapshot:
     """Immutable metadata for one content-addressed raw source response."""
 
     source_name: str
@@ -144,12 +144,12 @@ def _write_json_atomic(path: Path, payload: Mapping[str, object]) -> None:
             temporary_path.unlink()
 
 
-def _snapshot_from_metadata(*, metadata_path: Path, raw_path: Path, reused: bool) -> FetchedSnapshot:
+def _snapshot_from_metadata(*, metadata_path: Path, raw_path: Path, reused: bool) -> RawSnapshot:
     with metadata_path.open("r", encoding="utf-8") as handle:
         payload = json.load(handle)
     if payload.get("schema_version") != RAW_SNAPSHOT_SCHEMA_VERSION:
         raise SnapshotError(f"unsupported raw snapshot metadata: {metadata_path}")
-    return FetchedSnapshot(
+    return RawSnapshot(
         source_name=str(payload["source_name"]),
         source_url=str(payload["source_url"]),
         source_type=str(payload["source_type"]),
@@ -179,7 +179,7 @@ def _finish_snapshot(
     licence_or_access_note: str,
     suffix: str,
     retrieved_at: datetime,
-) -> FetchedSnapshot:
+) -> RawSnapshot:
     source_root = raw_root / source_name
     raw_path = source_root / f"{content_sha256}{suffix}"
     metadata_path = source_root / f"{content_sha256}{suffix}.metadata.json"
@@ -191,7 +191,7 @@ def _finish_snapshot(
     else:
         os.replace(temporary_path, raw_path)
 
-    snapshot = FetchedSnapshot(
+    snapshot = RawSnapshot(
         source_name=source_name,
         source_url=source_url,
         source_type=source_type,
@@ -229,7 +229,7 @@ def fetch_http_snapshot(
     maximum_bytes: int | None = None,
     timeout_seconds: float = 180.0,
     headers: Mapping[str, str] | None = None,
-) -> FetchedSnapshot:
+) -> RawSnapshot:
     """Stream an HTTP response into immutable content-addressed storage."""
 
     _validate_source_name(source_name)
@@ -322,7 +322,7 @@ def snapshot_local_file(
     media_type: str = "application/octet-stream",
     expected_sha256: str | None = None,
     maximum_bytes: int | None = None,
-) -> FetchedSnapshot:
+) -> RawSnapshot:
     """Copy a controlled local input into the same immutable raw-snapshot contract."""
 
     _validate_source_name(source_name)
