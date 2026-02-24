@@ -194,4 +194,72 @@ confidence intervals, and a self-hash.
 
 Every rule declares required fields and returns one of four states. Absence is UNKNOWN. Examples:
 
-<!-- TODO: sections below still to be written. -->
+- exact CPU/motherboard socket plus chipset/BIOS support;
+- DDR generation, total capacity, and module count;
+- motherboard/case and PSU/case form factors;
+- GPU length/slot width and cooler height/radiator clearance;
+- CPU cooler mounting sockets;
+- PSU GPU/EPS connectors and estimated-load headroom; and
+- storage interface and available motherboard slots.
+
+Power is a configurable estimate of CPU peak, GPU board power, motherboard, memory, storage,
+cooling, and fans, followed by 20% to 30% headroom. It is not a measured wall-power guarantee.
+
+## Version and cache contract
+
+Online logs and responses carry request/query ID, data version, ranking-model version,
+compatibility-rule version, candidate counts, filter counts, solver status, warnings, and elapsed
+time. Cache keys include all versions that can change a result. Updating one of those versions
+invalidates older recommendation-cache entries; saved builds remain historical records and can be
+explicitly re-run at current versions.
+
+## Failure behavior
+
+| Failure | Product behavior |
+| --- | --- |
+| Retailer unavailable | Use timestamped recent data only within freshness policy; disclose staleness. |
+| Vector model unavailable | Fall back to release-bound BM25 and structured retrieval; report retrieval mode. |
+| Ranker unavailable or incompatible | Use a deterministic documented baseline; never invent a model version. |
+| Required compatibility data absent | Return UNKNOWN or infeasible explanation. |
+| Solver timeout with incumbent | Return only independently revalidated feasible incumbents and the status. |
+| No feasible build | Return zero builds plus specific binding constraints and possible relaxations. |
+| Review evidence unavailable | Omit the review claim; core recommendation continues. |
+
+## Security, privacy, and source compliance
+
+Only permitted APIs, feeds, documents, or controlled imports may be acquired. Raw snapshots retain
+access notes and are not automatically redistributed. Credentials are injected through the
+environment and never committed. PostgreSQL's published port is for local development; a public
+deployment must use a private network, rotated secrets, TLS at ingress, least-privilege database
+roles, request limits, and restrictive CORS.
+
+Interaction logs use anonymous session IDs unless a user account exists. Avoid logging natural
+language, URLs containing tokens, or other personal data. Public build links expose only an
+allow-listed build representation.
+
+## Local and GPU operation
+
+`scripts/dev.ps1 -Build -Detach` starts the default stack. Add `-WithDagster` and `-WithMlflow`
+for the optional services. `scripts/test.ps1` uses the existing environment by default.
+
+The lockfile intentionally resolves the standard CPU PyTorch wheel. On the Windows host,
+`uv sync --locked --extra embeddings` installs the semantic-indexing dependencies, after which
+`scripts/setup-gpu.ps1` replaces the standard wheel with `torch==2.13.0+cu130` from the official
+PyTorch index and verifies `torch.cuda`, the device name, and compute capability. This CUDA wheel
+has been verified on the local RTX 5070 Ti. Running `uv sync` later restores the locked CPU wheel,
+so the GPU setup script must be rerun before host GPU training. This override is operational state,
+not a lockfile change. The production API image installs the `serving` extra so it can load the
+pinned local encoder on CPU while forcing Hugging Face/Transformers offline mode. Dagster remains
+separately optional. The model tree is a mounted release artifact, never fetched at API startup.
+
+LightGBM can use the GPU only when the installed build supports that device mode; training code
+must detect support and record the actual device. Sentence-Transformers should select CUDA only
+after `torch.cuda.is_available()` succeeds. Device choice does not relax grouped-split or frozen-
+test-set requirements.
+
+## Scale path
+
+At the portfolio target of 3,000 products and 10,000 listings, PostgreSQL, bounded retrieval, and
+one API process can remain adequate. Scale changes require evidence: query plans, connection
+saturation, p95/p99 latency, memory, job duration, and failure recovery. Replicas, queues, or
+service extraction are later options, not baseline architecture.
