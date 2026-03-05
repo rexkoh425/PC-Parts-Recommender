@@ -5,22 +5,59 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pc-build-recommender"
 version = "0.1.0"
-description = "Component retrieval and build recommendation for desktop PCs."
+description = "Evidence-backed PC component retrieval, ranking, compatibility, and build optimisation."
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 license = { text = "MIT" }
 dependencies = [
+  "alembic>=1.14,<2",
+  "cryptography>=44,<49",
+  "fastapi>=0.115,<1",
+  "httpcore>=1.0.9,<1.1",
+  "httpx>=0.28.1,<0.29",
+  "lightgbm>=4.5,<5",
   "numpy>=2.0,<3",
   "orjson>=3.10,<4",
+  "ortools>=9.12,<10",
   "pandas>=2.2,<4",
+  "pdfplumber>=0.11,<1",
+  "pgvector>=0.3,<1",
+  "psycopg[binary]>=3.2,<4",
   "pydantic>=2.10,<3",
   "pydantic-settings>=2.7,<3",
+  "pypdf>=5,<7",
+  "python-multipart>=0.0.20,<1",
+  "rank-bm25>=0.2.2,<1",
+  "scikit-learn>=1.6,<2",
+  "scipy>=1.14,<2",
+  "sqlalchemy>=2.0.36,<3",
+  "uvicorn[standard]>=0.34,<1",
+]
+
+[project.optional-dependencies]
+embeddings = [
+  "sentence-transformers>=3.4,<6",
+]
+serving = [
+  "sentence-transformers>=3.4,<6",
+]
+pipeline = [
+  "dagster>=1.9,<2",
+  "dagster-postgres>=0.25,<1",
+  "dagster-webserver>=1.9,<2",
+  "pyyaml>=6,<7",
+]
+mlops = [
+  "mlflow>=2.19,<4",
 ]
 
 [dependency-groups]
 dev = [
+  "hypothesis>=6.124,<7",
   "mypy>=1.14,<2",
   "pytest>=8.3,<10",
+  "pytest-asyncio>=0.25,<2",
+  "pytest-cov>=6,<8",
   "ruff>=0.9,<1",
 ]
 
@@ -30,19 +67,31 @@ package-dir = {"" = "packages/core/src"}
 [tool.setuptools.packages.find]
 where = ["packages/core/src"]
 
+[tool.setuptools.package-data]
+pc_build_recommender = ["py.typed"]
+
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
 testpaths = ["tests"]
 pythonpath = ["packages/core/src", "."]
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+  "integration: requires service or database integration",
+  "model: trains or evaluates a model",
+  "slow: takes longer than a unit test",
+]
 
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-src = ["packages/core/src", "tests"]
+src = ["packages/core/src", "services", "pipelines", "scripts", "tests"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["B008"]
 
 [tool.mypy]
 python_version = "3.12"
+plugins = ["pydantic.mypy"]
 strict = true
+warn_unused_configs = true
