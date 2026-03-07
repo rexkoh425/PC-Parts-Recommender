@@ -1,9 +1,0 @@
-{
-  "version": "v0",
-  "note": "Hand-written scratch queries. Superseded by the v1/v2 query sets.",
-  "queries": [
-    {"query_id": "q1", "text": "budget 1080p gaming build"},
-    {"query_id": "q2", "text": "quiet workstation for video editing"},
-    {"query_id": "q3", "text": "small form factor case with good airflow"}
-  ]
-}
