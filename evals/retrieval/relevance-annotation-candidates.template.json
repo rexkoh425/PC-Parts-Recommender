@@ -1,0 +1,94 @@
+{
+  "schema_version": "pc-build-recommender.relevance-annotation-candidates.v1",
+  "dataset_name": "replace-with-rights-cleared-candidate-capture",
+  "dataset_version": "replace-with-immutable-capture-version",
+  "rubric_version": "relevance-rubric-v1",
+  "data_version": "replace-with-catalogue-data-version",
+  "source_policy": {
+    "training_eligible": true,
+    "published_metrics_eligible": true,
+    "model_serving_eligible": false,
+    "scope_note": "Replace with the specific source-rights and permitted-use rationale."
+  },
+  "queries": [
+    {
+      "query_id": "replace-query-ai-001",
+      "query_group_id": "replace-intent-ai",
+      "category": "gpu",
+      "query_text": "GPU for local AI with at least 16 GB of memory",
+      "structured_constraints": {
+        "minimum_gpu_vram_gb": 16
+      },
+      "candidates": [
+        {
+          "product_id": "replace-canonical-gpu-id-001",
+          "evidence_payload": {
+            "canonical_name": "Replace with a rights-cleared product display name",
+            "vram_gb": 16,
+            "power_w": 250
+          },
+          "provenance": {
+            "source_name": "Replace with source name",
+            "source_url": "https://replace-with-source.example/product",
+            "license_or_access_note": "Replace with permitted-use evidence.",
+            "retrieved_at": "2026-07-23T00:00:00Z"
+          },
+          "is_synthetic": false
+        }
+      ],
+      "is_synthetic": false
+    },
+    {
+      "query_id": "replace-query-gaming-001",
+      "query_group_id": "replace-intent-gaming",
+      "category": "gpu",
+      "query_text": "Quiet GPU for 1440p gaming",
+      "structured_constraints": {
+        "noise": "low"
+      },
+      "candidates": [
+        {
+          "product_id": "replace-canonical-gpu-id-002",
+          "evidence_payload": {
+            "canonical_name": "Replace with a rights-cleared product display name",
+            "vram_gb": 12
+          },
+          "provenance": {
+            "source_name": "Replace with source name",
+            "source_url": "https://replace-with-source.example/product",
+            "license_or_access_note": "Replace with permitted-use evidence.",
+            "retrieved_at": "2026-07-23T00:00:00Z"
+          },
+          "is_synthetic": false
+        }
+      ],
+      "is_synthetic": false
+    },
+    {
+      "query_id": "replace-query-development-001",
+      "query_group_id": "replace-intent-development",
+      "category": "cpu",
+      "query_text": "CPU for software development and compilation",
+      "structured_constraints": {
+        "minimum_memory_gb": 32
+      },
+      "candidates": [
+        {
+          "product_id": "replace-canonical-cpu-id-001",
+          "evidence_payload": {
+            "canonical_name": "Replace with a rights-cleared product display name",
+            "core_count": 12
+          },
+          "provenance": {
+            "source_name": "Replace with source name",
+            "source_url": "https://replace-with-source.example/product",
+            "license_or_access_note": "Replace with permitted-use evidence.",
+            "retrieved_at": "2026-07-23T00:00:00Z"
+          },
+          "is_synthetic": false
+        }
+      ],
+      "is_synthetic": false
+    }
+  ]
+}

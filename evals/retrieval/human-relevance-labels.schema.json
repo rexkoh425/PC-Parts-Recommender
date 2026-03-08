@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc-build-recommender.human-relevance-labels.v1",
+  "title": "PC Build Recommender human relevance labels",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_name",
+    "dataset_version",
+    "label_source",
+    "queries",
+    "judgments",
+    "adjudications"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "pc-build-recommender.human-relevance-labels.v1"
+    },
+    "dataset_name": {"type": "string", "minLength": 1},
+    "dataset_version": {"type": "string", "minLength": 1},
+    "label_source": {"const": "human"},
+    "queries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "query_id",
+          "query_group_id",
+          "query_text",
+          "category",
+          "candidate_ids"
+        ],
+        "properties": {
+          "query_id": {"type": "string", "minLength": 1},
+          "query_group_id": {"type": "string", "minLength": 1},
+          "query_text": {"type": "string", "minLength": 1},
+          "category": {"type": "string", "minLength": 1},
+          "candidate_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "judgments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "query_id",
+          "product_id",
+          "reviewer_id",
+          "grade",
+          "rationale",
+          "reviewed_at_utc",
+          "is_synthetic"
+        ],
+        "properties": {
+          "query_id": {"type": "string", "minLength": 1},
+          "product_id": {"type": "string", "minLength": 1},
+          "reviewer_id": {"type": "string", "minLength": 1},
+          "grade": {"type": "integer", "minimum": 0, "maximum": 4},
+          "rationale": {"type": "string", "minLength": 1},
+          "reviewed_at_utc": {"type": "string", "format": "date-time"},
+          "is_synthetic": {"type": "boolean"}
+        }
+      }
+    },
+    "adjudications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "query_id",
+          "product_id",
+          "adjudicator_id",
+          "grade",
+          "rationale",
+          "adjudicated_at_utc"
+        ],
+        "properties": {
+          "query_id": {"type": "string", "minLength": 1},
+          "product_id": {"type": "string", "minLength": 1},
+          "adjudicator_id": {"type": "string", "minLength": 1},
+          "grade": {"type": "integer", "minimum": 0, "maximum": 4},
+          "rationale": {"type": "string", "minLength": 1},
+          "adjudicated_at_utc": {"type": "string", "format": "date-time"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "schema_version": "pc-build-recommender.relevance-annotation-query-set.v1",
+  "dataset_name": "buildcores-portfolio-human-relevance-collection",
+  "dataset_version": "author-curated-queries-v2",
+  "rubric_version": "relevance-rubric-v1",
+  "data_version": "buildcores-portfolio-3000-2026-07-22",
+  "source_policy": {
+    "training_eligible": true,
+    "published_metrics_eligible": true,
+    "model_serving_eligible": true,
+    "serving_attribution_notice": "Contains information from BuildCores OpenDB, made available under the ODC Attribution License v1.0: https://opendatacommons.org/licenses/by/1-0/",
+    "scope_note": "BuildCores OpenDB ODC-By 1.0 product evidence is used for human relevance collection. These author-curated requests contain no relevance labels; only a later independently reviewed, adjudicated, and frozen release may support a derived served ranker. The exact serving attribution notice must remain visible on each public output that uses this catalogue evidence."
+  },
+  "queries": [
+    {
+      "query_id": "cpu-development-multicore-v1",
+      "query_group_id": "intent-cpu-development-multicore-v1",
+      "category": "cpu",
+      "query_text": "CPU for software development with strong multicore compilation performance",
+      "structured_constraints": {
+        "workload": "software_development",
+        "minimum_core_count": 8
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "cpu-efficient-integrated-graphics-v1",
+      "query_group_id": "intent-cpu-efficient-integrated-graphics-v1",
+      "category": "cpu",
+      "query_text": "power efficient desktop CPU with integrated graphics for a quiet development PC",
+      "structured_constraints": {
+        "integrated_graphics_required": true,
+        "noise": "low",
+        "power_efficiency": "high"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "gpu-local-ai-16gb-v1",
+      "query_group_id": "intent-gpu-local-ai-16gb-v1",
+      "category": "gpu",
+      "query_text": "GPU for local AI inference with at least 16 GB of video memory",
+      "structured_constraints": {
+        "workload": "local_ai",
+        "minimum_gpu_vram_gb": 16
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "gpu-1440p-value-v1",
+      "query_group_id": "intent-gpu-1440p-value-v1",
+      "category": "gpu",
+      "query_text": "best value graphics card for 1440p gaming",
+      "structured_constraints": {
+        "workload": "gaming_1440p",
+        "preference": "value"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "motherboard-am5-upgrade-v1",
+      "query_group_id": "intent-motherboard-am5-upgrade-v1",
+      "category": "motherboard",
+      "query_text": "upgradeable AM5 motherboard with DDR5 memory and multiple M.2 slots",
+      "structured_constraints": {
+        "socket": "AM5",
+        "memory_type": "ddr5",
+        "upgradeability": "high"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "motherboard-compact-wifi-v1",
+      "query_group_id": "intent-motherboard-compact-wifi-v1",
+      "category": "motherboard",
+      "query_text": "compact motherboard with built in Wi-Fi for a small PC build",
+      "structured_constraints": {
+        "wifi_required": true,
+        "case_size": "small_form_factor"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "memory-32gb-ddr5-v1",
+      "query_group_id": "intent-memory-32gb-ddr5-v1",
+      "category": "memory",
+      "query_text": "32 GB DDR5 dual module memory kit for gaming and development",
+      "structured_constraints": {
+        "minimum_memory_gb": 32,
+        "memory_type": "ddr5"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "memory-64gb-creator-v1",
+      "query_group_id": "intent-memory-64gb-creator-v1",
+      "category": "memory",
+      "query_text": "64 GB memory kit for content creation and local development workloads",
+      "structured_constraints": {
+        "minimum_memory_gb": 64,
+        "workload": "content_creation"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "storage-2tb-nvme-v1",
+      "query_group_id": "intent-storage-2tb-nvme-v1",
+      "category": "storage",
+      "query_text": "2 TB NVMe SSD for a responsive development and gaming PC",
+      "structured_constraints": {
+        "minimum_storage_gb": 2000,
+        "interface": "nvme"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "storage-creator-endurance-v1",
+      "query_group_id": "intent-storage-creator-endurance-v1",
+      "category": "storage",
+      "query_text": "high endurance SSD for content creation projects and frequent writes",
+      "structured_constraints": {
+        "workload": "content_creation",
+        "preference": "endurance"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "psu-efficient-modular-v1",
+      "query_group_id": "intent-psu-efficient-modular-v1",
+      "category": "power_supply",
+      "query_text": "efficient modular power supply for a modern gaming PC",
+      "structured_constraints": {
+        "power_efficiency": "high",
+        "modular_required": true
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "psu-gpu-upgrade-v1",
+      "query_group_id": "intent-psu-gpu-upgrade-v1",
+      "category": "power_supply",
+      "query_text": "power supply with enough headroom for a future high performance graphics card upgrade",
+      "structured_constraints": {
+        "upgradeability": "high",
+        "workload": "gaming_1440p"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "cooler-quiet-air-v1",
+      "query_group_id": "intent-cooler-quiet-air-v1",
+      "category": "cooler",
+      "query_text": "quiet air CPU cooler for a low noise workstation",
+      "structured_constraints": {
+        "noise": "low",
+        "cooler_type": "air"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "cooler-performance-v1",
+      "query_group_id": "intent-cooler-performance-v1",
+      "category": "cooler",
+      "query_text": "high capacity CPU cooler for sustained rendering workloads",
+      "structured_constraints": {
+        "workload": "content_creation",
+        "preference": "performance"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "case-compact-build-v1",
+      "query_group_id": "intent-case-compact-build-v1",
+      "category": "case",
+      "query_text": "compact PC case for a small form factor desktop build",
+      "structured_constraints": {
+        "case_size": "small_form_factor"
+      },
+      "is_synthetic": false
+    },
+    {
+      "query_id": "case-airflow-gaming-v1",
+      "query_group_id": "intent-case-airflow-gaming-v1",
+      "category": "case",
+      "query_text": "mid tower case with strong airflow for a gaming graphics card",
+      "structured_constraints": {
+        "case_size": "mid_tower",
+        "preference": "airflow"
+      },
+      "is_synthetic": false
+    }
+  ]
+}
