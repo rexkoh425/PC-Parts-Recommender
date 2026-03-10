@@ -1,0 +1,60 @@
+{
+  "artifacts": {
+    "embeddings": {
+      "bytes": 39423104,
+      "path": "embeddings.npy",
+      "sha256": "e8d66fefcf56624a063441296bac297d69920aa26a428d6e99db7ba61de1d123"
+    },
+    "id_map": {
+      "bytes": 5065437,
+      "path": "ids.jsonl",
+      "sha256": "776c9a389614a78d8cf243406d4251a7578a46a396296a4089e08232a35a8916"
+    }
+  },
+  "build": {
+    "encoded_count": 25666,
+    "incremental": false,
+    "reuse_source": null,
+    "reused_count": 0
+  },
+  "content_hash": "b7729dfce26aa90e27dab35ea9f1fc9a6f41c121db1f4fa4cfb6fca81947445b",
+  "created_at_utc": "2026-07-22T05:55:13.842174+00:00",
+  "data_version": "buildcores-full-25666-8c738c513661",
+  "encoder": {
+    "batch_size": 128,
+    "dimension": 384,
+    "fingerprint": "455e4bf8f5ebbca36ee5cc66a419c69346177f4cb77aca6be5e03d413313541c",
+    "kind": "sentence_transformer",
+    "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+    "model_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "normalised": true,
+    "requested_device": "cuda",
+    "resolved_device": "cuda"
+  },
+  "index_version": "product-embeddings-v3-full-pinned",
+  "matrix": {
+    "dtype": "float32",
+    "l2_normalised": true,
+    "shape": [
+      25666,
+      384
+    ]
+  },
+  "product_count": 25666,
+  "schema_version": "product-embedding-index-manifest-v1",
+  "source": {
+    "file_count": 1,
+    "files": [
+      {
+        "bytes": 55056373,
+        "path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\buildcores_open_db\\f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f\\full\\records.jsonl",
+        "relative_path": "records.jsonl",
+        "sha256": "8c738c5136615080ac29ced074726f97cab473c5a45eafdf19c26504aa624ce2"
+      }
+    ],
+    "input_path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\buildcores_open_db\\f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f\\full\\records.jsonl",
+    "limit": null,
+    "recent_first": false
+  },
+  "text_builder_version": "product-embedding-text-v1"
+}
