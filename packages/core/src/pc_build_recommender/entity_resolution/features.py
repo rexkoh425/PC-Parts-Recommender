@@ -109,4 +109,85 @@ def _capacity_values(text: str) -> set[float]:
         return totals
     return {fact.value for fact in facts if fact.kind == "capacity"}
 
+
+def _capacity_agreement(listing: ListingRow, product: CanonicalProductRecord) -> float:
+    aliases = (
+        "capacity_gb",
+        "memory_capacity_gb",
+        "storage_capacity_gb",
+        "total_capacity_gb",
+        "vram_gb",
+        "vram_capacity_gb",
+    )
+    listing_value = _attribute_value(listing.attributes, aliases)
+    product_value = _attribute_value(product.attributes, aliases)
+    if listing_value is not None and product_value is not None:
+        return float(listing_value == product_value)
+    listing_values = _capacity_values(listing.text)
+    product_values = _capacity_values(product.text)
+    if not listing_values or not product_values:
+        return 0.5
+    return float(bool(listing_values & product_values))
+
+
+def _form_factor_agreement(listing: ListingRow, product: CanonicalProductRecord) -> float:
+    aliases = ("form_factor", "motherboard_form_factor", "psu_form_factor", "storage_form_factor")
+    listing_value = _attribute_value(listing.attributes, aliases)
+    product_value = _attribute_value(product.attributes, aliases)
+    if listing_value is None or product_value is None:
+        return 0.5
+    return float(listing_value == product_value)
+
+
+def _cosine(left: tuple[float, ...] | None, right: tuple[float, ...] | None) -> float:
+    if left is None or right is None or len(left) != len(right):
+        return 0.0
+    left_norm = sqrt(sum(value * value for value in left))
+    right_norm = sqrt(sum(value * value for value in right))
+    if left_norm == 0.0 or right_norm == 0.0:
+        return 0.0
+    return sum(a * b for a, b in zip(left, right, strict=True)) / (left_norm * right_norm)
+
+
+def _relative_price_difference(listing_price: float | None, product_price: float | None) -> float:
+    if listing_price is None or product_price is None:
+        return 0.0
+    denominator = max(abs(listing_price), abs(product_price), 1.0)
+    return min(abs(listing_price - product_price) / denominator, 5.0)
+
+
+@dataclass(frozen=True, slots=True)
+class PairFeatures:
+    """Named pairwise features with a stable vector contract."""
+
+    exact_mpn_match: float
+    exact_gtin_match: float
+    brand_match: float
+    category_match: float
+    model_token_overlap: float
+    character_similarity: float
+    numeric_token_agreement: float
+    capacity_agreement: float
+    form_factor_agreement: float
+    specification_overlap: float
+    embedding_cosine_similarity: float
+    relative_price_difference: float
+    price_missing: float
+    numeric_conflict: float
+    mpn_mismatch: float
+    gtin_mismatch: float
+    brand_mismatch: float
+    numeric_conflict_count: float
+    numeric_conflict_severity: float
+    capacity_conflict: float
+    module_count_conflict: float
+    power_conflict: float
+    radiator_conflict: float
+
+    def as_array(self) -> NDArray[np.float64]:
+        return np.asarray(tuple(getattr(self, name) for name in FEATURE_NAMES), dtype=np.float64)
+
+    def to_dict(self) -> dict[str, float]:
+        return {name: float(getattr(self, name)) for name in FEATURE_NAMES}
+
 # TODO: rest of this module still to come.
