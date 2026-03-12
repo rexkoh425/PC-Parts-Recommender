@@ -21,7 +21,7 @@ def get_database_url(database_url: str | None = None) -> str:
     return database_url or os.getenv("DATABASE_URL") or DEFAULT_DATABASE_URL
 
 
-def build_db_engine(
+def create_db_engine(
     database_url: str | None = None,
     *,
     echo: bool = False,
@@ -51,7 +51,7 @@ def create_session_factory(
     database_url: str | None = None,
     echo: bool = False,
 ) -> sessionmaker[Session]:
-    bind = engine or build_db_engine(database_url, echo=echo)
+    bind = engine or create_db_engine(database_url, echo=echo)
     return sessionmaker(bind=bind, class_=Session, expire_on_commit=False, autoflush=False)
 
 
@@ -80,5 +80,5 @@ def session_scope(factory: sessionmaker[Session]) -> Generator[Session, None, No
 
 
 # Common aliases used by service layers.
-create_engine_from_url = build_db_engine
+create_engine_from_url = create_db_engine
 create_tables = init_database

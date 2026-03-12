@@ -19,7 +19,7 @@ from pc_build_recommender.catalog import (
     ProductionCatalogPolicy,
     ProductionCatalogReadinessError,
     ReviewStatus,
-    build_db_engine,
+    create_db_engine,
     create_session_factory,
     init_database,
     iter_jsonl_objects,
@@ -322,7 +322,7 @@ def test_review_evidence_is_version_bound_and_persisted_by_both_catalog_paths(
     assert streamed.review_evidence_count == 1
     assert streamed.stats.data_version == in_memory.stats.data_version
 
-    engine = build_db_engine("sqlite:///:memory:")
+    engine = create_db_engine("sqlite:///:memory:")
     init_database(engine)
     factory = create_session_factory(engine)
     with session_scope(factory) as session:
@@ -929,7 +929,7 @@ def test_processed_seed_is_idempotent(tmp_path: Path) -> None:
     _write_jsonl(products, [_product()])
     _write_jsonl(offers, [_offer()])
     data = load_processed_catalog(products, offers)
-    engine = build_db_engine("sqlite:///:memory:")
+    engine = create_db_engine("sqlite:///:memory:")
     init_database(engine)
     factory = create_session_factory(engine)
 
@@ -1008,7 +1008,7 @@ def test_streaming_import_is_idempotent_and_reports_same_mapping(tmp_path: Path)
     offers = tmp_path / "offers.jsonl"
     _write_jsonl(products, [_product()])
     _write_jsonl(offers, [_offer()])
-    engine = build_db_engine("sqlite:///:memory:")
+    engine = create_db_engine("sqlite:///:memory:")
     init_database(engine)
     factory = create_session_factory(engine)
 
@@ -1037,7 +1037,7 @@ def test_streaming_production_gate_rolls_back_import(tmp_path: Path) -> None:
     offers = tmp_path / "offers.jsonl"
     _write_jsonl(products, [_product()])
     _write_jsonl(offers, [_offer()])
-    engine = build_db_engine("sqlite:///:memory:")
+    engine = create_db_engine("sqlite:///:memory:")
     init_database(engine)
     factory = create_session_factory(engine)
 

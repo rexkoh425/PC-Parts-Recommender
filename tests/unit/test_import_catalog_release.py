@@ -180,7 +180,7 @@ def test_release_sequence_is_non_destructive_and_finishes_with_exact_identity(
     engine = FakeEngine()
     monkeypatch.setattr(
         import_catalog_release,
-        "build_db_engine",
+        "create_db_engine",
         lambda _url: events.append("engine") or engine,
     )
 
@@ -310,7 +310,7 @@ def test_stale_preflight_blocks_all_catalogue_writes(
         def dispose(self) -> None:
             events.append("dispose")
 
-    monkeypatch.setattr(import_catalog_release, "build_db_engine", lambda _url: FakeEngine())
+    monkeypatch.setattr(import_catalog_release, "create_db_engine", lambda _url: FakeEngine())
 
     class FakeStore:
         session_factory = object()

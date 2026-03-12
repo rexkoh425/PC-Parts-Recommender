@@ -8,7 +8,7 @@ from pc_build_recommender.catalog import (
     CatalogRepository,
     PriceSnapshotRecord,
     RetailerListingRecord,
-    build_db_engine,
+    create_db_engine,
     create_session_factory,
     deterministic_id,
     init_database,
@@ -73,7 +73,7 @@ def _seed() -> dict[str, object]:
 
 
 def test_seed_loader_is_deterministic_and_idempotent() -> None:
-    engine = build_db_engine("sqlite:///:memory:")
+    engine = create_db_engine("sqlite:///:memory:")
     init_database(engine)
     factory = create_session_factory(engine)
     with factory() as session:

@@ -24,7 +24,7 @@ from services.api.serving_release import (
 from pc_build_recommender.application import ServingConfigurationError
 from pc_build_recommender.catalog import (
     ProcessedCatalogData,
-    build_db_engine,
+    create_db_engine,
     load_processed_catalog,
     seed_processed_catalog,
     session_scope,
@@ -299,7 +299,7 @@ def run_catalog_release(
             "embedding artifact canonical products do not exactly match the processed release"
         )
 
-    engine = build_db_engine(database_url)
+    engine = create_db_engine(database_url)
     try:
         store = SqlAlchemyDurableStore(engine)
         store.verify_schema()
