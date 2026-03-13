@@ -15,7 +15,7 @@ from enum import StrEnum
 
 from .conflicts import NumericConflict, find_numeric_conflicts
 from .normalization import normalize_identifier, normalize_text, unique_tokens
-from .records import CanonicalProductRecord, ListingRow
+from .records import CanonicalProductRecord, ListingRecord
 
 _GENERIC_PC_TOKENS = {
     "card",
@@ -88,7 +88,7 @@ class PCBlockingCandidate:
     evidence so extraction mistakes and close variants remain auditable.
     """
 
-    listing: ListingRow
+    listing: ListingRecord
     product: CanonicalProductRecord
     blocking_score: float
     score_components: tuple[BlockingScoreComponent, ...]
@@ -168,7 +168,7 @@ class UnlabeledHardNegativeCandidate:
             raise ValueError("selection_reasons must not be empty")
 
     @property
-    def listing(self) -> ListingRow:
+    def listing(self) -> ListingRecord:
         return self.candidate.listing
 
     @property
@@ -202,7 +202,7 @@ def _token_overlap(left: str, right: str) -> float:
 
 
 def _pc_numeric_conflicts(
-    listing: ListingRow,
+    listing: ListingRecord,
     product: CanonicalProductRecord,
     category: str,
 ) -> tuple[NumericConflict, ...]:
@@ -231,7 +231,7 @@ class PCDomainCandidateBlocker:
 
     def candidates(
         self,
-        listing: ListingRow,
+        listing: ListingRecord,
         products: Iterable[CanonicalProductRecord],
     ) -> tuple[PCBlockingCandidate, ...]:
         listing_category = canonical_pc_category(listing.category)
@@ -314,7 +314,7 @@ class PCDomainCandidateBlocker:
 
     def generate(
         self,
-        listings: Sequence[ListingRow],
+        listings: Sequence[ListingRecord],
         products: Sequence[CanonicalProductRecord],
     ) -> tuple[PCBlockingCandidate, ...]:
         """Generate candidates independent of caller input ordering."""
@@ -400,7 +400,7 @@ class DeterministicHardNegativeSampler:
 
     def generate(
         self,
-        listings: Sequence[ListingRow],
+        listings: Sequence[ListingRecord],
         products: Sequence[CanonicalProductRecord],
         *,
         blocker: PCDomainCandidateBlocker | None = None,

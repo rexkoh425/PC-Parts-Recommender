@@ -8,7 +8,7 @@ from difflib import SequenceMatcher
 
 from .conflicts import find_numeric_conflicts
 from .normalization import normalize_identifier, normalize_text, unique_tokens
-from .records import CanonicalProductRecord, ListingRow
+from .records import CanonicalProductRecord, ListingRecord
 
 _GENERIC_TOKENS = {
     "cpu",
@@ -34,7 +34,7 @@ _GENERIC_TOKENS = {
 class CandidatePair:
     """One candidate pair and the auditable reasons it survived blocking."""
 
-    listing: ListingRow
+    listing: ListingRecord
     product: CanonicalProductRecord
     blocking_score: float
     reasons: tuple[str, ...]
@@ -61,7 +61,7 @@ class CandidateBlocker:
 
     def candidates(
         self,
-        listing: ListingRow,
+        listing: ListingRecord,
         products: Iterable[CanonicalProductRecord],
     ) -> tuple[CandidatePair, ...]:
         result: list[CandidatePair] = []
@@ -133,7 +133,7 @@ class CandidateBlocker:
 
     def generate(
         self,
-        listings: Sequence[ListingRow],
+        listings: Sequence[ListingRecord],
         products: Sequence[CanonicalProductRecord],
     ) -> tuple[CandidatePair, ...]:
         """Generate candidates for multiple listings in stable listing order."""

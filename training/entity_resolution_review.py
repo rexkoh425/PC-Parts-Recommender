@@ -11,7 +11,7 @@ from typing import Any
 from pc_build_recommender.entity_resolution import (
     CanonicalProductRecord,
     DeterministicHardNegativeSampler,
-    ListingRow,
+    ListingRecord,
     PCDomainCandidateBlocker,
     ReviewQueue,
     SourceUsePolicy,
@@ -35,7 +35,7 @@ def _source_policy(path: Path) -> SourceUsePolicy:
 
 def _create_queue(args: argparse.Namespace) -> dict[str, object]:
     policy = _source_policy(args.source_policy)
-    listings = tuple(ListingRow.from_dict(row) for row in read_json_lines(args.listings))
+    listings = tuple(ListingRecord.from_dict(row) for row in read_json_lines(args.listings))
     products = tuple(
         CanonicalProductRecord.from_dict(row) for row in read_json_lines(args.products)
     )

@@ -38,7 +38,7 @@ from pc_build_recommender.entity_resolution import (
     CanonicalProductRecord,
     EntityResolutionPolicy,
     EntityResolutionRuntime,
-    ListingRow,
+    ListingRecord,
     entity_resolution_release_sha256,
     load_entity_resolution_runtime,
 )
@@ -626,7 +626,7 @@ def _colour_conflict(title: str, product: MasterProduct) -> bool:
 
 
 def _numeric_conflict(title: str, product: MasterProduct) -> bool:
-    listing = ListingRow(
+    listing = ListingRecord(
         listing_id="candidate",
         title=title,
         category=product.category.value,

@@ -9,7 +9,7 @@ from pc_build_recommender.entity_resolution import (
     FEATURE_NAMES,
     CandidateBlocker,
     CanonicalProductRecord,
-    ListingRow,
+    ListingRecord,
     MatchOutcome,
     MatchThresholds,
     LabelledPair,
@@ -37,7 +37,7 @@ def _memory_pair(*, listing_capacity: int = 32, product_capacity: int = 32) -> L
         price_sgd=150.0,
         embedding=(1.0, 0.0),
     )
-    listing = ListingRow(
+    listing = ListingRecord(
         listing_id=f"listing-{listing_capacity}",
         title=f"ASTER VELOCITY M1 {listing_capacity} GB DDR5 6000",
         category="memory",

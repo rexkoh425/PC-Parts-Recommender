@@ -23,7 +23,7 @@ from pc_build_recommender.entity_resolution import (
     CanonicalProductRecord,
     EntityResolutionPolicy,
     EntityResolutionRuntime,
-    ListingRow,
+    ListingRecord,
     entity_resolution_release_sha256,
     load_entity_resolution_runtime,
 )
@@ -138,7 +138,7 @@ def _brand_prefix_matches(title: str, brand: str) -> bool:
 
 
 def _numeric_conflict(title: str, product: _ProductIdentity) -> bool:
-    listing = ListingRow(
+    listing = ListingRecord(
         listing_id="candidate",
         title=title,
         category=product.category.value,

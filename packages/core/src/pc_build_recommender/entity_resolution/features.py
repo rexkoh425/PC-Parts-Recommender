@@ -19,7 +19,7 @@ from .normalization import (
     numeric_tokens,
     unique_tokens,
 )
-from .records import CanonicalProductRecord, ListingRow, LabelledPair
+from .records import CanonicalProductRecord, ListingRecord, LabelledPair
 
 FEATURE_NAMES: tuple[str, ...] = (
     "exact_mpn_match",
@@ -110,7 +110,7 @@ def _capacity_values(text: str) -> set[float]:
     return {fact.value for fact in facts if fact.kind == "capacity"}
 
 
-def _capacity_agreement(listing: ListingRow, product: CanonicalProductRecord) -> float:
+def _capacity_agreement(listing: ListingRecord, product: CanonicalProductRecord) -> float:
     aliases = (
         "capacity_gb",
         "memory_capacity_gb",
@@ -130,7 +130,7 @@ def _capacity_agreement(listing: ListingRow, product: CanonicalProductRecord) ->
     return float(bool(listing_values & product_values))
 
 
-def _form_factor_agreement(listing: ListingRow, product: CanonicalProductRecord) -> float:
+def _form_factor_agreement(listing: ListingRecord, product: CanonicalProductRecord) -> float:
     aliases = ("form_factor", "motherboard_form_factor", "psu_form_factor", "storage_form_factor")
     listing_value = _attribute_value(listing.attributes, aliases)
     product_value = _attribute_value(product.attributes, aliases)
@@ -198,7 +198,7 @@ class PairFeatureExtractor:
 
     def extract(
         self,
-        listing: ListingRow,
+        listing: ListingRecord,
         product: CanonicalProductRecord,
     ) -> PairFeatures:
         listing_text = normalize_text(listing.text)

@@ -24,7 +24,7 @@ from typing import Any
 
 from pc_build_recommender.entity_resolution import (
     CanonicalProductRecord,
-    ListingRow,
+    ListingRecord,
     LabelledPair,
 )
 from pipelines.sources.base import (
@@ -412,7 +412,7 @@ def adapt_pair(
 
     left = dataset.left[pair.left_id]
     right = dataset.right[pair.right_id]
-    listing = ListingRow(
+    listing = ListingRecord(
         listing_id=f"zenodo-dn7-left-{left.record_id}",
         title=left.title,
         category="transfer_consumer_products",

@@ -22,7 +22,7 @@ from typing import Any, Self
 
 from .candidate_generation import PCBlockingCandidate
 from .conflicts import NumericConflict
-from .records import CanonicalProductRecord, ListingRow, LabelledPair
+from .records import CanonicalProductRecord, ListingRecord, LabelledPair
 
 REVIEW_QUEUE_SCHEMA_VERSION = "pc-build-recommender.er-review-queue.v1"
 _CSV_COLUMNS = (
@@ -151,7 +151,7 @@ class ReviewQueueItem:
     """A frozen candidate snapshot plus an optional, attributable human decision."""
 
     queue_item_id: str
-    listing: ListingRow
+    listing: ListingRecord
     product: CanonicalProductRecord
     blocking_score: float
     blocking_reasons: tuple[str, ...]
@@ -320,7 +320,7 @@ class ReviewQueueItem:
         label = row.get("human_label")
         return cls(
             queue_item_id=str(row["queue_item_id"]),
-            listing=ListingRow.from_dict(row["listing"]),
+            listing=ListingRecord.from_dict(row["listing"]),
             product=CanonicalProductRecord.from_dict(row["product"]),
             blocking_score=float(row["blocking_score"]),
             blocking_reasons=tuple(str(value) for value in row.get("blocking_reasons", ())),
