@@ -1,0 +1,159 @@
+{
+  "created_at": "2026-07-22T02:46:10.800209+00:00",
+  "input": {
+    "path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\starter\\entity_resolution.synthetic.jsonl",
+    "rows": 288,
+    "sha256": "cee6fc70ff431893f74b4e4a807cdd3e720901faeb8ccd0e67f3f25d339a194e",
+    "synthetic_rows": 288
+  },
+  "mlflow_tracking": {
+    "artifact_uri": null,
+    "enabled": false,
+    "errors": [],
+    "experiment_name": null,
+    "run_id": null,
+    "status": "disabled",
+    "tracking_uri": null
+  },
+  "models": {
+    "exact": {
+      "artifact_path": "C:\\Users\\Admin\\Documents\\PC recommendation\\artifacts\\models\\entity-resolution-synthetic\\exact",
+      "metrics": {
+        "accuracy": 0.8771929824561403,
+        "auto_match_count": 12,
+        "auto_match_precision": 1.0,
+        "auto_match_recall": 0.631578947368421,
+        "average_precision": 0.8908382066276803,
+        "brier_score": 0.08805119385736254,
+        "classification_threshold": 0.5,
+        "eligible_for_promotion": false,
+        "f1": 0.7741935483870968,
+        "manual_review_count": 0,
+        "non_promotable_reason": "synthetic rows were included in evaluation metrics",
+        "positive_count": 19,
+        "precision": 1.0,
+        "recall": 0.631578947368421,
+        "rejected_count": 45,
+        "roc_auc": 0.961218836565097,
+        "sample_count": 57,
+        "synthetic_data": {
+          "eligible_for_reported_metrics": false,
+          "evaluated_rows": 57,
+          "reporting_block_reason": "synthetic rows were included in evaluation metrics",
+          "synthetic_flags_declared": true,
+          "synthetic_rows": 57,
+          "synthetic_rows_excluded": false,
+          "total_rows": 57
+        },
+        "thresholds": {
+          "auto_match": 0.98,
+          "manual_review": 0.8
+        }
+      },
+      "promotion_eligible": false,
+      "target_metrics_met": false
+    },
+    "lightgbm": {
+      "artifact_path": "C:\\Users\\Admin\\Documents\\PC recommendation\\artifacts\\models\\entity-resolution-synthetic\\lightgbm",
+      "device": {
+        "actual": "cpu",
+        "fallback_reason": "LightGBMError: GPU Tree Learner was not enabled in this build.\nPlease recompile with CMake option -DUSE_GPU=1",
+        "requested": "auto"
+      },
+      "metrics": {
+        "accuracy": 1.0,
+        "auto_match_count": 19,
+        "auto_match_precision": 1.0,
+        "auto_match_recall": 1.0,
+        "average_precision": 1.0,
+        "brier_score": 1.4796890005584867e-10,
+        "classification_threshold": 0.5,
+        "eligible_for_promotion": false,
+        "f1": 1.0,
+        "manual_review_count": 0,
+        "non_promotable_reason": "synthetic rows were included in evaluation metrics",
+        "positive_count": 19,
+        "precision": 1.0,
+        "recall": 1.0,
+        "rejected_count": 38,
+        "roc_auc": 1.0,
+        "sample_count": 57,
+        "synthetic_data": {
+          "eligible_for_reported_metrics": false,
+          "evaluated_rows": 57,
+          "reporting_block_reason": "synthetic rows were included in evaluation metrics",
+          "synthetic_flags_declared": true,
+          "synthetic_rows": 57,
+          "synthetic_rows_excluded": false,
+          "total_rows": 57
+        },
+        "thresholds": {
+          "auto_match": 0.98,
+          "manual_review": 0.8
+        }
+      },
+      "promotion_eligible": false,
+      "target_metrics_met": true
+    },
+    "logistic": {
+      "artifact_path": "C:\\Users\\Admin\\Documents\\PC recommendation\\artifacts\\models\\entity-resolution-synthetic\\logistic",
+      "metrics": {
+        "accuracy": 1.0,
+        "auto_match_count": 19,
+        "auto_match_precision": 1.0,
+        "auto_match_recall": 1.0,
+        "average_precision": 0.9999999999999998,
+        "brier_score": 1.9030968087245814e-05,
+        "classification_threshold": 0.5,
+        "eligible_for_promotion": false,
+        "f1": 1.0,
+        "manual_review_count": 0,
+        "non_promotable_reason": "synthetic rows were included in evaluation metrics",
+        "positive_count": 19,
+        "precision": 1.0,
+        "recall": 1.0,
+        "rejected_count": 38,
+        "roc_auc": 1.0,
+        "sample_count": 57,
+        "synthetic_data": {
+          "eligible_for_reported_metrics": false,
+          "evaluated_rows": 57,
+          "reporting_block_reason": "synthetic rows were included in evaluation metrics",
+          "synthetic_flags_declared": true,
+          "synthetic_rows": 57,
+          "synthetic_rows_excluded": false,
+          "total_rows": 57
+        },
+        "thresholds": {
+          "auto_match": 0.98,
+          "manual_review": 0.8
+        }
+      },
+      "promotion_eligible": false,
+      "target_metrics_met": true
+    }
+  },
+  "promotion_note": "synthetic diagnostics cannot support promotion or portfolio claims",
+  "split": {
+    "test": {
+      "listings": 19,
+      "positives": 19,
+      "rows": 57
+    },
+    "train": {
+      "listings": 58,
+      "positives": 58,
+      "rows": 174
+    },
+    "validation": {
+      "listings": 19,
+      "positives": 19,
+      "rows": 57
+    }
+  },
+  "task": "entity_resolution_binary_classification",
+  "thresholds": {
+    "auto_match": 0.98,
+    "manual_review": 0.8
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "artifact_format_version": 1,
+  "calibrator": {
+    "coefficient": 4.774796671561876,
+    "intercept": -5.564336064008957,
+    "is_fitted": true,
+    "type": "platt"
+  },
+  "class_weight": "balanced",
+  "coefficients": [
+    0.6579843307934351,
+    0.6579843307934351,
+    0.15525572123385342,
+    -0.9857757102303079,
+    1.0922356514133043,
+    -0.3107150433217135,
+    1.875517253361514,
+    0.3739545783829153,
+    -0.6066929031878608,
+    -0.4395116587220347,
+    2.324657359513176,
+    -0.4991024988346294,
+    0.0,
+    -2.005837729075651
+  ],
+  "feature_names": [
+    "exact_mpn_match",
+    "exact_gtin_match",
+    "brand_match",
+    "category_match",
+    "model_token_overlap",
+    "character_similarity",
+    "numeric_token_agreement",
+    "capacity_agreement",
+    "form_factor_agreement",
+    "specification_overlap",
+    "embedding_cosine_similarity",
+    "relative_price_difference",
+    "price_missing",
+    "numeric_conflict"
+  ],
+  "intercept": -0.9857757102303079,
+  "is_fitted": true,
+  "max_iter": 2000,
+  "model_type": "logistic_match_baseline",
+  "regularization_c": 1.0,
+  "thresholds": {
+    "auto_match": 0.98,
+    "manual_review": 0.8
+  }
+}
