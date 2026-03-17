@@ -1,0 +1,148 @@
+{
+  "actual_device": "cpu",
+  "allowed_missing_fraction": 0.0,
+  "best_iteration": 252,
+  "confidence_level": "low",
+  "config": {
+    "allow_device_fallback": true,
+    "category": "gpu",
+    "family_column": "product_family",
+    "feature_columns": [
+      "generation_index",
+      "compute_units",
+      "vram_gb",
+      "memory_bandwidth_gbps",
+      "boost_clock_mhz",
+      "board_power_w"
+    ],
+    "generation_column": "hardware_generation",
+    "lightgbm_params": {},
+    "max_confident_mape_percent": 12.0,
+    "max_prediction_missing_fraction": 0.0,
+    "min_confident_r2": 0.85,
+    "min_confident_test_rows": 20,
+    "product_id_column": "product_id",
+    "requested_device": "auto",
+    "ridge_alpha": 1.0,
+    "split_column": "split",
+    "split_seed": 20260722,
+    "split_weights": {
+      "test": 0.2,
+      "train": 0.6,
+      "validation": 0.2
+    },
+    "synthetic_column": "is_synthetic",
+    "target_column": "target_score",
+    "workload": "gaming_1440p"
+  },
+  "device_fallback_reason": "cuda: CUDA Tree Learner was not enabled in this build.\nPlease recompile with CMake option -DUSE_CUDA=1 (NVIDIA GPUs) or -DUSE_ROCM=1 (AMD GPUs); gpu: GPU Tree Learner was not enabled in this build.\nPlease recompile with CMake option -DUSE_GPU=1",
+  "evaluations": {
+    "lightgbm": {
+      "model_name": "lightgbm",
+      "test": {
+        "mae": 5.657946493351692,
+        "mape_percent": 3.295931915644131,
+        "r2": 0.9646403953506897,
+        "sample_count": 48
+      },
+      "validation": {
+        "mae": 5.718263962278996,
+        "mape_percent": 3.6415440857829453,
+        "r2": 0.9807989932807354,
+        "sample_count": 48
+      }
+    },
+    "ridge": {
+      "model_name": "ridge",
+      "test": {
+        "mae": 11.807515960244515,
+        "mape_percent": 6.2519267471220035,
+        "r2": 0.8736786320077407,
+        "sample_count": 48
+      },
+      "validation": {
+        "mae": 9.167288756509928,
+        "mape_percent": 5.490492826626945,
+        "r2": 0.9613291478658874,
+        "sample_count": 48
+      }
+    },
+    "train_median": {
+      "model_name": "train_median",
+      "test": {
+        "mae": 34.162099125,
+        "mape_percent": 20.62640688877507,
+        "r2": -0.039680913735715695,
+        "sample_count": 48
+      },
+      "validation": {
+        "mae": 50.85901387500001,
+        "mape_percent": 29.098513239682706,
+        "r2": -0.02553110092543176,
+        "sample_count": 48
+      }
+    }
+  },
+  "feature_profiles": {
+    "board_power_w": {
+      "maximum": 535.574,
+      "minimum": 195.787,
+      "missing_fraction": 0.0
+    },
+    "boost_clock_mhz": {
+      "maximum": 2034.991,
+      "minimum": 1374.037,
+      "missing_fraction": 0.0
+    },
+    "compute_units": {
+      "maximum": 92.341,
+      "minimum": 25.358,
+      "missing_fraction": 0.0
+    },
+    "generation_index": {
+      "maximum": 6.0,
+      "minimum": 1.0,
+      "missing_fraction": 0.0
+    },
+    "memory_bandwidth_gbps": {
+      "maximum": 960.663,
+      "minimum": 317.438,
+      "missing_fraction": 0.0
+    },
+    "vram_gb": {
+      "maximum": 28.0,
+      "minimum": 8.0,
+      "missing_fraction": 0.0
+    }
+  },
+  "model_file": "model.txt",
+  "model_sha256": "2d30125beab6b862a9bd17f0fc27d94f6e8ee5509a9d2ee9e055a666de87fae6",
+  "model_version": "00d9e4e490805423317dcef18454b5349ee0d66fd8f3bb9a1f7161b90cf269a4",
+  "precise_predictions_enabled": false,
+  "promotable": false,
+  "promotion_block_reasons": [
+    "synthetic rows were included in evaluation metrics"
+  ],
+  "requested_device": "auto",
+  "schema_version": "pc-build-recommender.performance-model.v1",
+  "split_group_counts": {
+    "test": 12,
+    "train": 36,
+    "validation": 12
+  },
+  "split_row_counts": {
+    "test": 48,
+    "train": 144,
+    "validation": 48
+  },
+  "synthetic_data": {
+    "eligible_for_reported_metrics": false,
+    "evaluated_rows": 240,
+    "reporting_block_reason": "synthetic rows were included in evaluation metrics",
+    "synthetic_flags_declared": true,
+    "synthetic_rows": 240,
+    "synthetic_rows_excluded": false,
+    "total_rows": 240
+  },
+  "training_data_sha256": "55979d6fae17faba9b0ba63396cba652e8f5f866074aa0aa096feb99339a5294"
+}

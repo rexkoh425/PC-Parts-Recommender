@@ -1,0 +1,109 @@
+{
+  "artifact_path": "C:\\Users\\Admin\\Documents\\PC recommendation\\artifacts\\models\\performance-gpu-synthetic",
+  "category": "gpu",
+  "created_at": "2026-07-22T02:46:24.682422+00:00",
+  "device": {
+    "actual": "cpu",
+    "fallback_reason": "cuda: CUDA Tree Learner was not enabled in this build.\nPlease recompile with CMake option -DUSE_CUDA=1 (NVIDIA GPUs) or -DUSE_ROCM=1 (AMD GPUs); gpu: GPU Tree Learner was not enabled in this build.\nPlease recompile with CMake option -DUSE_GPU=1",
+    "requested": "auto"
+  },
+  "feature_columns": [
+    "generation_index",
+    "compute_units",
+    "vram_gb",
+    "memory_bandwidth_gbps",
+    "boost_clock_mhz",
+    "board_power_w"
+  ],
+  "input": {
+    "path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\starter\\performance_gpu.synthetic.csv",
+    "sha256": "2f442ed6ae0ae95922d6f077f13b5c3c07eb5485245190745a09cdc8eead5343"
+  },
+  "mlflow_tracking": {
+    "artifact_uri": null,
+    "enabled": false,
+    "errors": [],
+    "experiment_name": null,
+    "run_id": null,
+    "status": "disabled",
+    "tracking_uri": null
+  },
+  "model_version": "00d9e4e490805423317dcef18454b5349ee0d66fd8f3bb9a1f7161b90cf269a4",
+  "models": {
+    "lightgbm": {
+      "model_name": "lightgbm",
+      "test": {
+        "mae": 5.657946493351692,
+        "mape_percent": 3.295931915644131,
+        "r2": 0.9646403953506897,
+        "sample_count": 48
+      },
+      "validation": {
+        "mae": 5.718263962278996,
+        "mape_percent": 3.6415440857829453,
+        "r2": 0.9807989932807354,
+        "sample_count": 48
+      }
+    },
+    "ridge": {
+      "model_name": "ridge",
+      "test": {
+        "mae": 11.807515960244515,
+        "mape_percent": 6.2519267471220035,
+        "r2": 0.8736786320077407,
+        "sample_count": 48
+      },
+      "validation": {
+        "mae": 9.167288756509928,
+        "mape_percent": 5.490492826626945,
+        "r2": 0.9613291478658874,
+        "sample_count": 48
+      }
+    },
+    "train_median": {
+      "model_name": "train_median",
+      "test": {
+        "mae": 34.162099125,
+        "mape_percent": 20.62640688877507,
+        "r2": -0.039680913735715695,
+        "sample_count": 48
+      },
+      "validation": {
+        "mae": 50.85901387500001,
+        "mape_percent": 29.098513239682706,
+        "r2": -0.02553110092543176,
+        "sample_count": 48
+      }
+    }
+  },
+  "promotion": {
+    "block_reasons": [
+      "synthetic rows were included in evaluation metrics"
+    ],
+    "confidence": "low",
+    "eligible": false,
+    "precise_predictions_enabled": false
+  },
+  "split_group_counts": {
+    "test": 12,
+    "train": 36,
+    "validation": 12
+  },
+  "split_row_counts": {
+    "test": 48,
+    "train": 144,
+    "validation": 48
+  },
+  "synthetic_data": {
+    "eligible_for_reported_metrics": false,
+    "evaluated_rows": 240,
+    "reporting_block_reason": "synthetic rows were included in evaluation metrics",
+    "synthetic_flags_declared": true,
+    "synthetic_rows": 240,
+    "synthetic_rows_excluded": false,
+    "total_rows": 240
+  },
+  "task": "workload_performance_regression",
+  "training_data_sha256": "55979d6fae17faba9b0ba63396cba652e8f5f866074aa0aa096feb99339a5294",
+  "workload": "gaming_1440p"
+}
