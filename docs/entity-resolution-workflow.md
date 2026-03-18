@@ -28,4 +28,30 @@ Reviewers may choose `MATCH`, `NON_MATCH`, or `UNCERTAIN`, or set the state to `
 `INVALID`. Every completed action requires a reviewer ID and timezone-aware review timestamp.
 The item snapshot hash prevents edited candidate data from being silently imported.
 
+```powershell
+uv run --no-sync python -m training.entity_resolution_review import-sheet `
+  --queue artifacts/entity-resolution/review-queue.jsonl `
+  --sheet artifacts/entity-resolution/review-sheet.csv `
+  --output artifacts/entity-resolution/reviewed-queue.jsonl
+```
+
+Repeated identical imports are idempotent. Attempts to rewrite a completed decision fail.
+`UNCERTAIN`, blank, skipped, and invalid rows never become binary training examples.
+
+## Active learning
+
+Active-learning input is JSONL containing `queue_item_id` and `probability` from a versioned
+model. Sampling prioritises uncertainty, proximity to the precision-first operating boundary,
+conflict/model disagreement, and category diversity. Its output remains explicitly unlabeled.
+
+```powershell
+uv run --no-sync python -m training.entity_resolution_review sample-active `
+  --queue artifacts/entity-resolution/review-queue.jsonl `
+  --scores artifacts/entity-resolution/candidate-scores.jsonl `
+  --model-version er-model-v1 --limit 100 `
+  --output artifacts/entity-resolution/active-batch.json
+```
+
+## Training gate
+
 <!-- TODO: sections below still to be written. -->
