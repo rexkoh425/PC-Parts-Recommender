@@ -197,4 +197,149 @@ def _fit_lightgbm(
         f"LightGBM could not train on requested device {requested!r}: {joined_failures}"
     )
 
+
+def _promotion_decision(
+    *,
+    config: PerformanceModelConfig,
+    data_use: DataUseDeclaration,
+    dataset_evidence: DatasetEvidence,
+    evaluations: dict[str, ModelEvaluation],
+    calibration: PredictionIntervalCalibration,
+    grouped_test: GroupedTestDiagnostics,
+    uncertainty: RegressionUncertainty,
+) -> tuple[bool, tuple[str, ...], Literal["high", "medium", "low"]]:
+    metrics = evaluations["lightgbm"].test
+    blockers: list[str] = []
+    if not data_use.eligible_for_reported_metrics:
+        blockers.append(data_use.reporting_block_reason or "training provenance is not reportable")
+    if metrics.sample_count < config.min_confident_test_rows:
+        blockers.append(
+            f"test sample count {metrics.sample_count} is below {config.min_confident_test_rows}"
+        )
+    if metrics.r2 < config.min_confident_r2:
+        blockers.append(f"test R2 {metrics.r2:.4f} is below {config.min_confident_r2:.4f}")
+    if metrics.mape_percent > config.max_confident_mape_percent:
+        blockers.append(
+            "test MAPE "
+            f"{metrics.mape_percent:.4f}% exceeds {config.max_confident_mape_percent:.4f}%"
+        )
+    blockers.extend(dataset_evidence.block_reasons)
+    if grouped_test.test_group_count < config.min_confident_test_groups:
+        blockers.append(
+            f"test group count {grouped_test.test_group_count} is below "
+            f"{config.min_confident_test_groups}"
+        )
+    if grouped_test.development_group_overlap_count:
+        blockers.append(
+            "test leakage units overlap development splits: "
+            f"{grouped_test.development_group_overlap_count}"
+        )
+    if grouped_test.outside_training_envelope_fraction > config.max_test_ood_fraction:
+        blockers.append(
+            "test feature-envelope OOD fraction "
+            f"{grouped_test.outside_training_envelope_fraction:.4f} exceeds "
+            f"{config.max_test_ood_fraction:.4f}"
+        )
+    if calibration.calibration_sample_count < config.min_calibration_rows:
+        blockers.append(
+            f"calibration sample count {calibration.calibration_sample_count} is below "
+            f"{config.min_calibration_rows}"
+        )
+    if calibration.calibration_group_count < config.min_calibration_groups:
+        blockers.append(
+            f"calibration group count {calibration.calibration_group_count} is below "
+            f"{config.min_calibration_groups}"
+        )
+    minimum_coverage = calibration.nominal_coverage - config.max_interval_coverage_shortfall
+    if calibration.test_coverage < minimum_coverage:
+        blockers.append(
+            f"test prediction-interval coverage {calibration.test_coverage:.4f} is below "
+            f"{minimum_coverage:.4f}"
+        )
+    if uncertainty.r2_lower < config.min_confident_r2:
+        blockers.append(
+            f"grouped-bootstrap R2 lower bound {uncertainty.r2_lower:.4f} is below "
+            f"{config.min_confident_r2:.4f}"
+        )
+    if uncertainty.mape_percent_upper > config.max_confident_mape_percent:
+        blockers.append(
+            "grouped-bootstrap MAPE upper bound "
+            f"{uncertainty.mape_percent_upper:.4f}% exceeds "
+            f"{config.max_confident_mape_percent:.4f}%"
+        )
+    if config.require_baseline_improvement:
+        required_fraction = 1.0 - config.minimum_baseline_mape_improvement_percent / 100.0
+        for split_name in ("validation", "test"):
+            lightgbm_mape = getattr(evaluations["lightgbm"], split_name).mape_percent
+            best_baseline_mape = min(
+                getattr(evaluations[name], split_name).mape_percent
+                for name in ("train_median", "ridge")
+            )
+            if lightgbm_mape >= best_baseline_mape * required_fraction:
+                blockers.append(
+                    f"LightGBM {split_name} MAPE {lightgbm_mape:.4f}% does not improve "
+                    f"on the best baseline {best_baseline_mape:.4f}% by the required "
+                    f"{config.minimum_baseline_mape_improvement_percent:.2f}%"
+                )
+    promotable = not blockers
+    confidence: Literal["high", "medium", "low"]
+    if promotable:
+        confidence = "high"
+    elif (
+        data_use.eligible_for_reported_metrics
+        and metrics.sample_count >= config.min_confident_test_rows
+        and (
+            metrics.r2 >= min(0.70, config.min_confident_r2)
+            or metrics.mape_percent <= max(20.0, config.max_confident_mape_percent)
+        )
+    ):
+        confidence = "medium"
+    else:
+        confidence = "low"
+    return promotable, tuple(dict.fromkeys(blockers)), confidence
+
+
+def _row_level_dataset_evidence(
+    frame: pd.DataFrame,
+    evidence: DatasetEvidence,
+) -> DatasetEvidence:
+    blockers = list(evidence.block_reasons)
+    column = "eligible_for_external_claims"
+    if column not in frame:
+        blockers.append("row-level external-claim eligibility was not declared")
+    elif not pd.api.types.is_bool_dtype(frame[column].dtype):
+        blockers.append("row-level external-claim eligibility was not explicitly boolean")
+    elif not bool(frame[column].all()):
+        blockers.append("one or more training rows are ineligible for external claims")
+    if not blockers:
+        return evidence
+    return DatasetEvidence(
+        verified=evidence.verified,
+        eligible_for_promotion=False,
+        manifest_sha256=evidence.manifest_sha256,
+        block_reasons=tuple(dict.fromkeys(blockers)),
+    )
+
+
+def _model_version(
+    *,
+    booster: lgb.Booster,
+    config: PerformanceModelConfig,
+    training_data_sha256: str,
+    best_iteration: int,
+) -> str:
+    payload = json.dumps(
+        {
+            "config": config.to_dict(),
+            "training_data_sha256": training_data_sha256,
+        },
+        allow_nan=False,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    digest = hashlib.sha256(payload)
+    digest.update(booster.model_to_string(num_iteration=best_iteration).encode("utf-8"))
+    return digest.hexdigest()
+
 # TODO: rest of this module still to come.
