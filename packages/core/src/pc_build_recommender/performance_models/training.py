@@ -342,4 +342,217 @@ def _model_version(
     digest.update(booster.model_to_string(num_iteration=best_iteration).encode("utf-8"))
     return digest.hexdigest()
 
-# TODO: rest of this module still to come.
+
+def train_performance_model(
+    frame: pd.DataFrame,
+    config: PerformanceModelConfig,
+    *,
+    dataset_evidence: DatasetEvidence | None = None,
+) -> PerformanceTrainingResult:
+    """Train baselines and a LightGBM regressor on deterministic grouped splits."""
+
+    prepared = split_performance_frame(frame, config)
+    peak_memory_mb = estimate_peak_training_memory_mb(prepared, config)
+    if peak_memory_mb > config.max_training_memory_mb:
+        raise MemoryError(
+            f"estimated peak training memory {peak_memory_mb:.2f} MiB exceeds configured "
+            f"budget {config.max_training_memory_mb} MiB"
+        )
+    evidence = _row_level_dataset_evidence(
+        prepared,
+        dataset_evidence or DatasetEvidence.unverified(),
+    )
+    features = list(config.feature_columns)
+    split_frames = {
+        name: prepared.loc[prepared[config.split_column] == name].copy()
+        for name in ("train", "validation", "calibration", "test")
+    }
+    train = split_frames["train"]
+    validation = split_frames["validation"]
+    calibration_frame = split_frames["calibration"]
+    test = split_frames["test"]
+    x_train = train.loc[:, features]
+    x_validation = validation.loc[:, features]
+    x_calibration = calibration_frame.loc[:, features]
+    x_test = test.loc[:, features]
+    y_train = train[config.target_column].to_numpy(dtype=float)
+    y_validation = validation[config.target_column].to_numpy(dtype=float)
+    y_calibration = calibration_frame[config.target_column].to_numpy(dtype=float)
+    y_test = test[config.target_column].to_numpy(dtype=float)
+    learner_y_train = transform_targets(y_train, transform=config.target_transform)
+    learner_y_validation = transform_targets(y_validation, transform=config.target_transform)
+
+    median_value = float(np.median(y_train))
+    median_evaluation = _evaluate_candidate(
+        name="train_median",
+        predict=lambda candidate: np.full(len(candidate), median_value, dtype=float),
+        validation_features=x_validation,
+        validation_target=y_validation,
+        test_features=x_test,
+        test_target=y_test,
+    )
+
+    ridge = make_pipeline(
+        SimpleImputer(strategy="median"),
+        StandardScaler(),
+        Ridge(alpha=config.ridge_alpha),
+    )
+    ridge.fit(x_train, y_train)
+    ridge_evaluation = _evaluate_candidate(
+        name="ridge",
+        predict=lambda candidate: np.asarray(ridge.predict(candidate), dtype=float),
+        validation_features=x_validation,
+        validation_target=y_validation,
+        test_features=x_test,
+        test_target=y_test,
+    )
+
+    estimator, requested_device, actual_device, fallback_reason = _fit_lightgbm(
+        config=config,
+        train_features=x_train,
+        train_target=learner_y_train,
+        validation_features=x_validation,
+        validation_target=learner_y_validation,
+    )
+    best_iteration = max(1, int(estimator.best_iteration_ or estimator.n_estimators))
+
+    def native_predictions(candidate: pd.DataFrame) -> np.ndarray:
+        return inverse_target_predictions(
+            np.asarray(
+                estimator.predict(candidate, num_iteration=best_iteration),
+                dtype=float,
+            ),
+            transform=config.target_transform,
+        )
+
+    lightgbm_evaluation = _evaluate_candidate(
+        name="lightgbm",
+        predict=native_predictions,
+        validation_features=x_validation,
+        validation_target=y_validation,
+        test_features=x_test,
+        test_target=y_test,
+    )
+    evaluations = {
+        "train_median": median_evaluation,
+        "ridge": ridge_evaluation,
+        "lightgbm": lightgbm_evaluation,
+    }
+
+    feature_profiles: dict[str, FeatureProfile] = {}
+    for feature in config.feature_columns:
+        values = train[feature].to_numpy(dtype=float)
+        finite_values = values[np.isfinite(values)]
+        if finite_values.size == 0:
+            raise ValueError(f"training split feature {feature!r} has no finite values")
+        feature_profiles[feature] = FeatureProfile(
+            minimum=float(np.min(finite_values)),
+            maximum=float(np.max(finite_values)),
+            missing_fraction=float(np.isnan(values).mean()),
+        )
+
+    calibration_predictions = native_predictions(x_calibration)
+    test_predictions = native_predictions(x_test)
+    calibration = calibrate_prediction_intervals(
+        y_calibration,
+        calibration_predictions,
+        calibration_frame[config.family_column].astype(str).tolist(),
+        y_test,
+        test_predictions,
+        alpha=config.prediction_interval_alpha,
+    )
+    uncertainty = grouped_bootstrap_uncertainty(
+        y_test,
+        test_predictions,
+        test[config.family_column].astype(str).tolist(),
+        confidence_level=config.bootstrap_confidence_level,
+        n_resamples=config.bootstrap_resamples,
+        seed=config.split_seed,
+    )
+    development_groups = set(
+        prepared.loc[
+            prepared[config.split_column].isin(("train", "validation", "calibration")),
+            config.family_column,
+        ].astype(str)
+    )
+    grouped_test = grouped_test_diagnostics(
+        test_frame=test,
+        observed=y_test,
+        predicted=test_predictions,
+        group_column=config.family_column,
+        development_groups=development_groups,
+        feature_columns=config.feature_columns,
+        feature_profiles=feature_profiles,
+    )
+
+    synthetic_flags = prepared[config.synthetic_column].astype(bool).tolist()
+    data_use = DataUseDeclaration.from_flags(synthetic_flags, include_synthetic=True)
+    promotable, blockers, confidence = _promotion_decision(
+        config=config,
+        data_use=data_use,
+        dataset_evidence=evidence,
+        evaluations=evaluations,
+        calibration=calibration,
+        grouped_test=grouped_test,
+        uncertainty=uncertainty,
+    )
+    training_data_sha256 = performance_frame_sha256(prepared, config)
+    model_version = _model_version(
+        booster=estimator.booster_,
+        config=config,
+        training_data_sha256=training_data_sha256,
+        best_iteration=best_iteration,
+    )
+    group_columns = [config.family_column, config.generation_column]
+    split_group_counts = {
+        name: int(split_frame.loc[:, group_columns].drop_duplicates().shape[0])
+        for name, split_frame in split_frames.items()
+    }
+    split_row_counts = {name: int(len(split_frame)) for name, split_frame in split_frames.items()}
+    split_group_hashes = {
+        name: tuple(
+            sorted(
+                hashlib.sha256(str(value).encode("utf-8")).hexdigest()
+                for value in split_frame[config.family_column].astype(str).unique()
+            )
+        )
+        for name, split_frame in split_frames.items()
+    }
+    development_group_hashes = tuple(
+        sorted({value for hashes in split_group_hashes.values() for value in hashes})
+    )
+    artifact = PerformanceModelArtifact(
+        config=config,
+        booster=estimator.booster_,
+        evaluations=evaluations,
+        data_use=data_use,
+        training_data_sha256=training_data_sha256,
+        model_version=model_version,
+        split_group_counts=split_group_counts,
+        split_row_counts=split_row_counts,
+        split_group_hashes=split_group_hashes,
+        development_group_hashes=development_group_hashes,
+        feature_profiles=feature_profiles,
+        dataset_evidence=evidence,
+        calibration=calibration,
+        grouped_test=grouped_test,
+        test_uncertainty=uncertainty,
+        estimated_peak_training_memory_mb=peak_memory_mb,
+        allowed_missing_fraction=config.max_prediction_missing_fraction,
+        best_iteration=best_iteration,
+        confidence_level=confidence,
+        precise_predictions_enabled=promotable,
+        promotable=promotable,
+        promotion_block_reasons=blockers,
+        requested_device=requested_device,
+        actual_device=actual_device,
+        device_fallback_reason=fallback_reason,
+    )
+    assignments = dict(
+        zip(
+            prepared[config.product_id_column].astype(str),
+            prepared[config.split_column].astype(str),
+            strict=True,
+        )
+    )
+    return PerformanceTrainingResult(artifact=artifact, split_assignments=assignments)
