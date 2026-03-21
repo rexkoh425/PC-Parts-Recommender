@@ -1,0 +1,46 @@
+{
+  "actual_device": "cpu",
+  "artifact_format_version": 1,
+  "calibrator": {
+    "coefficient": 0.8351658396099793,
+    "intercept": -1.678976175753801,
+    "is_fitted": true,
+    "type": "platt"
+  },
+  "fallback_reason": null,
+  "feature_names": [
+    "exact_mpn_match",
+    "exact_gtin_match",
+    "brand_match",
+    "category_match",
+    "model_token_overlap",
+    "character_similarity",
+    "numeric_token_agreement",
+    "capacity_agreement",
+    "form_factor_agreement",
+    "specification_overlap",
+    "embedding_cosine_similarity",
+    "relative_price_difference",
+    "price_missing",
+    "numeric_conflict"
+  ],
+  "is_fitted": true,
+  "model_file": "model.txt",
+  "model_type": "lightgbm_entity_resolver",
+  "parameters": {
+    "colsample_bytree": 1.0,
+    "learning_rate": 0.04,
+    "max_depth": 4,
+    "min_child_samples": 8,
+    "n_estimators": 350,
+    "num_leaves": 7,
+    "scale_pos_weight": 32.16216216216216,
+    "subsample": 1.0
+  },
+  "random_state": 20260722,
+  "requested_device": "cpu",
+  "thresholds": {
+    "auto_match": 0.98,
+    "manual_review": 0.8
+  }
+}

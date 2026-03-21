@@ -1,0 +1,25 @@
+{
+  "claim_scope": "transfer_benchmark_only",
+  "dataset_manifest": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\zenodo_er_dn7\\3e3fd6951ab4c4ed6aa741c2594d3ab496b63aeca6b41b8a1e639bc6d9895980\\dataset_manifest.json",
+  "dataset_manifest_sha256": "693633f2766abd8dba1abe19c01011f66d2823444a661488b61ea6c8bf66274e",
+  "leakage_units": [
+    "left_source_record_id",
+    "right_source_record_id"
+  ],
+  "pc_retailer_production_claim_eligible": false,
+  "test_access_policy": "test labels used once after model and threshold selection",
+  "validation_selected_thresholds": {
+    "f1_optimised": {
+      "f1": 0.8260869565217391,
+      "precision": 0.8636363636363636,
+      "recall": 0.7916666666666666,
+      "threshold": 0.34096437319426015
+    },
+    "precision_at_least_0_99": {
+      "f1": 0.2222222222222222,
+      "precision": 1.0,
+      "recall": 0.125,
+      "threshold": 0.9987831734009401
+    }
+  }
+}
