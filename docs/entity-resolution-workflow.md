@@ -54,4 +54,24 @@ uv run --no-sync python -m training.entity_resolution_review sample-active `
 
 ## Training gate
 
-<!-- TODO: sections below still to be written. -->
+Training is available only for a queue whose stored source policy permits it. The dedicated
+command splits by listing ID into training, calibration, threshold-selection, and test groups.
+Calibration and threshold selection are separate. The threshold maximises validation recall
+subject to at least 99% precision and minimum support; failure to meet the gate produces only a
+diagnostic artifact. A held-out grouped test precision gate is required before the artifact is
+placed under `deployable/`.
+
+```powershell
+uv run --no-sync python -m training.train_entity_resolution_human `
+  --review-queue artifacts/entity-resolution/reviewed-authorised-queue.jsonl `
+  --artifact-dir artifacts/models/entity-resolution-human `
+  --minimum-precision 0.99 --minimum-predicted-matches 25 `
+  --max-host-used-gb 55 --minimum-free-memory-mb 1024
+```
+
+The report stores queue and candidate hashes, source-use policy, listing-group hashes,
+calibration evidence, operating-point selection, and grouped test results. Test fixtures and
+external transfer benchmarks must remain clearly separated from PC-domain human-label claims. The
+human-label trainer and the transfer benchmark both preflight materialised input against the 55 GiB
+host-RAM cap before parsing it; their reports preserve the observed memory snapshot and conservative
+allocation estimate.
