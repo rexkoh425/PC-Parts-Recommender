@@ -1,0 +1,40 @@
+{
+  "artifact_format_version": 2,
+  "calibrator": {
+    "coefficient": 0.6769970549313742,
+    "intercept": -0.431318103805096,
+    "is_fitted": true,
+    "type": "platt"
+  },
+  "feature_names": [
+    "exact_mpn_match",
+    "exact_gtin_match",
+    "brand_match",
+    "category_match",
+    "model_token_overlap",
+    "character_similarity",
+    "numeric_token_agreement",
+    "capacity_agreement",
+    "form_factor_agreement",
+    "specification_overlap",
+    "embedding_cosine_similarity",
+    "relative_price_difference",
+    "price_missing",
+    "numeric_conflict",
+    "mpn_mismatch",
+    "gtin_mismatch",
+    "brand_mismatch",
+    "numeric_conflict_count",
+    "numeric_conflict_severity",
+    "capacity_conflict",
+    "module_count_conflict",
+    "power_conflict",
+    "radiator_conflict"
+  ],
+  "is_fitted": true,
+  "model_type": "exact_match_baseline",
+  "thresholds": {
+    "auto_match": 0.98,
+    "manual_review": 0.8
+  }
+}
