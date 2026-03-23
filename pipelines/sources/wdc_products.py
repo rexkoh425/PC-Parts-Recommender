@@ -29,7 +29,7 @@ from typing import Any, BinaryIO, Final, cast
 
 from pc_build_recommender.data_rights import production_catalog_rights_are_valid
 from pipelines.sources.base import (
-    FetchedSnapshot,
+    RawSnapshot,
     fetch_http_snapshot,
     sha256_bytes,
     sha256_file,
@@ -174,7 +174,7 @@ class WDCProductsResearchSource:
     def __init__(self, raw_root: str | Path) -> None:
         self.raw_root = Path(raw_root)
 
-    def fetch_corpus(self, *, corpus_path: str | Path | None = None) -> FetchedSnapshot:
+    def fetch_corpus(self, *, corpus_path: str | Path | None = None) -> RawSnapshot:
         if corpus_path is not None:
             suffix, media_type = _local_jsonl_format(corpus_path)
             return snapshot_local_file(
@@ -200,7 +200,7 @@ class WDCProductsResearchSource:
             timeout_seconds=1800,
         )
 
-    def fetch_categories(self, *, category_path: str | Path | None = None) -> FetchedSnapshot:
+    def fetch_categories(self, *, category_path: str | Path | None = None) -> RawSnapshot:
         if category_path is not None:
             suffix, media_type = _local_jsonl_format(category_path)
             return snapshot_local_file(
@@ -261,11 +261,11 @@ def _atomic_json(path: Path, payload: Mapping[str, object]) -> None:
             temporary_path.unlink(missing_ok=True)
 
 
-def _retention_deadline(snapshot: FetchedSnapshot) -> datetime:
+def _retention_deadline(snapshot: RawSnapshot) -> datetime:
     return snapshot.retrieved_at + timedelta(days=WDC_RESEARCH_RETENTION_DAYS)
 
 
-def _assert_snapshot_within_retention(snapshot: FetchedSnapshot) -> None:
+def _assert_snapshot_within_retention(snapshot: RawSnapshot) -> None:
     if utc_now() > _retention_deadline(snapshot):
         raise PermissionError(
             f"WDC research snapshot exceeded its {WDC_RESEARCH_RETENTION_DAYS}-day "
@@ -344,7 +344,7 @@ def _set_metadata(connection: sqlite3.Connection, key: str, value: object) -> No
 def _initialise_category_database(
     connection: sqlite3.Connection,
     *,
-    snapshot: FetchedSnapshot,
+    snapshot: RawSnapshot,
 ) -> dict[str, str]:
     connection.execute("PRAGMA journal_mode=DELETE")
     connection.execute("PRAGMA synchronous=FULL")
@@ -393,7 +393,7 @@ def _required_identifier(payload: Mapping[str, Any], field: str, *, context: str
 
 
 def build_wdc_category_index(
-    snapshot: FetchedSnapshot,
+    snapshot: RawSnapshot,
     *,
     index_path: str | Path,
     record_budget: int | None = None,
@@ -751,7 +751,7 @@ def _normalise_research_record(
     *,
     source_line_number: int,
     raw_line: bytes,
-    snapshot: FetchedSnapshot,
+    snapshot: RawSnapshot,
     broad_category: str,
     component_category: str,
 ) -> dict[str, object]:
@@ -819,7 +819,7 @@ def _normalise_research_record(
 
 
 def import_wdc_research_candidates(
-    snapshot: FetchedSnapshot,
+    snapshot: RawSnapshot,
     *,
     category_index_path: str | Path,
     output_root: str | Path,

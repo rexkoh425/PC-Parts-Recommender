@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 import pytest
-from pipelines.sources.base import ParseResult, FetchedSnapshot, SnapshotError, sha256_bytes
+from pipelines.sources.base import ParseResult, RawSnapshot, SnapshotError, sha256_bytes
 from pipelines.sources.pci_ids import (
     PCI_IDS_GZIP_URL,
     PCI_IDS_LICENSE,
@@ -37,7 +37,7 @@ def _snapshot(
     *,
     payload: bytes = PCI_IDS_FIXTURE,
     compressed: bool = False,
-) -> FetchedSnapshot:
+) -> RawSnapshot:
     tmp_path.mkdir(parents=True, exist_ok=True)
     source = tmp_path / ("pci.ids.gz" if compressed else "pci.ids")
     source.write_bytes(gzip.compress(payload, mtime=0) if compressed else payload)
@@ -333,7 +333,7 @@ def test_pci_ids_local_snapshot_can_be_sha256_pinned(tmp_path: Path) -> None:
 
 def test_pci_ids_parse_requires_its_own_snapshot(tmp_path: Path) -> None:
     snapshot = _snapshot(tmp_path)
-    foreign = FetchedSnapshot(
+    foreign = RawSnapshot(
         source_name="fixture_foreign",
         source_url=snapshot.source_url,
         source_type=snapshot.source_type,

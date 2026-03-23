@@ -13,7 +13,7 @@ from pc_build_recommender.domain.models import BenchmarkResult
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
     ParseResult,
-    FetchedSnapshot,
+    RawSnapshot,
     fetch_http_snapshot,
     rejected_record,
     sha256_bytes,
@@ -39,7 +39,7 @@ class MLPerfInferenceAdapter:
     def __init__(self, *, raw_root: str | Path) -> None:
         self.raw_root = Path(raw_root)
 
-    def fetch(self, *, summary_path: str | Path | None = None) -> FetchedSnapshot:
+    def fetch(self, *, summary_path: str | Path | None = None) -> RawSnapshot:
         if summary_path is not None:
             return snapshot_local_file(
                 source_name="mlperf_inference_v6",
@@ -65,7 +65,7 @@ class MLPerfInferenceAdapter:
 
     def parse(
         self,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
         *,
         available_only: bool = False,
         single_accelerator_only: bool = False,
@@ -135,7 +135,7 @@ class MLPerfInferenceAdapter:
 
     @classmethod
     def _normalise_result(
-        cls, *, row: dict[str, Any], index: int, snapshot: FetchedSnapshot
+        cls, *, row: dict[str, Any], index: int, snapshot: RawSnapshot
     ) -> dict[str, Any]:
         result_id = str(row.get("ID", "")).strip()
         if not result_id:

@@ -9,7 +9,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import pytest
-from pipelines.sources.base import FetchedSnapshot, utc_now
+from pipelines.sources.base import RawSnapshot, utc_now
 from pipelines.sources.wdc_products import (
     WDC_RESEARCH_DATA_USE_RIGHTS,
     WDC_RESEARCH_MANIFEST_SCHEMA,
@@ -34,7 +34,7 @@ def _write_jsonl_gzip(path: Path, rows: list[dict[str, object]]) -> list[bytes]:
     return encoded_rows
 
 
-def _fixture_snapshots(tmp_path: Path) -> tuple[FetchedSnapshot, FetchedSnapshot, list[bytes]]:
+def _fixture_snapshots(tmp_path: Path) -> tuple[RawSnapshot, RawSnapshot, list[bytes]]:
     category_path = tmp_path / "categories.json.gz"
     corpus_path = tmp_path / "corpus.json.gz"
     category_rows = [

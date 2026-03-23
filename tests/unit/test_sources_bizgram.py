@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 from pipelines.checks.quality import evaluate_batch_quality
 from pipelines.sources import bizgram_pdf
-from pipelines.sources.base import FetchedSnapshot
+from pipelines.sources.base import RawSnapshot
 from pipelines.sources.bizgram_pdf import (
     BIZGRAM_DATA_USE_RIGHTS,
     BIZGRAM_EXPECTED_SHA256,
@@ -35,8 +35,8 @@ class _FakeReader:
         self.pages = [_FakePage(page) for page in pages]
 
 
-def _snapshot(tmp_path: Path) -> FetchedSnapshot:
-    return FetchedSnapshot(
+def _snapshot(tmp_path: Path) -> RawSnapshot:
+    return RawSnapshot(
         source_name="bizgram_controlled_pdf",
         source_url=BIZGRAM_SOURCE_URL,
         source_type="retailer",

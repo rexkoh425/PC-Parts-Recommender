@@ -16,7 +16,7 @@ from pc_build_recommender.domain.models import BenchmarkResult
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
     ParseResult,
-    FetchedSnapshot,
+    RawSnapshot,
     fetch_http_snapshot,
     rejected_record,
     sha256_bytes,
@@ -40,7 +40,7 @@ class BlenderOpenDataAdapter:
     def __init__(self, *, raw_root: str | Path) -> None:
         self.raw_root = Path(raw_root)
 
-    def fetch(self, *, archive_path: str | Path | None = None) -> FetchedSnapshot:
+    def fetch(self, *, archive_path: str | Path | None = None) -> RawSnapshot:
         if archive_path is not None:
             return snapshot_local_file(
                 source_name="blender_open_data",
@@ -67,7 +67,7 @@ class BlenderOpenDataAdapter:
 
     def parse(
         self,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
         *,
         max_observations: int = 3_000,
         max_submissions_scan: int | None = None,
@@ -308,7 +308,7 @@ class BlenderOpenDataAdapter:
         submission: dict[str, Any],
         observation: dict[str, Any],
         observation_index: int,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
     ) -> dict[str, Any]:
         submission_id = str(submission.get("id", "")).strip()
         if not submission_id:

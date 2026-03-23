@@ -18,7 +18,7 @@ from pc_build_recommender.domain.models import PriceSample, RetailerOffering
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
     ParseResult,
-    FetchedSnapshot,
+    RawSnapshot,
     rejected_record,
     sha256_bytes,
     snapshot_local_file,
@@ -67,7 +67,7 @@ class DynacoreControlledPDFAdapter:
     def __init__(self, *, raw_root: str | Path) -> None:
         self.raw_root = Path(raw_root)
 
-    def fetch(self, *, pdf_path: str | Path) -> FetchedSnapshot:
+    def fetch(self, *, pdf_path: str | Path) -> RawSnapshot:
         snapshot = snapshot_local_file(
             source_name="dynacore_controlled_pdf",
             source_url=DYNACORE_SOURCE_URL,
@@ -86,7 +86,7 @@ class DynacoreControlledPDFAdapter:
             )
         return snapshot
 
-    def parse(self, snapshot: FetchedSnapshot) -> ParseResult:
+    def parse(self, snapshot: RawSnapshot) -> ParseResult:
         if snapshot.content_sha256 != DYNACORE_EXPECTED_SHA256:
             raise ValueError("snapshot does not match the reviewed Dynacore PDF fingerprint")
         batch = ParseResult(
@@ -215,7 +215,7 @@ class DynacoreControlledPDFAdapter:
         self,
         page: Any,
         batch: ParseResult,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
     ) -> list[dict[str, Any]]:
         records: list[dict[str, Any]] = []
         tables = page.crop((546, 0, 815, page.height)).extract_tables()
@@ -265,7 +265,7 @@ class DynacoreControlledPDFAdapter:
         self,
         page: Any,
         batch: ParseResult,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
     ) -> list[dict[str, Any]]:
         records: list[dict[str, Any]] = []
         tables = page.extract_tables()
@@ -356,7 +356,7 @@ class DynacoreControlledPDFAdapter:
         self,
         page: Any,
         batch: ParseResult,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
     ) -> list[dict[str, Any]]:
         records: list[dict[str, Any]] = []
         tables = page.extract_tables()
@@ -421,7 +421,7 @@ class DynacoreControlledPDFAdapter:
         *,
         page: Any,
         page_number: int,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
         batch: ParseResult,
         section: str,
         x_min: float,
@@ -523,7 +523,7 @@ class DynacoreControlledPDFAdapter:
     def _listing_record(
         self,
         *,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
         source_record_id: str,
         title: str,
         price: int,

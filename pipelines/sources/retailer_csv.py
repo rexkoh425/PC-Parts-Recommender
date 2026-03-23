@@ -16,7 +16,7 @@ from pc_build_recommender.domain.models import PriceSample, RetailerOffering
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
     ParseResult,
-    FetchedSnapshot,
+    RawSnapshot,
     rejected_record,
     sha256_bytes,
     snapshot_local_file,
@@ -93,7 +93,7 @@ class ConsentedRetailerCSVAdapter:
     def source_name(self) -> str:
         return f"retailer_feed_{self.policy.feed_id}"
 
-    def fetch(self, *, csv_path: str | Path) -> FetchedSnapshot:
+    def fetch(self, *, csv_path: str | Path) -> RawSnapshot:
         return snapshot_local_file(
             source_name=self.source_name,
             source_url=self.policy.source_url,
@@ -106,7 +106,7 @@ class ConsentedRetailerCSVAdapter:
             media_type="text/csv",
         )
 
-    def parse(self, snapshot: FetchedSnapshot) -> ParseResult:
+    def parse(self, snapshot: RawSnapshot) -> ParseResult:
         batch = ParseResult(
             source_name=snapshot.source_name,
             snapshot_sha256=snapshot.content_sha256,
@@ -160,7 +160,7 @@ class ConsentedRetailerCSVAdapter:
         *,
         row: dict[str, str | None],
         row_number: int,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
     ) -> dict[str, Any]:
         source_listing_id = self._required(row, "source_listing_id")
         title = self._required(row, "title")

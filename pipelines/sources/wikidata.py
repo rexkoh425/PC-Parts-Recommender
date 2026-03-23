@@ -24,7 +24,7 @@ from pc_build_recommender.domain.enums import ComponentKind
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION
 from pipelines.sources.base import (
     ParseResult,
-    FetchedSnapshot,
+    RawSnapshot,
     rejected_record,
     sha256_bytes,
     snapshot_local_file,
@@ -243,7 +243,7 @@ class WikidataEnrichmentAdapter:
         search_limit: int = DEFAULT_SEARCH_LIMIT,
         language: str = "en",
         timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
-    ) -> FetchedSnapshot:
+    ) -> RawSnapshot:
         """Fetch official API responses or snapshot a controlled response fixture.
 
         ``response_path`` is intended for deterministic reproduction and tests.  Live
@@ -533,7 +533,7 @@ class WikidataEnrichmentAdapter:
 
     def parse(
         self,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
         *,
         max_records: int = DEFAULT_MAX_RECORDS,
     ) -> ParseResult:
@@ -721,7 +721,7 @@ class WikidataEnrichmentAdapter:
         entity: dict[str, Any],
         method: str,
         language: str,
-        snapshot: FetchedSnapshot,
+        snapshot: RawSnapshot,
         is_official: bool,
     ) -> dict[str, Any]:
         labels = _language_values(entity.get("labels"), language)
