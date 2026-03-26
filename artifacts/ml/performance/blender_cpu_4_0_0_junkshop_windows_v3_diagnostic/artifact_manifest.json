@@ -1,0 +1,25 @@
+{
+  "diagnostic_schema_version": "pc-build-recommender.performance-v3-diagnostic.v1",
+  "files": {
+    "diagnostic_report.json": {
+      "sha256": "771ad2e0cf3ab5a361f8d825a388bd311c7c0bed5320efb8d76abc016a829e46",
+      "size_bytes": 28128
+    },
+    "feature_contract.json": {
+      "sha256": "bc334c8d9d065f5c398a9126e700146c8b42aebdce581d57977577a87ff7f42d",
+      "size_bytes": 1681
+    },
+    "model.txt": {
+      "sha256": "34b1e3cba077e5e1cf3a44c6464c9c655f978dd644c184a6ed03bcc3fb932e4a",
+      "size_bytes": 248879
+    }
+  },
+  "model_version": "d21ccd87b4699194d3bd294124f40436c62641a29880f639f7f662a177ab9e12",
+  "production_loadable": false,
+  "revocation_reasons": [
+    "the source observations are samples/minute with higher_is_better=true, but preparation mislabeled them as seconds and inverted them",
+    "the v3 development and reused-holdout diagnostics were adaptively derived from the invalid target and are not promotion evidence"
+  ],
+  "revoked": true,
+  "schema_version": "pc-build-recommender.performance-v3-manifest.v1"
+}
