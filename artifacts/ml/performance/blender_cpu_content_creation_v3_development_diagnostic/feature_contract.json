@@ -1,0 +1,59 @@
+{
+  "base_features": [
+    "core_count",
+    "thread_count",
+    "base_clock_ghz",
+    "boost_clock_ghz",
+    "tdp_watts"
+  ],
+  "generation_columns": [
+    "generation__2x_zen_4_4x_zen_4c__4c2c7cfb",
+    "generation__alder_lake__341e868c",
+    "generation__broadwell_e__0803db6c",
+    "generation__cascade_lake__643aed9f",
+    "generation__coffee_lake__51de7902",
+    "generation__comet_lake__993c0b06",
+    "generation__haswell__e1f40b24",
+    "generation__haswell_e__9d971765",
+    "generation__ivy_bridge__11d6f943",
+    "generation__kaby_lake__188ab67d",
+    "generation__raptor_lake__80029b0d",
+    "generation__rocket_lake__6a5939ef",
+    "generation__skylake__2fe9ca49",
+    "generation__zen__92e4accd",
+    "generation__zen_2__5598ab79",
+    "generation__zen_3__83374461",
+    "generation__zen_4__ed8dd0a2",
+    "generation__zen_5__da45e8c9"
+  ],
+  "generation_levels": [
+    "2x_zen_4_4x_zen_4c",
+    "alder_lake",
+    "broadwell_e",
+    "cascade_lake",
+    "coffee_lake",
+    "comet_lake",
+    "haswell",
+    "haswell_e",
+    "ivy_bridge",
+    "kaby_lake",
+    "raptor_lake",
+    "rocket_lake",
+    "skylake",
+    "zen",
+    "zen_2",
+    "zen_3",
+    "zen_4",
+    "zen_5"
+  ],
+  "interaction_features": {
+    "boost_capacity_per_watt": "core_count * boost_clock_ghz / tdp_watts",
+    "core_base_clock_capacity": "core_count * base_clock_ghz",
+    "core_boost_clock_capacity": "core_count * boost_clock_ghz",
+    "tdp_watts_per_core": "tdp_watts / core_count",
+    "thread_core_ratio": "thread_count / core_count"
+  },
+  "schema_version": "pc-build-recommender.cpu-feature-contract.v3",
+  "target_columns_used": [],
+  "unknown_generation_column": "generation__unknown"
+}
