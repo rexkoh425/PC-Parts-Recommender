@@ -1,0 +1,158 @@
+{
+  "artifact_path": "C:\\Users\\Admin\\Documents\\PC recommendation\\artifacts\\ml\\performance\\blender_cpu_4_0_0_junkshop_windows_v2",
+  "calibration": {
+    "absolute_error_quantile": 189.6145675862957,
+    "alpha": 0.1,
+    "calibration_group_count": 15,
+    "calibration_sample_count": 21,
+    "method": "split_conformal_absolute_residual",
+    "nominal_coverage": 0.9,
+    "test_coverage": 1.0,
+    "test_coverage_lower_95": 0.8388748419471806,
+    "test_covered_count": 20,
+    "test_sample_count": 20
+  },
+  "category": "cpu",
+  "created_at": "2026-07-22T05:46:49.320238+00:00",
+  "dataset_evidence": {
+    "block_reasons": [],
+    "eligible_for_promotion": true,
+    "manifest_sha256": "83a6d1e60508e740a7a0fdc743c25bb1d73d82aaec0c85069376f2bbd647f083",
+    "verified": true
+  },
+  "device": {
+    "actual": "cpu",
+    "fallback_reason": null,
+    "requested": "cpu"
+  },
+  "feature_columns": [
+    "core_count",
+    "thread_count",
+    "base_clock_ghz",
+    "boost_clock_ghz",
+    "tdp_watts"
+  ],
+  "grouped_test": {
+    "development_group_overlap_count": 0,
+    "evaluable_group_count": 5,
+    "group_column": "product_family",
+    "outside_training_envelope_fraction": 0.05,
+    "outside_training_envelope_row_count": 1,
+    "test_group_count": 13,
+    "test_row_count": 20,
+    "worst_group_mape_percent": 45.330897679992546
+  },
+  "input": {
+    "path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\model_training\\blender_performance_250k_full\\blender_performance.csv",
+    "sha256": "fd17be52c9667893e9a479e899a94adf7e2ee869edc6ae7b58125bf66e0feb87"
+  },
+  "mlflow_tracking": {
+    "artifact_uri": null,
+    "enabled": false,
+    "errors": [],
+    "experiment_name": null,
+    "run_id": null,
+    "status": "disabled",
+    "tracking_uri": null
+  },
+  "model_version": "fafbce2ba6007815026c5263cfc2cc00abf0620eb96c6908d95fed2f8416786a",
+  "models": {
+    "lightgbm": {
+      "model_name": "lightgbm",
+      "test": {
+        "mae": 8.056500427436116,
+        "mape_percent": 19.798375522858343,
+        "r2": 0.7236835505729606,
+        "sample_count": 20
+      },
+      "validation": {
+        "mae": 3.260409882992655,
+        "mape_percent": 14.821986263137363,
+        "r2": 0.9324419404506704,
+        "sample_count": 36
+      }
+    },
+    "ridge": {
+      "model_name": "ridge",
+      "test": {
+        "mae": 12.631410653397108,
+        "mape_percent": 61.66325755718167,
+        "r2": 0.6341049311721643,
+        "sample_count": 20
+      },
+      "validation": {
+        "mae": 8.42388479653227,
+        "mape_percent": 52.77560045634719,
+        "r2": 0.6690501466977228,
+        "sample_count": 36
+      }
+    },
+    "train_median": {
+      "model_name": "train_median",
+      "test": {
+        "mae": 17.499606638709146,
+        "mape_percent": 62.90903249835986,
+        "r2": -0.1422503999717446,
+        "sample_count": 20
+      },
+      "validation": {
+        "mae": 14.073946600634075,
+        "mape_percent": 86.37377262394689,
+        "r2": -0.011885772571184727,
+        "sample_count": 36
+      }
+    }
+  },
+  "promotion": {
+    "block_reasons": [
+      "test R2 0.7237 is below 0.8500",
+      "test MAPE 19.7984% exceeds 12.0000%",
+      "grouped-bootstrap R2 lower bound 0.4006 is below 0.8500",
+      "grouped-bootstrap MAPE upper bound 28.0891% exceeds 12.0000%"
+    ],
+    "confidence": "medium",
+    "eligible": false,
+    "precise_predictions_enabled": false
+  },
+  "resources": {
+    "configured_max_training_memory_mb": 512,
+    "estimated_peak_training_memory_mb": 32.44018840789795,
+    "gpu_max_bin": 63,
+    "max_cpu_threads": 1
+  },
+  "split_group_counts": {
+    "calibration": 15,
+    "test": 13,
+    "train": 59,
+    "validation": 22
+  },
+  "split_row_counts": {
+    "calibration": 21,
+    "test": 20,
+    "train": 95,
+    "validation": 36
+  },
+  "synthetic_data": {
+    "eligible_for_reported_metrics": true,
+    "evaluated_rows": 172,
+    "reporting_block_reason": null,
+    "synthetic_flags_declared": true,
+    "synthetic_rows": 0,
+    "synthetic_rows_excluded": false,
+    "total_rows": 172
+  },
+  "task": "workload_performance_regression",
+  "test_uncertainty": {
+    "confidence_level": 0.95,
+    "group_count": 13,
+    "mae_lower": 2.9826683929332427,
+    "mae_upper": 13.787154869146034,
+    "mape_percent_lower": 11.434971032832916,
+    "mape_percent_upper": 28.089051874184033,
+    "r2_lower": 0.4005507656726958,
+    "r2_upper": 0.8754009573241337,
+    "resamples": 2000
+  },
+  "training_data_sha256": "7d6316d431548612e721e214d585c728cdc2f14fb20f5d92043dee8c53232a84",
+  "workload": "blender_4_0_0_junkshop_cpu_windows"
+}
