@@ -1,0 +1,43 @@
+{
+  "artifact_schema_version": "pc-build-recommender.performance-model.v2",
+  "development_only": true,
+  "evidence_files": [
+    "dataset_manifest.json",
+    "training_evidence.json",
+    "training_report.json"
+  ],
+  "files": {
+    "dataset_manifest.json": {
+      "sha256": "6f5828799a93f0316ee4e0985db852a67250071d1af5454443ca5fe5c187324c",
+      "size_bytes": 189636
+    },
+    "metadata.json": {
+      "sha256": "7122217318232f2a286a1a7b9e27edc2d955955d959dcf0da18b54fdf869cfe8",
+      "size_bytes": 21703
+    },
+    "model.txt": {
+      "sha256": "3e3b83d1d876bdbeb3a4b490f3faf568ed11c846d150d7f408c4a24c947fe808",
+      "size_bytes": 136946
+    },
+    "training_evidence.json": {
+      "sha256": "974219cf7e433ef288850f2a5bdd480a0f40b4f106e4310ddcb20e321a3a2691",
+      "size_bytes": 15696
+    },
+    "training_report.json": {
+      "sha256": "8accd646ef3419ab0d51ed18810d7c4ee0a8ece5f7cbbc155dea9d8a451efc1d",
+      "size_bytes": 5518
+    }
+  },
+  "model_version": "7a9b5748cab32a6ed2906829793efab5853b9612217758299653ab6fa3af04a9",
+  "promotion_blockers": [
+    "test sample count 18 is below 20",
+    "test R2 0.8400 is below 0.8500",
+    "test MAPE 17.5668% exceeds 12.0000%",
+    "development experiment only; no independently frozen external holdout",
+    "one or more training rows are ineligible for external claims",
+    "grouped-bootstrap R2 lower bound -1.0715 is below 0.8500",
+    "grouped-bootstrap MAPE upper bound 30.3140% exceeds 12.0000%"
+  ],
+  "schema_version": "pc-build-recommender.performance-artifact-manifest.v2",
+  "serving_mode": "development_relative_only"
+}
