@@ -1,0 +1,3531 @@
+{
+  "candidate_cohorts": [
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 50,
+      "joined_observations": 1939,
+      "leakage_groups": 36,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 49,
+      "joined_observations": 1981,
+      "leakage_groups": 35,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 49,
+      "joined_observations": 1035,
+      "leakage_groups": 35,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 48,
+      "joined_observations": 1305,
+      "leakage_groups": 34,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 47,
+      "joined_observations": 1911,
+      "leakage_groups": 34,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 47,
+      "joined_observations": 1271,
+      "leakage_groups": 34,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 47,
+      "joined_observations": 961,
+      "leakage_groups": 34,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 48,
+      "joined_observations": 1166,
+      "leakage_groups": 33,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 47,
+      "joined_observations": 1348,
+      "leakage_groups": 33,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 45,
+      "joined_observations": 1031,
+      "leakage_groups": 33,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 47,
+      "joined_observations": 1296,
+      "leakage_groups": 32,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 46,
+      "joined_observations": 1019,
+      "leakage_groups": 32,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 45,
+      "joined_observations": 1229,
+      "leakage_groups": 32,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 45,
+      "joined_observations": 1014,
+      "leakage_groups": 32,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 45,
+      "joined_observations": 1146,
+      "leakage_groups": 31,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 45,
+      "joined_observations": 967,
+      "leakage_groups": 31,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 43,
+      "joined_observations": 301,
+      "leakage_groups": 30,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 43,
+      "joined_observations": 1219,
+      "leakage_groups": 29,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 41,
+      "joined_observations": 1238,
+      "leakage_groups": 29,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 41,
+      "joined_observations": 1232,
+      "leakage_groups": 29,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.1",
+      "hardware_identities": 41,
+      "joined_observations": 393,
+      "leakage_groups": 29,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 41,
+      "joined_observations": 316,
+      "leakage_groups": 29,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.1",
+      "hardware_identities": 39,
+      "joined_observations": 416,
+      "leakage_groups": 29,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 40,
+      "joined_observations": 311,
+      "leakage_groups": 28,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.0",
+      "hardware_identities": 37,
+      "joined_observations": 204,
+      "leakage_groups": 28,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 39,
+      "joined_observations": 556,
+      "leakage_groups": 27,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.1",
+      "hardware_identities": 36,
+      "joined_observations": 414,
+      "leakage_groups": 27,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 32,
+      "joined_observations": 158,
+      "leakage_groups": 27,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 38,
+      "joined_observations": 1180,
+      "leakage_groups": 26,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 38,
+      "joined_observations": 1167,
+      "leakage_groups": 26,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 38,
+      "joined_observations": 1060,
+      "leakage_groups": 26,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 38,
+      "joined_observations": 795,
+      "leakage_groups": 26,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 38,
+      "joined_observations": 538,
+      "leakage_groups": 26,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 37,
+      "joined_observations": 522,
+      "leakage_groups": 26,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 36,
+      "joined_observations": 1026,
+      "leakage_groups": 26,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 33,
+      "joined_observations": 148,
+      "leakage_groups": 26,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 33,
+      "joined_observations": 123,
+      "leakage_groups": 26,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 37,
+      "joined_observations": 793,
+      "leakage_groups": 25,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 36,
+      "joined_observations": 827,
+      "leakage_groups": 25,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 33,
+      "joined_observations": 150,
+      "leakage_groups": 25,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.0",
+      "hardware_identities": 31,
+      "joined_observations": 166,
+      "leakage_groups": 25,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 35,
+      "joined_observations": 473,
+      "leakage_groups": 24,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 34,
+      "joined_observations": 419,
+      "leakage_groups": 24,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 34,
+      "joined_observations": 410,
+      "leakage_groups": 24,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 33,
+      "joined_observations": 104,
+      "leakage_groups": 24,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 31,
+      "joined_observations": 109,
+      "leakage_groups": 24,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 31,
+      "joined_observations": 108,
+      "leakage_groups": 24,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.0",
+      "hardware_identities": 29,
+      "joined_observations": 154,
+      "leakage_groups": 24,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 34,
+      "joined_observations": 1027,
+      "leakage_groups": 23,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 34,
+      "joined_observations": 401,
+      "leakage_groups": 23,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 34,
+      "joined_observations": 323,
+      "leakage_groups": 23,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 33,
+      "joined_observations": 99,
+      "leakage_groups": 23,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.1",
+      "hardware_identities": 32,
+      "joined_observations": 89,
+      "leakage_groups": 23,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.1",
+      "hardware_identities": 27,
+      "joined_observations": 74,
+      "leakage_groups": 23,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 33,
+      "joined_observations": 1134,
+      "leakage_groups": 22,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 33,
+      "joined_observations": 857,
+      "leakage_groups": 22,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 32,
+      "joined_observations": 89,
+      "leakage_groups": 22,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 28,
+      "joined_observations": 100,
+      "leakage_groups": 22,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 27,
+      "joined_observations": 93,
+      "leakage_groups": 22,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 26,
+      "joined_observations": 98,
+      "leakage_groups": 22,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.0.0",
+      "hardware_identities": 26,
+      "joined_observations": 84,
+      "leakage_groups": 22,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 32,
+      "joined_observations": 1090,
+      "leakage_groups": 21,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 32,
+      "joined_observations": 1080,
+      "leakage_groups": 21,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 30,
+      "joined_observations": 667,
+      "leakage_groups": 21,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 30,
+      "joined_observations": 248,
+      "leakage_groups": 21,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 29,
+      "joined_observations": 84,
+      "leakage_groups": 21,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 28,
+      "joined_observations": 118,
+      "leakage_groups": 21,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 27,
+      "joined_observations": 106,
+      "leakage_groups": 21,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 27,
+      "joined_observations": 97,
+      "leakage_groups": 21,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.1",
+      "hardware_identities": 27,
+      "joined_observations": 76,
+      "leakage_groups": 21,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 29,
+      "joined_observations": 245,
+      "leakage_groups": 20,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 29,
+      "joined_observations": 211,
+      "leakage_groups": 20,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.0.0",
+      "hardware_identities": 24,
+      "joined_observations": 67,
+      "leakage_groups": 20,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 25,
+      "joined_observations": 138,
+      "leakage_groups": 19,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 24,
+      "joined_observations": 77,
+      "leakage_groups": 19,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 21,
+      "joined_observations": 49,
+      "leakage_groups": 19,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.0",
+      "hardware_identities": 20,
+      "joined_observations": 37,
+      "leakage_groups": 19,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 19,
+      "joined_observations": 27,
+      "leakage_groups": 19,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 28,
+      "joined_observations": 609,
+      "leakage_groups": 18,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 28,
+      "joined_observations": 257,
+      "leakage_groups": 18,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 27,
+      "joined_observations": 263,
+      "leakage_groups": 18,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 27,
+      "joined_observations": 151,
+      "leakage_groups": 18,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 26,
+      "joined_observations": 551,
+      "leakage_groups": 18,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 25,
+      "joined_observations": 81,
+      "leakage_groups": 18,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 25,
+      "joined_observations": 65,
+      "leakage_groups": 18,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 24,
+      "joined_observations": 90,
+      "leakage_groups": 18,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 23,
+      "joined_observations": 99,
+      "leakage_groups": 18,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 23,
+      "joined_observations": 37,
+      "leakage_groups": 18,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 22,
+      "joined_observations": 69,
+      "leakage_groups": 18,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 22,
+      "joined_observations": 48,
+      "leakage_groups": 18,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 27,
+      "joined_observations": 333,
+      "leakage_groups": 17,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 27,
+      "joined_observations": 212,
+      "leakage_groups": 17,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 26,
+      "joined_observations": 534,
+      "leakage_groups": 17,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 26,
+      "joined_observations": 149,
+      "leakage_groups": 17,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 25,
+      "joined_observations": 94,
+      "leakage_groups": 17,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 23,
+      "joined_observations": 61,
+      "leakage_groups": 17,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 22,
+      "joined_observations": 201,
+      "leakage_groups": 17,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.0.0",
+      "hardware_identities": 22,
+      "joined_observations": 80,
+      "leakage_groups": 17,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 21,
+      "joined_observations": 70,
+      "leakage_groups": 17,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 21,
+      "joined_observations": 45,
+      "leakage_groups": 17,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 26,
+      "joined_observations": 502,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 25,
+      "joined_observations": 345,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 25,
+      "joined_observations": 120,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 24,
+      "joined_observations": 262,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 24,
+      "joined_observations": 122,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 24,
+      "joined_observations": 82,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 23,
+      "joined_observations": 223,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 23,
+      "joined_observations": 106,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 23,
+      "joined_observations": 87,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 23,
+      "joined_observations": 54,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 20,
+      "joined_observations": 76,
+      "leakage_groups": 16,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 19,
+      "joined_observations": 74,
+      "leakage_groups": 16,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 18,
+      "joined_observations": 33,
+      "leakage_groups": 16,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 17,
+      "joined_observations": 28,
+      "leakage_groups": 16,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 24,
+      "joined_observations": 540,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 23,
+      "joined_observations": 348,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 23,
+      "joined_observations": 298,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 23,
+      "joined_observations": 138,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 22,
+      "joined_observations": 215,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 22,
+      "joined_observations": 203,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 21,
+      "joined_observations": 144,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 21,
+      "joined_observations": 76,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 20,
+      "joined_observations": 154,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 20,
+      "joined_observations": 39,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 19,
+      "joined_observations": 65,
+      "leakage_groups": 15,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 19,
+      "joined_observations": 64,
+      "leakage_groups": 15,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 19,
+      "joined_observations": 46,
+      "leakage_groups": 15,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.0",
+      "hardware_identities": 17,
+      "joined_observations": 34,
+      "leakage_groups": 15,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 16,
+      "joined_observations": 70,
+      "leakage_groups": 15,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 16,
+      "joined_observations": 22,
+      "leakage_groups": 15,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 16,
+      "joined_observations": 19,
+      "leakage_groups": 15,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 24,
+      "joined_observations": 450,
+      "leakage_groups": 14,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 23,
+      "joined_observations": 311,
+      "leakage_groups": 14,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 22,
+      "joined_observations": 319,
+      "leakage_groups": 14,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 22,
+      "joined_observations": 108,
+      "leakage_groups": 14,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 20,
+      "joined_observations": 119,
+      "leakage_groups": 14,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 18,
+      "joined_observations": 113,
+      "leakage_groups": 14,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 18,
+      "joined_observations": 59,
+      "leakage_groups": 14,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 18,
+      "joined_observations": 41,
+      "leakage_groups": 14,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 18,
+      "joined_observations": 35,
+      "leakage_groups": 14,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 17,
+      "joined_observations": 67,
+      "leakage_groups": 14,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 14,
+      "joined_observations": 27,
+      "leakage_groups": 14,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 23,
+      "joined_observations": 262,
+      "leakage_groups": 13,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 23,
+      "joined_observations": 218,
+      "leakage_groups": 13,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 23,
+      "joined_observations": 171,
+      "leakage_groups": 13,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 20,
+      "joined_observations": 157,
+      "leakage_groups": 13,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 20,
+      "joined_observations": 116,
+      "leakage_groups": 13,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 20,
+      "joined_observations": 108,
+      "leakage_groups": 13,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 19,
+      "joined_observations": 33,
+      "leakage_groups": 13,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.1.0",
+      "hardware_identities": 15,
+      "joined_observations": 31,
+      "leakage_groups": 13,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 13,
+      "joined_observations": 18,
+      "leakage_groups": 13,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 22,
+      "joined_observations": 243,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 21,
+      "joined_observations": 250,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 20,
+      "joined_observations": 137,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 19,
+      "joined_observations": 153,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 17,
+      "joined_observations": 81,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 17,
+      "joined_observations": 63,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 16,
+      "joined_observations": 90,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 16,
+      "joined_observations": 75,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 15,
+      "joined_observations": 61,
+      "leakage_groups": 12,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 15,
+      "joined_observations": 56,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 13,
+      "joined_observations": 18,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 12,
+      "joined_observations": 16,
+      "leakage_groups": 12,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 21,
+      "joined_observations": 323,
+      "leakage_groups": 11,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 21,
+      "joined_observations": 289,
+      "leakage_groups": 11,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 20,
+      "joined_observations": 147,
+      "leakage_groups": 11,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 17,
+      "joined_observations": 138,
+      "leakage_groups": 11,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 16,
+      "joined_observations": 65,
+      "leakage_groups": 11,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 15,
+      "joined_observations": 35,
+      "leakage_groups": 11,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 15,
+      "joined_observations": 30,
+      "leakage_groups": 11,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 14,
+      "joined_observations": 21,
+      "leakage_groups": 11,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 14,
+      "joined_observations": 21,
+      "leakage_groups": 11,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 13,
+      "joined_observations": 23,
+      "leakage_groups": 11,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 13,
+      "joined_observations": 21,
+      "leakage_groups": 11,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 12,
+      "joined_observations": 21,
+      "leakage_groups": 11,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 11,
+      "joined_observations": 23,
+      "leakage_groups": 11,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 11,
+      "joined_observations": 17,
+      "leakage_groups": 11,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 11,
+      "joined_observations": 16,
+      "leakage_groups": 11,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 11,
+      "joined_observations": 13,
+      "leakage_groups": 11,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 11,
+      "joined_observations": 12,
+      "leakage_groups": 11,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 17,
+      "joined_observations": 80,
+      "leakage_groups": 10,
+      "operating_system": "Windows",
+      "scene": "barbershop_interior"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 16,
+      "joined_observations": 62,
+      "leakage_groups": 10,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 14,
+      "joined_observations": 57,
+      "leakage_groups": 10,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 14,
+      "joined_observations": 50,
+      "leakage_groups": 10,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 14,
+      "joined_observations": 29,
+      "leakage_groups": 10,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 14,
+      "joined_observations": 23,
+      "leakage_groups": 10,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 14,
+      "joined_observations": 20,
+      "leakage_groups": 10,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 13,
+      "joined_observations": 32,
+      "leakage_groups": 10,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 12,
+      "joined_observations": 23,
+      "leakage_groups": 10,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 11,
+      "joined_observations": 16,
+      "leakage_groups": 10,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 11,
+      "joined_observations": 16,
+      "leakage_groups": 10,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 11,
+      "joined_observations": 13,
+      "leakage_groups": 10,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 10,
+      "joined_observations": 19,
+      "leakage_groups": 10,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 10,
+      "joined_observations": 14,
+      "leakage_groups": 10,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.0.0",
+      "hardware_identities": 10,
+      "joined_observations": 11,
+      "leakage_groups": 10,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 10,
+      "joined_observations": 10,
+      "leakage_groups": 10,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 14,
+      "joined_observations": 19,
+      "leakage_groups": 9,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 13,
+      "joined_observations": 30,
+      "leakage_groups": 9,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 13,
+      "joined_observations": 27,
+      "leakage_groups": 9,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 12,
+      "joined_observations": 32,
+      "leakage_groups": 9,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 12,
+      "joined_observations": 20,
+      "leakage_groups": 9,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 12,
+      "joined_observations": 16,
+      "leakage_groups": 9,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 11,
+      "joined_observations": 32,
+      "leakage_groups": 9,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 11,
+      "joined_observations": 18,
+      "leakage_groups": 9,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 11,
+      "joined_observations": 14,
+      "leakage_groups": 9,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 10,
+      "joined_observations": 19,
+      "leakage_groups": 9,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 10,
+      "joined_observations": 19,
+      "leakage_groups": 9,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 9,
+      "joined_observations": 41,
+      "leakage_groups": 9,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 9,
+      "joined_observations": 18,
+      "leakage_groups": 9,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 9,
+      "joined_observations": 10,
+      "leakage_groups": 9,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 13,
+      "joined_observations": 23,
+      "leakage_groups": 8,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.93.1",
+      "hardware_identities": 10,
+      "joined_observations": 15,
+      "leakage_groups": 8,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 9,
+      "joined_observations": 16,
+      "leakage_groups": 8,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 9,
+      "joined_observations": 13,
+      "leakage_groups": 8,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 9,
+      "joined_observations": 12,
+      "leakage_groups": 8,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 8,
+      "joined_observations": 12,
+      "leakage_groups": 8,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 8,
+      "joined_observations": 12,
+      "leakage_groups": 8,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 8,
+      "joined_observations": 12,
+      "leakage_groups": 8,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.2.0 LTS",
+      "hardware_identities": 8,
+      "joined_observations": 9,
+      "leakage_groups": 8,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 10,
+      "joined_observations": 17,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 10,
+      "joined_observations": 13,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 9,
+      "joined_observations": 31,
+      "leakage_groups": 7,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 9,
+      "joined_observations": 19,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 9,
+      "joined_observations": 10,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 8,
+      "joined_observations": 17,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 8,
+      "joined_observations": 16,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 8,
+      "joined_observations": 12,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 8,
+      "joined_observations": 11,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 8,
+      "joined_observations": 10,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 8,
+      "joined_observations": 10,
+      "leakage_groups": 7,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 7,
+      "joined_observations": 11,
+      "leakage_groups": 7,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 7,
+      "joined_observations": 11,
+      "leakage_groups": 7,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 7,
+      "joined_observations": 10,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 7,
+      "joined_observations": 10,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 7,
+      "joined_observations": 9,
+      "leakage_groups": 7,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 7,
+      "joined_observations": 8,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.0.0",
+      "hardware_identities": 7,
+      "joined_observations": 8,
+      "leakage_groups": 7,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 10,
+      "joined_observations": 17,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 9,
+      "joined_observations": 64,
+      "leakage_groups": 6,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 9,
+      "joined_observations": 20,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 9,
+      "joined_observations": 16,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 9,
+      "joined_observations": 9,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 7,
+      "joined_observations": 18,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 7,
+      "joined_observations": 14,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 7,
+      "joined_observations": 8,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 6,
+      "joined_observations": 13,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.0.0",
+      "hardware_identities": 6,
+      "joined_observations": 11,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 6,
+      "joined_observations": 9,
+      "leakage_groups": 6,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 6,
+      "joined_observations": 9,
+      "leakage_groups": 6,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 6,
+      "joined_observations": 8,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 6,
+      "joined_observations": 8,
+      "leakage_groups": 6,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 6,
+      "joined_observations": 8,
+      "leakage_groups": 6,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 6,
+      "joined_observations": 7,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 6,
+      "joined_observations": 7,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.2.0 LTS",
+      "hardware_identities": 6,
+      "joined_observations": 7,
+      "leakage_groups": 6,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 6,
+      "joined_observations": 6,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 6,
+      "joined_observations": 6,
+      "leakage_groups": 6,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 8,
+      "joined_observations": 92,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 8,
+      "joined_observations": 90,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 8,
+      "joined_observations": 83,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 8,
+      "joined_observations": 80,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 8,
+      "joined_observations": 70,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 8,
+      "joined_observations": 69,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 8,
+      "joined_observations": 51,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 8,
+      "joined_observations": 40,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 8,
+      "joined_observations": 39,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 8,
+      "joined_observations": 35,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 8,
+      "joined_observations": 27,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 7,
+      "joined_observations": 12,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 6,
+      "joined_observations": 11,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.2.0 LTS",
+      "hardware_identities": 6,
+      "joined_observations": 8,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 6,
+      "joined_observations": 7,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 5,
+      "joined_observations": 11,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 5,
+      "joined_observations": 10,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 5,
+      "joined_observations": 9,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 5,
+      "joined_observations": 9,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 5,
+      "joined_observations": 9,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 5,
+      "joined_observations": 8,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 5,
+      "joined_observations": 8,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 5,
+      "joined_observations": 7,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 5,
+      "joined_observations": 7,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 5,
+      "joined_observations": 7,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 5,
+      "joined_observations": 6,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 5,
+      "joined_observations": 6,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 5,
+      "joined_observations": 6,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 5,
+      "joined_observations": 6,
+      "leakage_groups": 5,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 5,
+      "joined_observations": 6,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 5,
+      "joined_observations": 6,
+      "leakage_groups": 5,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 7,
+      "joined_observations": 111,
+      "leakage_groups": 4,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 7,
+      "joined_observations": 88,
+      "leakage_groups": 4,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 7,
+      "joined_observations": 57,
+      "leakage_groups": 4,
+      "operating_system": "Windows",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 7,
+      "joined_observations": 46,
+      "leakage_groups": 4,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 6,
+      "joined_observations": 16,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 6,
+      "joined_observations": 10,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "barbershop_interior"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 5,
+      "joined_observations": 7,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 4,
+      "joined_observations": 10,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 4,
+      "joined_observations": 9,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.2.0",
+      "hardware_identities": 4,
+      "joined_observations": 9,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 4,
+      "joined_observations": 7,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.3.0",
+      "hardware_identities": 4,
+      "joined_observations": 7,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 4,
+      "joined_observations": 7,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 4,
+      "joined_observations": 6,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.3.0",
+      "hardware_identities": 4,
+      "joined_observations": 5,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.1",
+      "hardware_identities": 4,
+      "joined_observations": 4,
+      "leakage_groups": 4,
+      "operating_system": "Windows",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.1",
+      "hardware_identities": 4,
+      "joined_observations": 4,
+      "leakage_groups": 4,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 4,
+      "joined_observations": 4,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.92.0",
+      "hardware_identities": 4,
+      "joined_observations": 4,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 4,
+      "joined_observations": 4,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 4,
+      "joined_observations": 4,
+      "leakage_groups": 4,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 4,
+      "joined_observations": 4,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.4.0",
+      "hardware_identities": 4,
+      "joined_observations": 4,
+      "leakage_groups": 4,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 6,
+      "joined_observations": 60,
+      "leakage_groups": 3,
+      "operating_system": "Windows",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 6,
+      "joined_observations": 53,
+      "leakage_groups": 3,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 6,
+      "joined_observations": 9,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 5,
+      "joined_observations": 10,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 5,
+      "joined_observations": 9,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 4,
+      "joined_observations": 5,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 3,
+      "joined_observations": 7,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 3,
+      "joined_observations": 6,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 3,
+      "joined_observations": 5,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 3,
+      "joined_observations": 5,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 3,
+      "joined_observations": 4,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 3,
+      "joined_observations": 4,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.1",
+      "hardware_identities": 3,
+      "joined_observations": 3,
+      "leakage_groups": 3,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.2",
+      "hardware_identities": 3,
+      "joined_observations": 3,
+      "leakage_groups": 3,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.2",
+      "hardware_identities": 3,
+      "joined_observations": 3,
+      "leakage_groups": 3,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 3,
+      "joined_observations": 3,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.0.0",
+      "hardware_identities": 3,
+      "joined_observations": 3,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 3,
+      "joined_observations": 3,
+      "leakage_groups": 3,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 5,
+      "joined_observations": 8,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 5,
+      "joined_observations": 6,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 4,
+      "joined_observations": 15,
+      "leakage_groups": 2,
+      "operating_system": "Windows",
+      "scene": "barbershop_interior"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 4,
+      "joined_observations": 10,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 4,
+      "joined_observations": 9,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 4,
+      "joined_observations": 8,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 4,
+      "joined_observations": 7,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 4,
+      "joined_observations": 6,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "koro"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 4,
+      "joined_observations": 6,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 4,
+      "joined_observations": 5,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 3,
+      "joined_observations": 4,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 2,
+      "joined_observations": 5,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 2,
+      "joined_observations": 5,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.6.0",
+      "hardware_identities": 2,
+      "joined_observations": 5,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.91.2",
+      "hardware_identities": 2,
+      "joined_observations": 3,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "victor"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.1",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.1.0",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.0",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.2.0 LTS",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "5.2.0 LTS",
+      "hardware_identities": 2,
+      "joined_observations": 2,
+      "leakage_groups": 2,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.81 (sub 16)",
+      "hardware_identities": 2,
+      "joined_observations": 3,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "barbershop_interior"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.1.0",
+      "hardware_identities": 1,
+      "joined_observations": 4,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 1,
+      "joined_observations": 2,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "fishy_cat"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.83.0",
+      "hardware_identities": 1,
+      "joined_observations": 2,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.1",
+      "hardware_identities": 1,
+      "joined_observations": 2,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.5.0",
+      "hardware_identities": 1,
+      "joined_observations": 2,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Darwin",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Darwin",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.82 (sub 7)",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Darwin",
+      "scene": "victor"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.0",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Darwin",
+      "scene": "bmw27"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.1",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "koro"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "2.90.1",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "2.90.1",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "pavillon_barcelona"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.0.1",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.2",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "OPTIX",
+      "benchmark_version": "3.1.2",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.2.1",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "3.5.0",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "classroom"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "4.4.0",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "5.0.0",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "5.0.0",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "monster"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "5.1.0",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "5.1.1",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Windows",
+      "scene": "junkshop"
+    },
+    {
+      "backend": "CUDA",
+      "benchmark_version": "5.1.1",
+      "hardware_identities": 1,
+      "joined_observations": 1,
+      "leakage_groups": 1,
+      "operating_system": "Linux",
+      "scene": "monster"
+    }
+  ],
+  "dataset_role": "measured_pilot_non_promotable",
+  "features": [
+    "base_clock_mhz",
+    "boost_clock_mhz",
+    "vram_gb",
+    "board_power_watts"
+  ],
+  "is_synthetic": false,
+  "matching": {
+    "counts": {
+      "blender_category_filtered": 127753,
+      "blender_gpu_no_catalog_family": 15532,
+      "blender_gpu_unparsed_name": 3285,
+      "blender_observations_seen": 250000,
+      "blender_unsupported_backend": 19722,
+      "catalog_cpu_parsed_name": 455,
+      "catalog_cpu_records": 788,
+      "catalog_cpu_unparsed_name": 333,
+      "catalog_gpu_parsed_name": 3632,
+      "catalog_gpu_records": 3832,
+      "catalog_gpu_unparsed_name": 200,
+      "join_rejected_ambiguous_vram_variant": 25,
+      "join_rejected_catalog_variant_or_features": 20236,
+      "join_rejected_explicit_vram_conflict": 4,
+      "joined_observations": 63472
+    },
+    "fuzzy_matching_used": false,
+    "method": "conservative_normalized_hardware_family_v1"
+  },
+  "output": {
+    "csv": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\model_training\\blender_gpu_performance_250k_full\\blender_performance.csv",
+    "rows": 50,
+    "sha256": "bdcea49ca7814a6b2a45f3697dc76d0f4148c50a4edcf29b3236d69b2de62bd2"
+  },
+  "promotion": {
+    "block_reasons": [
+      "selected cohort has 36 leakage groups; credible grouped-evaluation minimum is 100"
+    ],
+    "eligible": false,
+    "minimum_credible_products": 100,
+    "minimum_pilot_products": 15
+  },
+  "row_count": 50,
+  "schema_version": "pc-build-recommender.blender-performance-dataset.v1",
+  "selected_cohort": {
+    "backend": "OPTIX",
+    "benchmark_version": "4.5.0",
+    "category": "gpu",
+    "hardware_identities": 50,
+    "joined_observations": 1939,
+    "leakage_groups": 36,
+    "operating_system": "Windows",
+    "scene": "junkshop",
+    "workload": "blender_4_5_0_junkshop_optix_windows"
+  },
+  "source_licences": {
+    "blender_open_data": "CC0 1.0",
+    "buildcores_open_db": "ODC-By 1.0; attribution required"
+  },
+  "sources": {
+    "blender_records": {
+      "path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\blender_open_data\\c0f9d35c20807776138b0590097177b8ef2172119cc19aae8d1bad1b55af4833\\hash_sample-250000-scan-all\\records.jsonl",
+      "rows": 250000,
+      "sha256": "393a10e957256d23ddcb2a2a16cb2458a358ca682a38b65580a1339fb625fd06"
+    },
+    "buildcores_records": {
+      "path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\buildcores_open_db\\f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f\\full\\records.jsonl",
+      "rows": 25666,
+      "sha256": "8c738c5136615080ac29ced074726f97cab473c5a45eafdf19c26504aa624ce2"
+    }
+  },
+  "target": {
+    "aggregation": "median within exact cohort and hardware family",
+    "column": "target_score",
+    "formula": "target_scale / median_render_seconds",
+    "higher_is_better": true,
+    "source_unit": "seconds",
+    "source_value_kind": "observed",
+    "target_scale": 1000.0
+  }
+}

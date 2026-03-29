@@ -1,0 +1,182 @@
+{
+  "artifact_path": "C:\\Users\\Admin\\Documents\\PC recommendation\\artifacts\\ml\\performance\\blender_gpu_content_creation_optix_pilot_v1",
+  "calibration": {
+    "absolute_error_quantile": 19.884618162320468,
+    "alpha": 0.1,
+    "calibration_group_count": 5,
+    "calibration_sample_count": 7,
+    "method": "split_conformal_absolute_residual",
+    "nominal_coverage": 0.9,
+    "test_coverage": 1.0,
+    "test_coverage_lower_95": 0.6096657120978346,
+    "test_covered_count": 6,
+    "test_sample_count": 6
+  },
+  "category": "gpu",
+  "created_at": "2026-07-23T05:45:44.411790+00:00",
+  "dataset_evidence": {
+    "block_reasons": [
+      "selected cohort has 36 leakage groups; credible grouped-evaluation minimum is 100",
+      "one or more training rows are ineligible for external claims"
+    ],
+    "eligible_for_promotion": false,
+    "manifest_sha256": "a63c944b1054e430169a1b84e96e5ee0afe4d9cefb34461d6afb62dc5fcf0534",
+    "verified": true
+  },
+  "device": {
+    "actual": "cpu",
+    "fallback_reason": null,
+    "requested": "cpu"
+  },
+  "feature_columns": [
+    "base_clock_mhz",
+    "boost_clock_mhz",
+    "vram_gb",
+    "board_power_watts"
+  ],
+  "grouped_test": {
+    "development_group_overlap_count": 0,
+    "evaluable_group_count": 1,
+    "group_column": "product_family",
+    "outside_training_envelope_fraction": 0.0,
+    "outside_training_envelope_row_count": 0,
+    "test_group_count": 5,
+    "test_row_count": 6,
+    "worst_group_mape_percent": 15.317940499519079
+  },
+  "input": {
+    "path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\model_training\\blender_gpu_performance_250k_full\\blender_performance.csv",
+    "sha256": "bdcea49ca7814a6b2a45f3697dc76d0f4148c50a4edcf29b3236d69b2de62bd2"
+  },
+  "mlflow_tracking": {
+    "artifact_uri": null,
+    "enabled": false,
+    "errors": [],
+    "experiment_name": null,
+    "run_id": null,
+    "status": "disabled",
+    "tracking_uri": null
+  },
+  "model_version": "fb2f42fccae0ac6965d28118fc26b5f5b811aa3fed8f6599fc4013a710a75192",
+  "models": {
+    "lightgbm": {
+      "model_name": "lightgbm",
+      "test": {
+        "mae": 2.839991518009757,
+        "mape_percent": 203.5237060029363,
+        "r2": -1.853750452771871,
+        "sample_count": 6
+      },
+      "validation": {
+        "mae": 8.326917728580016,
+        "mape_percent": 424.67384194988193,
+        "r2": 0.48359124130749687,
+        "sample_count": 13
+      }
+    },
+    "ridge": {
+      "model_name": "ridge",
+      "test": {
+        "mae": 13.788062285046124,
+        "mape_percent": 615.2560849140802,
+        "r2": -52.61820020752308,
+        "sample_count": 6
+      },
+      "validation": {
+        "mae": 11.105706965378715,
+        "mape_percent": 670.7982031745526,
+        "r2": 0.3419167893893965,
+        "sample_count": 13
+      }
+    },
+    "train_median": {
+      "model_name": "train_median",
+      "test": {
+        "mae": 1.781152309739402,
+        "mape_percent": 50.02032687716264,
+        "r2": -0.4010976555582526,
+        "sample_count": 6
+      },
+      "validation": {
+        "mae": 7.718084509885267,
+        "mape_percent": 129.55166019527758,
+        "r2": -0.1439509529066887,
+        "sample_count": 13
+      }
+    }
+  },
+  "promotion": {
+    "block_reasons": [
+      "test sample count 6 is below 20",
+      "test R2 -1.8538 is below 0.8500",
+      "test MAPE 203.5237% exceeds 12.0000%",
+      "selected cohort has 36 leakage groups; credible grouped-evaluation minimum is 100",
+      "one or more training rows are ineligible for external claims",
+      "test group count 5 is below 10",
+      "calibration sample count 7 is below 20",
+      "calibration group count 5 is below 10",
+      "grouped-bootstrap R2 lower bound -3511.8527 is below 0.8500",
+      "grouped-bootstrap MAPE upper bound 393.3696% exceeds 12.0000%",
+      "LightGBM validation MAPE 424.6738% does not improve on the best baseline 129.5517% by the required 0.00%",
+      "LightGBM test MAPE 203.5237% does not improve on the best baseline 50.0203% by the required 0.00%"
+    ],
+    "confidence": "low",
+    "eligible": false,
+    "precise_predictions_enabled": false
+  },
+  "resources": {
+    "configured_max_training_memory_mb": 128,
+    "estimated_peak_training_memory_mb": 32.33395957946777,
+    "gpu_max_bin": 63,
+    "host_memory_preflight": {
+      "available_bytes": 35233329152,
+      "available_gib": 32.814,
+      "estimated_additional_mib": 32.331,
+      "max_used_gib": 55.0,
+      "minimum_free_mib": 1024.0,
+      "projected_available_gib": 32.782,
+      "projected_used_gib": 28.871,
+      "source": "windows_global_memory_status_ex",
+      "total_bytes": 66199764992,
+      "total_gib": 61.653,
+      "used_bytes": 30966435840,
+      "used_gib": 28.84
+    },
+    "max_cpu_threads": 1
+  },
+  "split_group_counts": {
+    "calibration": 5,
+    "test": 5,
+    "train": 17,
+    "validation": 9
+  },
+  "split_row_counts": {
+    "calibration": 7,
+    "test": 6,
+    "train": 24,
+    "validation": 13
+  },
+  "synthetic_data": {
+    "eligible_for_reported_metrics": true,
+    "evaluated_rows": 50,
+    "reporting_block_reason": null,
+    "synthetic_flags_declared": true,
+    "synthetic_rows": 0,
+    "synthetic_rows_excluded": false,
+    "total_rows": 50
+  },
+  "task": "workload_performance_regression",
+  "test_uncertainty": {
+    "confidence_level": 0.95,
+    "group_count": 5,
+    "mae_lower": 1.450158864233479,
+    "mae_upper": 5.235780975240485,
+    "mape_percent_lower": 67.91946776880113,
+    "mape_percent_upper": 393.3696395307256,
+    "r2_lower": -3511.852667081245,
+    "r2_upper": 0.28938996897193625,
+    "resamples": 500
+  },
+  "training_data_sha256": "53791231470674f45173fe9323ba5fa272c3748e4faf1b492498faff88a547ea",
+  "workload": "blender_4_5_0_junkshop_optix_windows"
+}
