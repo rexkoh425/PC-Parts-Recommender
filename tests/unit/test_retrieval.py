@@ -7,7 +7,7 @@ from pc_build_recommender.retrieval import (
     BM25ProductIndex,
     HybridProductRetriever,
     InMemoryVectorIndex,
-    IndexedDocument,
+    ProductDocument,
     SearchHit,
     StableHashEmbeddingEncoder,
     StructuredFilterSpec,
@@ -17,9 +17,9 @@ from pc_build_recommender.retrieval import (
 
 
 @pytest.fixture
-def products() -> list[IndexedDocument]:
+def products() -> list[ProductDocument]:
     return [
-        IndexedDocument(
+        ProductDocument(
             product_id="gpu-4070s",
             category="gpu",
             text="NVIDIA GeForce RTX 4070 Super 12 GB quiet 1440p gaming",
@@ -28,7 +28,7 @@ def products() -> list[IndexedDocument]:
             stock_status="in_stock",
             attributes={"model": "RTX 4070 Super", "vram_gb": 12},
         ),
-        IndexedDocument(
+        ProductDocument(
             product_id="gpu-7900xt",
             category="gpu",
             text="AMD Radeon RX 7900 XT 20 GB high performance 4K gaming",
@@ -37,7 +37,7 @@ def products() -> list[IndexedDocument]:
             stock_status="limited_stock",
             attributes={"model": "RX 7900 XT", "vram_gb": 20},
         ),
-        IndexedDocument(
+        ProductDocument(
             product_id="gpu-4090-oos",
             category="gpu",
             text="NVIDIA GeForce RTX 4090 24 GB local AI inference",
@@ -46,7 +46,7 @@ def products() -> list[IndexedDocument]:
             stock_status="out_of_stock",
             attributes={"model": "RTX 4090", "vram_gb": 24},
         ),
-        IndexedDocument(
+        ProductDocument(
             product_id="cpu-7950x",
             category="cpu",
             text="AMD Ryzen 9 7950X compilation multicore development",
@@ -58,7 +58,7 @@ def products() -> list[IndexedDocument]:
 
 
 def test_product_document_builds_search_text_from_mapping() -> None:
-    document = IndexedDocument.from_mapping(
+    document = ProductDocument.from_mapping(
         {
             "product_id": "mem-1",
             "category": "memory",
@@ -76,7 +76,7 @@ def test_product_document_builds_search_text_from_mapping() -> None:
 
 
 def test_bm25_and_vector_search_are_category_scoped(
-    products: list[IndexedDocument],
+    products: list[ProductDocument],
 ) -> None:
     bm25 = BM25ProductIndex(products)
     vector = InMemoryVectorIndex(products)
@@ -120,7 +120,7 @@ def test_reciprocal_rank_fusion_uses_rank_not_raw_score() -> None:
 
 
 def test_structured_filters_are_strict_for_applicable_category(
-    products: list[IndexedDocument],
+    products: list[ProductDocument],
 ) -> None:
     filters = StructuredFilterSpec(
         maximum_price_sgd=1200,
@@ -139,7 +139,7 @@ def test_structured_filters_are_strict_for_applicable_category(
 
 
 def test_hybrid_retrieval_filters_before_source_top_k(
-    products: list[IndexedDocument],
+    products: list[ProductDocument],
 ) -> None:
     retriever = HybridProductRetriever(products)
 
@@ -156,7 +156,7 @@ def test_hybrid_retrieval_filters_before_source_top_k(
 
 
 def test_hybrid_retrieval_source_pools_use_the_same_filter_gate(
-    products: list[IndexedDocument],
+    products: list[ProductDocument],
 ) -> None:
     retriever = HybridProductRetriever(products)
 
@@ -178,7 +178,7 @@ def test_hybrid_retrieval_source_pools_use_the_same_filter_gate(
 
 
 def test_retrieve_categories_keeps_independent_candidate_pools(
-    products: list[IndexedDocument],
+    products: list[ProductDocument],
 ) -> None:
     retriever = HybridProductRetriever(products)
 

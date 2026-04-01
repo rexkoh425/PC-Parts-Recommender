@@ -10,7 +10,7 @@ from sqlalchemy.dialects import postgresql
 from pc_build_recommender.retrieval.bm25 import BM25ProductIndex
 from pc_build_recommender.retrieval.embedding_index import embedding_encoder_fingerprint
 from pc_build_recommender.retrieval.models import (
-    IndexedDocument,
+    ProductDocument,
     SearchHit,
     StructuredFilterSpec,
 )
@@ -113,9 +113,9 @@ def _full_text_backend(session: _SqlSession) -> PostgresFullTextSearchBackend:
 def _bm25_backend(session: _Bm25SqlSession) -> PostgresBm25SearchBackend:
     index = BM25ProductIndex(
         (
-            IndexedDocument("prod_a", "gpu", "NVIDIA RTX quiet local AI GPU"),
-            IndexedDocument("prod_b", "gpu", "AMD gaming GPU"),
-            IndexedDocument("prod_c", "gpu", "Intel Arc creator GPU"),
+            ProductDocument("prod_a", "gpu", "NVIDIA RTX quiet local AI GPU"),
+            ProductDocument("prod_b", "gpu", "AMD gaming GPU"),
+            ProductDocument("prod_c", "gpu", "Intel Arc creator GPU"),
         )
     )
     return PostgresBm25SearchBackend(
@@ -282,8 +282,8 @@ class _HybridSession:
         raise AssertionError(f"unexpected statement: {statement}")
 
 
-def _document(product_id: str) -> IndexedDocument:
-    return IndexedDocument(
+def _document(product_id: str) -> ProductDocument:
+    return ProductDocument(
         product_id=product_id,
         category="gpu",
         text=f"GPU {product_id}",

@@ -8,7 +8,7 @@ from collections.abc import Iterable
 import numpy as np
 from rank_bm25 import BM25Okapi  # type: ignore[import-untyped]
 
-from .models import IndexedDocument, SearchHit
+from .models import ProductDocument, SearchHit
 from .text import tokenize
 
 
@@ -17,8 +17,8 @@ class BM25ProductIndex:
 
     source_name = "bm25"
 
-    def __init__(self, documents: Iterable[IndexedDocument]) -> None:
-        by_category: dict[str, list[IndexedDocument]] = defaultdict(list)
+    def __init__(self, documents: Iterable[ProductDocument]) -> None:
+        by_category: dict[str, list[ProductDocument]] = defaultdict(list)
         seen: set[str] = set()
         for document in documents:
             if document.product_id in seen:

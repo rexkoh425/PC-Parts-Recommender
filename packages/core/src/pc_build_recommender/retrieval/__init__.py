@@ -49,7 +49,7 @@ from .judgments import (
 )
 from .models import (
     FusedHit,
-    IndexedDocument,
+    ProductDocument,
     RetrievedCandidate,
     SearchHit,
     StructuredFilterSpec,
@@ -141,7 +141,7 @@ __all__ = [
     "MAX_BM25_DOCUMENTS",
     "MAX_BM25_TEXT_BYTES",
     "MAX_QUERY_CHARACTERS",
-    "IndexedDocument",
+    "ProductDocument",
     "ProductRetriever",
     "PgVectorSearchBackend",
     "PostgresBm25SearchBackend",

@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Protocol, runtime_checkable
 import numpy as np
 from numpy.typing import NDArray
 
-from .models import IndexedDocument, SearchHit
+from .models import ProductDocument, SearchHit
 from .text import token_features
 
 if TYPE_CHECKING:
@@ -197,7 +197,7 @@ class InMemoryVectorIndex:
 
     def __init__(
         self,
-        documents: Iterable[IndexedDocument],
+        documents: Iterable[ProductDocument],
         *,
         encoder: EmbeddingEncoder | None = None,
     ) -> None:

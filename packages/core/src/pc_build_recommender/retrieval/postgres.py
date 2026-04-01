@@ -40,7 +40,7 @@ from .embedding_index import (
     embedding_encoder_fingerprint,
     load_normalized_product_jsonl,
 )
-from .models import IndexedDocument, SearchHit, StructuredFilterSpec
+from .models import ProductDocument, SearchHit, StructuredFilterSpec
 from .postgres_filters import normalize_postgres_category, postgres_structured_predicates
 from .vector import EmbeddingEncoder
 
@@ -112,7 +112,7 @@ def bm25_index_from_embedding_artifact(
             f"BM25 corpus exceeds the {MAX_BM25_DOCUMENTS} document serving limit"
         )
 
-    documents: list[IndexedDocument] = []
+    documents: list[ProductDocument] = []
     text_bytes = 0
     for product, search_document in zip(artifact.products, artifact.search_documents, strict=True):
         encoded_size = len(search_document.encode("utf-8"))
@@ -122,7 +122,7 @@ def bm25_index_from_embedding_artifact(
                 "BM25 corpus exceeds the configured text-byte serving limit"
             )
         documents.append(
-            IndexedDocument(
+            ProductDocument(
                 product_id=product.product_id,
                 category=product.category.value,
                 text=search_document,
