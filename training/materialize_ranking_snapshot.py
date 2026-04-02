@@ -33,7 +33,7 @@ from pc_build_recommender.ranking import (
     RankingFeatureBuilder,
 )
 from pc_build_recommender.retrieval import (
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     QueryGroupSplit,
     HumanJudgmentSet,
     load_human_judgment_set,
@@ -362,7 +362,7 @@ def _verify_annotation_release(
     dict[str, Any],
     dict[str, Any],
     HumanJudgmentSet,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     QueryGroupSplit,
     str,
 ]:
@@ -413,7 +413,7 @@ def _verify_annotation_release(
 
     human = load_human_judgment_set(root / "human-judgments.json")
     adjudicated = human.adjudicate()
-    qrels = PinnedCandidateSet.load(root / "qrels.json")
+    qrels = FrozenCandidateSet.load(root / "qrels.json")
     expected_qrels = adjudicated.frozen_candidates
     if (
         qrels.version != expected_qrels.version
@@ -465,7 +465,7 @@ def _materialized_rows(
     prelabel_rows: Sequence[Mapping[str, Any]],
     snapshot: Mapping[str, Any],
     evidence: Mapping[str, Any],
-    qrels: PinnedCandidateSet,
+    qrels: FrozenCandidateSet,
 ) -> tuple[dict[str, Any], ...]:
     prelabel_by_id = {
         _string(row.get("query_id"), name="pre-label query_id"): row
@@ -810,7 +810,7 @@ def verify_labeled_ranking_snapshot(
         raise RankingSnapshotMaterializationError(
             "labeled snapshot does not require two independent reviewers"
         )
-    qrels = PinnedCandidateSet.load(qrels_path)
+    qrels = FrozenCandidateSet.load(qrels_path)
     qrels_manifest = _object(manifest.get("qrels"), name="labeled snapshot qrels")
     if (
         qrels.version != qrels_manifest.get("version")

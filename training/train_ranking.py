@@ -32,7 +32,7 @@ from pc_build_recommender.ranking import (
     relative_ndcg_improvement,
 )
 from pc_build_recommender.retrieval import (
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     QueryGroupSplit,
     HumanJudgmentSet,
     RelevanceLabelSource,
@@ -160,7 +160,7 @@ def _load_queries(path: Path) -> tuple[LabeledRankingQuery, ...]:
 
 def _validate_feature_snapshot_against_qrels(
     queries: Sequence[LabeledRankingQuery],
-    qrels: PinnedCandidateSet,
+    qrels: FrozenCandidateSet,
 ) -> None:
     """Reject feature rows whose candidate universe or grades differ from qrels."""
 
@@ -214,7 +214,7 @@ def _load_verified_human_evidence(
 
     human_judgments = load_human_judgment_set(human_judgments_path)
     adjudicated = human_judgments.adjudicate()
-    qrels = PinnedCandidateSet.load(qrels_path)
+    qrels = FrozenCandidateSet.load(qrels_path)
     expected_qrels = adjudicated.frozen_candidates
     if (
         qrels.version != expected_qrels.version

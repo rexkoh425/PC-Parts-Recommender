@@ -75,7 +75,7 @@ an explicit decision from a third, independent adjudicator.
 The Python contracts are exported from `pc_build_recommender.retrieval`:
 
 - `HumanJudgmentSet.adjudicate()` validates coverage and produces a checksummed
-  `PinnedCandidateSet`;
+  `FrozenCandidateSet`;
 - `QueryGroupSplit.create()` freezes leakage-safe group assignments;
 - `compare_ranked_models()` compares complete BM25, vector, RRF, and LambdaMART
   rankings with query-group bootstrap confidence intervals;

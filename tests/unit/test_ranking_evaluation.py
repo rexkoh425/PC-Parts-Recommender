@@ -7,11 +7,11 @@ from pc_build_recommender.ranking import (
     rankings_from_scores,
     relative_ndcg_improvement,
 )
-from pc_build_recommender.retrieval import FrozenCandidateQuery, PinnedCandidateSet
+from pc_build_recommender.retrieval import FrozenCandidateQuery, FrozenCandidateSet
 
 
-def _dataset() -> PinnedCandidateSet:
-    return PinnedCandidateSet.create(
+def _dataset() -> FrozenCandidateSet:
+    return FrozenCandidateSet.create(
         "ranking-frozen-v1",
         [
             FrozenCandidateQuery(

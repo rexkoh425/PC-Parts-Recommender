@@ -22,7 +22,7 @@ from pc_build_recommender.ranking import (
     write_ranker_promotion_decision,
 )
 from pc_build_recommender.retrieval import (
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     QueryGroupSplit,
     compare_ranked_models,
     write_ranking_comparison_report,
@@ -98,7 +98,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.n_resamples < 1:
         raise ValueError("n_resamples must be positive")
 
-    qrels = PinnedCandidateSet.load(args.qrels)
+    qrels = FrozenCandidateSet.load(args.qrels)
     if (
         qrels.label_source.value != "human"
         or not qrels.adjudication_complete

@@ -27,7 +27,7 @@ from pc_build_recommender.evaluation.manifest import json_sha256
 from pc_build_recommender.evaluation.metrics import bootstrap_confidence_interval
 
 from .benchmark import QueryGroupSplit
-from .evaluation import FrozenCandidateQuery, PinnedCandidateSet, RelevanceLabelSource
+from .evaluation import FrozenCandidateQuery, FrozenCandidateSet, RelevanceLabelSource
 
 PRUNING_STAGE_SCHEMA_VERSION = "pc-build-recommender.frozen-pruning-stage.v1"
 PRUNING_TRACE_SCHEMA_VERSION = "pc-build-recommender.frozen-pruning-trace.v1"
@@ -341,7 +341,7 @@ class CandidatePopulationDeclaration:
     @classmethod
     def create(
         cls,
-        dataset: PinnedCandidateSet,
+        dataset: FrozenCandidateSet,
         *,
         scope: CandidatePopulationScope,
         catalog_manifest_sha256: str,
@@ -414,7 +414,7 @@ class CandidatePopulationDeclaration:
             checksum=json_sha256(payload),
         )
 
-    def validate_dataset(self, dataset: PinnedCandidateSet) -> None:
+    def validate_dataset(self, dataset: FrozenCandidateSet) -> None:
         if self.dataset_checksum != dataset.checksum:
             raise ValueError("population declaration targets a different frozen candidate set")
         if self.dataset_evidence_checksum != dataset.evidence_checksum:
@@ -1058,7 +1058,7 @@ def _stage_metrics(
 
 
 def _validate_stages(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     stages: Sequence[FrozenPruningStage],
 ) -> None:
     if not stages:
@@ -1092,11 +1092,11 @@ def _validate_stages(
 
 
 def _selected_queries(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     *,
     query_split: QueryGroupSplit | None,
     split_name: str | None,
-) -> tuple[tuple[FrozenCandidateQuery, ...], PinnedCandidateSet, Mapping[str, Hashable]]:
+) -> tuple[tuple[FrozenCandidateQuery, ...], FrozenCandidateSet, Mapping[str, Hashable]]:
     if query_split is None:
         if split_name is not None:
             raise ValueError("split_name requires a frozen query-group split")
@@ -1120,7 +1120,7 @@ def _selected_queries(
 
 
 def evaluate_candidate_pruning(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     stages: Sequence[FrozenPruningStage],
     *,
     population: CandidatePopulationDeclaration,
@@ -1142,7 +1142,7 @@ def evaluate_candidate_pruning(
         raise ValueError("confidence_level must be between zero and one")
     if n_resamples < 2:
         raise ValueError("n_resamples must be at least two")
-    refrozen_dataset = PinnedCandidateSet.create(
+    refrozen_dataset = FrozenCandidateSet.create(
         dataset.version,
         dataset.queries,
         label_source=dataset.label_source,

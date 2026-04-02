@@ -19,7 +19,7 @@ from pc_build_recommender.ranking import (
 from pc_build_recommender.retrieval import (
     ArtifactBoundRankingEvidence,
     FrozenCandidateQuery,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     QueryGroupSplit,
     RelevanceLabelSource,
     compare_ranked_models,
@@ -31,7 +31,7 @@ from pc_build_recommender.retrieval import (
 
 def _human_dataset(
     *, source: RelevanceLabelSource = RelevanceLabelSource.HUMAN
-) -> PinnedCandidateSet:
+) -> FrozenCandidateSet:
     queries = []
     for group_number in range(3):
         for paraphrase in range(2):
@@ -46,7 +46,7 @@ def _human_dataset(
                     relevance_labels={"best": 4, "ok": 2, "bad": 0},
                 )
             )
-    return PinnedCandidateSet.create(
+    return FrozenCandidateSet.create(
         "human-ranking-v1",
         queries,
         label_source=source,
@@ -55,7 +55,7 @@ def _human_dataset(
     )
 
 
-def _rankings(dataset: PinnedCandidateSet) -> dict[str, dict[str, list[str]]]:
+def _rankings(dataset: FrozenCandidateSet) -> dict[str, dict[str, list[str]]]:
     return {
         "bm25": {query.query_id: ["bad", "ok", "best"] for query in dataset.queries},
         "vector": {query.query_id: ["ok", "best", "bad"] for query in dataset.queries},
@@ -65,7 +65,7 @@ def _rankings(dataset: PinnedCandidateSet) -> dict[str, dict[str, list[str]]]:
 
 
 def _bound_ranker_evidence(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     split: QueryGroupSplit,
     metadata: RankerMetadata,
     identity: RankerArtifactIdentity,

@@ -27,7 +27,7 @@ from .encoder_bundle import (
 )
 from .evaluation import (
     FrozenCandidateQuery,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     RelevanceLabelSource,
     RetrievalEvaluation,
     evaluate_ranked_candidates,
@@ -128,7 +128,7 @@ __all__ = [
     "EncoderBundleValidationError",
     "EMBEDDING_DIMENSION",
     "FrozenCandidateQuery",
-    "PinnedCandidateSet",
+    "FrozenCandidateSet",
     "QueryGroupSplit",
     "FrozenPruningStage",
     "FusedHit",
