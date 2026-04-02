@@ -23,7 +23,7 @@ from pc_build_recommender.retrieval import (
 )
 
 
-def _human_judgments(query_count: int = 13) -> HumanJudgmentSet:
+def _human_judgments(query_count: int = 12) -> HumanJudgmentSet:
     queries = tuple(
         LabelingQuery(
             query_id=f"q{index}",
