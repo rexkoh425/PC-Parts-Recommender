@@ -6,7 +6,6 @@ matches the price a user could actually have paid on that day.
 """
 
 from __future__ import annotations
-from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
