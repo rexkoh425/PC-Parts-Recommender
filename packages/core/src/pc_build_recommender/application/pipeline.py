@@ -189,4 +189,348 @@ def filters_by_category(
         )
     return result
 
-# TODO: rest of this module still to come.
+
+class CandidatePipeline:
+    """Prepare bounded, compatibility-eligible, ranked CP-SAT candidates."""
+
+    def __init__(
+        self,
+        catalog: ApplicationCatalog,
+        retriever: ProductRetriever,
+        ranker: ProductRanker,
+        compatibility_engine: CompatibilityEngine,
+        *,
+        candidate_limits: CandidateLimits | None = None,
+        performance_provider: ArtifactPerformanceProvider | None = None,
+    ) -> None:
+        self.catalog = catalog
+        self.retriever = retriever
+        self.ranker = ranker
+        self.compatibility_engine = compatibility_engine
+        self.candidate_limits = candidate_limits or CandidateLimits()
+        self.performance_provider = performance_provider
+        self._documents_by_id = {document.product_id: document for document in catalog.documents}
+
+    def prepare(
+        self,
+        request: BuildRequestSpec,
+        *,
+        request_id: str,
+    ) -> PreparedCandidates:
+        locked_by_category = {
+            existing.category.value: existing.product_id for existing in request.existing_products
+        }
+        reasons = self._validate_locked_products(request, locked_by_category)
+        if reasons:
+            return PreparedCandidates(
+                pools=MappingProxyType({}),
+                locked_product_ids=frozenset(locked_by_category.values()),
+                infeasibility_reasons=tuple(reasons),
+            )
+
+        query_text = build_query_text(request)
+        filters = filters_by_category(request, locked_by_category=locked_by_category)
+        limits = self.candidate_limits.as_mapping()
+        retrieved: dict[str, list[RetrievedCandidate]] = {}
+        for category in REQUIRED_CATEGORIES:
+            locked_id = locked_by_category.get(category)
+            if locked_id is not None:
+                document = self.catalog.document_for(locked_id)
+                retrieved[category] = [
+                    RetrievedCandidate(
+                        product=document,
+                        rank=1,
+                        rrf_score=0.0,
+                        bm25_score=0.0,
+                        vector_similarity=0.0,
+                    )
+                ]
+                continue
+            retrieved[category] = self.retriever.retrieve(
+                query_text,
+                category=category,
+                filters=filters[category],
+                top_k=max(limits[category] * 3, limits[category]),
+            )
+
+        missing = [category for category in REQUIRED_CATEGORIES if not retrieved[category]]
+        if missing:
+            reasons = [
+                f"No {category} products satisfy the structured filters and availability rules."
+                for category in missing
+            ]
+            reasons.extend(self._suggest_relaxations(request, missing))
+            return PreparedCandidates(
+                pools=MappingProxyType({}),
+                locked_product_ids=frozenset(locked_by_category.values()),
+                infeasibility_reasons=tuple(dict.fromkeys(reasons)),
+            )
+
+        eligible, compatibility_reasons = self._arc_consistency_prune(retrieved)
+        if compatibility_reasons:
+            compatibility_reasons.extend(
+                self._suggest_relaxations(
+                    request,
+                    [category for category in REQUIRED_CATEGORIES if not eligible[category]],
+                )
+            )
+            return PreparedCandidates(
+                pools=MappingProxyType({}),
+                locked_product_ids=frozenset(locked_by_category.values()),
+                infeasibility_reasons=tuple(dict.fromkeys(compatibility_reasons)),
+            )
+
+        context = RankingContext(
+            query_id=request_id,
+            query_text=query_text,
+            budget_sgd=float(request.budget_sgd),
+            workload_weights={item.name.value: item.weight for item in request.workloads},
+            requirements=request.requirements.model_dump(mode="json"),
+            preferences=request.preferences.model_dump(mode="json"),
+            data_version=self.catalog.data_version,
+            candidate_set_version=self.catalog.data_version,
+        )
+        ranked_pools: dict[str, tuple[RankedCatalogItem, ...]] = {}
+        for category in REQUIRED_CATEGORIES:
+            ranked = self._rank(context, eligible[category])
+            ranked_pools[category] = tuple(ranked[: limits[category]])
+
+        return PreparedCandidates(
+            pools=MappingProxyType(ranked_pools),
+            locked_product_ids=frozenset(locked_by_category.values()),
+        )
+
+    def _validate_locked_products(
+        self,
+        request: BuildRequestSpec,
+        locked_by_category: Mapping[str, str],
+    ) -> list[str]:
+        reasons: list[str] = []
+        filters = filters_by_category(request, locked_by_category=locked_by_category)
+        for category, product_id in sorted(locked_by_category.items()):
+            item = self.catalog.get(product_id)
+            if item is None:
+                reasons.append(
+                    f"Retained {category} product {product_id!r} is not in the canonical catalogue."
+                )
+                continue
+            if item.product.category.value != category:
+                reasons.append(
+                    f"Retained product {product_id!r} is {item.product.category.value}, "
+                    f"not {category}."
+                )
+                continue
+            document = self.catalog.document_for(product_id)
+            if not product_matches_filters(document, filters[category]):
+                reasons.append(
+                    f"Retained {category} {item.product.canonical_name!r} violates a hard "
+                    "structured requirement or brand exclusion."
+                )
+        return reasons
+
+    def _arc_consistency_prune(
+        self,
+        pools: Mapping[str, Sequence[RetrievedCandidate]],
+    ) -> tuple[dict[str, list[RetrievedCandidate]], list[str]]:
+        eligible = {category: list(candidates) for category, candidates in pools.items()}
+        cache: dict[tuple[str, str, str, str], bool] = {}
+
+        def pair_is_feasible(
+            left_category: str,
+            left: RetrievedCandidate,
+            right_category: str,
+            right: RetrievedCandidate,
+        ) -> bool:
+            key = (left_category, left.product_id, right_category, right.product_id)
+            if key not in cache:
+                left_item = self.catalog.require(left.product_id)
+                right_item = self.catalog.require(right.product_id)
+                report = self.compatibility_engine.check_pair(
+                    left_category,
+                    left_item.compatibility_record,
+                    right_category,
+                    right_item.compatibility_record,
+                )
+                cache[key] = report.is_feasible
+            return cache[key]
+
+        changed = True
+        while changed:
+            changed = False
+            for left_category, right_category in COMPATIBILITY_PAIRS:
+                left_pool = eligible[left_category]
+                right_pool = eligible[right_category]
+                supported_left = [
+                    left
+                    for left in left_pool
+                    if any(
+                        pair_is_feasible(left_category, left, right_category, right)
+                        for right in right_pool
+                    )
+                ]
+                supported_right = [
+                    right
+                    for right in right_pool
+                    if any(
+                        pair_is_feasible(left_category, left, right_category, right)
+                        for left in supported_left
+                    )
+                ]
+                if len(supported_left) != len(left_pool):
+                    eligible[left_category] = supported_left
+                    changed = True
+                if len(supported_right) != len(right_pool):
+                    eligible[right_category] = supported_right
+                    changed = True
+
+        empty = [category for category in REQUIRED_CATEGORIES if not eligible[category]]
+        reasons = [
+            f"Compatibility pruning removed every {category} candidate; required fields may "
+            "be missing or all available pairs conflict."
+            for category in empty
+        ]
+        return eligible, reasons
+
+    def _rank(
+        self,
+        context: RankingContext,
+        candidates: Sequence[RetrievedCandidate],
+    ) -> list[RankedCatalogItem]:
+        ranking_candidates: list[ScoredCandidate] = []
+        performance_by_product: dict[str, Mapping[str, WorkloadPerformanceSignal]] = {}
+        for candidate in candidates:
+            item = self.catalog.require(candidate.product_id)
+            performance = self._performance_signals(item, context)
+            performance_by_product[candidate.product_id] = performance
+            request_workloads = {
+                workload: signal.relative_score for workload, signal in performance.items()
+            }
+            signals = dict(item.ranking_signals)
+            observed = {
+                workload: signal.relative_score
+                for workload, signal in performance.items()
+                if signal.basis == "observed"
+            }
+            predicted = {
+                workload: signal.relative_score
+                for workload, signal in performance.items()
+                if signal.basis != "observed"
+            }
+            observed_score = self._weighted_score(context, observed)
+            predicted_score = self._weighted_score(context, predicted)
+            if observed_score is not None:
+                signals["observed_benchmark_score"] = observed_score
+            else:
+                signals.pop("observed_benchmark_score", None)
+            if predicted_score is not None:
+                signals["predicted_workload_score"] = predicted_score
+            ranking_candidates.append(
+                ScoredCandidate.from_retrieved(
+                    candidate,
+                    workload_scores=request_workloads,
+                    signals=signals,
+                )
+            )
+        ranked = self.ranker.rank_query(context, ranking_candidates)
+        return self._normalise_ranked(ranked, performance_by_product)
+
+    def _performance_signals(
+        self,
+        item: CatalogItem,
+        context: RankingContext,
+    ) -> Mapping[str, WorkloadPerformanceSignal]:
+        result: dict[str, WorkloadPerformanceSignal] = {}
+        for workload in context.workload_weights:
+            observed_score = item.workload_scores.get(workload)
+            observations = item.workload_benchmarks.get(workload, ())
+            if observed_score is not None and observations:
+                result[workload] = WorkloadPerformanceSignal(
+                    workload=WorkloadLabel(workload),
+                    metric="normalised comparable benchmark score",
+                    unit="relative index",
+                    score=observed_score,
+                    relative_score=observed_score,
+                    basis="observed",
+                    confidence="observed",
+                    decision="observed_benchmark",
+                    supporting_sources=list(
+                        dict.fromkeys(observation.source_url for observation in observations)
+                    ),
+                    supporting_benchmark_ids=[
+                        observation.benchmark_id for observation in observations
+                    ],
+                )
+                continue
+            if self.performance_provider is None:
+                continue
+            estimate = self.performance_provider.estimate(item.product, workload)
+            if estimate is not None:
+                result[workload] = estimate
+        return MappingProxyType(result)
+
+    @staticmethod
+    def _weighted_score(
+        context: RankingContext,
+        scores: Mapping[str, float],
+    ) -> float | None:
+        total_weight = sum(context.workload_weights.get(name, 0.0) for name in scores)
+        if total_weight <= 0:
+            return None
+        return (
+            sum(context.workload_weights.get(name, 0.0) * score for name, score in scores.items())
+            / total_weight
+        )
+
+    def _normalise_ranked(
+        self,
+        ranked: Sequence[RankedCandidate],
+        performance_by_product: Mapping[str, Mapping[str, WorkloadPerformanceSignal]],
+    ) -> list[RankedCatalogItem]:
+        if not ranked:
+            return []
+        scores = [item.score for item in ranked]
+        minimum = min(scores)
+        maximum = max(scores)
+        result: list[RankedCatalogItem] = []
+        for item in ranked:
+            component_score = (
+                100.0
+                if len(ranked) == 1
+                else 100.0 * (item.score - minimum) / max(maximum - minimum, 1e-12)
+            )
+            result.append(
+                RankedCatalogItem(
+                    item=self.catalog.require(item.product_id),
+                    rank=item.rank,
+                    raw_score=item.score,
+                    component_score=round(component_score, 6),
+                    ranker_version=item.ranker_version,
+                    ranking_basis=item.ranking_basis,
+                    feature_contributions=item.feature_contributions,
+                    performance_signals=performance_by_product.get(item.product_id, {}),
+                )
+            )
+        return result
+
+    @staticmethod
+    def _suggest_relaxations(
+        request: BuildRequestSpec,
+        empty_categories: Sequence[str],
+    ) -> list[str]:
+        suggestions: list[str] = []
+        categories = set(empty_categories)
+        requirements = request.requirements
+        if "gpu" in categories and requirements.minimum_gpu_vram_gb is not None:
+            suggestions.append("Suggested relaxation: lower the minimum GPU VRAM requirement.")
+        if "memory" in categories and requirements.minimum_memory_gb is not None:
+            suggestions.append("Suggested relaxation: lower the minimum system-memory capacity.")
+        if "storage" in categories and requirements.storage_gb is not None:
+            suggestions.append("Suggested relaxation: lower the required storage capacity.")
+        if "motherboard" in categories and requirements.wifi_required:
+            suggestions.append("Suggested relaxation: allow a separate Wi-Fi adapter.")
+        if request.preferences.excluded_brands:
+            suggestions.append("Suggested relaxation: remove one or more brand exclusions.")
+        if requirements.in_stock_only:
+            suggestions.append("Suggested relaxation: include backorder or unknown-stock listings.")
+        suggestions.append("Suggested relaxation: increase the acquisition budget.")
+        return suggestions
