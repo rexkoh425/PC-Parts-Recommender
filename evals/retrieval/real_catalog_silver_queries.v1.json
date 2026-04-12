@@ -1,0 +1,365 @@
+{
+  "schema_version": "pc-build-recommender.silver-query-set.v1",
+  "dataset_name": "buildcores-real-catalog-retrieval-silver-pilot",
+  "judgment_method": "Deterministic weak labels from declared category specification predicates. These are not human relevance judgments and are not eligible for production or resume metric claims.",
+  "queries": [
+    {
+      "query_id": "cpu-workstation-16-core",
+      "query_text": "high core count workstation processor with at least 16 cores",
+      "category": "cpu",
+      "must": [{"field": "category_attributes.core_count", "operator": "ge", "value": 16}],
+      "excellent": [{"field": "category_attributes.core_count", "operator": "ge", "value": 24}]
+    },
+    {
+      "query_id": "cpu-low-power-integrated-graphics",
+      "query_text": "power efficient processor with integrated graphics at 65 watts or less",
+      "category": "cpu",
+      "must": [
+        {"field": "category_attributes.tdp_watts", "operator": "le", "value": 65},
+        {"field": "category_attributes.integrated_graphics", "operator": "not_null", "value": true}
+      ],
+      "excellent": [{"field": "category_attributes.tdp_watts", "operator": "le", "value": 45}]
+    },
+    {
+      "query_id": "cpu-am5-eight-core",
+      "query_text": "AM5 processor with at least 8 cores for a modern development build",
+      "category": "cpu",
+      "must": [
+        {"field": "category_attributes.socket", "operator": "eq", "value": "AM5"},
+        {"field": "category_attributes.core_count", "operator": "ge", "value": 8}
+      ],
+      "excellent": [{"field": "category_attributes.core_count", "operator": "ge", "value": 12}]
+    },
+    {
+      "query_id": "cpu-lga1700-included-cooler",
+      "query_text": "LGA 1700 processor with at least 6 cores and an included cooler",
+      "category": "cpu",
+      "must": [
+        {"field": "category_attributes.socket", "operator": "eq", "value": "LGA 1700"},
+        {"field": "category_attributes.core_count", "operator": "ge", "value": 6},
+        {"field": "category_attributes.included_cooler", "operator": "eq", "value": true}
+      ],
+      "excellent": [{"field": "category_attributes.core_count", "operator": "ge", "value": 10}]
+    },
+    {
+      "query_id": "gpu-local-ai-16gb",
+      "query_text": "graphics card for local AI inference with at least 16 GB video memory",
+      "category": "gpu",
+      "must": [{"field": "category_attributes.vram_gb", "operator": "ge", "value": 16}],
+      "excellent": [{"field": "category_attributes.vram_gb", "operator": "ge", "value": 24}]
+    },
+    {
+      "query_id": "gpu-compact-eight-gb",
+      "query_text": "compact graphics card with at least 8 GB memory under 270 mm and at most 2.5 slots",
+      "category": "gpu",
+      "must": [
+        {"field": "category_attributes.vram_gb", "operator": "ge", "value": 8},
+        {"field": "category_attributes.length_mm", "operator": "le", "value": 270},
+        {"field": "category_attributes.slot_width", "operator": "le", "value": 2.5}
+      ],
+      "excellent": [
+        {"field": "category_attributes.length_mm", "operator": "le", "value": 240},
+        {"field": "category_attributes.slot_width", "operator": "le", "value": 2}
+      ]
+    },
+    {
+      "query_id": "gpu-efficient-12gb",
+      "query_text": "power efficient graphics card with at least 12 GB memory under 220 watts",
+      "category": "gpu",
+      "must": [
+        {"field": "category_attributes.vram_gb", "operator": "ge", "value": 12},
+        {"field": "category_attributes.board_power_watts", "operator": "le", "value": 220}
+      ],
+      "excellent": [{"field": "category_attributes.board_power_watts", "operator": "le", "value": 180}]
+    },
+    {
+      "query_id": "gpu-modern-16gb-memory",
+      "query_text": "modern graphics card with 16 GB or more of GDDR6, GDDR6X, or GDDR7 memory",
+      "category": "gpu",
+      "must": [
+        {"field": "category_attributes.vram_gb", "operator": "ge", "value": 16},
+        {"field": "category_attributes.vram_type", "operator": "one_of", "value": ["GDDR6", "GDDR6X", "GDDR7"]}
+      ],
+      "excellent": [{"field": "category_attributes.vram_type", "operator": "eq", "value": "GDDR7"}]
+    },
+    {
+      "query_id": "motherboard-am5-ddr5-atx",
+      "query_text": "AM5 DDR5 ATX motherboard with at least four M.2 slots",
+      "category": "motherboard",
+      "must": [
+        {"field": "category_attributes.socket", "operator": "eq", "value": "AM5"},
+        {"field": "category_attributes.memory_type", "operator": "eq", "value": "ddr5"},
+        {"field": "category_attributes.form_factor", "operator": "eq", "value": "atx"},
+        {"field": "category_attributes.m2_slots", "operator": "ge", "value": 4}
+      ],
+      "excellent": [{"field": "category_attributes.m2_slots", "operator": "ge", "value": 5}]
+    },
+    {
+      "query_id": "motherboard-lga1700-ddr4-matx",
+      "query_text": "LGA 1700 DDR4 micro ATX motherboard with at least two M.2 slots",
+      "category": "motherboard",
+      "must": [
+        {"field": "category_attributes.socket", "operator": "eq", "value": "LGA 1700"},
+        {"field": "category_attributes.memory_type", "operator": "eq", "value": "ddr4"},
+        {"field": "category_attributes.form_factor", "operator": "eq", "value": "micro_atx"},
+        {"field": "category_attributes.m2_slots", "operator": "ge", "value": 2}
+      ],
+      "excellent": [{"field": "category_attributes.m2_slots", "operator": "ge", "value": 4}]
+    },
+    {
+      "query_id": "motherboard-mini-itx-wifi",
+      "query_text": "compact mini ITX motherboard with built in Wi-Fi",
+      "category": "motherboard",
+      "must": [
+        {"field": "category_attributes.form_factor", "operator": "eq", "value": "mini_itx"},
+        {"field": "category_attributes.wifi_support", "operator": "eq", "value": true}
+      ],
+      "excellent": [{"field": "category_attributes.memory_type", "operator": "eq", "value": "ddr5"}]
+    },
+    {
+      "query_id": "motherboard-upgradeable-storage-memory",
+      "query_text": "upgradeable motherboard supporting at least 192 GB memory and four M.2 drives",
+      "category": "motherboard",
+      "must": [
+        {"field": "category_attributes.maximum_memory_gb", "operator": "ge", "value": 192},
+        {"field": "category_attributes.m2_slots", "operator": "ge", "value": 4}
+      ],
+      "excellent": [
+        {"field": "category_attributes.maximum_memory_gb", "operator": "ge", "value": 256},
+        {"field": "category_attributes.m2_slots", "operator": "ge", "value": 5}
+      ]
+    },
+    {
+      "query_id": "memory-32gb-ddr5-6000",
+      "query_text": "32 GB dual module DDR5 memory kit at 6000 MT/s or faster",
+      "category": "memory",
+      "must": [
+        {"field": "category_attributes.capacity_gb", "operator": "eq", "value": 32},
+        {"field": "category_attributes.memory_type", "operator": "eq", "value": "ddr5"},
+        {"field": "category_attributes.module_count", "operator": "eq", "value": 2},
+        {"field": "category_attributes.speed_mt_s", "operator": "ge", "value": 6000}
+      ],
+      "excellent": [
+        {"field": "category_attributes.speed_mt_s", "operator": "ge", "value": 6400},
+        {"field": "category_attributes.cas_latency", "operator": "le", "value": 36}
+      ]
+    },
+    {
+      "query_id": "memory-64gb-ddr5-5600",
+      "query_text": "64 GB DDR5 memory kit running at 5600 MT/s or faster",
+      "category": "memory",
+      "must": [
+        {"field": "category_attributes.capacity_gb", "operator": "eq", "value": 64},
+        {"field": "category_attributes.memory_type", "operator": "eq", "value": "ddr5"},
+        {"field": "category_attributes.speed_mt_s", "operator": "ge", "value": 5600}
+      ],
+      "excellent": [{"field": "category_attributes.speed_mt_s", "operator": "ge", "value": 6000}]
+    },
+    {
+      "query_id": "memory-32gb-ddr4-low-latency",
+      "query_text": "32 GB DDR4 memory at 3200 MT/s or faster with CAS latency 18 or lower",
+      "category": "memory",
+      "must": [
+        {"field": "category_attributes.capacity_gb", "operator": "eq", "value": 32},
+        {"field": "category_attributes.memory_type", "operator": "eq", "value": "ddr4"},
+        {"field": "category_attributes.speed_mt_s", "operator": "ge", "value": 3200},
+        {"field": "category_attributes.cas_latency", "operator": "le", "value": 18}
+      ],
+      "excellent": [
+        {"field": "category_attributes.speed_mt_s", "operator": "ge", "value": 3600},
+        {"field": "category_attributes.cas_latency", "operator": "le", "value": 16}
+      ]
+    },
+    {
+      "query_id": "memory-high-capacity-ddr5",
+      "query_text": "high capacity DDR5 memory kit with at least 96 GB",
+      "category": "memory",
+      "must": [
+        {"field": "category_attributes.capacity_gb", "operator": "ge", "value": 96},
+        {"field": "category_attributes.memory_type", "operator": "eq", "value": "ddr5"}
+      ],
+      "excellent": [{"field": "category_attributes.capacity_gb", "operator": "ge", "value": 128}]
+    },
+    {
+      "query_id": "storage-2tb-nvme-m2",
+      "query_text": "at least 2 TB NVMe M.2 solid state drive for a workstation",
+      "category": "storage",
+      "must": [
+        {"field": "category_attributes.capacity_gb", "operator": "ge", "value": 2000},
+        {"field": "category_attributes.interface", "operator": "eq", "value": "nvme_pcie"},
+        {"field": "category_attributes.form_factor", "operator": "eq", "value": "m2_2280"}
+      ],
+      "excellent": [{"field": "category_attributes.capacity_gb", "operator": "ge", "value": 4000}]
+    },
+    {
+      "query_id": "storage-1tb-nvme-m2",
+      "query_text": "1 TB or larger NVMe M.2 SSD for fast development storage",
+      "category": "storage",
+      "must": [
+        {"field": "category_attributes.capacity_gb", "operator": "ge", "value": 1000},
+        {"field": "category_attributes.interface", "operator": "eq", "value": "nvme_pcie"},
+        {"field": "category_attributes.form_factor", "operator": "eq", "value": "m2_2280"}
+      ],
+      "excellent": [{"field": "category_attributes.capacity_gb", "operator": "ge", "value": 2000}]
+    },
+    {
+      "query_id": "storage-4tb-sata-2-5-inch",
+      "query_text": "4 TB or larger SATA 2.5 inch storage drive",
+      "category": "storage",
+      "must": [
+        {"field": "category_attributes.capacity_gb", "operator": "ge", "value": 4000},
+        {"field": "category_attributes.interface", "operator": "eq", "value": "sata"},
+        {"field": "category_attributes.form_factor", "operator": "eq", "value": "2_5_inch"}
+      ],
+      "excellent": [{"field": "category_attributes.capacity_gb", "operator": "ge", "value": 8000}]
+    },
+    {
+      "query_id": "storage-8tb-sata-3-5-inch",
+      "query_text": "large capacity 8 TB or bigger SATA 3.5 inch hard drive",
+      "category": "storage",
+      "must": [
+        {"field": "category_attributes.capacity_gb", "operator": "ge", "value": 8000},
+        {"field": "category_attributes.interface", "operator": "eq", "value": "sata"},
+        {"field": "category_attributes.form_factor", "operator": "eq", "value": "3_5_inch"}
+      ],
+      "excellent": [{"field": "category_attributes.capacity_gb", "operator": "ge", "value": 14000}]
+    },
+    {
+      "query_id": "psu-850w-gold-or-better",
+      "query_text": "850 watt or larger power supply with 80 Plus Gold efficiency or better",
+      "category": "power_supply",
+      "must": [
+        {"field": "category_attributes.wattage", "operator": "ge", "value": 850},
+        {"field": "category_attributes.efficiency_rating", "operator": "one_of", "value": ["80_plus_gold", "80_plus_platinum", "80_plus_titanium"]}
+      ],
+      "excellent": [
+        {"field": "category_attributes.wattage", "operator": "ge", "value": 1000},
+        {"field": "category_attributes.efficiency_rating", "operator": "one_of", "value": ["80_plus_platinum", "80_plus_titanium"]}
+      ]
+    },
+    {
+      "query_id": "psu-sfx-650w",
+      "query_text": "compact SFX power supply rated for at least 650 watts",
+      "category": "power_supply",
+      "must": [
+        {"field": "category_attributes.form_factor", "operator": "eq", "value": "sfx"},
+        {"field": "category_attributes.wattage", "operator": "ge", "value": 650}
+      ],
+      "excellent": [{"field": "category_attributes.wattage", "operator": "ge", "value": 850}]
+    },
+    {
+      "query_id": "psu-1000w-platinum",
+      "query_text": "1000 watt or larger 80 Plus Platinum or Titanium power supply",
+      "category": "power_supply",
+      "must": [
+        {"field": "category_attributes.wattage", "operator": "ge", "value": 1000},
+        {"field": "category_attributes.efficiency_rating", "operator": "one_of", "value": ["80_plus_platinum", "80_plus_titanium"]}
+      ],
+      "excellent": [
+        {"field": "category_attributes.wattage", "operator": "ge", "value": 1200},
+        {"field": "category_attributes.efficiency_rating", "operator": "eq", "value": "80_plus_titanium"}
+      ]
+    },
+    {
+      "query_id": "psu-650-to-750w-gold",
+      "query_text": "80 Plus Gold power supply between 650 and 750 watts",
+      "category": "power_supply",
+      "must": [
+        {"field": "category_attributes.wattage", "operator": "ge", "value": 650},
+        {"field": "category_attributes.wattage", "operator": "le", "value": 750},
+        {"field": "category_attributes.efficiency_rating", "operator": "eq", "value": "80_plus_gold"}
+      ],
+      "excellent": [{"field": "category_attributes.wattage", "operator": "eq", "value": 750}]
+    },
+    {
+      "query_id": "cooler-360mm-aio-am5",
+      "query_text": "360 mm all in one liquid CPU cooler with AM5 socket support",
+      "category": "cooler",
+      "must": [
+        {"field": "category_attributes.cooler_type", "operator": "eq", "value": "aio"},
+        {"field": "category_attributes.radiator_size_mm", "operator": "eq", "value": 360},
+        {"field": "category_attributes.supported_sockets", "operator": "contains", "value": "AM5"}
+      ],
+      "excellent": [{"field": "category_attributes.fan_count", "operator": "ge", "value": 3}]
+    },
+    {
+      "query_id": "cooler-240mm-aio-lga1700",
+      "query_text": "240 mm all in one liquid CPU cooler supporting LGA 1700",
+      "category": "cooler",
+      "must": [
+        {"field": "category_attributes.cooler_type", "operator": "eq", "value": "aio"},
+        {"field": "category_attributes.radiator_size_mm", "operator": "eq", "value": 240},
+        {"field": "category_attributes.supported_sockets", "operator": "contains", "value": "LGA 1700"}
+      ],
+      "excellent": [{"field": "category_attributes.fan_count", "operator": "ge", "value": 2}]
+    },
+    {
+      "query_id": "cooler-low-profile-air-am5",
+      "query_text": "low profile AM5 air CPU cooler no taller than 70 mm",
+      "category": "cooler",
+      "must": [
+        {"field": "category_attributes.cooler_type", "operator": "eq", "value": "air"},
+        {"field": "category_attributes.height_mm", "operator": "le", "value": 70},
+        {"field": "category_attributes.supported_sockets", "operator": "contains", "value": "AM5"}
+      ],
+      "excellent": [{"field": "category_attributes.height_mm", "operator": "le", "value": 55}]
+    },
+    {
+      "query_id": "cooler-air-am5-lga1700-160mm",
+      "query_text": "air CPU cooler under 160 mm supporting both AM5 and LGA 1700",
+      "category": "cooler",
+      "must": [
+        {"field": "category_attributes.cooler_type", "operator": "eq", "value": "air"},
+        {"field": "category_attributes.height_mm", "operator": "le", "value": 160},
+        {"field": "category_attributes.supported_sockets", "operator": "contains_all", "value": ["AM5", "LGA 1700"]}
+      ],
+      "excellent": [{"field": "category_attributes.height_mm", "operator": "le", "value": 155}]
+    },
+    {
+      "query_id": "case-mini-tower-matx-300mm-gpu",
+      "query_text": "mini tower case for micro ATX with at least 300 mm graphics card clearance",
+      "category": "case",
+      "must": [
+        {"field": "category_attributes.case_size", "operator": "eq", "value": "mini_tower"},
+        {"field": "category_attributes.supported_motherboard_sizes", "operator": "contains", "value": "micro_atx"},
+        {"field": "category_attributes.maximum_gpu_length_mm", "operator": "ge", "value": 300}
+      ],
+      "excellent": [{"field": "category_attributes.maximum_gpu_length_mm", "operator": "ge", "value": 350}]
+    },
+    {
+      "query_id": "case-mid-tower-350mm-gpu",
+      "query_text": "mid tower case with at least 350 mm graphics card clearance",
+      "category": "case",
+      "must": [
+        {"field": "category_attributes.case_size", "operator": "eq", "value": "mid_tower"},
+        {"field": "category_attributes.maximum_gpu_length_mm", "operator": "ge", "value": 350}
+      ],
+      "excellent": [{"field": "category_attributes.maximum_gpu_length_mm", "operator": "ge", "value": 400}]
+    },
+    {
+      "query_id": "case-full-tower-400mm-gpu-six-bays",
+      "query_text": "full tower case with 400 mm graphics card clearance and at least six drive bays",
+      "category": "case",
+      "must": [
+        {"field": "category_attributes.case_size", "operator": "eq", "value": "full_tower"},
+        {"field": "category_attributes.maximum_gpu_length_mm", "operator": "ge", "value": 400},
+        {"field": "category_attributes.drive_bays", "operator": "ge", "value": 6}
+      ],
+      "excellent": [{"field": "category_attributes.drive_bays", "operator": "ge", "value": 8}]
+    },
+    {
+      "query_id": "case-mid-tower-170mm-cooler-four-bays",
+      "query_text": "mid tower case with 170 mm CPU cooler clearance and at least four drive bays",
+      "category": "case",
+      "must": [
+        {"field": "category_attributes.case_size", "operator": "eq", "value": "mid_tower"},
+        {"field": "category_attributes.maximum_cooler_height_mm", "operator": "ge", "value": 170},
+        {"field": "category_attributes.drive_bays", "operator": "ge", "value": 4}
+      ],
+      "excellent": [
+        {"field": "category_attributes.maximum_cooler_height_mm", "operator": "ge", "value": 180},
+        {"field": "category_attributes.drive_bays", "operator": "ge", "value": 6}
+      ]
+    }
+  ]
+}
