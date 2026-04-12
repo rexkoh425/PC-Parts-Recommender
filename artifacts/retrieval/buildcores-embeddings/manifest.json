@@ -1,0 +1,59 @@
+{
+  "artifacts": {
+    "embeddings": {
+      "bytes": 4608128,
+      "path": "embeddings.npy",
+      "sha256": "10a9278d66e9b0acb05e730937dc6a9d4c896b5a47b1152ad2a91b7e16034eea"
+    },
+    "id_map": {
+      "bytes": 590390,
+      "path": "ids.jsonl",
+      "sha256": "9f10364399bb53311838e05c805c5c5a2d04ce3f8d49e6f6565443e8113c63f5"
+    }
+  },
+  "build": {
+    "encoded_count": 3000,
+    "incremental": false,
+    "reuse_source": null,
+    "reused_count": 0
+  },
+  "content_hash": "ed35bdddc041a4f143b73e5f1262289b13c722a80ca09fc4498009f92a772dd1",
+  "created_at_utc": "2026-07-22T02:22:41.460219+00:00",
+  "data_version": "buildcores-portfolio-3000-07e485e82333",
+  "encoder": {
+    "batch_size": 128,
+    "dimension": 384,
+    "fingerprint": "a9823c0f66fb77015c6aed2b166843c69264de7eca7482a8b28ac37e4de78308",
+    "kind": "sentence_transformer",
+    "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+    "normalised": true,
+    "requested_device": "cuda",
+    "resolved_device": "cuda"
+  },
+  "index_version": "product-embeddings-v1",
+  "matrix": {
+    "dtype": "float32",
+    "l2_normalised": true,
+    "shape": [
+      3000,
+      384
+    ]
+  },
+  "product_count": 3000,
+  "schema_version": "product-embedding-index-manifest-v1",
+  "source": {
+    "file_count": 1,
+    "files": [
+      {
+        "bytes": 6422473,
+        "path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\buildcores_open_db\\f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f\\portfolio-3000\\records.jsonl",
+        "relative_path": "records.jsonl",
+        "sha256": "4675d5f816eb95de6c6e627f1120f49a2630baf5bac5c8e8ca47a6112af292dc"
+      }
+    ],
+    "input_path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\buildcores_open_db\\f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f\\portfolio-3000\\records.jsonl",
+    "limit": null,
+    "recent_first": false
+  },
+  "text_builder_version": "product-embedding-text-v1"
+}
