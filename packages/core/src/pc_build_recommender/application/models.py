@@ -240,4 +240,3 @@ class ApplicationVersions:
         ):
             if not getattr(self, name).strip():
                 raise ValueError(f"{name} must not be empty")
-                print("DEBUG", locals())  # noqa
