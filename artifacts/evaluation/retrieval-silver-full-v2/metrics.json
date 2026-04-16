@@ -1,0 +1,2596 @@
+{
+  "artifact_sha256": "8c0f3383dee1e3a197d44e53cdcf0fe3e6b1bc2a714303aa82eff39e788bbea9",
+  "dataset": {
+    "candidate_checksum": "ed5dcd72672b221c8b2afacd6ab4cb8f391b50d33e69b8f629dee7f40d55688a",
+    "candidate_rows_across_queries": 102664,
+    "catalog_product_count": 25666,
+    "grade_counts": {
+      "3": 8280,
+      "4": 5729
+    },
+    "judgment_method": "Deterministic weak labels from declared category specification predicates. These are not human relevance judgments and are not eligible for production or resume metric claims.",
+    "macro_recall_cutoff_ceilings": {
+      "20": 0.15785149682077632,
+      "50": 0.2903488507475929
+    },
+    "name": "buildcores-real-catalog-retrieval-silver-pilot",
+    "positive_qrel_count": 14009,
+    "queries_with_more_relevant_items_than_cutoff": {
+      "20": 31,
+      "50": 28
+    },
+    "query_count": 32,
+    "query_statistics": {
+      "case-full-tower-400mm-gpu-six-bays": {
+        "candidate_count": 3713,
+        "category": "case",
+        "grade_3_count": 51,
+        "grade_4_count": 108,
+        "relevant_count": 159
+      },
+      "case-mid-tower-170mm-cooler-four-bays": {
+        "candidate_count": 3713,
+        "category": "case",
+        "grade_3_count": 252,
+        "grade_4_count": 124,
+        "relevant_count": 376
+      },
+      "case-mid-tower-350mm-gpu": {
+        "candidate_count": 3713,
+        "category": "case",
+        "grade_3_count": 764,
+        "grade_4_count": 1083,
+        "relevant_count": 1847
+      },
+      "case-mini-tower-matx-300mm-gpu": {
+        "candidate_count": 3713,
+        "category": "case",
+        "grade_3_count": 183,
+        "grade_4_count": 160,
+        "relevant_count": 343
+      },
+      "cooler-240mm-aio-lga1700": {
+        "candidate_count": 2388,
+        "category": "cooler",
+        "grade_3_count": 299,
+        "grade_4_count": 58,
+        "relevant_count": 357
+      },
+      "cooler-360mm-aio-am5": {
+        "candidate_count": 2388,
+        "category": "cooler",
+        "grade_3_count": 365,
+        "grade_4_count": 102,
+        "relevant_count": 467
+      },
+      "cooler-air-am5-lga1700-160mm": {
+        "candidate_count": 2388,
+        "category": "cooler",
+        "grade_3_count": 182,
+        "grade_4_count": 348,
+        "relevant_count": 530
+      },
+      "cooler-low-profile-air-am5": {
+        "candidate_count": 2388,
+        "category": "cooler",
+        "grade_3_count": 31,
+        "grade_4_count": 36,
+        "relevant_count": 67
+      },
+      "cpu-am5-eight-core": {
+        "candidate_count": 788,
+        "category": "cpu",
+        "grade_3_count": 15,
+        "grade_4_count": 15,
+        "relevant_count": 30
+      },
+      "cpu-lga1700-included-cooler": {
+        "candidate_count": 788,
+        "category": "cpu",
+        "grade_3_count": 4,
+        "grade_4_count": 15,
+        "relevant_count": 19
+      },
+      "cpu-low-power-integrated-graphics": {
+        "candidate_count": 788,
+        "category": "cpu",
+        "grade_3_count": 170,
+        "grade_4_count": 51,
+        "relevant_count": 221
+      },
+      "cpu-workstation-16-core": {
+        "candidate_count": 788,
+        "category": "cpu",
+        "grade_3_count": 59,
+        "grade_4_count": 37,
+        "relevant_count": 96
+      },
+      "gpu-compact-eight-gb": {
+        "candidate_count": 3832,
+        "category": "gpu",
+        "grade_3_count": 561,
+        "grade_4_count": 336,
+        "relevant_count": 897
+      },
+      "gpu-efficient-12gb": {
+        "candidate_count": 3832,
+        "category": "gpu",
+        "grade_3_count": 209,
+        "grade_4_count": 187,
+        "relevant_count": 396
+      },
+      "gpu-local-ai-16gb": {
+        "candidate_count": 3832,
+        "category": "gpu",
+        "grade_3_count": 726,
+        "grade_4_count": 239,
+        "relevant_count": 965
+      },
+      "gpu-modern-16gb-memory": {
+        "candidate_count": 3832,
+        "category": "gpu",
+        "grade_3_count": 685,
+        "grade_4_count": 264,
+        "relevant_count": 949
+      },
+      "memory-32gb-ddr4-low-latency": {
+        "candidate_count": 4480,
+        "category": "memory",
+        "grade_3_count": 287,
+        "grade_4_count": 53,
+        "relevant_count": 340
+      },
+      "memory-32gb-ddr5-6000": {
+        "candidate_count": 4480,
+        "category": "memory",
+        "grade_3_count": 436,
+        "grade_4_count": 283,
+        "relevant_count": 719
+      },
+      "memory-64gb-ddr5-5600": {
+        "candidate_count": 4480,
+        "category": "memory",
+        "grade_3_count": 106,
+        "grade_4_count": 280,
+        "relevant_count": 386
+      },
+      "memory-high-capacity-ddr5": {
+        "candidate_count": 4480,
+        "category": "memory",
+        "grade_3_count": 98,
+        "grade_4_count": 84,
+        "relevant_count": 182
+      },
+      "motherboard-am5-ddr5-atx": {
+        "candidate_count": 3689,
+        "category": "motherboard",
+        "grade_3_count": 69,
+        "grade_4_count": 95,
+        "relevant_count": 164
+      },
+      "motherboard-lga1700-ddr4-matx": {
+        "candidate_count": 3689,
+        "category": "motherboard",
+        "grade_3_count": 66,
+        "grade_4_count": 68,
+        "relevant_count": 134
+      },
+      "motherboard-mini-itx-wifi": {
+        "candidate_count": 3689,
+        "category": "motherboard",
+        "grade_3_count": 4,
+        "grade_4_count": 20,
+        "relevant_count": 24
+      },
+      "motherboard-upgradeable-storage-memory": {
+        "candidate_count": 3689,
+        "category": "motherboard",
+        "grade_3_count": 414,
+        "grade_4_count": 193,
+        "relevant_count": 607
+      },
+      "psu-1000w-platinum": {
+        "candidate_count": 3282,
+        "category": "power_supply",
+        "grade_3_count": 235,
+        "grade_4_count": 40,
+        "relevant_count": 275
+      },
+      "psu-650-to-750w-gold": {
+        "candidate_count": 3282,
+        "category": "power_supply",
+        "grade_3_count": 257,
+        "grade_4_count": 279,
+        "relevant_count": 536
+      },
+      "psu-850w-gold-or-better": {
+        "candidate_count": 3282,
+        "category": "power_supply",
+        "grade_3_count": 711,
+        "grade_4_count": 275,
+        "relevant_count": 986
+      },
+      "psu-sfx-650w": {
+        "candidate_count": 3282,
+        "category": "power_supply",
+        "grade_3_count": 53,
+        "grade_4_count": 45,
+        "relevant_count": 98
+      },
+      "storage-1tb-nvme-m2": {
+        "candidate_count": 3494,
+        "category": "storage",
+        "grade_3_count": 445,
+        "grade_4_count": 542,
+        "relevant_count": 987
+      },
+      "storage-2tb-nvme-m2": {
+        "candidate_count": 3494,
+        "category": "storage",
+        "grade_3_count": 356,
+        "grade_4_count": 186,
+        "relevant_count": 542
+      },
+      "storage-4tb-sata-2-5-inch": {
+        "candidate_count": 3494,
+        "category": "storage",
+        "grade_3_count": 36,
+        "grade_4_count": 10,
+        "relevant_count": 46
+      },
+      "storage-8tb-sata-3-5-inch": {
+        "candidate_count": 3494,
+        "category": "storage",
+        "grade_3_count": 151,
+        "grade_4_count": 113,
+        "relevant_count": 264
+      }
+    },
+    "version": "buildcores-silver-pilot-v1-8c738c513661-fac11c46a59f"
+  },
+  "eligible_for_production_or_resume_metric_claims": false,
+  "evaluation_parameters": {
+    "ndcg_cutoff": 10,
+    "query_encoder": {
+      "batch_size": 64,
+      "cosine_score_rounding_decimals": 8,
+      "dimension": 384,
+      "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+      "requested_device": "cuda",
+      "resolved_device": "cuda"
+    },
+    "recall_cutoffs": [
+      20,
+      50
+    ],
+    "relevance_threshold_for_recall_and_mrr": 1,
+    "rrf_k": 60
+  },
+  "evidence_status": "diagnostic_silver_pilot_only",
+  "human_relevance_judgments": false,
+  "learning_to_rank_status": {
+    "reason": "Training LambdaMART on labels generated from these same predicates would measure label reconstruction and leak the evaluation target.",
+    "trained": false
+  },
+  "limitations": [
+    "Relevance grades are deterministic silver labels derived from the same declared specification predicates used to define each query; no human relevance review was done.",
+    "Queries cover declared catalog fields, not subjective workload value or compatibility.",
+    "Catalog specifications are community-maintained and may contain missing or stale fields.",
+    "No prices, availability, observed user behavior, or reviewer agreement are evaluated.",
+    "Some broad queries have more silver-relevant products than a retrieval cutoff, so the artifact records the query-level macro Recall@K ceiling.",
+    "Heuristic and LambdaMART rankers are omitted because required independent price, performance, preference, and human-label evidence is not present in this pilot."
+  ],
+  "models": {
+    "bm25": {
+      "basis": "rank_bm25 over the same labelled product text as the embedding index",
+      "metrics": {
+        "aggregate": {
+          "candidate_checksum": "ed5dcd72672b221c8b2afacd6ab4cb8f391b50d33e69b8f629dee7f40d55688a",
+          "dataset_version": "buildcores-silver-pilot-v1-8c738c513661-fac11c46a59f",
+          "eligible_for_promotion": false,
+          "label_source": "silver",
+          "mean_reciprocal_rank": 0.457588617979243,
+          "metric_estimates": {
+            "mean_reciprocal_rank": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.3295717195131258,
+                "upper": 0.581723369295635
+              },
+              "denominator": null,
+              "name": "mean_reciprocal_rank",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.457588617979243
+            },
+            "ndcg_at_10": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.13476467913894277,
+                "upper": 0.25255303325770206
+              },
+              "denominator": null,
+              "name": "ndcg_at_10",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.19341124260014803
+            },
+            "recall_at_20": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.017226044125242163,
+                "upper": 0.09341767061126587
+              },
+              "denominator": null,
+              "name": "recall_at_20",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.04619624891708193
+            },
+            "recall_at_50": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.052667487154510174,
+                "upper": 0.20207311829356792
+              },
+              "denominator": null,
+              "name": "recall_at_50",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.11381006791660075
+            }
+          },
+          "ndcg_at_10": 0.19341124260014803,
+          "per_query": {
+            "case-full-tower-400mm-gpu-six-bays": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.10270949093910409,
+              "recall_at_20": 0.03773584905660377,
+              "recall_at_50": 0.13836477987421383
+            },
+            "case-mid-tower-170mm-cooler-four-bays": {
+              "mean_reciprocal_rank": 0.1,
+              "ndcg_at_10": 0.0296897011595108,
+              "recall_at_20": 0.007978723404255319,
+              "recall_at_50": 0.031914893617021274
+            },
+            "case-mid-tower-350mm-gpu": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.2873213687846095,
+              "recall_at_20": 0.007038440714672442,
+              "recall_at_50": 0.021115322144017325
+            },
+            "case-mini-tower-matx-300mm-gpu": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.6698623505528798,
+              "recall_at_20": 0.03206997084548105,
+              "recall_at_50": 0.05539358600583091
+            },
+            "cooler-240mm-aio-lga1700": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.5748716052659509,
+              "recall_at_20": 0.028011204481792718,
+              "recall_at_50": 0.07282913165266107
+            },
+            "cooler-360mm-aio-am5": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.5837154733670048,
+              "recall_at_20": 0.019271948608137045,
+              "recall_at_50": 0.059957173447537475
+            },
+            "cooler-air-am5-lga1700-160mm": {
+              "mean_reciprocal_rank": 0.25,
+              "ndcg_at_10": 0.32776097292662437,
+              "recall_at_20": 0.01509433962264151,
+              "recall_at_50": 0.016981132075471698
+            },
+            "cooler-low-profile-air-am5": {
+              "mean_reciprocal_rank": 0.013333333333333334,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.0
+            },
+            "cpu-am5-eight-core": {
+              "mean_reciprocal_rank": 0.25,
+              "ndcg_at_10": 0.24779995645035177,
+              "recall_at_20": 0.5333333333333333,
+              "recall_at_50": 1.0
+            },
+            "cpu-lga1700-included-cooler": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.2631012802554386,
+              "recall_at_20": 0.3684210526315789,
+              "recall_at_50": 0.8421052631578947
+            },
+            "cpu-low-power-integrated-graphics": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.2445004324738068,
+              "recall_at_20": 0.03619909502262444,
+              "recall_at_50": 0.11764705882352941
+            },
+            "cpu-workstation-16-core": {
+              "mean_reciprocal_rank": 0.2,
+              "ndcg_at_10": 0.14024551189535048,
+              "recall_at_20": 0.052083333333333336,
+              "recall_at_50": 0.13541666666666666
+            },
+            "gpu-compact-eight-gb": {
+              "mean_reciprocal_rank": 0.08333333333333333,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.004459308807134894,
+              "recall_at_50": 0.010033444816053512
+            },
+            "gpu-efficient-12gb": {
+              "mean_reciprocal_rank": 0.125,
+              "ndcg_at_10": 0.09912092309628807,
+              "recall_at_20": 0.007575757575757576,
+              "recall_at_50": 0.007575757575757576
+            },
+            "gpu-local-ai-16gb": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.19697764817304972,
+              "recall_at_20": 0.014507772020725389,
+              "recall_at_50": 0.024870466321243522
+            },
+            "gpu-modern-16gb-memory": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.20012524421575767,
+              "recall_at_20": 0.011591148577449948,
+              "recall_at_50": 0.023182297154899896
+            },
+            "memory-32gb-ddr4-low-latency": {
+              "mean_reciprocal_rank": 0.07692307692307693,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0029411764705882353,
+              "recall_at_50": 0.05588235294117647
+            },
+            "memory-32gb-ddr5-6000": {
+              "mean_reciprocal_rank": 0.2,
+              "ndcg_at_10": 0.13841025181947847,
+              "recall_at_20": 0.013908205841446454,
+              "recall_at_50": 0.04728789986091794
+            },
+            "memory-64gb-ddr5-5600": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.3201783434002694,
+              "recall_at_20": 0.038860103626943004,
+              "recall_at_50": 0.11658031088082901
+            },
+            "memory-high-capacity-ddr5": {
+              "mean_reciprocal_rank": 0.2,
+              "ndcg_at_10": 0.07631931375613829,
+              "recall_at_20": 0.054945054945054944,
+              "recall_at_50": 0.21428571428571427
+            },
+            "motherboard-am5-ddr5-atx": {
+              "mean_reciprocal_rank": 0.05555555555555555,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.012195121951219513,
+              "recall_at_50": 0.13414634146341464
+            },
+            "motherboard-lga1700-ddr4-matx": {
+              "mean_reciprocal_rank": 0.3333333333333333,
+              "ndcg_at_10": 0.2187664338090078,
+              "recall_at_20": 0.029850746268656716,
+              "recall_at_50": 0.05223880597014925
+            },
+            "motherboard-mini-itx-wifi": {
+              "mean_reciprocal_rank": 0.05,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.041666666666666664,
+              "recall_at_50": 0.041666666666666664
+            },
+            "motherboard-upgradeable-storage-memory": {
+              "mean_reciprocal_rank": 0.020833333333333332,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.0032948929159802307
+            },
+            "psu-1000w-platinum": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.3452396537291373,
+              "recall_at_20": 0.02909090909090909,
+              "recall_at_50": 0.07636363636363637
+            },
+            "psu-650-to-750w-gold": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.3452396537291373,
+              "recall_at_20": 0.011194029850746268,
+              "recall_at_50": 0.016791044776119403
+            },
+            "psu-850w-gold-or-better": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.15406423640865613,
+              "recall_at_20": 0.008113590263691683,
+              "recall_at_50": 0.015212981744421906
+            },
+            "psu-sfx-650w": {
+              "mean_reciprocal_rank": 0.14285714285714285,
+              "ndcg_at_10": 0.03423649697970137,
+              "recall_at_20": 0.01020408163265306,
+              "recall_at_50": 0.030612244897959183
+            },
+            "storage-1tb-nvme-m2": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.23436174119545905,
+              "recall_at_20": 0.0121580547112462,
+              "recall_at_50": 0.02127659574468085
+            },
+            "storage-2tb-nvme-m2": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.10270949093910409,
+              "recall_at_20": 0.0036900369003690036,
+              "recall_at_50": 0.00922509225092251
+            },
+            "storage-4tb-sata-2-5-inch": {
+              "mean_reciprocal_rank": 0.041666666666666664,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.17391304347826086
+            },
+            "storage-8tb-sata-3-5-inch": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.25183218788291983,
+              "recall_at_20": 0.03409090909090909,
+              "recall_at_50": 0.07575757575757576
+            }
+          },
+          "query_count": 32,
+          "recall_at": {
+            "20": 0.04619624891708193,
+            "50": 0.11381006791660075
+          }
+        },
+        "by_category": {
+          "case": {
+            "mean_reciprocal_rank": 0.525,
+            "ndcg_at_10": 0.27239572785902605,
+            "recall_at_20": 0.021205746005253146,
+            "recall_at_50": 0.06169714541027083
+          },
+          "cooler": {
+            "mean_reciprocal_rank": 0.5658333333333333,
+            "ndcg_at_10": 0.37158701288989504,
+            "recall_at_20": 0.015594373178142818,
+            "recall_at_50": 0.03744185929391756
+          },
+          "cpu": {
+            "mean_reciprocal_rank": 0.6125,
+            "ndcg_at_10": 0.22391179526873692,
+            "recall_at_20": 0.2475092035802175,
+            "recall_at_50": 0.5237922471620227
+          },
+          "gpu": {
+            "mean_reciprocal_rank": 0.3020833333333333,
+            "ndcg_at_10": 0.12405595387127387,
+            "recall_at_20": 0.009533496745266951,
+            "recall_at_50": 0.016415491466988626
+          },
+          "memory": {
+            "mean_reciprocal_rank": 0.24423076923076925,
+            "ndcg_at_10": 0.13372697724397153,
+            "recall_at_20": 0.02766363522100816,
+            "recall_at_50": 0.10850906949215942
+          },
+          "motherboard": {
+            "mean_reciprocal_rank": 0.11493055555555555,
+            "ndcg_at_10": 0.05469160845225195,
+            "recall_at_20": 0.020928133721635725,
+            "recall_at_50": 0.0578366767540527
+          },
+          "power_supply": {
+            "mean_reciprocal_rank": 0.7857142857142857,
+            "ndcg_at_10": 0.21969501021165802,
+            "recall_at_20": 0.014650652709500025,
+            "recall_at_50": 0.03474497694553422
+          },
+          "storage": {
+            "mean_reciprocal_rank": 0.5104166666666666,
+            "ndcg_at_10": 0.14722585500437074,
+            "recall_at_20": 0.012484750175631073,
+            "recall_at_50": 0.07004307680786
+          }
+        },
+        "macro_query_bootstrap_ci": {
+          "mean_reciprocal_rank": {
+            "confidence_level": 0.95,
+            "lower": 0.3295717195131258,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.581723369295635
+          },
+          "ndcg_at_10": {
+            "confidence_level": 0.95,
+            "lower": 0.13404397100709012,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.25133635956802447
+          },
+          "recall_at_20": {
+            "confidence_level": 0.95,
+            "lower": 0.017565025155717232,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.08665278415835148
+          },
+          "recall_at_50": {
+            "confidence_level": 0.95,
+            "lower": 0.05214135243249725,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.1933464120462459
+          }
+        },
+        "per_query": {
+          "case-full-tower-400mm-gpu-six-bays": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.10270949093910409,
+            "recall_at_20": 0.03773584905660377,
+            "recall_at_50": 0.13836477987421383
+          },
+          "case-mid-tower-170mm-cooler-four-bays": {
+            "mean_reciprocal_rank": 0.1,
+            "ndcg_at_10": 0.0296897011595108,
+            "recall_at_20": 0.007978723404255319,
+            "recall_at_50": 0.031914893617021274
+          },
+          "case-mid-tower-350mm-gpu": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.2873213687846095,
+            "recall_at_20": 0.007038440714672442,
+            "recall_at_50": 0.021115322144017325
+          },
+          "case-mini-tower-matx-300mm-gpu": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.6698623505528798,
+            "recall_at_20": 0.03206997084548105,
+            "recall_at_50": 0.05539358600583091
+          },
+          "cooler-240mm-aio-lga1700": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.5748716052659509,
+            "recall_at_20": 0.028011204481792718,
+            "recall_at_50": 0.07282913165266107
+          },
+          "cooler-360mm-aio-am5": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.5837154733670048,
+            "recall_at_20": 0.019271948608137045,
+            "recall_at_50": 0.059957173447537475
+          },
+          "cooler-air-am5-lga1700-160mm": {
+            "mean_reciprocal_rank": 0.25,
+            "ndcg_at_10": 0.32776097292662437,
+            "recall_at_20": 0.01509433962264151,
+            "recall_at_50": 0.016981132075471698
+          },
+          "cooler-low-profile-air-am5": {
+            "mean_reciprocal_rank": 0.013333333333333334,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.0
+          },
+          "cpu-am5-eight-core": {
+            "mean_reciprocal_rank": 0.25,
+            "ndcg_at_10": 0.24779995645035177,
+            "recall_at_20": 0.5333333333333333,
+            "recall_at_50": 1.0
+          },
+          "cpu-lga1700-included-cooler": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.2631012802554386,
+            "recall_at_20": 0.3684210526315789,
+            "recall_at_50": 0.8421052631578947
+          },
+          "cpu-low-power-integrated-graphics": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.2445004324738068,
+            "recall_at_20": 0.03619909502262444,
+            "recall_at_50": 0.11764705882352941
+          },
+          "cpu-workstation-16-core": {
+            "mean_reciprocal_rank": 0.2,
+            "ndcg_at_10": 0.14024551189535048,
+            "recall_at_20": 0.052083333333333336,
+            "recall_at_50": 0.13541666666666666
+          },
+          "gpu-compact-eight-gb": {
+            "mean_reciprocal_rank": 0.08333333333333333,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.004459308807134894,
+            "recall_at_50": 0.010033444816053512
+          },
+          "gpu-efficient-12gb": {
+            "mean_reciprocal_rank": 0.125,
+            "ndcg_at_10": 0.09912092309628807,
+            "recall_at_20": 0.007575757575757576,
+            "recall_at_50": 0.007575757575757576
+          },
+          "gpu-local-ai-16gb": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.19697764817304972,
+            "recall_at_20": 0.014507772020725389,
+            "recall_at_50": 0.024870466321243522
+          },
+          "gpu-modern-16gb-memory": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.20012524421575767,
+            "recall_at_20": 0.011591148577449948,
+            "recall_at_50": 0.023182297154899896
+          },
+          "memory-32gb-ddr4-low-latency": {
+            "mean_reciprocal_rank": 0.07692307692307693,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0029411764705882353,
+            "recall_at_50": 0.05588235294117647
+          },
+          "memory-32gb-ddr5-6000": {
+            "mean_reciprocal_rank": 0.2,
+            "ndcg_at_10": 0.13841025181947847,
+            "recall_at_20": 0.013908205841446454,
+            "recall_at_50": 0.04728789986091794
+          },
+          "memory-64gb-ddr5-5600": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.3201783434002694,
+            "recall_at_20": 0.038860103626943004,
+            "recall_at_50": 0.11658031088082901
+          },
+          "memory-high-capacity-ddr5": {
+            "mean_reciprocal_rank": 0.2,
+            "ndcg_at_10": 0.07631931375613829,
+            "recall_at_20": 0.054945054945054944,
+            "recall_at_50": 0.21428571428571427
+          },
+          "motherboard-am5-ddr5-atx": {
+            "mean_reciprocal_rank": 0.05555555555555555,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.012195121951219513,
+            "recall_at_50": 0.13414634146341464
+          },
+          "motherboard-lga1700-ddr4-matx": {
+            "mean_reciprocal_rank": 0.3333333333333333,
+            "ndcg_at_10": 0.2187664338090078,
+            "recall_at_20": 0.029850746268656716,
+            "recall_at_50": 0.05223880597014925
+          },
+          "motherboard-mini-itx-wifi": {
+            "mean_reciprocal_rank": 0.05,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.041666666666666664,
+            "recall_at_50": 0.041666666666666664
+          },
+          "motherboard-upgradeable-storage-memory": {
+            "mean_reciprocal_rank": 0.020833333333333332,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.0032948929159802307
+          },
+          "psu-1000w-platinum": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.3452396537291373,
+            "recall_at_20": 0.02909090909090909,
+            "recall_at_50": 0.07636363636363637
+          },
+          "psu-650-to-750w-gold": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.3452396537291373,
+            "recall_at_20": 0.011194029850746268,
+            "recall_at_50": 0.016791044776119403
+          },
+          "psu-850w-gold-or-better": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.15406423640865613,
+            "recall_at_20": 0.008113590263691683,
+            "recall_at_50": 0.015212981744421906
+          },
+          "psu-sfx-650w": {
+            "mean_reciprocal_rank": 0.14285714285714285,
+            "ndcg_at_10": 0.03423649697970137,
+            "recall_at_20": 0.01020408163265306,
+            "recall_at_50": 0.030612244897959183
+          },
+          "storage-1tb-nvme-m2": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.23436174119545905,
+            "recall_at_20": 0.0121580547112462,
+            "recall_at_50": 0.02127659574468085
+          },
+          "storage-2tb-nvme-m2": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.10270949093910409,
+            "recall_at_20": 0.0036900369003690036,
+            "recall_at_50": 0.00922509225092251
+          },
+          "storage-4tb-sata-2-5-inch": {
+            "mean_reciprocal_rank": 0.041666666666666664,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.17391304347826086
+          },
+          "storage-8tb-sata-3-5-inch": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.25183218788291983,
+            "recall_at_20": 0.03409090909090909,
+            "recall_at_50": 0.07575757575757576
+          }
+        }
+      }
+    },
+    "rrf_hybrid": {
+      "basis": "reciprocal rank fusion of complete BM25 and vector rankings",
+      "metrics": {
+        "aggregate": {
+          "candidate_checksum": "ed5dcd72672b221c8b2afacd6ab4cb8f391b50d33e69b8f629dee7f40d55688a",
+          "dataset_version": "buildcores-silver-pilot-v1-8c738c513661-fac11c46a59f",
+          "eligible_for_promotion": false,
+          "label_source": "silver",
+          "mean_reciprocal_rank": 0.6668853715728715,
+          "metric_estimates": {
+            "mean_reciprocal_rank": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.5324869791666668,
+                "upper": 0.8006896814123377
+              },
+              "denominator": null,
+              "name": "mean_reciprocal_rank",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.6668853715728715
+            },
+            "ndcg_at_10": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.23859801813440903,
+                "upper": 0.38713013034022925
+              },
+              "denominator": null,
+              "name": "ndcg_at_10",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.30853382308088895
+            },
+            "recall_at_20": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.029936029363868497,
+                "upper": 0.08476229083780351
+              },
+              "denominator": null,
+              "name": "recall_at_20",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.05190349954092033
+            },
+            "recall_at_50": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.06104433314317064,
+                "upper": 0.18469427452198972
+              },
+              "denominator": null,
+              "name": "recall_at_50",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.1162271600459206
+            }
+          },
+          "ndcg_at_10": 0.30853382308088895,
+          "per_query": {
+            "case-full-tower-400mm-gpu-six-bays": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.5381567156244901,
+              "recall_at_20": 0.0440251572327044,
+              "recall_at_50": 0.07547169811320754
+            },
+            "case-mid-tower-170mm-cooler-four-bays": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.2200917662980802,
+              "recall_at_20": 0.005319148936170213,
+              "recall_at_50": 0.02127659574468085
+            },
+            "case-mid-tower-350mm-gpu": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.3414078875138127,
+              "recall_at_20": 0.008662696264212236,
+              "recall_at_50": 0.021115322144017325
+            },
+            "case-mini-tower-matx-300mm-gpu": {
+              "mean_reciprocal_rank": 0.125,
+              "ndcg_at_10": 0.16537514655067712,
+              "recall_at_20": 0.029154518950437316,
+              "recall_at_50": 0.09329446064139942
+            },
+            "cooler-240mm-aio-lga1700": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.787938183082081,
+              "recall_at_20": 0.0392156862745098,
+              "recall_at_50": 0.08403361344537816
+            },
+            "cooler-360mm-aio-am5": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.45168588322264613,
+              "recall_at_20": 0.027837259100642397,
+              "recall_at_50": 0.06423982869379015
+            },
+            "cooler-air-am5-lga1700-160mm": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.2200917662980802,
+              "recall_at_20": 0.009433962264150943,
+              "recall_at_50": 0.03207547169811321
+            },
+            "cooler-low-profile-air-am5": {
+              "mean_reciprocal_rank": 0.027777777777777776,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.014925373134328358
+            },
+            "cpu-am5-eight-core": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.19991320165059226,
+              "recall_at_20": 0.2,
+              "recall_at_50": 0.6333333333333333
+            },
+            "cpu-lga1700-included-cooler": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.38973166167918943,
+              "recall_at_20": 0.42105263157894735,
+              "recall_at_50": 0.8421052631578947
+            },
+            "cpu-low-power-integrated-graphics": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.21326530167494373,
+              "recall_at_20": 0.04072398190045249,
+              "recall_at_50": 0.09954751131221719
+            },
+            "cpu-workstation-16-core": {
+              "mean_reciprocal_rank": 0.2,
+              "ndcg_at_10": 0.06942315605893393,
+              "recall_at_20": 0.052083333333333336,
+              "recall_at_50": 0.16666666666666666
+            },
+            "gpu-compact-eight-gb": {
+              "mean_reciprocal_rank": 0.25,
+              "ndcg_at_10": 0.11173906650788708,
+              "recall_at_20": 0.005574136008918618,
+              "recall_at_50": 0.013377926421404682
+            },
+            "gpu-efficient-12gb": {
+              "mean_reciprocal_rank": 0.3333333333333333,
+              "ndcg_at_10": 0.29885671970713973,
+              "recall_at_20": 0.012626262626262626,
+              "recall_at_50": 0.03282828282828283
+            },
+            "gpu-local-ai-16gb": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.7055672068963288,
+              "recall_at_20": 0.016580310880829015,
+              "recall_at_50": 0.03316062176165803
+            },
+            "gpu-modern-16gb-memory": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.8218392295124184,
+              "recall_at_20": 0.018967334035827187,
+              "recall_at_50": 0.040042149631190724
+            },
+            "memory-32gb-ddr4-low-latency": {
+              "mean_reciprocal_rank": 0.08333333333333333,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.014705882352941176,
+              "recall_at_50": 0.05
+            },
+            "memory-32gb-ddr5-6000": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.2797714039376569,
+              "recall_at_20": 0.012517385257301807,
+              "recall_at_50": 0.02920723226703755
+            },
+            "memory-64gb-ddr5-5600": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.43697696550715587,
+              "recall_at_20": 0.03626943005181347,
+              "recall_at_50": 0.07253886010362694
+            },
+            "memory-high-capacity-ddr5": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.244147771689716,
+              "recall_at_20": 0.038461538461538464,
+              "recall_at_50": 0.1043956043956044
+            },
+            "motherboard-am5-ddr5-atx": {
+              "mean_reciprocal_rank": 0.16666666666666666,
+              "ndcg_at_10": 0.06627556001622596,
+              "recall_at_20": 0.03048780487804878,
+              "recall_at_50": 0.07317073170731707
+            },
+            "motherboard-lga1700-ddr4-matx": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.3967378179380473,
+              "recall_at_20": 0.05970149253731343,
+              "recall_at_50": 0.11940298507462686
+            },
+            "motherboard-mini-itx-wifi": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.2200917662980802,
+              "recall_at_20": 0.20833333333333334,
+              "recall_at_50": 0.2916666666666667
+            },
+            "motherboard-upgradeable-storage-memory": {
+              "mean_reciprocal_rank": 0.011363636363636364,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.0
+            },
+            "psu-1000w-platinum": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.37033923162362514,
+              "recall_at_20": 0.04727272727272727,
+              "recall_at_50": 0.11272727272727273
+            },
+            "psu-650-to-750w-gold": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.5476065019082856,
+              "recall_at_20": 0.03544776119402985,
+              "recall_at_50": 0.07649253731343283
+            },
+            "psu-850w-gold-or-better": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.4666666666666667,
+              "recall_at_20": 0.017241379310344827,
+              "recall_at_50": 0.034482758620689655
+            },
+            "psu-sfx-650w": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.27535623973828394,
+              "recall_at_20": 0.12244897959183673,
+              "recall_at_50": 0.25510204081632654
+            },
+            "storage-1tb-nvme-m2": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.41278451611093697,
+              "recall_at_20": 0.015197568389057751,
+              "recall_at_50": 0.037487335359675786
+            },
+            "storage-2tb-nvme-m2": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.19247653303334913,
+              "recall_at_20": 0.00922509225092251,
+              "recall_at_50": 0.033210332103321034
+            },
+            "storage-4tb-sata-2-5-inch": {
+              "mean_reciprocal_rank": 0.14285714285714285,
+              "ndcg_at_10": 0.03423649697970137,
+              "recall_at_20": 0.021739130434782608,
+              "recall_at_50": 0.021739130434782608
+            },
+            "storage-8tb-sata-3-5-inch": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.3945319748634142,
+              "recall_at_20": 0.06060606060606061,
+              "recall_at_50": 0.14015151515151514
+            }
+          },
+          "query_count": 32,
+          "recall_at": {
+            "20": 0.05190349954092033,
+            "50": 0.1162271600459206
+          }
+        },
+        "by_category": {
+          "case": {
+            "mean_reciprocal_rank": 0.53125,
+            "ndcg_at_10": 0.316257878996765,
+            "recall_at_20": 0.02179038034588104,
+            "recall_at_50": 0.05278951916082628
+          },
+          "cooler": {
+            "mean_reciprocal_rank": 0.6319444444444444,
+            "ndcg_at_10": 0.3649289581507018,
+            "recall_at_20": 0.019121726909825786,
+            "recall_at_50": 0.04881857174290247
+          },
+          "cpu": {
+            "mean_reciprocal_rank": 0.8,
+            "ndcg_at_10": 0.21808333026591484,
+            "recall_at_20": 0.17846498670318328,
+            "recall_at_50": 0.43541319361752795
+          },
+          "gpu": {
+            "mean_reciprocal_rank": 0.6458333333333334,
+            "ndcg_at_10": 0.4845005556559435,
+            "recall_at_20": 0.013437010887959362,
+            "recall_at_50": 0.029852245160634068
+          },
+          "memory": {
+            "mean_reciprocal_rank": 0.6458333333333334,
+            "ndcg_at_10": 0.2402240352836322,
+            "recall_at_20": 0.02548855903089873,
+            "recall_at_50": 0.06403542419156723
+          },
+          "motherboard": {
+            "mean_reciprocal_rank": 0.41950757575757575,
+            "ndcg_at_10": 0.17077628606308837,
+            "recall_at_20": 0.07463065768717389,
+            "recall_at_50": 0.12106009586215266
+          },
+          "power_supply": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.41499215998421535,
+            "recall_at_20": 0.05560271184223467,
+            "recall_at_50": 0.11970115236943044
+          },
+          "storage": {
+            "mean_reciprocal_rank": 0.6607142857142857,
+            "ndcg_at_10": 0.25850738024685044,
+            "recall_at_20": 0.02669196292020587,
+            "recall_at_50": 0.05814707826232364
+          }
+        },
+        "macro_query_bootstrap_ci": {
+          "mean_reciprocal_rank": {
+            "confidence_level": 0.95,
+            "lower": 0.5324869791666668,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.8006896814123377
+          },
+          "ndcg_at_10": {
+            "confidence_level": 0.95,
+            "lower": 0.23414921146527834,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.3823256288672645
+          },
+          "recall_at_20": {
+            "confidence_level": 0.95,
+            "lower": 0.02856226405315027,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.08582853842183089
+          },
+          "recall_at_50": {
+            "confidence_level": 0.95,
+            "lower": 0.06675265773864406,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.1874264984055179
+          }
+        },
+        "per_query": {
+          "case-full-tower-400mm-gpu-six-bays": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.5381567156244901,
+            "recall_at_20": 0.0440251572327044,
+            "recall_at_50": 0.07547169811320754
+          },
+          "case-mid-tower-170mm-cooler-four-bays": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.2200917662980802,
+            "recall_at_20": 0.005319148936170213,
+            "recall_at_50": 0.02127659574468085
+          },
+          "case-mid-tower-350mm-gpu": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.3414078875138127,
+            "recall_at_20": 0.008662696264212236,
+            "recall_at_50": 0.021115322144017325
+          },
+          "case-mini-tower-matx-300mm-gpu": {
+            "mean_reciprocal_rank": 0.125,
+            "ndcg_at_10": 0.16537514655067712,
+            "recall_at_20": 0.029154518950437316,
+            "recall_at_50": 0.09329446064139942
+          },
+          "cooler-240mm-aio-lga1700": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.787938183082081,
+            "recall_at_20": 0.0392156862745098,
+            "recall_at_50": 0.08403361344537816
+          },
+          "cooler-360mm-aio-am5": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.45168588322264613,
+            "recall_at_20": 0.027837259100642397,
+            "recall_at_50": 0.06423982869379015
+          },
+          "cooler-air-am5-lga1700-160mm": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.2200917662980802,
+            "recall_at_20": 0.009433962264150943,
+            "recall_at_50": 0.03207547169811321
+          },
+          "cooler-low-profile-air-am5": {
+            "mean_reciprocal_rank": 0.027777777777777776,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.014925373134328358
+          },
+          "cpu-am5-eight-core": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.19991320165059226,
+            "recall_at_20": 0.2,
+            "recall_at_50": 0.6333333333333333
+          },
+          "cpu-lga1700-included-cooler": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.38973166167918943,
+            "recall_at_20": 0.42105263157894735,
+            "recall_at_50": 0.8421052631578947
+          },
+          "cpu-low-power-integrated-graphics": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.21326530167494373,
+            "recall_at_20": 0.04072398190045249,
+            "recall_at_50": 0.09954751131221719
+          },
+          "cpu-workstation-16-core": {
+            "mean_reciprocal_rank": 0.2,
+            "ndcg_at_10": 0.06942315605893393,
+            "recall_at_20": 0.052083333333333336,
+            "recall_at_50": 0.16666666666666666
+          },
+          "gpu-compact-eight-gb": {
+            "mean_reciprocal_rank": 0.25,
+            "ndcg_at_10": 0.11173906650788708,
+            "recall_at_20": 0.005574136008918618,
+            "recall_at_50": 0.013377926421404682
+          },
+          "gpu-efficient-12gb": {
+            "mean_reciprocal_rank": 0.3333333333333333,
+            "ndcg_at_10": 0.29885671970713973,
+            "recall_at_20": 0.012626262626262626,
+            "recall_at_50": 0.03282828282828283
+          },
+          "gpu-local-ai-16gb": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.7055672068963288,
+            "recall_at_20": 0.016580310880829015,
+            "recall_at_50": 0.03316062176165803
+          },
+          "gpu-modern-16gb-memory": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.8218392295124184,
+            "recall_at_20": 0.018967334035827187,
+            "recall_at_50": 0.040042149631190724
+          },
+          "memory-32gb-ddr4-low-latency": {
+            "mean_reciprocal_rank": 0.08333333333333333,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.014705882352941176,
+            "recall_at_50": 0.05
+          },
+          "memory-32gb-ddr5-6000": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.2797714039376569,
+            "recall_at_20": 0.012517385257301807,
+            "recall_at_50": 0.02920723226703755
+          },
+          "memory-64gb-ddr5-5600": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.43697696550715587,
+            "recall_at_20": 0.03626943005181347,
+            "recall_at_50": 0.07253886010362694
+          },
+          "memory-high-capacity-ddr5": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.244147771689716,
+            "recall_at_20": 0.038461538461538464,
+            "recall_at_50": 0.1043956043956044
+          },
+          "motherboard-am5-ddr5-atx": {
+            "mean_reciprocal_rank": 0.16666666666666666,
+            "ndcg_at_10": 0.06627556001622596,
+            "recall_at_20": 0.03048780487804878,
+            "recall_at_50": 0.07317073170731707
+          },
+          "motherboard-lga1700-ddr4-matx": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.3967378179380473,
+            "recall_at_20": 0.05970149253731343,
+            "recall_at_50": 0.11940298507462686
+          },
+          "motherboard-mini-itx-wifi": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.2200917662980802,
+            "recall_at_20": 0.20833333333333334,
+            "recall_at_50": 0.2916666666666667
+          },
+          "motherboard-upgradeable-storage-memory": {
+            "mean_reciprocal_rank": 0.011363636363636364,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.0
+          },
+          "psu-1000w-platinum": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.37033923162362514,
+            "recall_at_20": 0.04727272727272727,
+            "recall_at_50": 0.11272727272727273
+          },
+          "psu-650-to-750w-gold": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.5476065019082856,
+            "recall_at_20": 0.03544776119402985,
+            "recall_at_50": 0.07649253731343283
+          },
+          "psu-850w-gold-or-better": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.4666666666666667,
+            "recall_at_20": 0.017241379310344827,
+            "recall_at_50": 0.034482758620689655
+          },
+          "psu-sfx-650w": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.27535623973828394,
+            "recall_at_20": 0.12244897959183673,
+            "recall_at_50": 0.25510204081632654
+          },
+          "storage-1tb-nvme-m2": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.41278451611093697,
+            "recall_at_20": 0.015197568389057751,
+            "recall_at_50": 0.037487335359675786
+          },
+          "storage-2tb-nvme-m2": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.19247653303334913,
+            "recall_at_20": 0.00922509225092251,
+            "recall_at_50": 0.033210332103321034
+          },
+          "storage-4tb-sata-2-5-inch": {
+            "mean_reciprocal_rank": 0.14285714285714285,
+            "ndcg_at_10": 0.03423649697970137,
+            "recall_at_20": 0.021739130434782608,
+            "recall_at_50": 0.021739130434782608
+          },
+          "storage-8tb-sata-3-5-inch": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.3945319748634142,
+            "recall_at_20": 0.06060606060606061,
+            "recall_at_50": 0.14015151515151514
+          }
+        }
+      }
+    },
+    "stable_product_id_negative_control": {
+      "basis": "ascending product ID; diagnostic negative control",
+      "metrics": {
+        "aggregate": {
+          "candidate_checksum": "ed5dcd72672b221c8b2afacd6ab4cb8f391b50d33e69b8f629dee7f40d55688a",
+          "dataset_version": "buildcores-silver-pilot-v1-8c738c513661-fac11c46a59f",
+          "eligible_for_promotion": false,
+          "label_source": "silver",
+          "mean_reciprocal_rank": 0.3039754496939466,
+          "metric_estimates": {
+            "mean_reciprocal_rank": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.2060497334139234,
+                "upper": 0.4101906010955206
+              },
+              "denominator": null,
+              "name": "mean_reciprocal_rank",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.3039754496939466
+            },
+            "ndcg_at_10": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.06937557091972481,
+                "upper": 0.1448703464112869
+              },
+              "denominator": null,
+              "name": "ndcg_at_10",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.10374726530726466
+            },
+            "recall_at_20": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.006230046503679215,
+                "upper": 0.013699966754574607
+              },
+              "denominator": null,
+              "name": "recall_at_20",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.00955462123101133
+            },
+            "recall_at_50": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.016452941172420764,
+                "upper": 0.028257601412589317
+              },
+              "denominator": null,
+              "name": "recall_at_50",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.022122718809223323
+            }
+          },
+          "ndcg_at_10": 0.10374726530726466,
+          "per_query": {
+            "case-full-tower-400mm-gpu-six-bays": {
+              "mean_reciprocal_rank": 0.047619047619047616,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.025157232704402517
+            },
+            "case-mid-tower-170mm-cooler-four-bays": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.18785260858072508,
+              "recall_at_20": 0.013297872340425532,
+              "recall_at_50": 0.026595744680851064
+            },
+            "case-mid-tower-350mm-gpu": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.3573769558922594,
+              "recall_at_20": 0.005955603681645912,
+              "recall_at_50": 0.014618299945858148
+            },
+            "case-mini-tower-matx-300mm-gpu": {
+              "mean_reciprocal_rank": 0.25,
+              "ndcg_at_10": 0.09478836436955079,
+              "recall_at_20": 0.0029154518950437317,
+              "recall_at_50": 0.008746355685131196
+            },
+            "cooler-240mm-aio-lga1700": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.15406423640865613,
+              "recall_at_20": 0.01680672268907563,
+              "recall_at_50": 0.0392156862745098
+            },
+            "cooler-360mm-aio-am5": {
+              "mean_reciprocal_rank": 0.2,
+              "ndcg_at_10": 0.13759074007807623,
+              "recall_at_20": 0.010706638115631691,
+              "recall_at_50": 0.021413276231263382
+            },
+            "cooler-air-am5-lga1700-160mm": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.244879524667047,
+              "recall_at_20": 0.005660377358490566,
+              "recall_at_50": 0.018867924528301886
+            },
+            "cooler-low-profile-air-am5": {
+              "mean_reciprocal_rank": 0.03125,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.014925373134328358
+            },
+            "cpu-am5-eight-core": {
+              "mean_reciprocal_rank": 0.02702702702702703,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.06666666666666667
+            },
+            "cpu-lga1700-included-cooler": {
+              "mean_reciprocal_rank": 0.125,
+              "ndcg_at_10": 0.06943122193677728,
+              "recall_at_20": 0.05263157894736842,
+              "recall_at_50": 0.05263157894736842
+            },
+            "cpu-low-power-integrated-graphics": {
+              "mean_reciprocal_rank": 0.2,
+              "ndcg_at_10": 0.23690530871965643,
+              "recall_at_20": 0.03167420814479638,
+              "recall_at_50": 0.06787330316742081
+            },
+            "cpu-workstation-16-core": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.2984900352767555,
+              "recall_at_20": 0.03125,
+              "recall_at_50": 0.052083333333333336
+            },
+            "gpu-compact-eight-gb": {
+              "mean_reciprocal_rank": 0.3333333333333333,
+              "ndcg_at_10": 0.12077790152848597,
+              "recall_at_20": 0.006688963210702341,
+              "recall_at_50": 0.012263099219620958
+            },
+            "gpu-efficient-12gb": {
+              "mean_reciprocal_rank": 0.3333333333333333,
+              "ndcg_at_10": 0.08375598237338144,
+              "recall_at_20": 0.010101010101010102,
+              "recall_at_50": 0.017676767676767676
+            },
+            "gpu-local-ai-16gb": {
+              "mean_reciprocal_rank": 0.2,
+              "ndcg_at_10": 0.07065209251147136,
+              "recall_at_20": 0.0051813471502590676,
+              "recall_at_50": 0.013471502590673576
+            },
+            "gpu-modern-16gb-memory": {
+              "mean_reciprocal_rank": 0.1111111111111111,
+              "ndcg_at_10": 0.03091863761204822,
+              "recall_at_20": 0.004214963119072708,
+              "recall_at_50": 0.012644889357218124
+            },
+            "memory-32gb-ddr4-low-latency": {
+              "mean_reciprocal_rank": 0.125,
+              "ndcg_at_10": 0.03240123690382939,
+              "recall_at_20": 0.0029411764705882353,
+              "recall_at_50": 0.0058823529411764705
+            },
+            "memory-32gb-ddr5-6000": {
+              "mean_reciprocal_rank": 0.07692307692307693,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.004172461752433936,
+              "recall_at_50": 0.011126564673157162
+            },
+            "memory-64gb-ddr5-5600": {
+              "mean_reciprocal_rank": 0.07142857142857142,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0051813471502590676,
+              "recall_at_50": 0.007772020725388601
+            },
+            "memory-high-capacity-ddr5": {
+              "mean_reciprocal_rank": 0.3333333333333333,
+              "ndcg_at_10": 0.1100458831490401,
+              "recall_at_20": 0.01098901098901099,
+              "recall_at_50": 0.027472527472527472
+            },
+            "motherboard-am5-ddr5-atx": {
+              "mean_reciprocal_rank": 0.125,
+              "ndcg_at_10": 0.03240123690382939,
+              "recall_at_20": 0.018292682926829267,
+              "recall_at_50": 0.042682926829268296
+            },
+            "motherboard-lga1700-ddr4-matx": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.10270949093910409,
+              "recall_at_20": 0.007462686567164179,
+              "recall_at_50": 0.007462686567164179
+            },
+            "motherboard-mini-itx-wifi": {
+              "mean_reciprocal_rank": 0.010752688172043012,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.0
+            },
+            "motherboard-upgradeable-storage-memory": {
+              "mean_reciprocal_rank": 0.3333333333333333,
+              "ndcg_at_10": 0.17668361703257085,
+              "recall_at_20": 0.009884678747940691,
+              "recall_at_50": 0.026359143327841845
+            },
+            "psu-1000w-platinum": {
+              "mean_reciprocal_rank": 0.07142857142857142,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0036363636363636364,
+              "recall_at_50": 0.014545454545454545
+            },
+            "psu-650-to-750w-gold": {
+              "mean_reciprocal_rank": 0.2,
+              "ndcg_at_10": 0.039733454899423135,
+              "recall_at_20": 0.0018656716417910447,
+              "recall_at_50": 0.013059701492537313
+            },
+            "psu-850w-gold-or-better": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.15274307813392599,
+              "recall_at_20": 0.008113590263691683,
+              "recall_at_50": 0.016227180527383367
+            },
+            "psu-sfx-650w": {
+              "mean_reciprocal_rank": 0.058823529411764705,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.01020408163265306,
+              "recall_at_50": 0.02040816326530612
+            },
+            "storage-1tb-nvme-m2": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.3484189261117258,
+              "recall_at_20": 0.00911854103343465,
+              "recall_at_50": 0.020263424518743668
+            },
+            "storage-2tb-nvme-m2": {
+              "mean_reciprocal_rank": 0.3333333333333333,
+              "ndcg_at_10": 0.17397208128825226,
+              "recall_at_20": 0.00922509225092251,
+              "recall_at_50": 0.01845018450184502
+            },
+            "storage-4tb-sata-2-5-inch": {
+              "mean_reciprocal_rank": 0.0041841004184100415,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.0
+            },
+            "storage-8tb-sata-3-5-inch": {
+              "mean_reciprocal_rank": 0.125,
+              "ndcg_at_10": 0.0633198745158776,
+              "recall_at_20": 0.007575757575757576,
+              "recall_at_50": 0.011363636363636364
+            }
+          },
+          "query_count": 32,
+          "recall_at": {
+            "20": 0.00955462123101133,
+            "50": 0.022122718809223323
+          }
+        },
+        "by_category": {
+          "case": {
+            "mean_reciprocal_rank": 0.4494047619047619,
+            "ndcg_at_10": 0.16000448221063382,
+            "recall_at_20": 0.005542231979278794,
+            "recall_at_50": 0.01877940825406073
+          },
+          "cooler": {
+            "mean_reciprocal_rank": 0.4328125,
+            "ndcg_at_10": 0.13413362528844483,
+            "recall_at_20": 0.008293434540799472,
+            "recall_at_50": 0.023605565042100856
+          },
+          "cpu": {
+            "mean_reciprocal_rank": 0.33800675675675673,
+            "ndcg_at_10": 0.1512066414832973,
+            "recall_at_20": 0.0288889467730412,
+            "recall_at_50": 0.05981372052869731
+          },
+          "gpu": {
+            "mean_reciprocal_rank": 0.24444444444444444,
+            "ndcg_at_10": 0.07652615350634676,
+            "recall_at_20": 0.006546570895261054,
+            "recall_at_50": 0.014014064711070084
+          },
+          "memory": {
+            "mean_reciprocal_rank": 0.1516712454212454,
+            "ndcg_at_10": 0.035611780013217374,
+            "recall_at_20": 0.005820999090573057,
+            "recall_at_50": 0.013063366453062426
+          },
+          "motherboard": {
+            "mean_reciprocal_rank": 0.36727150537634407,
+            "ndcg_at_10": 0.07794858621887608,
+            "recall_at_20": 0.008910012060483535,
+            "recall_at_50": 0.01912618918106858
+          },
+          "power_supply": {
+            "mean_reciprocal_rank": 0.20756302521008405,
+            "ndcg_at_10": 0.04811913325833728,
+            "recall_at_20": 0.005954926793624856,
+            "recall_at_50": 0.016060124957670337
+          },
+          "storage": {
+            "mean_reciprocal_rank": 0.24062935843793584,
+            "ndcg_at_10": 0.1464277204789639,
+            "recall_at_20": 0.006479847715028684,
+            "recall_at_50": 0.012519311346056262
+          }
+        },
+        "macro_query_bootstrap_ci": {
+          "mean_reciprocal_rank": {
+            "confidence_level": 0.95,
+            "lower": 0.2060497334139234,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.4101906010955206
+          },
+          "ndcg_at_10": {
+            "confidence_level": 0.95,
+            "lower": 0.06823734597871961,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.13941244777746487
+          },
+          "recall_at_20": {
+            "confidence_level": 0.95,
+            "lower": 0.006355311214404096,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.01350771397418653
+          },
+          "recall_at_50": {
+            "confidence_level": 0.95,
+            "lower": 0.01692824742555842,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.027878574290803277
+          }
+        },
+        "per_query": {
+          "case-full-tower-400mm-gpu-six-bays": {
+            "mean_reciprocal_rank": 0.047619047619047616,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.025157232704402517
+          },
+          "case-mid-tower-170mm-cooler-four-bays": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.18785260858072508,
+            "recall_at_20": 0.013297872340425532,
+            "recall_at_50": 0.026595744680851064
+          },
+          "case-mid-tower-350mm-gpu": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.3573769558922594,
+            "recall_at_20": 0.005955603681645912,
+            "recall_at_50": 0.014618299945858148
+          },
+          "case-mini-tower-matx-300mm-gpu": {
+            "mean_reciprocal_rank": 0.25,
+            "ndcg_at_10": 0.09478836436955079,
+            "recall_at_20": 0.0029154518950437317,
+            "recall_at_50": 0.008746355685131196
+          },
+          "cooler-240mm-aio-lga1700": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.15406423640865613,
+            "recall_at_20": 0.01680672268907563,
+            "recall_at_50": 0.0392156862745098
+          },
+          "cooler-360mm-aio-am5": {
+            "mean_reciprocal_rank": 0.2,
+            "ndcg_at_10": 0.13759074007807623,
+            "recall_at_20": 0.010706638115631691,
+            "recall_at_50": 0.021413276231263382
+          },
+          "cooler-air-am5-lga1700-160mm": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.244879524667047,
+            "recall_at_20": 0.005660377358490566,
+            "recall_at_50": 0.018867924528301886
+          },
+          "cooler-low-profile-air-am5": {
+            "mean_reciprocal_rank": 0.03125,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.014925373134328358
+          },
+          "cpu-am5-eight-core": {
+            "mean_reciprocal_rank": 0.02702702702702703,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.06666666666666667
+          },
+          "cpu-lga1700-included-cooler": {
+            "mean_reciprocal_rank": 0.125,
+            "ndcg_at_10": 0.06943122193677728,
+            "recall_at_20": 0.05263157894736842,
+            "recall_at_50": 0.05263157894736842
+          },
+          "cpu-low-power-integrated-graphics": {
+            "mean_reciprocal_rank": 0.2,
+            "ndcg_at_10": 0.23690530871965643,
+            "recall_at_20": 0.03167420814479638,
+            "recall_at_50": 0.06787330316742081
+          },
+          "cpu-workstation-16-core": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.2984900352767555,
+            "recall_at_20": 0.03125,
+            "recall_at_50": 0.052083333333333336
+          },
+          "gpu-compact-eight-gb": {
+            "mean_reciprocal_rank": 0.3333333333333333,
+            "ndcg_at_10": 0.12077790152848597,
+            "recall_at_20": 0.006688963210702341,
+            "recall_at_50": 0.012263099219620958
+          },
+          "gpu-efficient-12gb": {
+            "mean_reciprocal_rank": 0.3333333333333333,
+            "ndcg_at_10": 0.08375598237338144,
+            "recall_at_20": 0.010101010101010102,
+            "recall_at_50": 0.017676767676767676
+          },
+          "gpu-local-ai-16gb": {
+            "mean_reciprocal_rank": 0.2,
+            "ndcg_at_10": 0.07065209251147136,
+            "recall_at_20": 0.0051813471502590676,
+            "recall_at_50": 0.013471502590673576
+          },
+          "gpu-modern-16gb-memory": {
+            "mean_reciprocal_rank": 0.1111111111111111,
+            "ndcg_at_10": 0.03091863761204822,
+            "recall_at_20": 0.004214963119072708,
+            "recall_at_50": 0.012644889357218124
+          },
+          "memory-32gb-ddr4-low-latency": {
+            "mean_reciprocal_rank": 0.125,
+            "ndcg_at_10": 0.03240123690382939,
+            "recall_at_20": 0.0029411764705882353,
+            "recall_at_50": 0.0058823529411764705
+          },
+          "memory-32gb-ddr5-6000": {
+            "mean_reciprocal_rank": 0.07692307692307693,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.004172461752433936,
+            "recall_at_50": 0.011126564673157162
+          },
+          "memory-64gb-ddr5-5600": {
+            "mean_reciprocal_rank": 0.07142857142857142,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0051813471502590676,
+            "recall_at_50": 0.007772020725388601
+          },
+          "memory-high-capacity-ddr5": {
+            "mean_reciprocal_rank": 0.3333333333333333,
+            "ndcg_at_10": 0.1100458831490401,
+            "recall_at_20": 0.01098901098901099,
+            "recall_at_50": 0.027472527472527472
+          },
+          "motherboard-am5-ddr5-atx": {
+            "mean_reciprocal_rank": 0.125,
+            "ndcg_at_10": 0.03240123690382939,
+            "recall_at_20": 0.018292682926829267,
+            "recall_at_50": 0.042682926829268296
+          },
+          "motherboard-lga1700-ddr4-matx": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.10270949093910409,
+            "recall_at_20": 0.007462686567164179,
+            "recall_at_50": 0.007462686567164179
+          },
+          "motherboard-mini-itx-wifi": {
+            "mean_reciprocal_rank": 0.010752688172043012,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.0
+          },
+          "motherboard-upgradeable-storage-memory": {
+            "mean_reciprocal_rank": 0.3333333333333333,
+            "ndcg_at_10": 0.17668361703257085,
+            "recall_at_20": 0.009884678747940691,
+            "recall_at_50": 0.026359143327841845
+          },
+          "psu-1000w-platinum": {
+            "mean_reciprocal_rank": 0.07142857142857142,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0036363636363636364,
+            "recall_at_50": 0.014545454545454545
+          },
+          "psu-650-to-750w-gold": {
+            "mean_reciprocal_rank": 0.2,
+            "ndcg_at_10": 0.039733454899423135,
+            "recall_at_20": 0.0018656716417910447,
+            "recall_at_50": 0.013059701492537313
+          },
+          "psu-850w-gold-or-better": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.15274307813392599,
+            "recall_at_20": 0.008113590263691683,
+            "recall_at_50": 0.016227180527383367
+          },
+          "psu-sfx-650w": {
+            "mean_reciprocal_rank": 0.058823529411764705,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.01020408163265306,
+            "recall_at_50": 0.02040816326530612
+          },
+          "storage-1tb-nvme-m2": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.3484189261117258,
+            "recall_at_20": 0.00911854103343465,
+            "recall_at_50": 0.020263424518743668
+          },
+          "storage-2tb-nvme-m2": {
+            "mean_reciprocal_rank": 0.3333333333333333,
+            "ndcg_at_10": 0.17397208128825226,
+            "recall_at_20": 0.00922509225092251,
+            "recall_at_50": 0.01845018450184502
+          },
+          "storage-4tb-sata-2-5-inch": {
+            "mean_reciprocal_rank": 0.0041841004184100415,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.0
+          },
+          "storage-8tb-sata-3-5-inch": {
+            "mean_reciprocal_rank": 0.125,
+            "ndcg_at_10": 0.0633198745158776,
+            "recall_at_20": 0.007575757575757576,
+            "recall_at_50": 0.011363636363636364
+          }
+        }
+      }
+    },
+    "vector_only": {
+      "basis": "cosine similarity against the existing frozen embedding matrix",
+      "metrics": {
+        "aggregate": {
+          "candidate_checksum": "ed5dcd72672b221c8b2afacd6ab4cb8f391b50d33e69b8f629dee7f40d55688a",
+          "dataset_version": "buildcores-silver-pilot-v1-8c738c513661-fac11c46a59f",
+          "eligible_for_promotion": false,
+          "label_source": "silver",
+          "mean_reciprocal_rank": 0.6047731436535478,
+          "metric_estimates": {
+            "mean_reciprocal_rank": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.47139805105999893,
+                "upper": 0.7320960966834439
+              },
+              "denominator": null,
+              "name": "mean_reciprocal_rank",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.6047731436535478
+            },
+            "ndcg_at_10": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.19815679554116833,
+                "upper": 0.3510415467071989
+              },
+              "denominator": null,
+              "name": "ndcg_at_10",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.27225857703560513
+            },
+            "recall_at_20": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.022582951982110258,
+                "upper": 0.07418382781436622
+              },
+              "denominator": null,
+              "name": "recall_at_20",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.0442844563349996
+            },
+            "recall_at_50": {
+              "confidence_interval": {
+                "confidence_level": 0.95,
+                "lower": 0.050465007722719016,
+                "upper": 0.13207127590735235
+              },
+              "denominator": null,
+              "name": "recall_at_50",
+              "numerator": null,
+              "sample_count": 32,
+              "slice": "overall",
+              "unit": "ratio",
+              "value": 0.08504586134446672
+            }
+          },
+          "ndcg_at_10": 0.27225857703560513,
+          "per_query": {
+            "case-full-tower-400mm-gpu-six-bays": {
+              "mean_reciprocal_rank": 0.1111111111111111,
+              "ndcg_at_10": 0.06625422345438904,
+              "recall_at_20": 0.018867924528301886,
+              "recall_at_50": 0.03773584905660377
+            },
+            "case-mid-tower-170mm-cooler-four-bays": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.13886244387355456,
+              "recall_at_20": 0.0026595744680851063,
+              "recall_at_50": 0.010638297872340425
+            },
+            "case-mid-tower-350mm-gpu": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.9266360779006401,
+              "recall_at_20": 0.008662696264212236,
+              "recall_at_50": 0.018949648077964266
+            },
+            "case-mini-tower-matx-300mm-gpu": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.25982939541184563,
+              "recall_at_20": 0.026239067055393587,
+              "recall_at_50": 0.08746355685131195
+            },
+            "cooler-240mm-aio-lga1700": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.5547611348284992,
+              "recall_at_20": 0.0392156862745098,
+              "recall_at_50": 0.09243697478991597
+            },
+            "cooler-360mm-aio-am5": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.33619275283069505,
+              "recall_at_20": 0.021413276231263382,
+              "recall_at_50": 0.05353319057815846
+            },
+            "cooler-air-am5-lga1700-160mm": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.20829366581033185,
+              "recall_at_20": 0.0037735849056603774,
+              "recall_at_50": 0.016981132075471698
+            },
+            "cooler-low-profile-air-am5": {
+              "mean_reciprocal_rank": 0.05263157894736842,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.014925373134328358,
+              "recall_at_50": 0.04477611940298507
+            },
+            "cpu-am5-eight-core": {
+              "mean_reciprocal_rank": 0.25,
+              "ndcg_at_10": 0.08396802493854683,
+              "recall_at_20": 0.06666666666666667,
+              "recall_at_50": 0.13333333333333333
+            },
+            "cpu-lga1700-included-cooler": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.2717544012114744,
+              "recall_at_20": 0.3684210526315789,
+              "recall_at_50": 0.5789473684210527
+            },
+            "cpu-low-power-integrated-graphics": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.23545252151391563,
+              "recall_at_20": 0.03619909502262444,
+              "recall_at_50": 0.10407239819004525
+            },
+            "cpu-workstation-16-core": {
+              "mean_reciprocal_rank": 0.1,
+              "ndcg_at_10": 0.0296897011595108,
+              "recall_at_20": 0.03125,
+              "recall_at_50": 0.13541666666666666
+            },
+            "gpu-compact-eight-gb": {
+              "mean_reciprocal_rank": 0.3333333333333333,
+              "ndcg_at_10": 0.1424471200528695,
+              "recall_at_20": 0.004459308807134894,
+              "recall_at_50": 0.013377926421404682
+            },
+            "gpu-efficient-12gb": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.39135127286112187,
+              "recall_at_20": 0.017676767676767676,
+              "recall_at_50": 0.03787878787878788
+            },
+            "gpu-local-ai-16gb": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.1977157677074155,
+              "recall_at_20": 0.00932642487046632,
+              "recall_at_50": 0.019689119170984457
+            },
+            "gpu-modern-16gb-memory": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.5110369355730516,
+              "recall_at_20": 0.01685985247629083,
+              "recall_at_50": 0.032665964172813484
+            },
+            "memory-32gb-ddr4-low-latency": {
+              "mean_reciprocal_rank": 0.25,
+              "ndcg_at_10": 0.11636926184237624,
+              "recall_at_20": 0.01764705882352941,
+              "recall_at_50": 0.04411764705882353
+            },
+            "memory-32gb-ddr5-6000": {
+              "mean_reciprocal_rank": 0.07692307692307693,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.004172461752433936,
+              "recall_at_50": 0.008344923504867872
+            },
+            "memory-64gb-ddr5-5600": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.10270949093910409,
+              "recall_at_20": 0.007772020725388601,
+              "recall_at_50": 0.03367875647668394
+            },
+            "memory-high-capacity-ddr5": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.16265975898631188,
+              "recall_at_20": 0.016483516483516484,
+              "recall_at_50": 0.02197802197802198
+            },
+            "motherboard-am5-ddr5-atx": {
+              "mean_reciprocal_rank": 0.125,
+              "ndcg_at_10": 0.03240123690382939,
+              "recall_at_20": 0.012195121951219513,
+              "recall_at_50": 0.018292682926829267
+            },
+            "motherboard-lga1700-ddr4-matx": {
+              "mean_reciprocal_rank": 0.3333333333333333,
+              "ndcg_at_10": 0.1100458831490401,
+              "recall_at_20": 0.014925373134328358,
+              "recall_at_50": 0.05223880597014925
+            },
+            "motherboard-mini-itx-wifi": {
+              "mean_reciprocal_rank": 0.5,
+              "ndcg_at_10": 0.599976751690748,
+              "recall_at_20": 0.2916666666666667,
+              "recall_at_50": 0.3333333333333333
+            },
+            "motherboard-upgradeable-storage-memory": {
+              "mean_reciprocal_rank": 0.02040816326530612,
+              "ndcg_at_10": 0.0,
+              "recall_at_20": 0.0,
+              "recall_at_50": 0.0016474464579901153
+            },
+            "psu-1000w-platinum": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.40274046852745454,
+              "recall_at_20": 0.04727272727272727,
+              "recall_at_50": 0.10545454545454545
+            },
+            "psu-650-to-750w-gold": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.7307168173270163,
+              "recall_at_20": 0.03731343283582089,
+              "recall_at_50": 0.0914179104477612
+            },
+            "psu-850w-gold-or-better": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.4666666666666667,
+              "recall_at_20": 0.016227180527383367,
+              "recall_at_50": 0.038539553752535496
+            },
+            "psu-sfx-650w": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.3279399216603734,
+              "recall_at_20": 0.1326530612244898,
+              "recall_at_50": 0.2653061224489796
+            },
+            "storage-1tb-nvme-m2": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.4899497253169837,
+              "recall_at_20": 0.016210739614994935,
+              "recall_at_50": 0.040526849037487336
+            },
+            "storage-2tb-nvme-m2": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.3094529214355087,
+              "recall_at_20": 0.01845018450184502,
+              "recall_at_50": 0.046125461254612546
+            },
+            "storage-4tb-sata-2-5-inch": {
+              "mean_reciprocal_rank": 0.2,
+              "ndcg_at_10": 0.039733454899423135,
+              "recall_at_20": 0.021739130434782608,
+              "recall_at_50": 0.043478260869565216
+            },
+            "storage-8tb-sata-3-5-inch": {
+              "mean_reciprocal_rank": 1.0,
+              "ndcg_at_10": 0.4666666666666667,
+              "recall_at_20": 0.07575757575757576,
+              "recall_at_50": 0.1590909090909091
+            }
+          },
+          "query_count": 32,
+          "recall_at": {
+            "20": 0.0442844563349996,
+            "50": 0.08504586134446672
+          }
+        },
+        "by_category": {
+          "case": {
+            "mean_reciprocal_rank": 0.6527777777777778,
+            "ndcg_at_10": 0.34789553516010735,
+            "recall_at_20": 0.014107315578998204,
+            "recall_at_50": 0.0386968379645551
+          },
+          "cooler": {
+            "mean_reciprocal_rank": 0.5131578947368421,
+            "ndcg_at_10": 0.2748118883673815,
+            "recall_at_20": 0.01983198013644048,
+            "recall_at_50": 0.0519318542116328
+          },
+          "cpu": {
+            "mean_reciprocal_rank": 0.4625,
+            "ndcg_at_10": 0.1552161622058619,
+            "recall_at_20": 0.1256342035802175,
+            "recall_at_50": 0.23794244165277448
+          },
+          "gpu": {
+            "mean_reciprocal_rank": 0.7083333333333334,
+            "ndcg_at_10": 0.31063777404861465,
+            "recall_at_20": 0.01208058845766493,
+            "recall_at_50": 0.025902949410997626
+          },
+          "memory": {
+            "mean_reciprocal_rank": 0.4567307692307692,
+            "ndcg_at_10": 0.09543462794194806,
+            "recall_at_20": 0.011518764446217107,
+            "recall_at_50": 0.027029837254599332
+          },
+          "motherboard": {
+            "mean_reciprocal_rank": 0.24468537414965985,
+            "ndcg_at_10": 0.1856059679359044,
+            "recall_at_20": 0.07969679043805364,
+            "recall_at_50": 0.10137806717207548
+          },
+          "power_supply": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.48201596854537776,
+            "recall_at_20": 0.058366600465105334,
+            "recall_at_50": 0.12517953302595544
+          },
+          "storage": {
+            "mean_reciprocal_rank": 0.8,
+            "ndcg_at_10": 0.32645069207964555,
+            "recall_at_20": 0.03303940757729958,
+            "recall_at_50": 0.07230537006314355
+          }
+        },
+        "macro_query_bootstrap_ci": {
+          "mean_reciprocal_rank": {
+            "confidence_level": 0.95,
+            "lower": 0.47139805105999893,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.7320960966834439
+          },
+          "ndcg_at_10": {
+            "confidence_level": 0.95,
+            "lower": 0.19338562081001923,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.35081058069016813
+          },
+          "recall_at_20": {
+            "confidence_level": 0.95,
+            "lower": 0.020927611847703895,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.07718993063148537
+          },
+          "recall_at_50": {
+            "confidence_level": 0.95,
+            "lower": 0.05118537983577265,
+            "resamples": 1000,
+            "seed": 20260722,
+            "upper": 0.13075344566582417
+          }
+        },
+        "per_query": {
+          "case-full-tower-400mm-gpu-six-bays": {
+            "mean_reciprocal_rank": 0.1111111111111111,
+            "ndcg_at_10": 0.06625422345438904,
+            "recall_at_20": 0.018867924528301886,
+            "recall_at_50": 0.03773584905660377
+          },
+          "case-mid-tower-170mm-cooler-four-bays": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.13886244387355456,
+            "recall_at_20": 0.0026595744680851063,
+            "recall_at_50": 0.010638297872340425
+          },
+          "case-mid-tower-350mm-gpu": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.9266360779006401,
+            "recall_at_20": 0.008662696264212236,
+            "recall_at_50": 0.018949648077964266
+          },
+          "case-mini-tower-matx-300mm-gpu": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.25982939541184563,
+            "recall_at_20": 0.026239067055393587,
+            "recall_at_50": 0.08746355685131195
+          },
+          "cooler-240mm-aio-lga1700": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.5547611348284992,
+            "recall_at_20": 0.0392156862745098,
+            "recall_at_50": 0.09243697478991597
+          },
+          "cooler-360mm-aio-am5": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.33619275283069505,
+            "recall_at_20": 0.021413276231263382,
+            "recall_at_50": 0.05353319057815846
+          },
+          "cooler-air-am5-lga1700-160mm": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.20829366581033185,
+            "recall_at_20": 0.0037735849056603774,
+            "recall_at_50": 0.016981132075471698
+          },
+          "cooler-low-profile-air-am5": {
+            "mean_reciprocal_rank": 0.05263157894736842,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.014925373134328358,
+            "recall_at_50": 0.04477611940298507
+          },
+          "cpu-am5-eight-core": {
+            "mean_reciprocal_rank": 0.25,
+            "ndcg_at_10": 0.08396802493854683,
+            "recall_at_20": 0.06666666666666667,
+            "recall_at_50": 0.13333333333333333
+          },
+          "cpu-lga1700-included-cooler": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.2717544012114744,
+            "recall_at_20": 0.3684210526315789,
+            "recall_at_50": 0.5789473684210527
+          },
+          "cpu-low-power-integrated-graphics": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.23545252151391563,
+            "recall_at_20": 0.03619909502262444,
+            "recall_at_50": 0.10407239819004525
+          },
+          "cpu-workstation-16-core": {
+            "mean_reciprocal_rank": 0.1,
+            "ndcg_at_10": 0.0296897011595108,
+            "recall_at_20": 0.03125,
+            "recall_at_50": 0.13541666666666666
+          },
+          "gpu-compact-eight-gb": {
+            "mean_reciprocal_rank": 0.3333333333333333,
+            "ndcg_at_10": 0.1424471200528695,
+            "recall_at_20": 0.004459308807134894,
+            "recall_at_50": 0.013377926421404682
+          },
+          "gpu-efficient-12gb": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.39135127286112187,
+            "recall_at_20": 0.017676767676767676,
+            "recall_at_50": 0.03787878787878788
+          },
+          "gpu-local-ai-16gb": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.1977157677074155,
+            "recall_at_20": 0.00932642487046632,
+            "recall_at_50": 0.019689119170984457
+          },
+          "gpu-modern-16gb-memory": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.5110369355730516,
+            "recall_at_20": 0.01685985247629083,
+            "recall_at_50": 0.032665964172813484
+          },
+          "memory-32gb-ddr4-low-latency": {
+            "mean_reciprocal_rank": 0.25,
+            "ndcg_at_10": 0.11636926184237624,
+            "recall_at_20": 0.01764705882352941,
+            "recall_at_50": 0.04411764705882353
+          },
+          "memory-32gb-ddr5-6000": {
+            "mean_reciprocal_rank": 0.07692307692307693,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.004172461752433936,
+            "recall_at_50": 0.008344923504867872
+          },
+          "memory-64gb-ddr5-5600": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.10270949093910409,
+            "recall_at_20": 0.007772020725388601,
+            "recall_at_50": 0.03367875647668394
+          },
+          "memory-high-capacity-ddr5": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.16265975898631188,
+            "recall_at_20": 0.016483516483516484,
+            "recall_at_50": 0.02197802197802198
+          },
+          "motherboard-am5-ddr5-atx": {
+            "mean_reciprocal_rank": 0.125,
+            "ndcg_at_10": 0.03240123690382939,
+            "recall_at_20": 0.012195121951219513,
+            "recall_at_50": 0.018292682926829267
+          },
+          "motherboard-lga1700-ddr4-matx": {
+            "mean_reciprocal_rank": 0.3333333333333333,
+            "ndcg_at_10": 0.1100458831490401,
+            "recall_at_20": 0.014925373134328358,
+            "recall_at_50": 0.05223880597014925
+          },
+          "motherboard-mini-itx-wifi": {
+            "mean_reciprocal_rank": 0.5,
+            "ndcg_at_10": 0.599976751690748,
+            "recall_at_20": 0.2916666666666667,
+            "recall_at_50": 0.3333333333333333
+          },
+          "motherboard-upgradeable-storage-memory": {
+            "mean_reciprocal_rank": 0.02040816326530612,
+            "ndcg_at_10": 0.0,
+            "recall_at_20": 0.0,
+            "recall_at_50": 0.0016474464579901153
+          },
+          "psu-1000w-platinum": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.40274046852745454,
+            "recall_at_20": 0.04727272727272727,
+            "recall_at_50": 0.10545454545454545
+          },
+          "psu-650-to-750w-gold": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.7307168173270163,
+            "recall_at_20": 0.03731343283582089,
+            "recall_at_50": 0.0914179104477612
+          },
+          "psu-850w-gold-or-better": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.4666666666666667,
+            "recall_at_20": 0.016227180527383367,
+            "recall_at_50": 0.038539553752535496
+          },
+          "psu-sfx-650w": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.3279399216603734,
+            "recall_at_20": 0.1326530612244898,
+            "recall_at_50": 0.2653061224489796
+          },
+          "storage-1tb-nvme-m2": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.4899497253169837,
+            "recall_at_20": 0.016210739614994935,
+            "recall_at_50": 0.040526849037487336
+          },
+          "storage-2tb-nvme-m2": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.3094529214355087,
+            "recall_at_20": 0.01845018450184502,
+            "recall_at_50": 0.046125461254612546
+          },
+          "storage-4tb-sata-2-5-inch": {
+            "mean_reciprocal_rank": 0.2,
+            "ndcg_at_10": 0.039733454899423135,
+            "recall_at_20": 0.021739130434782608,
+            "recall_at_50": 0.043478260869565216
+          },
+          "storage-8tb-sata-3-5-inch": {
+            "mean_reciprocal_rank": 1.0,
+            "ndcg_at_10": 0.4666666666666667,
+            "recall_at_20": 0.07575757575757576,
+            "recall_at_50": 0.1590909090909091
+          }
+        }
+      }
+    }
+  },
+  "paired_baseline_comparisons": {
+    "rrf_hybrid_minus_bm25": {
+      "mean_reciprocal_rank": {
+        "absolute_delta": 0.2092967535936286,
+        "baseline_value": 0.457588617979243,
+        "challenger_value": 0.6668853715728715,
+        "paired_query_bootstrap_delta_ci": {
+          "confidence_level": 0.95,
+          "lower": 0.07167780765241705,
+          "resamples": 1000,
+          "seed": 20260722,
+          "upper": 0.3524860150699994
+        },
+        "relative_delta_percent": 45.73906460302793
+      },
+      "ndcg_at_10": {
+        "absolute_delta": 0.11512258048074092,
+        "baseline_value": 0.19341124260014803,
+        "challenger_value": 0.30853382308088895,
+        "paired_query_bootstrap_delta_ci": {
+          "confidence_level": 0.95,
+          "lower": 0.04607666240888712,
+          "resamples": 1000,
+          "seed": 20260722,
+          "upper": 0.18026008487176742
+        },
+        "relative_delta_percent": 59.52217613261579
+      },
+      "recall_at_20": {
+        "absolute_delta": 0.005707250623838405,
+        "baseline_value": 0.04619624891708193,
+        "challenger_value": 0.05190349954092033,
+        "paired_query_bootstrap_delta_ci": {
+          "confidence_level": 0.95,
+          "lower": -0.021682024741579337,
+          "resamples": 1000,
+          "seed": 20260722,
+          "upper": 0.02604501668793682
+        },
+        "relative_delta_percent": 12.354359407151003
+      },
+      "recall_at_50": {
+        "absolute_delta": 0.002417092129319835,
+        "baseline_value": 0.11381006791660075,
+        "challenger_value": 0.11622716004592058,
+        "paired_query_bootstrap_delta_ci": {
+          "confidence_level": 0.95,
+          "lower": -0.03340917238661504,
+          "resamples": 1000,
+          "seed": 20260722,
+          "upper": 0.033655654515743524
+        },
+        "relative_delta_percent": 2.1237946462619317
+      }
+    },
+    "vector_only_minus_bm25": {
+      "mean_reciprocal_rank": {
+        "absolute_delta": 0.14718452567430482,
+        "baseline_value": 0.457588617979243,
+        "challenger_value": 0.6047731436535478,
+        "paired_query_bootstrap_delta_ci": {
+          "confidence_level": 0.95,
+          "lower": 0.025346288755887014,
+          "resamples": 1000,
+          "seed": 20260722,
+          "upper": 0.28055423566714977
+        },
+        "relative_delta_percent": 32.165250596548134
+      },
+      "ndcg_at_10": {
+        "absolute_delta": 0.07884733443545712,
+        "baseline_value": 0.19341124260014803,
+        "challenger_value": 0.27225857703560513,
+        "paired_query_bootstrap_delta_ci": {
+          "confidence_level": 0.95,
+          "lower": 0.00022057025725843245,
+          "resamples": 1000,
+          "seed": 20260722,
+          "upper": 0.1546060650506642
+        },
+        "relative_delta_percent": 40.766675905424734
+      },
+      "recall_at_20": {
+        "absolute_delta": -0.0019117925820823286,
+        "baseline_value": 0.04619624891708193,
+        "challenger_value": 0.0442844563349996,
+        "paired_query_bootstrap_delta_ci": {
+          "confidence_level": 0.95,
+          "lower": -0.03943123694521209,
+          "resamples": 1000,
+          "seed": 20260722,
+          "upper": 0.02636479460586441
+        },
+        "relative_delta_percent": -4.138415189323754
+      },
+      "recall_at_50": {
+        "absolute_delta": -0.02876420657213403,
+        "baseline_value": 0.11381006791660075,
+        "challenger_value": 0.08504586134446672,
+        "paired_query_bootstrap_delta_ci": {
+          "confidence_level": 0.95,
+          "lower": -0.09555029303589702,
+          "resamples": 1000,
+          "seed": 20260722,
+          "upper": 0.021516446703624705
+        },
+        "relative_delta_percent": -25.27386820752295
+      }
+    }
+  },
+  "reporting_block_reason": "Relevance grades are deterministic silver labels derived from the same declared specification predicates used to define each query; no human relevance review was done.",
+  "run_id": "buildcores-silver-pilot-v1-8c738c513661-fac11c46a59f",
+  "schema_version": "pc-build-recommender.retrieval-silver-pilot.v1",
+  "sources": {
+    "catalog": {
+      "path": "data/processed/buildcores_open_db/f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f/full/records.jsonl",
+      "sha256": "8c738c5136615080ac29ced074726f97cab473c5a45eafdf19c26504aa624ce2"
+    },
+    "embedding_manifest": {
+      "built_on_device": "cuda",
+      "content_hash": "b7729dfce26aa90e27dab35ea9f1fc9a6f41c121db1f4fa4cfb6fca81947445b",
+      "index_version": "product-embeddings-v2-full",
+      "path": "artifacts/retrieval/buildcores-full-embeddings/manifest.json",
+      "sha256": "bfe6fcd319c8c484725eec018bc6712701079139e992b40a7da77fd9a83e4e9f"
+    },
+    "frozen_candidates": {
+      "path": "artifacts/evaluation/retrieval-silver-full-v2/frozen-candidates.json",
+      "sha256": "76f78f769eb7747269051e9be7c96870121ef1f444225533332ec04fa473fbc8"
+    },
+    "query_set": {
+      "path": "evals/retrieval/real_catalog_silver_queries.v1.json",
+      "sha256": "fac11c46a59f1cfe88908fb2b7f0188e018c956665cd885f7ceceff4d8469968"
+    }
+  },
+  "training_performed": false
+}
