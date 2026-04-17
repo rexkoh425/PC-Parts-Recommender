@@ -29,7 +29,7 @@ from .models import (
     RankedCandidate,
     RankerArtifactIdentity,
     RankerMetadata,
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
     RankingQuery,
 )
@@ -472,7 +472,7 @@ class LambdaMARTRanker:
         return self
 
     def predict(
-        self, context: RankingContext, candidates: Sequence[ScoredCandidate]
+        self, context: RankingContext, candidates: Sequence[RankingCandidate]
     ) -> NDArray[np.float64]:
         """Predict scores for one already-filtered query group."""
 
@@ -498,7 +498,7 @@ class LambdaMARTRanker:
         return scores
 
     def rank_query(
-        self, context: RankingContext, candidates: Sequence[ScoredCandidate]
+        self, context: RankingContext, candidates: Sequence[RankingCandidate]
     ) -> list[RankedCandidate]:
         scores = self.predict(context, candidates)
         order = sorted(

@@ -25,7 +25,7 @@ from .models import (
     RankedCandidate,
     RankerArtifactIdentity,
     RankerMetadata,
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
     RankingQuery,
 )
@@ -68,7 +68,7 @@ __all__ = [
     "RankerStageMaintenanceItem",
     "RankerStageMaintenanceReport",
     "RANKER_STAGE_ACTIVITY_LOCK",
-    "ScoredCandidate",
+    "RankingCandidate",
     "RankingContext",
     "RankingFeatureBuilder",
     "RankingQuery",

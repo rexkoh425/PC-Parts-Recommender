@@ -12,7 +12,7 @@ from .models import (
     RankedCandidate,
     RankerArtifactIdentity,
     RankerMetadata,
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
 )
 
@@ -81,7 +81,7 @@ class HeuristicRanker:
         return False
 
     def rank_query(
-        self, context: RankingContext, candidates: Sequence[ScoredCandidate]
+        self, context: RankingContext, candidates: Sequence[RankingCandidate]
     ) -> list[RankedCandidate]:
         if not candidates:
             return []

@@ -7,7 +7,7 @@ from training.train_ranking import _mean_ndcg
 
 from pc_build_recommender.ranking import (
     LabeledRankingQuery,
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
 )
 
@@ -19,7 +19,7 @@ class _FixedScoreRanker:
     def predict(
         self,
         _context: RankingContext,
-        _candidates: Sequence[ScoredCandidate],
+        _candidates: Sequence[RankingCandidate],
     ) -> tuple[float, ...]:
         return self._scores
 
@@ -28,17 +28,17 @@ def test_training_report_ndcg_matches_exponential_gain_evaluator() -> None:
     query = LabeledRankingQuery.create(
         RankingContext(query_id="q1"),
         (
-            ScoredCandidate(
+            RankingCandidate(
                 product_id="best",
                 category="gpu",
                 retrieval_scores={"bm25_score": 3.0},
             ),
-            ScoredCandidate(
+            RankingCandidate(
                 product_id="strong",
                 category="gpu",
                 retrieval_scores={"bm25_score": 2.0},
             ),
-            ScoredCandidate(
+            RankingCandidate(
                 product_id="irrelevant",
                 category="gpu",
                 retrieval_scores={"bm25_score": 1.0},
@@ -61,9 +61,9 @@ def test_training_report_breaks_score_ties_by_product_id() -> None:
     query = LabeledRankingQuery.create(
         RankingContext(query_id="q-tie"),
         (
-            ScoredCandidate(product_id="z-best", category="gpu"),
-            ScoredCandidate(product_id="a-strong", category="gpu"),
-            ScoredCandidate(product_id="m-irrelevant", category="gpu"),
+            RankingCandidate(product_id="z-best", category="gpu"),
+            RankingCandidate(product_id="a-strong", category="gpu"),
+            RankingCandidate(product_id="m-irrelevant", category="gpu"),
         ),
         (4, 3, 0),
     )

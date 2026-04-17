@@ -16,7 +16,7 @@ from pc_build_recommender.ranking import (
     LabeledRankingQuery,
     LambdaMARTRanker,
     RankerPromotionPolicy,
-    ScoredCandidate,
+    RankingCandidate,
     evaluate_ranker_promotion,
     generate_artifact_bound_rankings,
     write_ranker_promotion_decision,
@@ -43,7 +43,7 @@ def _retrieval_ranking(
         candidate_rows = query.candidates
         scores: dict[str, float] = {}
         for candidate in candidate_rows:
-            if not isinstance(candidate, ScoredCandidate):
+            if not isinstance(candidate, RankingCandidate):
                 raise TypeError("ranking feature snapshot contains an invalid candidate")
             raw_score = candidate.retrieval_scores.get(score_name)
             if raw_score is None or not math.isfinite(float(raw_score)):

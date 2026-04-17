@@ -17,7 +17,7 @@ from pc_build_recommender.ranking import (
     LabeledRankingQuery,
     LambdaMARTRanker,
     RankerMetadata,
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
     RankingFeatureBuilder,
     prepare_lgbm_data,
@@ -31,10 +31,10 @@ from pc_build_recommender.retrieval import (
 )
 
 
-def _candidate(query_number: int, grade: int) -> ScoredCandidate:
+def _candidate(query_number: int, grade: int) -> RankingCandidate:
     # Correlate multiple independent features with relevance so the tiny model
     # has a real split to learn while still exercising query groups.
-    return ScoredCandidate(
+    return RankingCandidate(
         product_id=f"q{query_number}-g{grade}",
         category="gpu",
         price_sgd=1500 - grade * 100 + query_number,

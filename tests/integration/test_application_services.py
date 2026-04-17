@@ -76,7 +76,7 @@ from pc_build_recommender.ranking import (
     RankedCandidate,
     RankerArtifactIdentity,
     RankerMetadata,
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
 )
 from pc_build_recommender.retrieval import HybridProductRetriever
@@ -183,7 +183,7 @@ class _PromotedRanker:
     def rank_query(
         self,
         context: RankingContext,
-        candidates: Sequence[ScoredCandidate],
+        candidates: Sequence[RankingCandidate],
     ) -> list[RankedCandidate]:
         return [
             replace(

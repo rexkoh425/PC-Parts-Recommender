@@ -12,7 +12,7 @@ from numpy.typing import NDArray
 
 from pc_build_recommender.retrieval.text import tokenize
 
-from .models import ScoredCandidate, RankingContext
+from .models import RankingCandidate, RankingContext
 
 FloatFeatureMatrix = NDArray[np.float64]
 
@@ -34,7 +34,7 @@ def _unit(value: Any, default: float = 0.0) -> float:
     return min(1.0, max(0.0, number))
 
 
-def _first(candidate: ScoredCandidate, *names: str) -> Any:
+def _first(candidate: RankingCandidate, *names: str) -> Any:
     for name in names:
         value = candidate.get(name)
         if value is not None:
@@ -83,7 +83,7 @@ class RankingFeatureBuilder:
     )
 
     def build(
-        self, context: RankingContext, candidates: Sequence[ScoredCandidate]
+        self, context: RankingContext, candidates: Sequence[RankingCandidate]
     ) -> FeatureBatch:
         if not candidates:
             return FeatureBatch(
@@ -117,7 +117,7 @@ class RankingFeatureBuilder:
     def _build_row(
         self,
         context: RankingContext,
-        candidate: ScoredCandidate,
+        candidate: RankingCandidate,
         known_prices: NDArray[np.float64],
     ) -> list[float]:
         weighted_workload = self._weighted_workload(context, candidate)
@@ -203,7 +203,7 @@ class RankingFeatureBuilder:
         return [values[name] for name in self.feature_names]
 
     @staticmethod
-    def _weighted_workload(context: RankingContext, candidate: ScoredCandidate) -> float:
+    def _weighted_workload(context: RankingContext, candidate: RankingCandidate) -> float:
         if not candidate.workload_scores:
             return _number(candidate.signals.get("workload_score"))
         if not context.workload_weights:
@@ -215,7 +215,7 @@ class RankingFeatureBuilder:
         ) / total_weight
 
     @staticmethod
-    def _exact_model_match(context: RankingContext, candidate: ScoredCandidate) -> float:
+    def _exact_model_match(context: RankingContext, candidate: RankingCandidate) -> float:
         if "exact_model_match" in candidate.signals:
             return _unit(candidate.signals["exact_model_match"])
         model = candidate.get("model")
@@ -228,7 +228,7 @@ class RankingFeatureBuilder:
     @staticmethod
     def _minimum_fit(
         context: RankingContext,
-        candidate: ScoredCandidate,
+        candidate: RankingCandidate,
         requirement_name: str,
         field_names: tuple[str, ...],
     ) -> float:
@@ -239,7 +239,7 @@ class RankingFeatureBuilder:
         return min(2.0, max(0.0, actual / required))
 
     def _specification_match(
-        self, context: RankingContext, candidate: ScoredCandidate
+        self, context: RankingContext, candidate: RankingCandidate
     ) -> float:
         if "specification_match" in candidate.signals:
             return _unit(candidate.signals["specification_match"])
@@ -252,7 +252,7 @@ class RankingFeatureBuilder:
         return sum(checks) / len(checks) if checks else 0.0
 
     @staticmethod
-    def _preference_match(context: RankingContext, candidate: ScoredCandidate) -> float:
+    def _preference_match(context: RankingContext, candidate: RankingCandidate) -> float:
         if "preference_match_score" in candidate.signals:
             return _unit(candidate.signals["preference_match_score"])
         preferred = context.preferences.get("preferred_brands", ())
