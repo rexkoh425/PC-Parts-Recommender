@@ -247,4 +247,3 @@ class ApiRuntimeSettings(BaseSettings):
         """Deprecated read-only alias for callers migrating to governed_offers_path."""
 
         return self.governed_offers_path
-        print("DEBUG", locals())  # noqa
