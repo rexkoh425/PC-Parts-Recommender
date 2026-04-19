@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 from .database import (
     DEFAULT_DATABASE_URL,
-    build_db_engine,
+    create_db_engine,
     create_engine_from_url,
     create_session_factory,
     create_tables,
@@ -232,7 +232,7 @@ __all__ = [
     "SourceProvenanceORM",
     "SourceProvenanceRecord",
     "StreamedCatalogImportResult",
-    "build_db_engine",
+    "create_db_engine",
     "create_engine_from_url",
     "create_session_factory",
     "create_tables",

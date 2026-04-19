@@ -18,7 +18,7 @@ from services.api.serving_release import (
 from pc_build_recommender.catalog import (
     ProductionCatalogReadinessError,
     StreamedCatalogImportResult,
-    build_db_engine,
+    create_db_engine,
     create_session_factory,
     init_database,
     session_scope,
@@ -257,7 +257,7 @@ def main() -> int:
     )
     try:
         if args.database_url:
-            engine = build_db_engine(args.database_url)
+            engine = create_db_engine(args.database_url)
             try:
                 durable_store = SqlAlchemyDurableStore(engine)
                 if args.require_migrated_schema:

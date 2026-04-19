@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 from pc_build_recommender.catalog import (
     CatalogRepository,
     PriceSnapshotRecord,
-    build_db_engine,
+    create_db_engine,
     create_session_factory,
     get_database_url,
     init_database,
@@ -32,7 +32,7 @@ from pc_build_recommender.domain import (
 
 @pytest.fixture
 def session() -> Session:
-    engine = build_db_engine("sqlite:///:memory:")
+    engine = create_db_engine("sqlite:///:memory:")
     init_database(engine)
     factory = create_session_factory(engine)
     with factory() as value:
@@ -163,7 +163,7 @@ def test_benchmark_round_trip_keeps_configuration_fields(session: Session) -> No
 
 
 def test_session_scope_commits_and_rolls_back() -> None:
-    engine = build_db_engine("sqlite:///:memory:")
+    engine = create_db_engine("sqlite:///:memory:")
     init_database(engine)
     factory = create_session_factory(engine)
     with session_scope(factory) as scoped:
