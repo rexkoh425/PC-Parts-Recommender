@@ -11,7 +11,7 @@ from pc_build_recommender.entity_resolution import (
     BlockingScoreComponent,
     CanonicalProductRecord,
     HumanMatchLabel,
-    ListingRow,
+    ListingRecord,
     PairFeatureExtractor,
     PCBlockingCandidate,
     ReviewConflictError,
@@ -37,7 +37,7 @@ def _candidate(
     listing_capacity: int = 32,
     product_capacity: int = 32,
 ) -> PCBlockingCandidate:
-    listing = ListingRow(
+    listing = ListingRecord(
         listing_id=f"test-listing-{index}",
         title=f"Aster Velocity {listing_capacity}GB DDR5 kit {index}",
         category=category,
@@ -294,7 +294,7 @@ def test_conflict_aware_features_cover_aliases_identifiers_and_variant_severity(
 
 
 def test_conflict_parser_does_not_invent_space_grouped_numeric_semantics() -> None:
-    listing = ListingRow(
+    listing = ListingRecord(
         listing_id="ambiguous-weight-like-value",
         title="Aster memory listing",
         category="memory",

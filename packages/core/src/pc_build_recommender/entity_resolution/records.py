@@ -132,7 +132,7 @@ class CanonicalProductRecord:
 
 
 @dataclass(frozen=True, slots=True)
-class ListingRow:
+class ListingRecord:
     """Retailer listing representation used during blocking and matching."""
 
     listing_id: str
@@ -200,7 +200,7 @@ class LabelledPair:
     """A labelled listing-to-product pair with explicit data provenance."""
 
     pair_id: str
-    listing: ListingRow
+    listing: ListingRecord
     product: CanonicalProductRecord
     label: int
     is_synthetic: bool = False
@@ -259,7 +259,7 @@ class LabelledPair:
         if isinstance(row.get("listing"), Mapping) and isinstance(row.get("product"), Mapping):
             return cls(
                 pair_id=str(row["pair_id"]),
-                listing=ListingRow.from_dict(row["listing"]),
+                listing=ListingRecord.from_dict(row["listing"]),
                 product=CanonicalProductRecord.from_dict(row["product"]),
                 label=int(row["label"]),
                 is_synthetic=_bool(row.get("is_synthetic", False)),
@@ -285,7 +285,7 @@ class LabelledPair:
 
         return cls(
             pair_id=str(row["pair_id"]),
-            listing=ListingRow.from_dict(collect("listing")),
+            listing=ListingRecord.from_dict(collect("listing")),
             product=CanonicalProductRecord.from_dict(collect("product")),
             label=int(row["label"]),
             is_synthetic=_bool(row.get("is_synthetic", False)),

@@ -13,7 +13,7 @@ import numpy as np
 from pc_build_recommender.entity_resolution import (
     CanonicalProductRecord,
     EntityResolutionRuntime,
-    ListingRow,
+    ListingRecord,
     MatchOutcome,
     PairFeatureExtractor,
     PCDomainCandidateBlocker,
@@ -69,12 +69,12 @@ def listing_record_from_offer(
     retailer: str,
     current_price_sgd: float,
     metadata: Mapping[str, Any],
-) -> ListingRow:
+) -> ListingRecord:
     """Project governed offer metadata into the stable pair-feature contract."""
 
     identifiers = _metadata_mapping(metadata, "identifiers")
     attributes = _metadata_mapping(metadata, "attributes")
-    return ListingRow(
+    return ListingRecord(
         listing_id=listing_id,
         title=title,
         category=category,
@@ -92,7 +92,7 @@ def listing_record_from_offer(
     )
 
 
-def _brand_matches(listing: ListingRow, product: CanonicalProductRecord) -> bool:
+def _brand_matches(listing: ListingRecord, product: CanonicalProductRecord) -> bool:
     listing_brand = normalize_text(listing.brand)
     product_brand = normalize_text(product.brand)
     if listing_brand:
@@ -103,7 +103,7 @@ def _brand_matches(listing: ListingRow, product: CanonicalProductRecord) -> bool
 
 
 def _colour_conflict(
-    listing: ListingRow,
+    listing: ListingRecord,
     product: CanonicalProductRecord,
 ) -> bool:
     title_colours = _COLOUR_TOKENS.intersection(tokenize(listing.title))
@@ -117,7 +117,7 @@ def _colour_conflict(
 
 
 def _hard_conflict_reasons(
-    listing: ListingRow,
+    listing: ListingRecord,
     product: CanonicalProductRecord,
 ) -> tuple[str, ...]:
     reasons = [
@@ -202,13 +202,13 @@ class CatalogEntityMatcher:
     def model_version(self) -> str | None:
         return self.runtime.model_version if self.runtime is not None else None
 
-    def _products(self, listing: ListingRow) -> tuple[CanonicalProductRecord, ...]:
+    def _products(self, listing: ListingRecord) -> tuple[CanonicalProductRecord, ...]:
         category = normalize_text(listing.category).replace(" ", "_")
         return self.products_by_category.get(category, ())
 
     def _anchor_candidates(
         self,
-        listing: ListingRow,
+        listing: ListingRecord,
     ) -> tuple[str | None, tuple[CanonicalProductRecord, ...], tuple[str, ...]]:
         products = self._products(listing)
         listing_gtin = normalize_identifier(listing.gtin)
@@ -256,7 +256,7 @@ class CatalogEntityMatcher:
             return "exact_mpn_brand", mpn_matches, ()
         return None, (), ()
 
-    def _anchor_result(self, listing: ListingRow) -> CatalogMatchResult | None:
+    def _anchor_result(self, listing: ListingRecord) -> CatalogMatchResult | None:
         method, anchored, identifier_conflicts = self._anchor_candidates(listing)
         if identifier_conflicts:
             return CatalogMatchResult(
@@ -316,7 +316,7 @@ class CatalogEntityMatcher:
             evidence=evidence,
         )
 
-    def match(self, listing: ListingRow) -> CatalogMatchResult:
+    def match(self, listing: ListingRecord) -> CatalogMatchResult:
         """Resolve one offer without allowing ML to override exact or hard evidence."""
 
         anchor_result = self._anchor_result(listing)

@@ -35,7 +35,7 @@ from pc_build_recommender.entity_resolution import (
     CanonicalProductRecord,
     ExactMatchBaseline,
     LightGBMEntityResolver,
-    ListingRow,
+    ListingRecord,
     LogisticMatchBaseline,
     MatchThresholds,
     LabelledPair,
@@ -118,11 +118,11 @@ def add_frozen_embeddings(
     if matrix.ndim != 2 or matrix.shape[0] != len(records):
         raise RuntimeError("sentence encoder returned an invalid matrix")
 
-    embedded_listings: dict[str, ListingRow] = {}
+    embedded_listings: dict[str, ListingRecord] = {}
     embedded_products: dict[str, CanonicalProductRecord] = {}
     for (side, key), record, embedding in zip(record_keys, records, matrix, strict=True):
         if side == "listing":
-            if not isinstance(record, ListingRow):
+            if not isinstance(record, ListingRecord):
                 raise TypeError("listing embedding key resolved to a non-listing record")
             embedded_listings[key] = replace(
                 record, embedding=tuple(float(value) for value in embedding)

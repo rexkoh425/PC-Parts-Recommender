@@ -21,7 +21,7 @@ from pc_build_recommender.entity_resolution import (
     EntityResolutionRuntime,
     EntityResolutionServingEvidence,
     LightGBMEntityResolver,
-    ListingRow,
+    ListingRecord,
     MatchThresholds,
     build_entity_resolution_serving_evidence,
     entity_resolution_release_sha256,
@@ -72,8 +72,8 @@ def _listing(
     *,
     mpn: str | None = None,
     gtin: str | None = None,
-) -> ListingRow:
-    return ListingRow(
+) -> ListingRecord:
+    return ListingRecord(
         listing_id="listing-1",
         title=title,
         category="gpu",

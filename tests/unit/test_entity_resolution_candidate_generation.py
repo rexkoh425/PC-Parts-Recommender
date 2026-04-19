@@ -7,7 +7,7 @@ from pc_build_recommender.entity_resolution import (
     CandidateSupervision,
     CanonicalProductRecord,
     DeterministicHardNegativeSampler,
-    ListingRow,
+    ListingRecord,
     PCDomainCandidateBlocker,
     UnlabeledHardNegativeCandidate,
     canonical_pc_category,
@@ -31,8 +31,8 @@ def _product(
     )
 
 
-def _listing(*, mpn: str = "MEM-32") -> ListingRow:
-    return ListingRow(
+def _listing(*, mpn: str = "MEM-32") -> ListingRecord:
+    return ListingRecord(
         listing_id="listing-1",
         title="Aster Velocity M1 32GB DDR5-6000 2x16GB",
         category="RAM",

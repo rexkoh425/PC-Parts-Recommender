@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .candidate_generation import canonical_pc_category
-from .records import CanonicalProductRecord, ListingRow
+from .records import CanonicalProductRecord, ListingRecord
 from .review import SourceUsePolicy
 
 _CATALOGUE_SOURCE = "buildcores_open_db"
@@ -19,7 +19,7 @@ _LISTING_SOURCE = "dynacore_controlled_pdf"
 @dataclass(frozen=True, slots=True)
 class PCWorkflowInputs:
     products: tuple[CanonicalProductRecord, ...]
-    listings: tuple[ListingRow, ...]
+    listings: tuple[ListingRecord, ...]
     source_policy: SourceUsePolicy
 
 
@@ -80,7 +80,7 @@ def _catalogue_product(row: Mapping[str, Any], *, location: str) -> CanonicalPro
     )
 
 
-def _controlled_listing(row: Mapping[str, Any], *, location: str) -> ListingRow:
+def _controlled_listing(row: Mapping[str, Any], *, location: str) -> ListingRecord:
     if row.get("record_type") != "retailer_listing":
         raise ValueError(f"{location}: expected retailer_listing record")
     provenance = row.get("provenance")
@@ -100,7 +100,7 @@ def _controlled_listing(row: Mapping[str, Any], *, location: str) -> ListingRow:
         raise ValueError(f"{location}: controlled pilot listing must use SGD")
     # Brand and MPN stay missing unless explicitly supplied by the controlled record. We do
     # not convert title-token guesses into authoritative entity-resolution fields.
-    return ListingRow(
+    return ListingRecord(
         listing_id=str(listing["listing_id"]),
         title=str(listing["title"]),
         category=category,
@@ -131,7 +131,7 @@ def load_controlled_pc_workflow_inputs(
     catalogue_path = Path(catalogue_jsonl)
     listing_path = Path(listings_jsonl)
     products: list[CanonicalProductRecord] = []
-    listings: list[ListingRow] = []
+    listings: list[ListingRecord] = []
     catalogue_versions: set[str] = set()
     listing_versions: set[str] = set()
     catalogue_training_flags: list[bool] = []

@@ -13,7 +13,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from .records import CanonicalProductRecord, ListingRow, LabelledPair
+from .records import CanonicalProductRecord, ListingRecord, LabelledPair
 
 SYNTHETIC_PROVENANCE = (
     "synthetic engineering fixture; not retailer, manufacturer, benchmark, or user evidence"
@@ -23,7 +23,7 @@ SYNTHETIC_PROVENANCE = (
 @dataclass(frozen=True, slots=True)
 class SyntheticEntityResolutionDataset:
     products: tuple[CanonicalProductRecord, ...]
-    listings: tuple[ListingRow, ...]
+    listings: tuple[ListingRecord, ...]
     pairs: tuple[LabelledPair, ...]
     seed: int
     provenance: str = SYNTHETIC_PROVENANCE
@@ -188,14 +188,14 @@ def synthetic_catalog(
     for product in products:
         by_category.setdefault(product.category, []).append(product)
 
-    listings: list[ListingRow] = []
+    listings: list[ListingRecord] = []
     pairs: list[LabelledPair] = []
     for product_index, product in enumerate(products):
         variants = _title_variants(product)
         for variant_index in range(positive_variants):
             listing_id = f"synthetic-listing-{product_index:04d}-{variant_index}"
             jitter = rng.uniform(-0.08, 0.08)
-            listing = ListingRow(
+            listing = ListingRecord(
                 listing_id=listing_id,
                 title=variants[variant_index],
                 category=product.category,

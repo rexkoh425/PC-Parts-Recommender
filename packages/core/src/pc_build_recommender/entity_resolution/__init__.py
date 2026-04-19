@@ -54,7 +54,7 @@ from .normalization import (
 )
 from .records import (
     CanonicalProductRecord,
-    ListingRow,
+    ListingRecord,
     LabelledPair,
     pair_example_from_dict,
 )
@@ -170,7 +170,7 @@ __all__ = [
     "GroupedHumanEvaluation",
     "HumanMatchLabel",
     "LightGBMEntityResolver",
-    "ListingRow",
+    "ListingRecord",
     "LogisticMatchBaseline",
     "MatchDecision",
     "MatchOutcome",
