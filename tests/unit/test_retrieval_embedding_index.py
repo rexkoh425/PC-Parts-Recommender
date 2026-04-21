@@ -413,4 +413,3 @@ def test_corrupt_artifact_disables_incremental_reuse(tmp_path) -> None:
     assert rebuilt.encoded_count == 2
     assert rebuilt.reused_count == 0
     assert len(encoder.calls) == 1
-    print("DEBUG", locals())  # noqa
