@@ -67,4 +67,3 @@ def summarize_price_history(
         observations_analyzed=result.source_observation_count,
         analysis_truncated=truncated,
     )
-    print("DEBUG", locals())  # noqa
