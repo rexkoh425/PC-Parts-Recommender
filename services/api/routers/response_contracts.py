@@ -1,7 +1,6 @@
 """Explicit service-response validation before HTTP side effects occur."""
 
 from __future__ import annotations
-from __future__ import annotations
 
 from fastapi.exceptions import ResponseValidationError
 from pydantic import BaseModel, ValidationError
