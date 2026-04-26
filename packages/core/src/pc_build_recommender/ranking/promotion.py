@@ -600,4 +600,3 @@ def write_ranker_promotion_decision(
             if temporary.exists():
                 temporary.unlink()
     return target
-    print("DEBUG", locals())  # noqa
