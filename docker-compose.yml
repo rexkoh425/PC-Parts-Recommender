@@ -1,0 +1,163 @@
+name: pc-build-recommender
+
+x-app-environment: &app-environment
+  DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://pcbr:pcbr_local_only@postgres:5432/pc_build_recommender}
+  DATA_VERSION: ${DATA_VERSION:-development}
+  RANKING_MODEL_VERSION: ${RANKING_MODEL_VERSION:-untrained}
+  COMPATIBILITY_RULE_VERSION: ${COMPATIBILITY_RULE_VERSION:-compat_v1}
+  EMBEDDING_MODEL: ${EMBEDDING_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+  MLFLOW_TRACKING_URI: ${MLFLOW_CONTAINER_TRACKING_URI:-http://mlflow:5000}
+  PCBR_API_ENVIRONMENT: ${PCBR_API_ENVIRONMENT:-development}
+  PCBR_API_LOG_LEVEL: ${PCBR_API_LOG_LEVEL:-INFO}
+  PCBR_API_DATA_VERSION: ${PCBR_API_DATA_VERSION:-development}
+  PCBR_API_RANKING_MODEL_VERSION: ${PCBR_API_RANKING_MODEL_VERSION:-untrained}
+  PCBR_API_COMPATIBILITY_RULE_VERSION: ${PCBR_API_COMPATIBILITY_RULE_VERSION:-compat_v1}
+  PCBR_API_SOLVER_VERSION: ${PCBR_API_SOLVER_VERSION:-cp_sat_v1}
+
+x-postgres-health: &postgres-health
+  condition: service_healthy
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-pc_build_recommender}
+      POSTGRES_USER: ${POSTGRES_USER:-pcbr}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pcbr_local_only}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-pcbr} -d ${POSTGRES_DB:-pc_build_recommender}",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/api.Dockerfile
+    restart: unless-stopped
+    environment:
+      <<: *app-environment
+      PCBR_API_CORS_ORIGINS: '${PCBR_API_CORS_ORIGINS:-["http://localhost:3000"]}'
+      PCBR_API_MAX_REQUEST_BODY_BYTES: ${PCBR_API_MAX_REQUEST_BODY_BYTES:-1048576}
+      PCBR_API_BUILD_GENERATION_MAX_CONCURRENCY: ${PCBR_API_BUILD_GENERATION_MAX_CONCURRENCY:-1}
+      PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE: ${PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE:-8}
+      PCBR_API_BUILD_GENERATION_QUEUE_TIMEOUT_SECONDS: ${PCBR_API_BUILD_GENERATION_QUEUE_TIMEOUT_SECONDS:-2}
+    depends_on:
+      postgres: *postgres-health
+    ports:
+      - "${API_PORT:-8000}:8000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/web.Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  dagster:
+    profiles: ["pipeline"]
+    build:
+      context: .
+      dockerfile: infra/dagster.Dockerfile
+    restart: unless-stopped
+    environment:
+      <<: *app-environment
+      DAGSTER_HOME: ${DAGSTER_HOME:-/app/.dagster}
+      RAW_DATA_DIR: /app/data/raw
+      PROCESSED_DATA_DIR: /app/data/processed
+      SOURCE_REGISTRY_PATH: /app/config/source_registry.yaml
+    depends_on:
+      postgres: *postgres-health
+    ports:
+      - "${DAGSTER_PORT:-3001}:3001"
+    volumes:
+      - dagster-state:/app/.dagster
+      - ./data:/app/data
+      - ./artifacts:/app/artifacts
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3001/server_info', timeout=3)",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  mlflow:
+    profiles: ["mlops"]
+    build:
+      context: .
+      dockerfile: infra/mlflow.Dockerfile
+    restart: unless-stopped
+    environment:
+      MLFLOW_BACKEND_STORE_URI: ${MLFLOW_BACKEND_STORE_URI:-postgresql+psycopg://pcbr:pcbr_local_only@postgres:5432/pc_build_recommender}
+      MLFLOW_ARTIFACT_ROOT: ${MLFLOW_ARTIFACT_ROOT:-/mlartifacts}
+    depends_on:
+      postgres: *postgres-health
+    ports:
+      - "${MLFLOW_PORT:-5000}:5000"
+    volumes:
+      - mlflow-artifacts:/mlartifacts
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=3)",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  postgres-data:
+  dagster-state:
+  mlflow-artifacts:
