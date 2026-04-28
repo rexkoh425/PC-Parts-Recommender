@@ -38,7 +38,7 @@ from pc_build_recommender.entity_resolution import (
     ListingRecord,
     LogisticMatchBaseline,
     MatchThresholds,
-    LabelledPair,
+    PairExample,
     pair_example_from_dict,
 )
 from training._common import (
@@ -59,8 +59,8 @@ DEFAULT_SEED = 20260722
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 
 
-def load_materialized_splits(path: Path) -> dict[str, tuple[LabelledPair, ...]]:
-    result: dict[str, tuple[LabelledPair, ...]] = {}
+def load_materialized_splits(path: Path) -> dict[str, tuple[PairExample, ...]]:
+    result: dict[str, tuple[PairExample, ...]] = {}
     for split_name in ("train", "validation", "test"):
         rows = read_json_lines(path / f"pairs.{split_name}.jsonl")
         result[split_name] = tuple(pair_example_from_dict(row) for row in rows)
@@ -78,13 +78,13 @@ def _embedding_text(record: object) -> str:
 
 
 def add_frozen_embeddings(
-    splits: Mapping[str, Sequence[LabelledPair]],
+    splits: Mapping[str, Sequence[PairExample]],
     *,
     model_name: str,
     revision: str,
     device: str,
     batch_size: int,
-) -> tuple[dict[str, tuple[LabelledPair, ...]], dict[str, Any]]:
+) -> tuple[dict[str, tuple[PairExample, ...]], dict[str, Any]]:
     """Encode unique records once and reuse immutable record objects across pairs."""
 
     from sentence_transformers import SentenceTransformer
@@ -134,7 +134,7 @@ def add_frozen_embeddings(
                 record, embedding=tuple(float(value) for value in embedding)
             )
 
-    enriched: dict[str, tuple[LabelledPair, ...]] = {}
+    enriched: dict[str, tuple[PairExample, ...]] = {}
     for split_name, rows in splits.items():
         enriched[split_name] = tuple(
             replace(
@@ -237,8 +237,8 @@ def _lightgbm_candidates(positive_weight: float) -> tuple[dict[str, Any], ...]:
 
 
 def tune_lightgbm(
-    train: Sequence[LabelledPair],
-    validation: Sequence[LabelledPair],
+    train: Sequence[PairExample],
+    validation: Sequence[PairExample],
     *,
     seed: int,
     device: str,
@@ -282,7 +282,7 @@ def tune_lightgbm(
 
 
 def _fit_models(
-    splits: Mapping[str, Sequence[LabelledPair]],
+    splits: Mapping[str, Sequence[PairExample]],
     *,
     seed: int,
     device: str,
@@ -306,7 +306,7 @@ def _fit_models(
 
 def _evaluate_and_save(
     models: Mapping[str, BaseEntityResolver],
-    splits: Mapping[str, Sequence[LabelledPair]],
+    splits: Mapping[str, Sequence[PairExample]],
     *,
     artifact_dir: Path,
     dataset_manifest: Path,

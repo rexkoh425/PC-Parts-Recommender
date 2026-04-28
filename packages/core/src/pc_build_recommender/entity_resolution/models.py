@@ -26,13 +26,13 @@ from .features import (
     validate_feature_matrix,
 )
 from .metrics import EntityResolutionEvaluation, evaluate_binary_predictions
-from .records import LabelledPair
+from .records import PairExample
 
-type FeatureInput = Sequence[LabelledPair] | ArrayLike
+type FeatureInput = Sequence[PairExample] | ArrayLike
 ARTIFACT_FORMAT_VERSION = 2
 
 
-def _as_examples(values: FeatureInput) -> tuple[LabelledPair, ...] | None:
+def _as_examples(values: FeatureInput) -> tuple[PairExample, ...] | None:
     if isinstance(values, np.ndarray):
         return None
     if hasattr(values, "to_numpy"):
@@ -43,9 +43,9 @@ def _as_examples(values: FeatureInput) -> tuple[LabelledPair, ...] | None:
         return None
     if not items:
         return ()
-    if isinstance(items[0], LabelledPair):
-        if not all(isinstance(item, LabelledPair) for item in items):
-            raise TypeError("feature input cannot mix LabelledPair and numeric rows")
+    if isinstance(items[0], PairExample):
+        if not all(isinstance(item, PairExample) for item in items):
+            raise TypeError("feature input cannot mix PairExample and numeric rows")
         return items  # type: ignore[return-value]
     return None
 
@@ -53,7 +53,7 @@ def _as_examples(values: FeatureInput) -> tuple[LabelledPair, ...] | None:
 def _prepare_features(
     values: FeatureInput,
     extractor: PairFeatureExtractor,
-) -> tuple[NDArray[np.float64], tuple[LabelledPair, ...] | None, NDArray[np.bool_]]:
+) -> tuple[NDArray[np.float64], tuple[PairExample, ...] | None, NDArray[np.bool_]]:
     examples = _as_examples(values)
     if examples is not None:
         matrix = extractor.transform(examples)
@@ -65,7 +65,7 @@ def _prepare_features(
 
 
 def _training_labels(
-    examples: tuple[LabelledPair, ...] | None,
+    examples: tuple[PairExample, ...] | None,
     labels: Sequence[int] | ArrayLike | None,
     row_count: int,
 ) -> NDArray[np.int64]:

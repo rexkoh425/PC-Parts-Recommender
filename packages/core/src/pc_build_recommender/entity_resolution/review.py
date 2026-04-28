@@ -22,7 +22,7 @@ from typing import Any, Self
 
 from .candidate_generation import PCBlockingCandidate
 from .conflicts import NumericConflict
-from .records import CanonicalProductRecord, ListingRecord, LabelledPair
+from .records import CanonicalProductRecord, ListingRecord, PairExample
 
 REVIEW_QUEUE_SCHEMA_VERSION = "pc-build-recommender.er-review-queue.v1"
 _CSV_COLUMNS = (
@@ -284,13 +284,13 @@ class ReviewQueueItem:
             HumanMatchLabel.NON_MATCH,
         }
 
-    def to_pair_example(self) -> LabelledPair:
+    def to_pair_example(self) -> PairExample:
         """Convert only an attributable binary human judgment into model input."""
 
         if not self.is_binary_human_label:
-            raise ValueError("only binary human labels can become LabelledPair rows")
+            raise ValueError("only binary human labels can become PairExample rows")
         assert self.human_label is not None
-        return LabelledPair(
+        return PairExample(
             pair_id=f"human-{self.queue_item_id}",
             listing=self.listing,
             product=self.product,
@@ -412,7 +412,7 @@ class ReviewQueue:
             ),
         )
 
-    def human_labelled_examples(self) -> tuple[LabelledPair, ...]:
+    def human_labelled_examples(self) -> tuple[PairExample, ...]:
         """Return training rows only when source policy and human evidence both allow it."""
 
         if not self.source_policy.training_eligible:

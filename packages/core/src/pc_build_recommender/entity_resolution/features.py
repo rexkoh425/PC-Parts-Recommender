@@ -19,7 +19,7 @@ from .normalization import (
     numeric_tokens,
     unique_tokens,
 )
-from .records import CanonicalProductRecord, ListingRecord, LabelledPair
+from .records import CanonicalProductRecord, ListingRecord, PairExample
 
 FEATURE_NAMES: tuple[str, ...] = (
     "exact_mpn_match",
@@ -262,14 +262,14 @@ class PairFeatureExtractor:
 
     def transform(
         self,
-        examples: Iterable[LabelledPair],
+        examples: Iterable[PairExample],
     ) -> NDArray[np.float64]:
         rows = [self.extract(example.listing, example.product).as_array() for example in examples]
         if not rows:
             return np.empty((0, len(FEATURE_NAMES)), dtype=np.float64)
         return np.vstack(rows)
 
-    def hard_conflict_mask(self, examples: Iterable[LabelledPair]) -> NDArray[np.bool_]:
+    def hard_conflict_mask(self, examples: Iterable[PairExample]) -> NDArray[np.bool_]:
         return np.asarray(
             [bool(find_numeric_conflicts(item.listing, item.product)) for item in examples],
             dtype=np.bool_,

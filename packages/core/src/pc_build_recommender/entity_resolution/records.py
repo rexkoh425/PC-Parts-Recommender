@@ -196,7 +196,7 @@ class ListingRecord:
 
 
 @dataclass(frozen=True, slots=True)
-class LabelledPair:
+class PairExample:
     """A labelled listing-to-product pair with explicit data provenance."""
 
     pair_id: str
@@ -292,7 +292,7 @@ class LabelledPair:
         )
 
 
-def pair_example_from_dict(row: Mapping[str, Any]) -> LabelledPair:
+def pair_example_from_dict(row: Mapping[str, Any]) -> PairExample:
     """Functional loader for CLI code that should not need schema-specific branching."""
 
-    return LabelledPair.from_dict(row)
+    return PairExample.from_dict(row)

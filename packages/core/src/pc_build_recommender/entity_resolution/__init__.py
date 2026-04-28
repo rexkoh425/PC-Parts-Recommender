@@ -55,7 +55,7 @@ from .normalization import (
 from .records import (
     CanonicalProductRecord,
     ListingRecord,
-    LabelledPair,
+    PairExample,
     pair_example_from_dict,
 )
 from .release_contracts import (
@@ -180,7 +180,7 @@ __all__ = [
     "PCBlockingCandidate",
     "PCDomainCandidateBlocker",
     "PCWorkflowInputs",
-    "LabelledPair",
+    "PairExample",
     "PairFeatureExtractor",
     "PairFeatures",
     "PlattCalibrator",

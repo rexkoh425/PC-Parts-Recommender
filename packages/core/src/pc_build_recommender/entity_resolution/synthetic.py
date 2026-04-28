@@ -13,7 +13,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from .records import CanonicalProductRecord, ListingRecord, LabelledPair
+from .records import CanonicalProductRecord, ListingRecord, PairExample
 
 SYNTHETIC_PROVENANCE = (
     "synthetic engineering fixture; not retailer, manufacturer, benchmark, or user evidence"
@@ -24,7 +24,7 @@ SYNTHETIC_PROVENANCE = (
 class SyntheticEntityResolutionDataset:
     products: tuple[CanonicalProductRecord, ...]
     listings: tuple[ListingRecord, ...]
-    pairs: tuple[LabelledPair, ...]
+    pairs: tuple[PairExample, ...]
     seed: int
     provenance: str = SYNTHETIC_PROVENANCE
     is_synthetic: bool = True
@@ -189,7 +189,7 @@ def synthetic_catalog(
         by_category.setdefault(product.category, []).append(product)
 
     listings: list[ListingRecord] = []
-    pairs: list[LabelledPair] = []
+    pairs: list[PairExample] = []
     for product_index, product in enumerate(products):
         variants = _title_variants(product)
         for variant_index in range(positive_variants):
@@ -212,7 +212,7 @@ def synthetic_catalog(
             )
             listings.append(listing)
             pairs.append(
-                LabelledPair(
+                PairExample(
                     pair_id=f"{listing_id}--positive",
                     listing=listing,
                     product=product,
@@ -239,7 +239,7 @@ def synthetic_catalog(
             )
             for negative_index, candidate in enumerate(selected):
                 pairs.append(
-                    LabelledPair(
+                    PairExample(
                         pair_id=f"{listing_id}--negative-{negative_index}",
                         listing=listing,
                         product=candidate,
@@ -262,7 +262,7 @@ def synthetic_pairs(
     product_count: int = 48,
     positive_variants: int = 2,
     negatives_per_listing: int = 2,
-) -> tuple[LabelledPair, ...]:
+) -> tuple[PairExample, ...]:
     """Convenience API returning only the explicitly synthetic labelled pairs."""
 
     return synthetic_catalog(
@@ -281,7 +281,7 @@ def generate_synthetic_entity_resolution_data(
     return synthetic_catalog(**kwargs)
 
 
-def assert_all_synthetic(examples: Sequence[LabelledPair]) -> None:
+def assert_all_synthetic(examples: Sequence[PairExample]) -> None:
     """Fail if an engineering fixture accidentally contains undeclared provenance."""
 
     if not examples or not all(example.is_synthetic for example in examples):

@@ -14,7 +14,7 @@ from pc_build_recommender.entity_resolution import (
     LightGBMEntityResolver,
     LogisticMatchBaseline,
     MatchThresholds,
-    LabelledPair,
+    PairExample,
     pair_example_from_dict,
 )
 from pc_build_recommender.evaluation.splits import deterministic_group_split
@@ -36,11 +36,11 @@ from training.mlflow_tracking import (
 )
 
 
-def _load_pairs(path: Path) -> tuple[LabelledPair, ...]:
+def _load_pairs(path: Path) -> tuple[PairExample, ...]:
     return tuple(pair_example_from_dict(row) for row in read_json_lines(path))
 
 
-def _split_pairs(pairs: Sequence[LabelledPair], *, seed: int) -> dict[str, tuple[LabelledPair, ...]]:
+def _split_pairs(pairs: Sequence[PairExample], *, seed: int) -> dict[str, tuple[PairExample, ...]]:
     """Keep every candidate set for one listing in the same leakage-safe split."""
 
     group_ids = [pair.listing.listing_id for pair in pairs]
@@ -49,7 +49,7 @@ def _split_pairs(pairs: Sequence[LabelledPair], *, seed: int) -> dict[str, tuple
         weights={"train": 0.6, "validation": 0.2, "test": 0.2},
         seed=seed,
     )
-    result: dict[str, list[LabelledPair]] = {name: [] for name in split.weights}
+    result: dict[str, list[PairExample]] = {name: [] for name in split.weights}
     for pair, split_name in zip(pairs, split.row_assignments(group_ids), strict=True):
         result[split_name].append(pair)
     for split_name, rows in result.items():

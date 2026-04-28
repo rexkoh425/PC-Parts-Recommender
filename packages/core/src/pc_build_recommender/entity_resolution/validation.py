@@ -16,7 +16,7 @@ from pc_build_recommender.evaluation.metrics import (
 from pc_build_recommender.evaluation.splits import deterministic_group_split
 
 from .models import BaseEntityResolver
-from .records import LabelledPair
+from .records import PairExample
 from .review import ReviewQueue, ReviewQueueItem
 
 
@@ -228,7 +228,7 @@ def select_precision_first_threshold(
     )
 
 
-def _human_pairs(items: Sequence[ReviewQueueItem]) -> tuple[LabelledPair, ...]:
+def _human_pairs(items: Sequence[ReviewQueueItem]) -> tuple[PairExample, ...]:
     if not items:
         raise ValueError("at least one reviewed item is required")
     return tuple(item.to_pair_example() for item in items)

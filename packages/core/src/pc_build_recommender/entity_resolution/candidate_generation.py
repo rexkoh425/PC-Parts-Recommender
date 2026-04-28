@@ -1,6 +1,6 @@
 """PC-domain blocking and unlabeled hard-negative candidate discovery.
 
-This module deliberately does not create :class:`LabelledPair` objects.  A hard
+This module deliberately does not create :class:`PairExample` objects.  A hard
 conflict is useful annotation evidence, but it is not a ground-truth label: a
 retailer title, canonical record, or extracted specification may be wrong.
 """
@@ -150,7 +150,7 @@ class UnlabeledHardNegativeCandidate:
     """Metadata for a difficult pair that still requires an annotation decision.
 
     The name describes sampling intent only.  There is intentionally no ``label``
-    field and no conversion to ``LabelledPair`` on this type.
+    field and no conversion to ``PairExample`` on this type.
     """
 
     candidate: PCBlockingCandidate
