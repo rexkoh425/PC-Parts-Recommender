@@ -8,7 +8,7 @@ from typing import cast
 import pytest
 
 from pc_build_recommender.evaluation.contracts import MetricEstimate
-from pc_build_recommender.evaluation.manifest import json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.retrieval import (
     CandidatePopulationDeclaration,
     CandidatePopulationScope,
@@ -427,7 +427,7 @@ def test_loader_rejects_rehashed_but_internally_inconsistent_counts(tmp_path: Pa
     candidate_counts = cast(dict[str, object], counts["candidate_query_pairs"])
     candidate_counts["after"] = cast(int, candidate_counts["after"]) - 1
     candidate_counts["pruned"] = cast(int, candidate_counts["pruned"]) + 1
-    payload["report_sha256"] = json_sha256(
+    payload["report_sha256"] = sha256_json(
         {key: value for key, value in payload.items() if key != "report_sha256"}
     )
     output = tmp_path / "fabricated.json"

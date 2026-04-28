@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
-from pc_build_recommender.evaluation.manifest import json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.evaluation.splits import deterministic_group_split
 from pc_build_recommender.ranking import (
     LabeledRankingQuery,
@@ -382,7 +382,7 @@ def _training_publication_intent_sha256(
     """Bind an idempotent publication to exact inputs and training configuration."""
 
     split = evidence.frozen_query_split
-    return json_sha256(
+    return sha256_json(
         {
             "schema_version": "pc-build-recommender.ranking-training-publication-intent.v1",
             "feature_snapshot_sha256": source_sha256,

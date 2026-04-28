@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from .contracts import EvaluationResult
-from .manifest import json_sha256
+from .manifest import sha256_json
 
 ARTIFACT_SCHEMA_VERSION = "pc-build-recommender.evaluation-artifact.v1"
 
@@ -51,7 +51,7 @@ def build_evaluation_artifact(
         "evaluation_metadata": result.metadata,
         "run_metadata": dict(metadata or {}),
     }
-    payload["artifact_sha256"] = json_sha256(payload)
+    payload["artifact_sha256"] = sha256_json(payload)
     return payload
 
 
@@ -64,7 +64,7 @@ def verify_evaluation_artifact(payload: Mapping[str, object]) -> bool:
     unhashed = dict(payload)
     del unhashed["artifact_sha256"]
     try:
-        return json_sha256(unhashed) == stored_hash
+        return sha256_json(unhashed) == stored_hash
     except (TypeError, ValueError):
         return False
 

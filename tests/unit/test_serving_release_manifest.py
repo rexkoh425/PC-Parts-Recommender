@@ -12,7 +12,7 @@ from services.api import serving_release
 from sqlalchemy.orm import sessionmaker
 
 from pc_build_recommender.application import ServingConfigurationError
-from pc_build_recommender.evaluation.manifest import sha256_file, json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_file, sha256_json
 from pc_build_recommender.ranking import RankerPromotionPolicy
 from pc_build_recommender.retrieval import (
     SentenceTransformerEmbeddingEncoder,
@@ -39,7 +39,7 @@ def _reference(root: Path, path: Path) -> dict[str, object]:
 def _write_manifest(path: Path, payload: dict[str, Any]) -> None:
     unhashed = dict(payload)
     unhashed.pop("content_sha256", None)
-    payload["content_sha256"] = json_sha256(unhashed)
+    payload["content_sha256"] = sha256_json(unhashed)
     path.write_text(json.dumps(payload), encoding="utf-8")
 
 

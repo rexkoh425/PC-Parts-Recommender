@@ -25,7 +25,7 @@ from typing import Any
 from pc_build_recommender.evaluation.manifest import (
     canonical_json_bytes,
     sha256_file,
-    json_sha256,
+    sha256_json,
 )
 from pc_build_recommender.ranking import (
     RankingCandidate,
@@ -198,7 +198,7 @@ def _load_prelabel_rows(
         raise RankingSnapshotMaterializationError(
             "pre-label feature contract does not match the current feature builder"
         )
-    if json_sha256(feature_contract) != _digest(
+    if sha256_json(feature_contract) != _digest(
         snapshot.get("feature_contract_sha256"),
         name="pre-label feature_contract_sha256",
     ):
@@ -209,7 +209,7 @@ def _load_prelabel_rows(
     )
     semantic_snapshot = dict(snapshot)
     semantic_snapshot.pop("snapshot_sha256")
-    if json_sha256(semantic_snapshot) != snapshot_sha256:
+    if sha256_json(semantic_snapshot) != snapshot_sha256:
         raise RankingSnapshotMaterializationError("pre-label snapshot self-hash mismatch")
 
     feature_name = snapshot.get("file_name")
@@ -262,7 +262,7 @@ def _load_prelabel_rows(
                     f"duplicate pre-label query_id: {query_id!r}"
                 )
             seen.add(query_id)
-            if json_sha256(row) != _digest(
+            if sha256_json(row) != _digest(
                 expected_row_hashes.get(query_id),
                 name=f"pre-label row hash for {query_id!r}",
             ):
@@ -289,7 +289,7 @@ def _load_prelabel_rows(
                 raise RankingSnapshotMaterializationError(
                     f"pre-label candidates are duplicated for {query_id!r}"
                 )
-            if json_sha256(product_ids) != _digest(
+            if sha256_json(product_ids) != _digest(
                 row.get("candidate_ids_sha256"),
                 name=f"pre-label candidate hash for {query_id!r}",
             ):
@@ -325,7 +325,7 @@ def _load_prelabel_rows(
                     for index, product_id in enumerate(feature_batch.product_ids)
                 ],
             }
-            if json_sha256(matrix_payload) != _digest(
+            if sha256_json(matrix_payload) != _digest(
                 row.get("feature_matrix_sha256"),
                 name=f"pre-label feature matrix hash for {query_id!r}",
             ):
@@ -346,7 +346,7 @@ def _load_prelabel_rows(
         }
         for row in sorted(rows, key=lambda item: str(item["query_id"]))
     ]
-    if json_sha256(candidate_universe) != _digest(
+    if sha256_json(candidate_universe) != _digest(
         snapshot.get("candidate_universe_sha256"),
         name="pre-label candidate_universe_sha256",
     ):
@@ -385,7 +385,7 @@ def _verify_annotation_release(
     )
     identity = dict(manifest)
     identity.pop("release_sha256")
-    if json_sha256(identity) != release_sha256:
+    if sha256_json(identity) != release_sha256:
         raise RankingSnapshotMaterializationError("annotation release self-hash mismatch")
     files = _object(manifest.get("files"), name="annotation release files")
     if set(files) != _RELEVANCE_RELEASE_FILES:
@@ -616,7 +616,7 @@ def verify_labeled_ranking_snapshot(
     )
     semantic_manifest = dict(manifest)
     semantic_manifest.pop("manifest_sha256")
-    if json_sha256(semantic_manifest) != manifest_sha256:
+    if sha256_json(semantic_manifest) != manifest_sha256:
         raise RankingSnapshotMaterializationError(
             "labeled ranking snapshot manifest self-hash mismatch"
         )
@@ -688,7 +688,7 @@ def verify_labeled_ranking_snapshot(
                     )
                 prelabel_candidates.append(candidate)
             prelabel_row = {**row, "candidates": prelabel_candidates}
-            actual_prelabel_rows[query_id] = json_sha256(prelabel_row)
+            actual_prelabel_rows[query_id] = sha256_json(prelabel_row)
     if set(actual_prelabel_rows) != set(expected_prelabel_rows):
         raise RankingSnapshotMaterializationError(
             "labeled ranking queries do not match the pre-label row commitment"
@@ -948,7 +948,7 @@ def materialize_ranking_snapshot(
             }
         },
     }
-    manifest["manifest_sha256"] = json_sha256(manifest)
+    manifest["manifest_sha256"] = sha256_json(manifest)
     _write_output(
         output_dir=output_dir,
         ranking_bytes=ranking_bytes,

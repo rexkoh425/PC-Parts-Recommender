@@ -8,7 +8,7 @@ from typing import cast
 
 import pytest
 
-from pc_build_recommender.evaluation.manifest import json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.ranking import (
     ProductRanker,
     RankerArtifactIdentity,
@@ -87,7 +87,7 @@ def _bound_ranker_evidence(
         candidate_snapshot_sha256=evaluated.checksum,
         feature_snapshot_sha256="e" * 64,
         score_snapshot_sha256="f" * 64,
-        ranking_sha256=json_sha256(ranking),
+        ranking_sha256=sha256_json(ranking),
         split_name="test",
         split_checksum=split.checksum,
         query_count=len(evaluated.queries),
@@ -369,7 +369,7 @@ def test_existing_silver_report_shape_is_consumable_but_never_promotable(
             "rrf_hybrid_minus_bm25": {"ndcg_at_10": {"relative_delta_percent": 59.52}}
         },
     }
-    payload["artifact_sha256"] = json_sha256(payload)
+    payload["artifact_sha256"] = sha256_json(payload)
     path = tmp_path / "silver-metrics.json"
     path.write_text(json.dumps(payload), encoding="utf-8")
 

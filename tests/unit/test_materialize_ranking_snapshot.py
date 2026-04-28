@@ -8,7 +8,7 @@ from scripts import capture_relevance_annotation_candidates as capture
 from training import materialize_ranking_snapshot as materializer
 from training.train_ranking import main as ranking_main
 
-from pc_build_recommender.evaluation.manifest import sha256_file, json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_file, sha256_json
 from pc_build_recommender.ranking import LambdaMARTRanker
 from pc_build_recommender.retrieval import (
     QueryGroupSplit,
@@ -224,7 +224,7 @@ def _create_annotation_release(tmp_path: Path, capture_dir: Path) -> Path:
         "required_independent_reviews": 2,
         "files": files,
     }
-    manifest = {**identity, "release_sha256": json_sha256(identity)}
+    manifest = {**identity, "release_sha256": sha256_json(identity)}
     (release_dir / "manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
@@ -281,7 +281,7 @@ def test_materializer_appends_only_adjudicated_grades_and_binds_lineage(
     )
     semantic = dict(manifest)
     manifest_sha256 = semantic.pop("manifest_sha256")
-    assert json_sha256(semantic) == manifest_sha256
+    assert sha256_json(semantic) == manifest_sha256
     assert manifest_sha256 == result["manifest_sha256"]
     assert manifest["prelabel"]["snapshot_sha256"]
     assert manifest["annotation_release"]["release_sha256"]

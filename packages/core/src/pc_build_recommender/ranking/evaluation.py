@@ -6,7 +6,7 @@ import math
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
-from pc_build_recommender.evaluation.manifest import json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.retrieval import (
     ArtifactBoundRankingEvidence,
     FrozenCandidateSet,
@@ -140,9 +140,9 @@ def generate_artifact_bound_rankings(
         feature_version=metadata.feature_version,
         feature_names=metadata.feature_names,
         candidate_snapshot_sha256=evaluation_dataset.checksum,
-        feature_snapshot_sha256=json_sha256(feature_snapshot),
-        score_snapshot_sha256=json_sha256(score_snapshot),
-        ranking_sha256=json_sha256(canonical_rankings),
+        feature_snapshot_sha256=sha256_json(feature_snapshot),
+        score_snapshot_sha256=sha256_json(score_snapshot),
+        ranking_sha256=sha256_json(canonical_rankings),
         split_name=split_name,
         split_checksum=query_split.checksum if query_split is not None else None,
         query_count=len(evaluation_dataset.queries),

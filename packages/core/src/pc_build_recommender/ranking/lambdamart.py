@@ -19,7 +19,7 @@ import lightgbm as lgb
 import numpy as np
 from numpy.typing import NDArray
 
-from pc_build_recommender.evaluation.manifest import sha256_file, json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_file, sha256_json
 from pc_build_recommender.retrieval.benchmark import QueryGroupSplit
 from pc_build_recommender.retrieval.evaluation import RelevanceLabelSource
 
@@ -603,7 +603,7 @@ class LambdaMARTRanker:
             }
             manifest_payload = {
                 **manifest_content,
-                "manifest_sha256": json_sha256(manifest_content),
+                "manifest_sha256": sha256_json(manifest_content),
             }
             temporary_manifest_path = _write_json_temp(manifest_path, manifest_payload)
             temporary_paths.append(temporary_manifest_path)
@@ -784,7 +784,7 @@ class LambdaMARTRanker:
         stored_manifest_sha256 = manifest.get("manifest_sha256")
         manifest_content = dict(manifest)
         manifest_content.pop("manifest_sha256", None)
-        if not _is_sha256(stored_manifest_sha256) or stored_manifest_sha256 != json_sha256(
+        if not _is_sha256(stored_manifest_sha256) or stored_manifest_sha256 != sha256_json(
             manifest_content
         ):
             raise ValueError("ranker artifact manifest hash does not match its contents")
