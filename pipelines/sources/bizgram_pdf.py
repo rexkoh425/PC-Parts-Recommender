@@ -22,7 +22,7 @@ from pc_build_recommender.domain.enums import ListingCondition, StockState
 from pc_build_recommender.domain.models import PriceSample, RetailerOffering
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
-    ParseResult,
+    ParsedBatch,
     RawSnapshot,
     rejected_record,
     sha256_bytes,
@@ -180,9 +180,9 @@ class BizgramControlledPDFAdapter:
             raise ValueError("snapshotted Bizgram PDF fingerprint changed during import")
         return snapshot
 
-    def parse(self, snapshot: RawSnapshot) -> ParseResult:
+    def parse(self, snapshot: RawSnapshot) -> ParsedBatch:
         self._validate_snapshot(snapshot)
-        batch = ParseResult(
+        batch = ParsedBatch(
             source_name=snapshot.source_name,
             snapshot_sha256=snapshot.content_sha256,
         )
@@ -497,7 +497,7 @@ class BizgramControlledPDFAdapter:
     def _quarantine_duplicates_and_conflicts(
         self,
         candidates: list[dict[str, Any]],
-        batch: ParseResult,
+        batch: ParsedBatch,
         counters: dict[str, int],
     ) -> list[dict[str, Any]]:
         grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
@@ -537,7 +537,7 @@ class BizgramControlledPDFAdapter:
 
     @staticmethod
     def _reject(
-        batch: ParseResult,
+        batch: ParsedBatch,
         counters: dict[str, int],
         record_id: str,
         reason: str,

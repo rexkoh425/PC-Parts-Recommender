@@ -9,7 +9,7 @@ from pathlib import Path, PurePosixPath
 
 from pipelines.parsing.normalizers import BUILDCORES_CATEGORY_MAP, normalise_buildcores_product
 from pipelines.sources.base import (
-    ParseResult,
+    ParsedBatch,
     RawSnapshot,
     fetch_http_snapshot,
     rejected_record,
@@ -67,7 +67,7 @@ class BuildCoresOpenDBAdapter:
         categories: Sequence[str] = DEFAULT_CATEGORIES,
         per_category_limit: int | None = 100,
         per_category_limits: Mapping[str, int] | None = None,
-    ) -> ParseResult:
+    ) -> ParsedBatch:
         if per_category_limit is not None and per_category_limit <= 0:
             raise ValueError("per_category_limit must be positive or None")
         unknown_categories = set(categories) - set(BUILDCORES_CATEGORY_MAP)
@@ -78,7 +78,7 @@ class BuildCoresOpenDBAdapter:
             if category not in BUILDCORES_CATEGORY_MAP or limit <= 0:
                 raise ValueError(f"invalid category limit: {category}={limit}")
 
-        batch = ParseResult(
+        batch = ParsedBatch(
             source_name=snapshot.source_name,
             snapshot_sha256=snapshot.content_sha256,
         )

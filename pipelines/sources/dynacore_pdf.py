@@ -17,7 +17,7 @@ from pc_build_recommender.domain.enums import ListingCondition, StockState
 from pc_build_recommender.domain.models import PriceSample, RetailerOffering
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
-    ParseResult,
+    ParsedBatch,
     RawSnapshot,
     rejected_record,
     sha256_bytes,
@@ -86,10 +86,10 @@ class DynacoreControlledPDFAdapter:
             )
         return snapshot
 
-    def parse(self, snapshot: RawSnapshot) -> ParseResult:
+    def parse(self, snapshot: RawSnapshot) -> ParsedBatch:
         if snapshot.content_sha256 != DYNACORE_EXPECTED_SHA256:
             raise ValueError("snapshot does not match the reviewed Dynacore PDF fingerprint")
-        batch = ParseResult(
+        batch = ParsedBatch(
             source_name=snapshot.source_name,
             snapshot_sha256=snapshot.content_sha256,
         )
@@ -192,7 +192,7 @@ class DynacoreControlledPDFAdapter:
             raise ValueError("page 3 layout anchors do not match the reviewed profile")
 
     @staticmethod
-    def _quarantine_ref_cells(document: PDF, batch: ParseResult) -> None:
+    def _quarantine_ref_cells(document: PDF, batch: ParsedBatch) -> None:
         for page_index in (1, 2):
             for table_index, table in enumerate(document.pages[page_index].extract_tables()):
                 for row_index, row in enumerate(table):
@@ -214,7 +214,7 @@ class DynacoreControlledPDFAdapter:
     def _parse_nvidia_gpu_tables(
         self,
         page: Any,
-        batch: ParseResult,
+        batch: ParsedBatch,
         snapshot: RawSnapshot,
     ) -> list[dict[str, Any]]:
         records: list[dict[str, Any]] = []
@@ -264,7 +264,7 @@ class DynacoreControlledPDFAdapter:
     def _parse_amd_gpu_and_memory(
         self,
         page: Any,
-        batch: ParseResult,
+        batch: ParsedBatch,
         snapshot: RawSnapshot,
     ) -> list[dict[str, Any]]:
         records: list[dict[str, Any]] = []
@@ -355,7 +355,7 @@ class DynacoreControlledPDFAdapter:
     def _parse_storage(
         self,
         page: Any,
-        batch: ParseResult,
+        batch: ParsedBatch,
         snapshot: RawSnapshot,
     ) -> list[dict[str, Any]]:
         records: list[dict[str, Any]] = []
@@ -422,7 +422,7 @@ class DynacoreControlledPDFAdapter:
         page: Any,
         page_number: int,
         snapshot: RawSnapshot,
-        batch: ParseResult,
+        batch: ParsedBatch,
         section: str,
         x_min: float,
         x_max: float,
@@ -620,7 +620,7 @@ class DynacoreControlledPDFAdapter:
         }
 
     def _quarantine_duplicates_and_conflicts(
-        self, candidates: list[dict[str, Any]], batch: ParseResult
+        self, candidates: list[dict[str, Any]], batch: ParsedBatch
     ) -> list[dict[str, Any]]:
         grouped: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
         for record in candidates:

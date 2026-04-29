@@ -12,7 +12,7 @@ from pc_build_recommender.domain.enums import WorkloadLabel
 from pc_build_recommender.domain.models import BenchmarkResult
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
-    ParseResult,
+    ParsedBatch,
     RawSnapshot,
     fetch_http_snapshot,
     rejected_record,
@@ -70,7 +70,7 @@ class MLPerfInferenceAdapter:
         available_only: bool = False,
         single_accelerator_only: bool = False,
         max_records: int | None = None,
-    ) -> ParseResult:
+    ) -> ParsedBatch:
         if max_records is not None and max_records <= 0:
             raise ValueError("max_records must be positive or None")
         with snapshot.path.open("r", encoding="utf-8") as handle:
@@ -78,7 +78,7 @@ class MLPerfInferenceAdapter:
         if not isinstance(payload, list):
             raise TypeError("MLPerf summary root must be a list")
 
-        batch = ParseResult(
+        batch = ParsedBatch(
             source_name=snapshot.source_name,
             snapshot_sha256=snapshot.content_sha256,
         )

@@ -23,7 +23,7 @@ import httpx
 from pc_build_recommender.domain.enums import ComponentKind
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION
 from pipelines.sources.base import (
-    ParseResult,
+    ParsedBatch,
     RawSnapshot,
     rejected_record,
     sha256_bytes,
@@ -536,7 +536,7 @@ class WikidataEnrichmentAdapter:
         snapshot: RawSnapshot,
         *,
         max_records: int = DEFAULT_MAX_RECORDS,
-    ) -> ParseResult:
+    ) -> ParsedBatch:
         """Normalise unique, exact Wikidata matches into enrichment records."""
 
         _validate_max_records(max_records)
@@ -580,7 +580,7 @@ class WikidataEnrichmentAdapter:
         candidates = self._parse_candidates(payload.get("candidates"), max_records=max_records)
         search_ids_by_candidate = self._parse_search_results(payload.get("search_responses"))
         entities = self._parse_entities(payload.get("entity_responses"))
-        batch = ParseResult(
+        batch = ParsedBatch(
             source_name=snapshot.source_name,
             snapshot_sha256=snapshot.content_sha256,
         )
