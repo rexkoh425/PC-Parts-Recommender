@@ -26,7 +26,7 @@ from pc_build_recommender.evaluation.contracts import MetricEstimate
 from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.evaluation.metrics import bootstrap_confidence_interval
 
-from .benchmark import QueryGroupSplit
+from .benchmark import FrozenQueryGroupSplit
 from .evaluation import FrozenCandidateQuery, FrozenCandidateSet, RelevanceLabelSource
 
 PRUNING_STAGE_SCHEMA_VERSION = "pc-build-recommender.frozen-pruning-stage.v1"
@@ -1094,7 +1094,7 @@ def _validate_stages(
 def _selected_queries(
     dataset: FrozenCandidateSet,
     *,
-    query_split: QueryGroupSplit | None,
+    query_split: FrozenQueryGroupSplit | None,
     split_name: str | None,
 ) -> tuple[tuple[FrozenCandidateQuery, ...], FrozenCandidateSet, Mapping[str, Hashable]]:
     if query_split is None:
@@ -1125,7 +1125,7 @@ def evaluate_candidate_pruning(
     *,
     population: CandidatePopulationDeclaration,
     provenance: PruningEvaluationProvenance,
-    query_split: QueryGroupSplit | None = None,
+    query_split: FrozenQueryGroupSplit | None = None,
     split_name: str | None = None,
     confidence_level: float = 0.95,
     n_resamples: int = 1_000,

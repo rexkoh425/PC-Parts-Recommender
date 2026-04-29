@@ -76,7 +76,7 @@ The Python contracts are exported from `pc_build_recommender.retrieval`:
 
 - `HumanJudgmentSet.adjudicate()` validates coverage and produces a checksummed
   `FrozenCandidateSet`;
-- `QueryGroupSplit.create()` freezes leakage-safe group assignments;
+- `FrozenQueryGroupSplit.create()` freezes leakage-safe group assignments;
 - `compare_ranked_models()` compares complete BM25, vector, RRF, and LambdaMART
   rankings with query-group bootstrap confidence intervals;
 - `write_ranking_comparison_report()` writes a deterministic, hashed report;

@@ -11,7 +11,7 @@ from training.train_ranking import main as ranking_main
 from pc_build_recommender.evaluation.manifest import sha256_file, sha256_json
 from pc_build_recommender.ranking import LambdaMARTRanker
 from pc_build_recommender.retrieval import (
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     HumanJudgmentSet,
     LabelingQuery,
     ReviewerJudgment,
@@ -144,7 +144,7 @@ def _create_annotation_release(tmp_path: Path, capture_dir: Path) -> Path:
         adjudications=(),
     )
     qrels = human.adjudicate().frozen_candidates
-    split = QueryGroupSplit.create(
+    split = FrozenQueryGroupSplit.create(
         qrels,
         version=f"{qrels.version}:split-v1",
         weights={"train": 0.34, "validation": 0.33, "test": 0.33},

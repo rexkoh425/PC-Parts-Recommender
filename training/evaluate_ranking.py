@@ -23,7 +23,7 @@ from pc_build_recommender.ranking import (
 )
 from pc_build_recommender.retrieval import (
     FrozenCandidateSet,
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     compare_ranked_models,
     write_ranking_comparison_report,
 )
@@ -106,7 +106,7 @@ def main(argv: list[str] | None = None) -> int:
         or qrels.judgment_manifest_sha256 is None
     ):
         raise ValueError("ranking promotion requires adjudicated, non-synthetic human qrels")
-    query_split = QueryGroupSplit.load(args.frozen_query_split)
+    query_split = FrozenQueryGroupSplit.load(args.frozen_query_split)
     query_split.validate_dataset(qrels)
     if set(query_split.weights) != {"train", "validation", "test"}:
         raise ValueError("frozen query split must contain train, validation, and test")

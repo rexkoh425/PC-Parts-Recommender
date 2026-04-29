@@ -20,7 +20,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from pc_build_recommender.evaluation.manifest import sha256_file, sha256_json
-from pc_build_recommender.retrieval.benchmark import QueryGroupSplit
+from pc_build_recommender.retrieval.benchmark import FrozenQueryGroupSplit
 from pc_build_recommender.retrieval.evaluation import RelevanceLabelSource
 
 from .features import FeatureBatch, RankingFeatureBuilder
@@ -270,7 +270,7 @@ class LambdaMARTRanker:
         training_feature_contract_sha256: str | None = None,
         query_group_ids: Mapping[str, str] | None = None,
         query_group_split_checksum: str | None = None,
-        frozen_query_split: QueryGroupSplit | None = None,
+        frozen_query_split: FrozenQueryGroupSplit | None = None,
     ) -> LambdaMARTRanker:
         """Fit with query-contiguous rows and optional query-held-out validation."""
 
