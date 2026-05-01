@@ -9,7 +9,7 @@ import pytest
 from pydantic import ValidationError
 from scripts.review_catalog_mappings import main as review_mappings_main
 from services.api.main import create_app
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 
 from pc_build_recommender.catalog import (
     REVIEW_EVIDENCE_SCHEMA_VERSION,
@@ -904,17 +904,17 @@ def test_processed_production_startup_rejects_barred_rights_and_dev_is_explicit(
         ValidationError,
         match="entity-resolution evaluation must come from the immutable serving manifest",
     ):
-        create_app(ApiRuntimeSettings(environment="production", **settings_values))
+        create_app(ApiSettings(environment="production", **settings_values))
 
     with pytest.raises(ValidationError, match="forbidden outside development/test"):
-        ApiRuntimeSettings(
+        ApiSettings(
             environment="production",
             allow_development_catalog=True,
             **settings_values,
         )
 
     development = create_app(
-        ApiRuntimeSettings(
+        ApiSettings(
             environment="test",
             allow_development_catalog=True,
             **settings_values,

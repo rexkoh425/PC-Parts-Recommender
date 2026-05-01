@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 from services.api.core_service import CoreRecommendationService
 from services.api.durability import SqlAlchemyDurableStore
 from services.api.main import create_app
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 from sqlalchemy import select
 
 from pc_build_recommender.application import create_application_services
@@ -181,7 +181,7 @@ def _service(
     reader = InMemoryCatalogReader(data)
     application = create_application_services(reader, data_version=stats.data_version)
     return CoreRecommendationService(
-        ApiRuntimeSettings(), application, reader, data, durable_store=durable_store
+        ApiSettings(), application, reader, data, durable_store=durable_store
     )
 
 
@@ -557,7 +557,7 @@ def test_product_search_query_survives_restart_and_validates_interaction_refs(
 def test_demo_bootstrap_is_rejected_outside_development() -> None:
     with pytest.raises(RuntimeError, match="development-only"):
         create_app(
-            ApiRuntimeSettings(
+            ApiSettings(
                 environment="production",
                 service_mode="demo",
                 docs_enabled=False,

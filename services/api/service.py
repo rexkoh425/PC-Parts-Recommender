@@ -72,7 +72,7 @@ from services.api.models import (
 )
 from services.api.pricing import summarize_price_history
 from services.api.public_shares import public_build_snapshot
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 
 
 class RecommendationApplication(Protocol):
@@ -623,7 +623,7 @@ class InMemoryRecommendationService:
 
     def __init__(
         self,
-        settings: ApiRuntimeSettings,
+        settings: ApiSettings,
         *,
         products: Mapping[str, ProductRecord] | None = None,
         templates: Sequence[Template] | None = None,

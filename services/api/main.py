@@ -19,14 +19,14 @@ from services.api.middleware import (
 )
 from services.api.routers import admin, builds, compatibility, health, interactions, products
 from services.api.service import InMemoryRecommendationService, RecommendationApplication
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 
 
 def create_app(
-    settings: ApiRuntimeSettings | None = None,
+    settings: ApiSettings | None = None,
     service: RecommendationApplication | None = None,
 ) -> FastAPI:
-    runtime_settings = settings or ApiRuntimeSettings()
+    runtime_settings = settings or ApiSettings()
     runtime_settings.validate_http_exposure()
     if service is not None:
         application_service = service

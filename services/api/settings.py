@@ -9,7 +9,7 @@ from pydantic import AliasChoices, Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class ApiRuntimeSettings(BaseSettings):
+class ApiSettings(BaseSettings):
     """Settings are environment-driven and intentionally contain no secrets."""
 
     model_config = SettingsConfigDict(
@@ -84,7 +84,7 @@ class ApiRuntimeSettings(BaseSettings):
     allow_unpromoted_performance_models: bool = False
 
     @model_validator(mode="after")
-    def processed_catalog_paths_are_explicit(self) -> ApiRuntimeSettings:
+    def processed_catalog_paths_are_explicit(self) -> ApiSettings:
         if self.admin_token is not None and self.admin_token_file is not None:
             raise ValueError("configure only one of admin_token or admin_token_file")
         if self.admin_token_file is not None:
