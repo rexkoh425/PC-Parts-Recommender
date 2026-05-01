@@ -17,7 +17,7 @@ from pc_build_recommender.domain import (
     CompatibilityCheck,
     CompatVerdict,
     ComponentKind,
-    RetailerOffering,
+    RetailerListing,
     StockState,
 )
 
@@ -84,7 +84,7 @@ def coerce_scores(value: CandidateScores | Mapping[str, float] | object | None) 
 
 def candidate_from_domain(
     product: MasterProduct,
-    listing: RetailerOffering | None,
+    listing: RetailerListing | None,
     *,
     scores: CandidateScores | Mapping[str, float] | object | None = None,
 ) -> OptimizationCandidate:
@@ -196,7 +196,7 @@ def _compatibility_validator(engine: object) -> IndependentValidator:
 def problem_from_domain(
     request: BuildRequestSpec,
     products: Iterable[MasterProduct],
-    listings: Iterable[RetailerOffering],
+    listings: Iterable[RetailerListing],
     *,
     scores_by_product: Mapping[str, CandidateScores | Mapping[str, float] | object] | None = None,
     pairwise_compatibility: Iterable[PairwiseCompatibility] | Mapping[tuple[str, str], object] = (),
@@ -208,7 +208,7 @@ def problem_from_domain(
 
     products_tuple = tuple(products)
     scores_by_product = scores_by_product or {}
-    listings_by_product: dict[str, list[RetailerOffering]] = defaultdict(list)
+    listings_by_product: dict[str, list[RetailerListing]] = defaultdict(list)
     for listing in listings:
         if str(getattr(listing, "currency", "")) == "SGD":
             listings_by_product[str(listing.product_id)].append(listing)

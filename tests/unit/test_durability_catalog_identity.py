@@ -21,7 +21,7 @@ from pc_build_recommender.domain import (
     MasterProduct,
     ComponentKind,
     GPUAttributes,
-    RetailerOffering,
+    RetailerListing,
     StockState,
 )
 from pc_build_recommender.retrieval.embedding_index import (
@@ -55,8 +55,8 @@ def _listing(
     *,
     listing_id: str = "listing-1",
     product_id: str = "product-1",
-) -> RetailerOffering:
-    return RetailerOffering(
+) -> RetailerListing:
+    return RetailerListing(
         listing_id=listing_id,
         product_id=product_id,
         retailer="Example Retailer",
@@ -81,7 +81,7 @@ def _release_search_identity(product: MasterProduct) -> tuple[str, str]:
 def durable_catalog() -> tuple[
     SqlAlchemyDurableStore,
     MasterProduct,
-    RetailerOffering,
+    RetailerListing,
 ]:
     engine = create_db_engine("sqlite:///:memory:")
     init_database(engine)
@@ -108,7 +108,7 @@ def durable_catalog() -> tuple[
 def _verify(
     store: SqlAlchemyDurableStore,
     products: tuple[MasterProduct, ...],
-    listings: tuple[RetailerOffering, ...],
+    listings: tuple[RetailerListing, ...],
 ) -> None:
     store.verify_catalog_identity(
         product_ids=(product.product_id for product in products),
@@ -122,7 +122,7 @@ def test_strict_catalog_identity_accepts_exact_release_rows(
     durable_catalog: tuple[
         SqlAlchemyDurableStore,
         MasterProduct,
-        RetailerOffering,
+        RetailerListing,
     ],
 ) -> None:
     store, product, listing = durable_catalog
@@ -134,7 +134,7 @@ def test_id_only_catalog_identity_keeps_development_import_check_non_strict(
     durable_catalog: tuple[
         SqlAlchemyDurableStore,
         MasterProduct,
-        RetailerOffering,
+        RetailerListing,
     ],
 ) -> None:
     store, product, listing = durable_catalog
@@ -160,7 +160,7 @@ def test_stale_row_preflight_allows_missing_rows_but_rejects_unexpected_rows(
     durable_catalog: tuple[
         SqlAlchemyDurableStore,
         MasterProduct,
-        RetailerOffering,
+        RetailerListing,
     ],
 ) -> None:
     store, product, listing = durable_catalog
@@ -185,7 +185,7 @@ def test_strict_catalog_identity_rejects_extra_rows(
     durable_catalog: tuple[
         SqlAlchemyDurableStore,
         MasterProduct,
-        RetailerOffering,
+        RetailerListing,
     ],
     extra_kind: str,
 ) -> None:
@@ -207,7 +207,7 @@ def test_strict_catalog_identity_rejects_modified_canonical_row(
     durable_catalog: tuple[
         SqlAlchemyDurableStore,
         MasterProduct,
-        RetailerOffering,
+        RetailerListing,
     ],
 ) -> None:
     store, product, listing = durable_catalog
@@ -226,7 +226,7 @@ def test_strict_catalog_identity_rejects_modified_listing_row(
     durable_catalog: tuple[
         SqlAlchemyDurableStore,
         MasterProduct,
-        RetailerOffering,
+        RetailerListing,
     ],
 ) -> None:
     store, product, listing = durable_catalog
@@ -253,7 +253,7 @@ def test_strict_catalog_identity_rejects_modified_search_document_or_hash(
     durable_catalog: tuple[
         SqlAlchemyDurableStore,
         MasterProduct,
-        RetailerOffering,
+        RetailerListing,
     ],
     mutation: dict[str, str],
 ) -> None:

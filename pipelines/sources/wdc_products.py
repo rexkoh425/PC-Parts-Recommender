@@ -1,6 +1,6 @@
 """Bounded, resumable import of the historical WDC Products research corpus.
 
-This module deliberately does not emit :class:`RetailerOffering` objects.  WDC
+This module deliberately does not emit :class:`RetailerListing` objects.  WDC
 Products is a historical, multi-market research corpus extracted from 2020 web
 pages.  Its rows are useful for exercising ingestion and candidate-discovery
 code, but they are not evidence of current Singapore prices or availability.

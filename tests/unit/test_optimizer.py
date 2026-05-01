@@ -28,7 +28,7 @@ from pc_build_recommender.domain import (
     MemoryAttributes,
     MotherboardAttributes,
     PowerSupplyAttributes,
-    RetailerOffering,
+    RetailerListing,
     StockState,
     StorageAttributes,
     WorkloadLabel,
@@ -398,8 +398,8 @@ def _product(category: ComponentKind, product_id: str) -> MasterProduct:
     )
 
 
-def _listing(product_id: str, price: Decimal = Decimal("100")) -> RetailerOffering:
-    return RetailerOffering(
+def _listing(product_id: str, price: Decimal = Decimal("100")) -> RetailerListing:
+    return RetailerListing(
         listing_id=f"listing-{product_id}",
         product_id=product_id,
         retailer="retailer",

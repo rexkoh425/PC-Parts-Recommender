@@ -18,7 +18,7 @@ from pc_build_recommender.domain import (
     MasterProduct,
     CompatVerdict,
     ComponentKind,
-    RetailerOffering,
+    RetailerListing,
 )
 
 REQUIRED_CATEGORIES: tuple[ComponentKind, ...] = (
@@ -130,7 +130,7 @@ class OptimizationCandidate:
     def from_domain(
         cls,
         product: MasterProduct,
-        listing: RetailerOffering | None,
+        listing: RetailerListing | None,
         *,
         scores: CandidateScores | Mapping[str, float] | object | None = None,
     ) -> OptimizationCandidate:
@@ -343,7 +343,7 @@ class OptimizationProblem:
         cls,
         request: BuildRequestSpec,
         products: Iterable[MasterProduct],
-        listings: Iterable[RetailerOffering],
+        listings: Iterable[RetailerListing],
         *,
         scores_by_product: Mapping[str, CandidateScores | Mapping[str, float] | object]
         | None = None,

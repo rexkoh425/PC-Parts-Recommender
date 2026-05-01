@@ -20,7 +20,7 @@ from pc_build_recommender.domain import (
     InteractionRecord,
     PriceSample,
     ProductStatus,
-    RetailerOffering,
+    RetailerListing,
     ReviewNote,
     SearchQuery,
     SourceProvenance,
@@ -283,7 +283,7 @@ class CatalogRepository:
         return [self._to_product(record) for record in self.session.scalars(statement).unique()]
 
     @staticmethod
-    def _listing_values(listing: RetailerOffering) -> dict[str, Any]:
+    def _listing_values(listing: RetailerListing) -> dict[str, Any]:
         return {
             "product_id": listing.product_id,
             "retailer": listing.retailer,
@@ -301,8 +301,8 @@ class CatalogRepository:
         }
 
     @staticmethod
-    def _to_listing(record: RetailerListingRecord) -> RetailerOffering:
-        return RetailerOffering.model_validate(
+    def _to_listing(record: RetailerListingRecord) -> RetailerListing:
+        return RetailerListing.model_validate(
             {
                 "listing_id": record.listing_id,
                 "product_id": record.product_id,
@@ -321,7 +321,7 @@ class CatalogRepository:
             }
         )
 
-    def add_listing(self, listing: RetailerOffering) -> RetailerOffering:
+    def add_listing(self, listing: RetailerListing) -> RetailerListing:
         if self.session.get(RetailerListingRecord, listing.listing_id) is not None:
             raise ValueError(f"listing already exists: {listing.listing_id}")
         record = RetailerListingRecord(
@@ -331,7 +331,7 @@ class CatalogRepository:
         self.session.flush()
         return self._to_listing(record)
 
-    def upsert_listing(self, listing: RetailerOffering) -> RetailerOffering:
+    def upsert_listing(self, listing: RetailerListing) -> RetailerListing:
         record = self.session.get(RetailerListingRecord, listing.listing_id)
         if record is None:
             record = self.session.scalar(
@@ -347,7 +347,7 @@ class CatalogRepository:
         self.session.flush()
         return self._to_listing(record)
 
-    def get_listing(self, listing_id: str) -> RetailerOffering | None:
+    def get_listing(self, listing_id: str) -> RetailerListing | None:
         record = self.session.get(RetailerListingRecord, listing_id)
         return None if record is None else self._to_listing(record)
 
@@ -358,7 +358,7 @@ class CatalogRepository:
         retailer: str | None = None,
         stock_status: StockState | None = None,
         limit: int = 100,
-    ) -> list[RetailerOffering]:
+    ) -> list[RetailerListing]:
         if not 1 <= limit <= 1000:
             raise ValueError("limit must be between 1 and 1000")
         statement = select(RetailerListingRecord)
@@ -374,7 +374,7 @@ class CatalogRepository:
         ).limit(limit)
         return [self._to_listing(record) for record in self.session.scalars(statement)]
 
-    def cheapest_in_stock_listing(self, product_id: str) -> RetailerOffering | None:
+    def cheapest_in_stock_listing(self, product_id: str) -> RetailerListing | None:
         listings = self.list_listings(
             product_id=product_id, stock_status=StockState.IN_STOCK, limit=1
         )

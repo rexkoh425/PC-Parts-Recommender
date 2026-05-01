@@ -19,7 +19,7 @@ from pc_build_recommender.domain import (
     ComponentAlternative,
     ComponentKind,
     ExistingComponent,
-    RetailerOffering,
+    RetailerListing,
     StockState,
     new_id,
 )
@@ -400,7 +400,7 @@ class GenerateBuildsService:
     ) -> OptimizationProblem:
         ranked = [candidate for pool in prepared.pools.values() for candidate in pool]
         products = [candidate.item.product for candidate in ranked]
-        listings: list[RetailerOffering] = []
+        listings: list[RetailerListing] = []
         for candidate in ranked:
             listing = candidate.item.listing
             if listing is None:
