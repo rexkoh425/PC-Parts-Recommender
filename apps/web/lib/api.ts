@@ -351,4 +351,134 @@ export function getProduct(
   );
 }
 
-// TODO: rest of this module still to come.
+export function getProductPrices(
+  productId: string,
+  options: ApiRequestOptions = {},
+): Promise<ProductPricesResponse> {
+  if (USING_DEMO_DATA) return Promise.resolve().then(() => getDemoPrices(productId));
+  return apiRequest<ProductPricesResponse>(
+    `/v1/products/${encodeURIComponent(productId)}/prices`,
+    undefined,
+    options,
+  );
+}
+
+export function getProductBenchmarks(
+  productId: string,
+  options: ApiRequestOptions = {},
+): Promise<ProductBenchmarksResponse> {
+  if (USING_DEMO_DATA) return Promise.resolve().then(() => getDemoBenchmarks(productId));
+  return apiRequest<ProductBenchmarksResponse>(
+    `/v1/products/${encodeURIComponent(productId)}/benchmarks`,
+    undefined,
+    options,
+  );
+}
+
+export function getProductReviews(
+  productId: string,
+  options: ApiRequestOptions = {},
+): Promise<ProductReviewsResponse> {
+  if (USING_DEMO_DATA) return Promise.resolve().then(() => getDemoReviews(productId));
+  return apiRequest<ProductReviewsResponse>(
+    `/v1/products/${encodeURIComponent(productId)}/reviews`,
+    undefined,
+    options,
+  );
+}
+
+export function checkCompatibility(
+  request: CompatibilityCheckRequest,
+  options: ApiRequestOptions = {},
+): Promise<CompatibilityCheckResponse> {
+  if (USING_DEMO_DATA) return Promise.resolve(checkDemoCompatibility(request));
+  return apiRequest<CompatibilityCheckResponse>(
+    "/v1/compatibility/check",
+    {
+      method: "POST",
+      body: JSON.stringify(request),
+    },
+    options,
+  );
+}
+
+export async function replaceComponent(
+  buildId: string,
+  request: ReplacementRequest,
+  options: ApiRequestOptions = {},
+): Promise<ReplacementResponse> {
+  const cachedBuild = USING_DEMO_DATA ? readCachedBuild(buildId) : undefined;
+  if (USING_DEMO_DATA && !cachedBuild) {
+    throw new ApiError("This demo build is not available in this browser session.", 404);
+  }
+  const response = USING_DEMO_DATA
+    ? replaceDemoComponent(cachedBuild as BuildResult, request)
+    : await apiRequest<ReplacementResponse>(
+        `/v1/builds/${encodeURIComponent(buildId)}/replace`,
+        {
+          method: "POST",
+          body: JSON.stringify(request),
+        },
+        options,
+      );
+  if (typeof window !== "undefined") {
+    window.sessionStorage.setItem(
+      `${buildCachePrefix}${response.build.build_id}`,
+      JSON.stringify(response.build),
+    );
+  }
+  return response;
+}
+
+export function getFreshness(options: ApiRequestOptions = {}): Promise<FreshnessSummary> {
+  if (USING_DEMO_DATA) return Promise.resolve(getDemoFreshness());
+  return apiRequest<FreshnessSummary>("/v1/system/freshness", undefined, options);
+}
+
+export function getAdminOperations(
+  adminToken: string,
+  options: ApiRequestOptions = {},
+): Promise<AdminOperationsResponse> {
+  if (USING_DEMO_DATA) {
+    return Promise.reject(
+      new ApiError("The protected operations surface is not available in the public demo.", 503),
+    );
+  }
+  return apiRequest<AdminOperationsResponse>(
+    "/v1/admin/operations",
+    { headers: { "X-PCBR-Admin-Token": adminToken } },
+    options,
+  );
+}
+
+export function getSessionId(): string {
+  if (typeof window === "undefined") return "server";
+  const current = window.sessionStorage.getItem(sessionIdKey);
+  if (current) return current;
+  const created = globalThis.crypto?.randomUUID?.() ?? `session-${Date.now()}`;
+  window.sessionStorage.setItem(sessionIdKey, created);
+  return created;
+}
+
+export async function trackInteraction(
+  event: InteractionRecord,
+  options: ApiRequestOptions = {},
+): Promise<void> {
+  if (USING_DEMO_DATA) {
+    acceptDemoInteraction(event);
+    return;
+  }
+  try {
+    await apiRequest<InteractionAccepted>(
+      "/v1/interactions",
+      {
+        method: "POST",
+        body: JSON.stringify(event),
+        keepalive: true,
+      },
+      options,
+    );
+  } catch {
+    // Analytics is deliberately non-blocking for the recommendation flow.
+  }
+}
