@@ -1,0 +1,20 @@
+{
+  "artifact_schema_version": "pc-build-recommender.performance-model.v2",
+  "files": {
+    "metadata.json": {
+      "sha256": "23ce648065277e63e1a11880a66015a3c9c57fd2b8e58370b6fcdd0b4879a6fb",
+      "size_bytes": 21935
+    },
+    "model.txt": {
+      "sha256": "7e47364851dc6132f363a7fb9f7b834852d1176ee995223079385cbcf5e37550",
+      "size_bytes": 249507
+    }
+  },
+  "model_version": "fafbce2ba6007815026c5263cfc2cc00abf0620eb96c6908d95fed2f8416786a",
+  "revocation_reasons": [
+    "the source observations are samples/minute with higher_is_better=true, but preparation mislabeled them as seconds and inverted them",
+    "all v2 evaluation metrics were computed against the invalid inverted target and are not model-quality evidence"
+  ],
+  "revoked": true,
+  "schema_version": "pc-build-recommender.performance-artifact-manifest.v1"
+}
