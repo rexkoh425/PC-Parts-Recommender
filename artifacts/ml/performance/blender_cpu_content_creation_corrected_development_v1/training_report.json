@@ -1,0 +1,164 @@
+{
+  "artifact_path": "C:\\Users\\Admin\\Documents\\PC recommendation\\artifacts\\ml\\performance\\blender_cpu_content_creation_corrected_development_v1",
+  "calibration": {
+    "absolute_error_quantile": 32.41610720886468,
+    "alpha": 0.1,
+    "calibration_group_count": 15,
+    "calibration_sample_count": 21,
+    "method": "split_conformal_absolute_residual",
+    "nominal_coverage": 0.9,
+    "test_coverage": 1.0,
+    "test_coverage_lower_95": 0.8388748419471806,
+    "test_covered_count": 20,
+    "test_sample_count": 20
+  },
+  "category": "cpu",
+  "created_at": "2026-07-23T00:53:38.656695+00:00",
+  "dataset_evidence": {
+    "block_reasons": [
+      "target contract was corrected after v2/v3 evaluation results were observed; this snapshot has been adaptively explored",
+      "no untouched external frozen cohort has been evaluated",
+      "one or more training rows are ineligible for external claims"
+    ],
+    "eligible_for_promotion": false,
+    "manifest_sha256": "e9cc28acaa3bea52e5953577cc8c35873a1ce6c1cb27e46639fbf7bdfe727977",
+    "verified": true
+  },
+  "device": {
+    "actual": "cpu",
+    "fallback_reason": null,
+    "requested": "cpu"
+  },
+  "feature_columns": [
+    "core_count",
+    "thread_count",
+    "base_clock_ghz",
+    "boost_clock_ghz",
+    "tdp_watts"
+  ],
+  "grouped_test": {
+    "development_group_overlap_count": 0,
+    "evaluable_group_count": 5,
+    "group_column": "product_family",
+    "outside_training_envelope_fraction": 0.05,
+    "outside_training_envelope_row_count": 1,
+    "test_group_count": 13,
+    "test_row_count": 20,
+    "worst_group_mape_percent": 61.05309847994983
+  },
+  "input": {
+    "path": "C:\\Users\\Admin\\Documents\\PC recommendation\\data\\processed\\model_training\\blender_cpu_content_creation_corrected_v1\\blender_performance.csv",
+    "sha256": "a4922e0d51a7981f40a257a363cb25649ce5cc27cf32a7517b5e560652acfdf9"
+  },
+  "mlflow_tracking": {
+    "artifact_uri": null,
+    "enabled": false,
+    "errors": [],
+    "experiment_name": null,
+    "run_id": null,
+    "status": "disabled",
+    "tracking_uri": null
+  },
+  "model_version": "e4f5f153d4e42ed25a37cf91eaf95dd0dc968942e3843ff50d41cf61e40fab21",
+  "models": {
+    "lightgbm": {
+      "model_name": "lightgbm",
+      "test": {
+        "mae": 9.159323163151413,
+        "mape_percent": 22.23040932907976,
+        "r2": 0.9408137783190511,
+        "sample_count": 20
+      },
+      "validation": {
+        "mae": 10.413684650388724,
+        "mape_percent": 18.137602379077194,
+        "r2": 0.916186916246895,
+        "sample_count": 36
+      }
+    },
+    "ridge": {
+      "model_name": "ridge",
+      "test": {
+        "mae": 14.509558493365983,
+        "mape_percent": 35.980668025971305,
+        "r2": 0.7580163454155726,
+        "sample_count": 20
+      },
+      "validation": {
+        "mae": 10.779255462763878,
+        "mape_percent": 22.207226647371336,
+        "r2": 0.9032287594671077,
+        "sample_count": 36
+      }
+    },
+    "train_median": {
+      "model_name": "train_median",
+      "test": {
+        "mae": 29.264858220932997,
+        "mape_percent": 81.40699147094223,
+        "r2": -0.031272082369355525,
+        "sample_count": 20
+      },
+      "validation": {
+        "mae": 40.1804972904775,
+        "mape_percent": 65.471051694727,
+        "r2": -0.27352153704671345,
+        "sample_count": 36
+      }
+    }
+  },
+  "promotion": {
+    "block_reasons": [
+      "test MAPE 22.2304% exceeds 12.0000%",
+      "target contract was corrected after v2/v3 evaluation results were observed; this snapshot has been adaptively explored",
+      "no untouched external frozen cohort has been evaluated",
+      "one or more training rows are ineligible for external claims",
+      "grouped-bootstrap R2 lower bound 0.7173 is below 0.8500",
+      "grouped-bootstrap MAPE upper bound 32.4806% exceeds 12.0000%"
+    ],
+    "confidence": "medium",
+    "eligible": false,
+    "precise_predictions_enabled": false
+  },
+  "resources": {
+    "configured_max_training_memory_mb": 512,
+    "estimated_peak_training_memory_mb": 32.46052837371826,
+    "gpu_max_bin": 63,
+    "max_cpu_threads": 1
+  },
+  "split_group_counts": {
+    "calibration": 15,
+    "test": 13,
+    "train": 59,
+    "validation": 22
+  },
+  "split_row_counts": {
+    "calibration": 21,
+    "test": 20,
+    "train": 95,
+    "validation": 36
+  },
+  "synthetic_data": {
+    "eligible_for_reported_metrics": true,
+    "evaluated_rows": 172,
+    "reporting_block_reason": null,
+    "synthetic_flags_declared": true,
+    "synthetic_rows": 0,
+    "synthetic_rows_excluded": false,
+    "total_rows": 172
+  },
+  "task": "workload_performance_regression",
+  "test_uncertainty": {
+    "confidence_level": 0.95,
+    "group_count": 13,
+    "mae_lower": 5.829408799643107,
+    "mae_upper": 13.15483670254249,
+    "mape_percent_lower": 13.593100514773951,
+    "mape_percent_upper": 32.4806015910115,
+    "r2_lower": 0.7172979649584991,
+    "r2_upper": 0.9647911209506362,
+    "resamples": 2000
+  },
+  "training_data_sha256": "bbd4dac049ff229ead7a21c36496fa66d360d0a6abce37f3954bc03e97280992",
+  "workload": "content_creation"
+}

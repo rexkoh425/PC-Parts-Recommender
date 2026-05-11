@@ -1,0 +1,25 @@
+{
+  "artifact_schema_version": "pc-build-recommender.performance-model.v2",
+  "development_only": true,
+  "files": {
+    "metadata.json": {
+      "sha256": "775c1820804effe6f974c0c0121bcc764913ece0e0844ff87b667a0fd7c8a452",
+      "size_bytes": 22396
+    },
+    "model.txt": {
+      "sha256": "6d34ab522ad9b6958f2ac2c07d9aef3ca1e9c7a795897090a7afe00537165074",
+      "size_bytes": 307084
+    }
+  },
+  "model_version": "e4f5f153d4e42ed25a37cf91eaf95dd0dc968942e3843ff50d41cf61e40fab21",
+  "promotion_blockers": [
+    "test MAPE 22.2304% exceeds 12.0000%",
+    "target contract was corrected after v2/v3 evaluation results were observed; this snapshot has been adaptively explored",
+    "no untouched external frozen cohort has been evaluated",
+    "one or more training rows are ineligible for external claims",
+    "grouped-bootstrap R2 lower bound 0.7173 is below 0.8500",
+    "grouped-bootstrap MAPE upper bound 32.4806% exceeds 12.0000%"
+  ],
+  "serving_mode": "development_relative_only",
+  "schema_version": "pc-build-recommender.performance-artifact-manifest.v1"
+}
