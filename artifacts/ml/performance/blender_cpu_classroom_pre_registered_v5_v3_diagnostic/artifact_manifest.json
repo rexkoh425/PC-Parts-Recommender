@@ -1,0 +1,20 @@
+{
+  "diagnostic_schema_version": "pc-build-recommender.performance-v3-diagnostic.v1",
+  "files": {
+    "diagnostic_report.json": {
+      "sha256": "ff37df795c0ecb6dca46fdb5b17034f27e3e4a175d7e647497db08a4e87475ae",
+      "size_bytes": 27854
+    },
+    "feature_contract.json": {
+      "sha256": "88d9c74c1e9e460cfba77acd58dbfec93bd7c6871f31cb1a1f07cadc76b6e27c",
+      "size_bytes": 1561
+    },
+    "model.txt": {
+      "sha256": "ae3e7e3baf4cb65ad49a01d903012e4dc05beadae87b30db1be384057a958c55",
+      "size_bytes": 156300
+    }
+  },
+  "model_version": "d616ff3ba57911f0afbcebc84eb24e9568ba07ead976ed6351a9430e6f732b8f",
+  "production_loadable": false,
+  "schema_version": "pc-build-recommender.performance-v3-manifest.v1"
+}
