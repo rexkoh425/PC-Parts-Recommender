@@ -1,0 +1,178 @@
+{
+  "artifact_path": "artifacts/ml/performance/blender_cpu_classroom_pre_registered_v5_identity_l1",
+  "calibration": {
+    "absolute_error_quantile": 27.104519528310732,
+    "alpha": 0.1,
+    "calibration_group_count": 14,
+    "calibration_sample_count": 22,
+    "method": "split_conformal_absolute_residual",
+    "nominal_coverage": 0.9,
+    "test_coverage": 0.8888888888888888,
+    "test_coverage_lower_95": 0.6720023486982118,
+    "test_covered_count": 16,
+    "test_sample_count": 18
+  },
+  "category": "cpu",
+  "created_at": "2026-07-23T15:27:23.688827+00:00",
+  "dataset_evidence": {
+    "block_reasons": [
+      "development experiment only; no independently frozen external holdout",
+      "one or more training rows are ineligible for external claims"
+    ],
+    "eligible_for_promotion": false,
+    "manifest_sha256": "6f5828799a93f0316ee4e0985db852a67250071d1af5454443ca5fe5c187324c",
+    "verified": true
+  },
+  "device": {
+    "actual": "cpu",
+    "fallback_reason": null,
+    "requested": "cpu"
+  },
+  "feature_columns": [
+    "core_count",
+    "thread_count",
+    "base_clock_ghz",
+    "boost_clock_ghz",
+    "tdp_watts"
+  ],
+  "grouped_test": {
+    "development_group_overlap_count": 0,
+    "evaluable_group_count": 3,
+    "group_column": "product_family",
+    "outside_training_envelope_fraction": 0.0,
+    "outside_training_envelope_row_count": 0,
+    "test_group_count": 12,
+    "test_row_count": 18,
+    "worst_group_mape_percent": 33.80640296997227
+  },
+  "input": {
+    "path": "data/processed/model_training/blender_cpu_classroom_pre_registered_v5/blender_performance.csv",
+    "sha256": "4597f1cf75301d7b07d370c87e85c91a66597a9fef987cd5c7253df38343243a"
+  },
+  "mlflow_tracking": {
+    "artifact_uri": null,
+    "enabled": false,
+    "errors": [],
+    "experiment_name": null,
+    "run_id": null,
+    "status": "disabled",
+    "tracking_uri": null
+  },
+  "model_version": "7a9b5748cab32a6ed2906829793efab5853b9612217758299653ab6fa3af04a9",
+  "models": {
+    "lightgbm": {
+      "model_name": "lightgbm",
+      "test": {
+        "mae": 8.576156349981602,
+        "mape_percent": 17.566808765035553,
+        "r2": 0.839962074905495,
+        "sample_count": 18
+      },
+      "validation": {
+        "mae": 7.005583257966191,
+        "mape_percent": 13.714756228841104,
+        "r2": 0.8900041104208376,
+        "sample_count": 31
+      }
+    },
+    "ridge": {
+      "model_name": "ridge",
+      "test": {
+        "mae": 13.85100075853038,
+        "mape_percent": 33.102216211211996,
+        "r2": 0.43336422433717214,
+        "sample_count": 18
+      },
+      "validation": {
+        "mae": 8.306065860911103,
+        "mape_percent": 25.939022368277303,
+        "r2": 0.9039924981643364,
+        "sample_count": 31
+      }
+    },
+    "train_median": {
+      "model_name": "train_median",
+      "test": {
+        "mae": 18.888523199241675,
+        "mape_percent": 46.08140839084241,
+        "r2": -0.05265198375093694,
+        "sample_count": 18
+      },
+      "validation": {
+        "mae": 30.30277989251185,
+        "mape_percent": 68.27209672284313,
+        "r2": -0.30291401360563497,
+        "sample_count": 31
+      }
+    }
+  },
+  "promotion": {
+    "block_reasons": [
+      "test sample count 18 is below 20",
+      "test R2 0.8400 is below 0.8500",
+      "test MAPE 17.5668% exceeds 12.0000%",
+      "development experiment only; no independently frozen external holdout",
+      "one or more training rows are ineligible for external claims",
+      "grouped-bootstrap R2 lower bound -1.0715 is below 0.8500",
+      "grouped-bootstrap MAPE upper bound 30.3140% exceeds 12.0000%"
+    ],
+    "confidence": "low",
+    "eligible": false,
+    "precise_predictions_enabled": false
+  },
+  "resources": {
+    "configured_max_training_memory_mb": 512,
+    "estimated_peak_training_memory_mb": 32.490474700927734,
+    "gpu_max_bin": 63,
+    "host_memory_preflight": {
+      "available_bytes": 33961181184,
+      "available_gib": 31.629,
+      "estimated_additional_mib": 32.482,
+      "max_used_gib": 55.0,
+      "minimum_free_mib": 1024.0,
+      "projected_available_gib": 31.597,
+      "projected_used_gib": 30.056,
+      "source": "windows_global_memory_status_ex",
+      "total_bytes": 66199764992,
+      "total_gib": 61.653,
+      "used_bytes": 32238583808,
+      "used_gib": 30.025
+    },
+    "max_cpu_threads": 1
+  },
+  "split_group_counts": {
+    "calibration": 14,
+    "test": 12,
+    "train": 58,
+    "validation": 20
+  },
+  "split_row_counts": {
+    "calibration": 22,
+    "test": 18,
+    "train": 95,
+    "validation": 31
+  },
+  "synthetic_data": {
+    "eligible_for_reported_metrics": true,
+    "evaluated_rows": 166,
+    "reporting_block_reason": null,
+    "synthetic_flags_declared": true,
+    "synthetic_rows": 0,
+    "synthetic_rows_excluded": false,
+    "total_rows": 166
+  },
+  "task": "workload_performance_regression",
+  "test_uncertainty": {
+    "confidence_level": 0.95,
+    "group_count": 12,
+    "mae_lower": 4.087802318539643,
+    "mae_upper": 16.31505730718583,
+    "mape_percent_lower": 9.211929513524911,
+    "mape_percent_upper": 30.314045774878114,
+    "r2_lower": -1.071513936248429,
+    "r2_upper": 0.9400385527028285,
+    "resamples": 1000
+  },
+  "training_data_sha256": "e694658da93b9549c73c982dd4750dd327662f53b9789d46d4048afa9124f182",
+  "workload": "blender_cpu_render_classroom"
+}
