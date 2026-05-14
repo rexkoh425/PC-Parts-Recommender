@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import type { Metadata } from "next";
 import { CatalogueScreen } from "@/components/catalogue-screen";
 import { componentCategories, type ComponentKind } from "@/lib/types";
 
