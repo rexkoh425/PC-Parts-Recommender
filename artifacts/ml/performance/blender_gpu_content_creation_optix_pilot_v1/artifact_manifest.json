@@ -1,0 +1,48 @@
+{
+  "artifact_schema_version": "pc-build-recommender.performance-model.v2",
+  "development_only": true,
+  "evidence_files": [
+    "dataset_manifest.json",
+    "training_evidence.json",
+    "training_report.json"
+  ],
+  "files": {
+    "dataset_manifest.json": {
+      "sha256": "a63c944b1054e430169a1b84e96e5ee0afe4d9cefb34461d6afb62dc5fcf0534",
+      "size_bytes": 95202
+    },
+    "metadata.json": {
+      "sha256": "d4f6944fa1a697d5842da2841203a69008845b24fc04f482758e9afeaaf54721",
+      "size_bytes": 11861
+    },
+    "model.txt": {
+      "sha256": "9a806f30e7045e8475448e4ed2a745d67086eb2520049ae62c10da2035cdc6b0",
+      "size_bytes": 22853
+    },
+    "training_evidence.json": {
+      "sha256": "4d2e05600b8bde0432d3aeb8737e992b520835e7a2b024ed085abdc5d77561d8",
+      "size_bytes": 5768
+    },
+    "training_report.json": {
+      "sha256": "48170c820ef1eb3a5a9425089a5c938ec0cd44d186536fc988cc9562cb6f8681",
+      "size_bytes": 5953
+    }
+  },
+  "model_version": "fb2f42fccae0ac6965d28118fc26b5f5b811aa3fed8f6599fc4013a710a75192",
+  "promotion_blockers": [
+    "test sample count 6 is below 20",
+    "test R2 -1.8538 is below 0.8500",
+    "test MAPE 203.5237% exceeds 12.0000%",
+    "selected cohort has 36 leakage groups; credible grouped-evaluation minimum is 100",
+    "one or more training rows are ineligible for external claims",
+    "test group count 5 is below 10",
+    "calibration sample count 7 is below 20",
+    "calibration group count 5 is below 10",
+    "grouped-bootstrap R2 lower bound -3511.8527 is below 0.8500",
+    "grouped-bootstrap MAPE upper bound 393.3696% exceeds 12.0000%",
+    "LightGBM validation MAPE 424.6738% does not improve on the best baseline 129.5517% by the required 0.00%",
+    "LightGBM test MAPE 203.5237% does not improve on the best baseline 50.0203% by the required 0.00%"
+  ],
+  "schema_version": "pc-build-recommender.performance-artifact-manifest.v2",
+  "serving_mode": "development_relative_only"
+}

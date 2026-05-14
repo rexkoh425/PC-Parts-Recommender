@@ -1,0 +1,293 @@
+{
+  "actual_device": "cpu",
+  "allowed_missing_fraction": 0.0,
+  "best_iteration": 46,
+  "calibration": {
+    "absolute_error_quantile": 19.884618162320468,
+    "alpha": 0.1,
+    "calibration_group_count": 5,
+    "calibration_sample_count": 7,
+    "method": "split_conformal_absolute_residual",
+    "nominal_coverage": 0.9,
+    "test_coverage": 1.0,
+    "test_coverage_lower_95": 0.6096657120978346,
+    "test_covered_count": 6,
+    "test_sample_count": 6
+  },
+  "confidence_level": "low",
+  "config": {
+    "allow_device_fallback": true,
+    "bootstrap_confidence_level": 0.95,
+    "bootstrap_resamples": 500,
+    "category": "gpu",
+    "family_column": "product_family",
+    "feature_columns": [
+      "base_clock_mhz",
+      "boost_clock_mhz",
+      "vram_gb",
+      "board_power_watts"
+    ],
+    "generation_column": "hardware_generation",
+    "gpu_max_bin": 63,
+    "lightgbm_params": {},
+    "max_confident_mape_percent": 12.0,
+    "max_cpu_threads": 1,
+    "max_interval_coverage_shortfall": 0.1,
+    "max_prediction_missing_fraction": 0.0,
+    "max_test_ood_fraction": 0.2,
+    "max_training_memory_mb": 128,
+    "max_training_missing_fraction": 0.25,
+    "min_calibration_groups": 10,
+    "min_calibration_rows": 20,
+    "min_confident_r2": 0.85,
+    "min_confident_test_groups": 10,
+    "min_confident_test_rows": 20,
+    "min_feature_unique_values": 2,
+    "minimum_baseline_mape_improvement_percent": 0.0,
+    "prediction_interval_alpha": 0.1,
+    "product_id_column": "product_id",
+    "requested_device": "cpu",
+    "require_baseline_improvement": true,
+    "ridge_alpha": 1.0,
+    "split_column": "split",
+    "split_seed": 20260722,
+    "split_weights": {
+      "calibration": 0.15,
+      "test": 0.15,
+      "train": 0.55,
+      "validation": 0.15
+    },
+    "strict_inference_features": true,
+    "synthetic_column": "is_synthetic",
+    "target_column": "target_score",
+    "workload": "blender_4_5_0_junkshop_optix_windows"
+  },
+  "dataset_evidence": {
+    "block_reasons": [
+      "selected cohort has 36 leakage groups; credible grouped-evaluation minimum is 100",
+      "one or more training rows are ineligible for external claims"
+    ],
+    "eligible_for_promotion": false,
+    "manifest_sha256": "a63c944b1054e430169a1b84e96e5ee0afe4d9cefb34461d6afb62dc5fcf0534",
+    "verified": true
+  },
+  "development_group_hashes": [
+    "079d29329eb7a446bc7fb1658e089ee2446377852031233e83ce11f045eefc26",
+    "08cad303b2d6553487438164d8b11cac93d806bded015d180b0a014a9395ce89",
+    "0db1658b345b73d6917b2dee8f667b3f4d2ecbd14991b518de38cb25a8f2a357",
+    "1035b466a96738fcdadae46e3857bb31c834c7787098987db827786b0edb276b",
+    "10e82f7b818b92af8eb25f2261d24eb648aef3b293ef01260074dfa2363e9744",
+    "1b2340a528389a416a0ae6e76d528f8526165c258816915558192c230f998340",
+    "2fd87d863f8af4defa01a9dd30776c592919fbb57f40fe7702ebe48806b9b22b",
+    "371c6ec940676bbc06d909b1b0af9e0a4089584f6daaad642371ec0ab77f9087",
+    "48254564a681eb037fb3847837a05ee0bd5a4eedf597138a453b74579cf58f7e",
+    "567ebe8ae74e31159ca97f6b87000e4807cf27bae19c1642dd4b5848428b59f0",
+    "5f357da2d0122df5c247aa1ac3868f224137f63ed9bd9bee69898017c4d843c6",
+    "5fe29e6f61953e2026cb5dab1e94aed66621512e41c50e54698b6776b1a3610d",
+    "6953f8d5df38a983eb15e060805f1fff523747428ad1b7af52862be5e1c6f6c7",
+    "756977ab18089dea296c0201ce72704173450517dded8caacc44e590b42d2df6",
+    "77388593d878afc5c14fdc1ef3c81b0f7abdcb639a71cf9be6a95ecad2ca34ef",
+    "7f3c85951caa532cc991d17b5dd712b480d95b2e63416f78001575c806ca0040",
+    "7f3cb260facd7da2c447c05f839c4a2c38f5f81bedee96f951d789eaaab83b76",
+    "809c85d54ccd405d92b970ed73b5229ee77d0ea9176c532a7b74bc2bee6704be",
+    "861e6223e943e2515d1543892fdd1b6b63735730bd4b063cedc01187e5965249",
+    "9e850a25ea54e0e4ddf3a618d5ed5f85ed03c22090dc04334faa53748c1ac345",
+    "9f0987cd8fc4495b5de3e59697f467004097faf8a4ee4de7c1db1c46eb3e247c",
+    "9ff3460b224a1dc021a5a13a95af5cd582950f069dd2571f3e1e93c001c89cfd",
+    "a312da2c597498a9481f61b77b9b77e0d6a3eef57ba1c38675119add85c446c2",
+    "a8473fb0fa1abb2ef83f52823f4500573e7f98f4bba020ad8c39a9c28be6a8c5",
+    "ae66118f2c405a6c39a872ab771b06a989479c54ad919d030fdfb9df6502d254",
+    "aeb1dbcbf68ca6794ca8a37a48e32df75502b1a77e41d8ce1e529928b45b4ad4",
+    "bdc9cbc95e1e4b6fdb241dd640a909cc85467cb4a5757b80d93b6de9dea8b92e",
+    "cc10cad8ec45366dc6c49ecefb7e218ec1515599095a3f6552500d9092cea45f",
+    "d27e522330d8b6702469c955ac25c9838049f3ead181a4bbcba304657c643fc9",
+    "d2914338104a221718acfefc00f50aba6fb067f288c1091aa29bfe850d08fbc2",
+    "d619112800ccb5493d1ed5c053bf3a490245d0f7f3d0454137faf08a7df57a10",
+    "dca29bec02b5a26d1da1ef56822348a0b3ffc29a3ba0570a5e3ff1512ce8657b",
+    "ee698b4b3c2b75555b6b25c2501e6c716c51a2fbcab620fc72a30e8558ef2169",
+    "f6fc9decb2041c628eab12587fa91534e2ac53fb8da59cf30a6edc6ea7f36ecf",
+    "f73e73c213e8e0852526b20bbc2114fcdea5c10297b3d64aa6dfee1122b2b43c",
+    "f9062363c5de7255583c856c7c3ff5e96b8686509e3b359c6c49d67fd9791cc3"
+  ],
+  "device_fallback_reason": null,
+  "estimated_peak_training_memory_mb": 32.33395957946777,
+  "evaluations": {
+    "lightgbm": {
+      "model_name": "lightgbm",
+      "test": {
+        "mae": 2.839991518009757,
+        "mape_percent": 203.5237060029363,
+        "r2": -1.853750452771871,
+        "sample_count": 6
+      },
+      "validation": {
+        "mae": 8.326917728580016,
+        "mape_percent": 424.67384194988193,
+        "r2": 0.48359124130749687,
+        "sample_count": 13
+      }
+    },
+    "ridge": {
+      "model_name": "ridge",
+      "test": {
+        "mae": 13.788062285046124,
+        "mape_percent": 615.2560849140802,
+        "r2": -52.61820020752308,
+        "sample_count": 6
+      },
+      "validation": {
+        "mae": 11.105706965378715,
+        "mape_percent": 670.7982031745526,
+        "r2": 0.3419167893893965,
+        "sample_count": 13
+      }
+    },
+    "train_median": {
+      "model_name": "train_median",
+      "test": {
+        "mae": 1.781152309739402,
+        "mape_percent": 50.02032687716264,
+        "r2": -0.4010976555582526,
+        "sample_count": 6
+      },
+      "validation": {
+        "mae": 7.718084509885267,
+        "mape_percent": 129.55166019527758,
+        "r2": -0.1439509529066887,
+        "sample_count": 13
+      }
+    }
+  },
+  "feature_profiles": {
+    "base_clock_mhz": {
+      "maximum": 2295.0,
+      "minimum": 727.0,
+      "missing_fraction": 0.0
+    },
+    "board_power_watts": {
+      "maximum": 575.0,
+      "minimum": 50.0,
+      "missing_fraction": 0.0
+    },
+    "boost_clock_mhz": {
+      "maximum": 2640.0,
+      "minimum": 1228.0,
+      "missing_fraction": 0.0
+    },
+    "vram_gb": {
+      "maximum": 48.0,
+      "minimum": 2.0,
+      "missing_fraction": 0.0
+    }
+  },
+  "grouped_test": {
+    "development_group_overlap_count": 0,
+    "evaluable_group_count": 1,
+    "group_column": "product_family",
+    "outside_training_envelope_fraction": 0.0,
+    "outside_training_envelope_row_count": 0,
+    "test_group_count": 5,
+    "test_row_count": 6,
+    "worst_group_mape_percent": 15.317940499519079
+  },
+  "model_file": "model.txt",
+  "model_sha256": "9a806f30e7045e8475448e4ed2a745d67086eb2520049ae62c10da2035cdc6b0",
+  "model_version": "fb2f42fccae0ac6965d28118fc26b5f5b811aa3fed8f6599fc4013a710a75192",
+  "precise_predictions_enabled": false,
+  "promotable": false,
+  "promotion_block_reasons": [
+    "test sample count 6 is below 20",
+    "test R2 -1.8538 is below 0.8500",
+    "test MAPE 203.5237% exceeds 12.0000%",
+    "selected cohort has 36 leakage groups; credible grouped-evaluation minimum is 100",
+    "one or more training rows are ineligible for external claims",
+    "test group count 5 is below 10",
+    "calibration sample count 7 is below 20",
+    "calibration group count 5 is below 10",
+    "grouped-bootstrap R2 lower bound -3511.8527 is below 0.8500",
+    "grouped-bootstrap MAPE upper bound 393.3696% exceeds 12.0000%",
+    "LightGBM validation MAPE 424.6738% does not improve on the best baseline 129.5517% by the required 0.00%",
+    "LightGBM test MAPE 203.5237% does not improve on the best baseline 50.0203% by the required 0.00%"
+  ],
+  "requested_device": "cpu",
+  "schema_version": "pc-build-recommender.performance-model.v2",
+  "split_group_counts": {
+    "calibration": 5,
+    "test": 5,
+    "train": 17,
+    "validation": 9
+  },
+  "split_group_hashes": {
+    "calibration": [
+      "079d29329eb7a446bc7fb1658e089ee2446377852031233e83ce11f045eefc26",
+      "0db1658b345b73d6917b2dee8f667b3f4d2ecbd14991b518de38cb25a8f2a357",
+      "2fd87d863f8af4defa01a9dd30776c592919fbb57f40fe7702ebe48806b9b22b",
+      "9ff3460b224a1dc021a5a13a95af5cd582950f069dd2571f3e1e93c001c89cfd",
+      "f6fc9decb2041c628eab12587fa91534e2ac53fb8da59cf30a6edc6ea7f36ecf"
+    ],
+    "test": [
+      "5fe29e6f61953e2026cb5dab1e94aed66621512e41c50e54698b6776b1a3610d",
+      "756977ab18089dea296c0201ce72704173450517dded8caacc44e590b42d2df6",
+      "9e850a25ea54e0e4ddf3a618d5ed5f85ed03c22090dc04334faa53748c1ac345",
+      "aeb1dbcbf68ca6794ca8a37a48e32df75502b1a77e41d8ce1e529928b45b4ad4",
+      "d2914338104a221718acfefc00f50aba6fb067f288c1091aa29bfe850d08fbc2"
+    ],
+    "train": [
+      "08cad303b2d6553487438164d8b11cac93d806bded015d180b0a014a9395ce89",
+      "1035b466a96738fcdadae46e3857bb31c834c7787098987db827786b0edb276b",
+      "10e82f7b818b92af8eb25f2261d24eb648aef3b293ef01260074dfa2363e9744",
+      "1b2340a528389a416a0ae6e76d528f8526165c258816915558192c230f998340",
+      "5f357da2d0122df5c247aa1ac3868f224137f63ed9bd9bee69898017c4d843c6",
+      "6953f8d5df38a983eb15e060805f1fff523747428ad1b7af52862be5e1c6f6c7",
+      "77388593d878afc5c14fdc1ef3c81b0f7abdcb639a71cf9be6a95ecad2ca34ef",
+      "7f3c85951caa532cc991d17b5dd712b480d95b2e63416f78001575c806ca0040",
+      "809c85d54ccd405d92b970ed73b5229ee77d0ea9176c532a7b74bc2bee6704be",
+      "861e6223e943e2515d1543892fdd1b6b63735730bd4b063cedc01187e5965249",
+      "9f0987cd8fc4495b5de3e59697f467004097faf8a4ee4de7c1db1c46eb3e247c",
+      "a312da2c597498a9481f61b77b9b77e0d6a3eef57ba1c38675119add85c446c2",
+      "cc10cad8ec45366dc6c49ecefb7e218ec1515599095a3f6552500d9092cea45f",
+      "d619112800ccb5493d1ed5c053bf3a490245d0f7f3d0454137faf08a7df57a10",
+      "dca29bec02b5a26d1da1ef56822348a0b3ffc29a3ba0570a5e3ff1512ce8657b",
+      "ee698b4b3c2b75555b6b25c2501e6c716c51a2fbcab620fc72a30e8558ef2169",
+      "f73e73c213e8e0852526b20bbc2114fcdea5c10297b3d64aa6dfee1122b2b43c"
+    ],
+    "validation": [
+      "371c6ec940676bbc06d909b1b0af9e0a4089584f6daaad642371ec0ab77f9087",
+      "48254564a681eb037fb3847837a05ee0bd5a4eedf597138a453b74579cf58f7e",
+      "567ebe8ae74e31159ca97f6b87000e4807cf27bae19c1642dd4b5848428b59f0",
+      "7f3cb260facd7da2c447c05f839c4a2c38f5f81bedee96f951d789eaaab83b76",
+      "a8473fb0fa1abb2ef83f52823f4500573e7f98f4bba020ad8c39a9c28be6a8c5",
+      "ae66118f2c405a6c39a872ab771b06a989479c54ad919d030fdfb9df6502d254",
+      "bdc9cbc95e1e4b6fdb241dd640a909cc85467cb4a5757b80d93b6de9dea8b92e",
+      "d27e522330d8b6702469c955ac25c9838049f3ead181a4bbcba304657c643fc9",
+      "f9062363c5de7255583c856c7c3ff5e96b8686509e3b359c6c49d67fd9791cc3"
+    ]
+  },
+  "split_row_counts": {
+    "calibration": 7,
+    "test": 6,
+    "train": 24,
+    "validation": 13
+  },
+  "synthetic_data": {
+    "eligible_for_reported_metrics": true,
+    "evaluated_rows": 50,
+    "reporting_block_reason": null,
+    "synthetic_flags_declared": true,
+    "synthetic_rows": 0,
+    "synthetic_rows_excluded": false,
+    "total_rows": 50
+  },
+  "test_uncertainty": {
+    "confidence_level": 0.95,
+    "group_count": 5,
+    "mae_lower": 1.450158864233479,
+    "mae_upper": 5.235780975240485,
+    "mape_percent_lower": 67.91946776880113,
+    "mape_percent_upper": 393.3696395307256,
+    "r2_lower": -3511.852667081245,
+    "r2_upper": 0.28938996897193625,
+    "resamples": 500
+  },
+  "training_data_sha256": "53791231470674f45173fe9323ba5fa272c3748e4faf1b492498faff88a547ea"
+}
