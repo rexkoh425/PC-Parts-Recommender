@@ -1,0 +1,84 @@
+{
+  "schema_version": "pc-build-recommender.blender-temporal-evaluation-protocol.v1",
+  "protocol_id": "blender-cpu-content-creation-v4-2026-07-23",
+  "registration_status": "retrospective_integrity_protocol_not_prospective_preregistration",
+  "purpose": "Exact new-submission temporal audit of the corrected Blender CPU content-creation development model. Never pool temporal rows into development data.",
+  "inputs": {
+    "old_snapshot": {
+      "path": "data/raw/blender_open_data/c0f9d35c20807776138b0590097177b8ef2172119cc19aae8d1bad1b55af4833.zip",
+      "sha256": "c0f9d35c20807776138b0590097177b8ef2172119cc19aae8d1bad1b55af4833",
+      "metadata_sha256": "76e4f2e6a4e3c738205b540b90a44b82d2afbbce1ef109efd9fa65c93fc5d224"
+    },
+    "new_snapshot": {
+      "path": "data/raw/blender_open_data/67582ebca9ead706b0c8d6cc96726bfa25c748664f95e10ad994a5fc81e493f5.zip",
+      "sha256": "67582ebca9ead706b0c8d6cc96726bfa25c748664f95e10ad994a5fc81e493f5",
+      "metadata_sha256": "df2599f8855c111ed3a6a6987970e3e3f4d8ab7f53e8e1efa85917f68c34fc58"
+    },
+    "buildcores_records": {
+      "path": "data/processed/buildcores_open_db/f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f/full/records.jsonl",
+      "sha256": "8c738c5136615080ac29ced074726f97cab473c5a45eafdf19c26504aa624ce2",
+      "expected_total_records": 25666,
+      "maximum_total_records": 50000
+    },
+    "development_csv": {
+      "path": "data/processed/model_training/blender_cpu_content_creation_corrected_v1/blender_performance.csv",
+      "sha256": "a4922e0d51a7981f40a257a363cb25649ce5cc27cf32a7517b5e560652acfdf9"
+    },
+    "development_manifest": {
+      "path": "data/processed/model_training/blender_cpu_content_creation_corrected_v1/manifest.json",
+      "sha256": "e9cc28acaa3bea52e5953577cc8c35873a1ce6c1cb27e46639fbf7bdfe727977"
+    },
+    "model_artifact": {
+      "path": "artifacts/ml/performance/blender_cpu_content_creation_corrected_development_v1",
+      "artifact_manifest_sha256": "84171325a8bef00dab2e27743f63278b56a9db2206ea379b1e5575615f0c4f5f",
+      "metadata_sha256": "775c1820804effe6f974c0c0121bcc764913ece0e0844ff87b667a0fd7c8a452",
+      "model_sha256": "6d34ab522ad9b6958f2ac2c07d9aef3ca1e9c7a795897090a7afe00537165074"
+    }
+  },
+  "development_contract": {
+    "category": "cpu",
+    "workload": "content_creation",
+    "row_count": 172,
+    "leakage_family_count": 109,
+    "leakage_family_hashes_sha256": "8a54523833d536319c728e9b42dfdc87b08ad6f7cd3d8378eb4966f6ca4765ce",
+    "feature_columns": [
+      "core_count",
+      "thread_count",
+      "base_clock_ghz",
+      "boost_clock_ghz",
+      "tdp_watts"
+    ],
+    "model_version": "e4f5f153d4e42ed25a37cf91eaf95dd0dc968942e3843ff50d41cf61e40fab21"
+  },
+  "cohort_contract": {
+    "benchmark_version": "4.0.0",
+    "scene": "junkshop",
+    "backend": "CPU",
+    "operating_system": "Windows",
+    "source_unit": "samples/minute",
+    "source_higher_is_better": true,
+    "source_score_field": "samples_per_minute",
+    "blender_build_hash": "878f71061b8e",
+    "benchmark_script": "3.1.0",
+    "scene_checksum": "f5515a21a1337b908212d8d76733530df83014464a24c585ab7b96000da0cdce"
+  },
+  "evaluation_policy": {
+    "strict_new_submission_only": true,
+    "require_new_snapshot_strict_superset": true,
+    "exclude_development_leakage_families": true,
+    "require_zero_remaining_development_family_overlap": true,
+    "pool_external_rows_into_development": false,
+    "minimum_external_rows": 20,
+    "minimum_external_leakage_families": 10,
+    "bootstrap_resamples": 2000,
+    "bootstrap_confidence_level": 0.95,
+    "bootstrap_seed": 20260722
+  },
+  "resource_limits": {
+    "maximum_submissions_per_snapshot": 2000000,
+    "maximum_novel_submissions": 100000,
+    "maximum_novel_observations": 500000,
+    "maximum_retained_cohort_records": 100000,
+    "maximum_external_rows": 100000
+  }
+}
