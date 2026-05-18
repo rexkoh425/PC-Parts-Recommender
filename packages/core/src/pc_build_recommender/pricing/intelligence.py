@@ -20,7 +20,7 @@ from .models import (
     PriceIntelligence,
     PriceLabel,
     PriceObservation,
-    StockState,
+    StockStatus,
     as_utc,
 )
 
@@ -41,7 +41,7 @@ def _coerce_observation(value: PriceInput) -> PriceObservation:
         observed_at=value["observed_at"],
         base_price=value["base_price"],
         shipping_price=value.get("shipping_price", 0),
-        stock_status=value.get("stock_status", StockState.UNKNOWN),
+        stock_status=value.get("stock_status", StockStatus.UNKNOWN),
         seller_name=str(value.get("seller_name", "")),
         retailer=str(value.get("retailer", "")),
         currency=str(value.get("currency", "SGD")),
@@ -54,7 +54,7 @@ def _daily_lowest_in_stock(
 ) -> tuple[PriceObservation, ...]:
     daily: dict[date, PriceObservation] = {}
     for observation in observations:
-        if observation.stock_status is not StockState.IN_STOCK:
+        if observation.stock_status is not StockStatus.IN_STOCK:
             continue
         day = observation.observed_at.date()
         incumbent = daily.get(day)
@@ -153,7 +153,7 @@ def _daily_market_state(
     result: dict[date, tuple[int, float]] = {}
     for day, listing_records in by_day_listing.items():
         records = tuple(listing_records.values())
-        in_stock = tuple(item for item in records if item.stock_status is StockState.IN_STOCK)
+        in_stock = tuple(item for item in records if item.stock_status is StockStatus.IN_STOCK)
         sellers = {item.seller_key for item in in_stock}
         result[day] = (len(sellers), len(in_stock) / len(records))
     return result
@@ -277,7 +277,7 @@ def analyse_product_prices(
     current_offers = tuple(
         item
         for item in latest_by_listing.values()
-        if item.stock_status is StockState.IN_STOCK
+        if item.stock_status is StockStatus.IN_STOCK
         and (freshness_cutoff is None or item.observed_at >= freshness_cutoff)
     )
     cheapest = min(

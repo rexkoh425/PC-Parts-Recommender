@@ -22,7 +22,7 @@ from pc_build_recommender.domain import (
     ComponentKind,
     GPUAttributes,
     RetailerListing,
-    StockState,
+    StockStatus,
 )
 from pc_build_recommender.retrieval.embedding_index import (
     TEXT_BUILDER_VERSION,
@@ -64,7 +64,7 @@ def _listing(
         title=f"Example listing {listing_id}",
         base_price=Decimal("899.00"),
         shipping_price=Decimal("8.00"),
-        stock_status=StockState.IN_STOCK,
+        stock_status=StockStatus.IN_STOCK,
         listing_url=f"https://retailer.invalid/{listing_id}",
         first_seen_at=NOW,
         last_seen_at=NOW,

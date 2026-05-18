@@ -13,7 +13,7 @@ from typing import Any
 import pdfplumber
 from pdfplumber.pdf import PDF
 
-from pc_build_recommender.domain.enums import ListingCondition, StockState
+from pc_build_recommender.domain.enums import ListingCondition, StockStatus
 from pc_build_recommender.domain.models import PriceSample, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
@@ -550,7 +550,7 @@ class DynacoreControlledPDFAdapter:
             currency="SGD",
             base_price=amount,
             shipping_price=Decimal("0.00"),
-            stock_status=StockState.UNKNOWN,
+            stock_status=StockStatus.UNKNOWN,
             seller_name="Dynacore",
             listing_url=DYNACORE_RETAILER_URL,
             first_seen_at=DYNACORE_OBSERVED_AT,
@@ -568,7 +568,7 @@ class DynacoreControlledPDFAdapter:
             observed_at=DYNACORE_OBSERVED_AT,
             base_price=amount,
             shipping_price=Decimal("0.00"),
-            stock_status=StockState.UNKNOWN,
+            stock_status=StockStatus.UNKNOWN,
             promotion_text="Dynacore price list #05-73; availability not asserted",
         )
         raw_row = {

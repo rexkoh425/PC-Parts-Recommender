@@ -32,7 +32,7 @@ from urllib.robotparser import RobotFileParser
 import httpcore
 import httpx
 
-from pc_build_recommender.domain.enums import ComponentKind, ListingCondition, StockState
+from pc_build_recommender.domain.enums import ComponentKind, ListingCondition, StockStatus
 from pc_build_recommender.domain.models import PriceSample, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import ParsedBatch, RawSnapshot, rejected_record, sha256_bytes
@@ -2079,18 +2079,18 @@ class WebProductCrawlerAdapter:
         return current
 
     @staticmethod
-    def _stock_status(value: object) -> StockState:
+    def _stock_status(value: object) -> StockStatus:
         token = str(value or "").rstrip("/").rsplit("/", maxsplit=1)[-1].casefold()
         return {
-            "instock": StockState.IN_STOCK,
-            "limitedavailability": StockState.IN_STOCK,
-            "onlineonly": StockState.IN_STOCK,
-            "outofstock": StockState.OUT_OF_STOCK,
-            "soldout": StockState.OUT_OF_STOCK,
-            "backorder": StockState.BACKORDER,
-            "preorder": StockState.PREORDER,
-            "presale": StockState.PREORDER,
-        }.get(token, StockState.UNKNOWN)
+            "instock": StockStatus.IN_STOCK,
+            "limitedavailability": StockStatus.IN_STOCK,
+            "onlineonly": StockStatus.IN_STOCK,
+            "outofstock": StockStatus.OUT_OF_STOCK,
+            "soldout": StockStatus.OUT_OF_STOCK,
+            "backorder": StockStatus.BACKORDER,
+            "preorder": StockStatus.PREORDER,
+            "presale": StockStatus.PREORDER,
+        }.get(token, StockStatus.UNKNOWN)
 
     @staticmethod
     def _condition(value: object) -> ListingCondition:

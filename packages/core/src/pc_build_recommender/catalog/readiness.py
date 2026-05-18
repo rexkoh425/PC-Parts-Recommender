@@ -18,7 +18,7 @@ from pc_build_recommender.domain import (
     ComponentKind,
     RetailerListing,
     SourceProvenance,
-    StockState,
+    StockStatus,
 )
 
 from .canonical_identity import CanonicalIdentityPreflightReport
@@ -506,7 +506,7 @@ class CatalogReadinessAccumulator:
     ) -> None:
         self.listing_count += 1
         self.matched_by_category[category.value] += 1
-        if listing.stock_status is StockState.IN_STOCK:
+        if listing.stock_status is StockStatus.IN_STOCK:
             self.in_stock_by_category[category.value] += 1
         if provenance is not None and _provenance_is_complete(
             provenance, listing_id=listing.listing_id

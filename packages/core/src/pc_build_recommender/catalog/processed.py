@@ -32,7 +32,7 @@ from pc_build_recommender.domain import (
     RetailerListing,
     ReviewNote,
     SourceProvenance,
-    StockState,
+    StockStatus,
 )
 from pc_build_recommender.entity_resolution import (
     CanonicalProductRecord,
@@ -1098,7 +1098,7 @@ def load_processed_catalog(
         listing_provenance.append(provenance)
         methods[listing.listing_id] = method
         matched_by_category[selected.category.value] += 1
-        if listing.stock_status == StockState.IN_STOCK:
+        if listing.stock_status == StockStatus.IN_STOCK:
             in_stock_by_category[selected.category.value] += 1
         readiness_accumulator.observe_listing(
             listing,
@@ -1169,7 +1169,7 @@ def load_processed_catalog(
         matched_listings_by_category=dict(sorted(matched_by_category.items())),
         in_stock_listings_by_category=dict(sorted(in_stock_by_category.items())),
         known_in_stock_listing_count=sum(
-            listing.stock_status == StockState.IN_STOCK for listing in listings
+            listing.stock_status == StockStatus.IN_STOCK for listing in listings
         ),
         data_version=data_version,
         review_rejected_count=review_rejected_count,
@@ -1261,7 +1261,7 @@ class InMemoryCatalogReader:
         *,
         product_id: str | None = None,
         retailer: str | None = None,
-        stock_status: StockState | None = None,
+        stock_status: StockStatus | None = None,
         limit: int = 100,
     ) -> list[RetailerListing]:
         if not 1 <= limit <= 1000:

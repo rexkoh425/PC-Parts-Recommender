@@ -31,7 +31,7 @@ def as_utc(value: datetime) -> datetime:
     return value.astimezone(UTC)
 
 
-class StockState(StrEnum):
+class StockStatus(StrEnum):
     """Normalised availability states used by pricing and optimisation."""
 
     IN_STOCK = "in_stock"
@@ -40,7 +40,7 @@ class StockState(StrEnum):
     UNKNOWN = "unknown"
 
     @classmethod
-    def parse(cls, value: StockState | str) -> StockState:
+    def parse(cls, value: StockStatus | str) -> StockStatus:
         if isinstance(value, cls):
             return value
         normalised = str(value).strip().casefold().replace("-", "_").replace(" ", "_")
@@ -92,7 +92,7 @@ class PriceObservation:
     observed_at: datetime
     base_price: Decimal | int | float | str
     shipping_price: Decimal | int | float | str = Decimal("0")
-    stock_status: StockState | str = StockState.UNKNOWN
+    stock_status: StockStatus | str = StockStatus.UNKNOWN
     seller_name: str = ""
     retailer: str = ""
     currency: str = "SGD"
@@ -117,7 +117,7 @@ class PriceObservation:
         object.__setattr__(self, "observed_at", as_utc(self.observed_at))
         object.__setattr__(self, "base_price", base_price)
         object.__setattr__(self, "shipping_price", shipping_price)
-        object.__setattr__(self, "stock_status", StockState.parse(self.stock_status))
+        object.__setattr__(self, "stock_status", StockStatus.parse(self.stock_status))
         object.__setattr__(self, "seller_name", self.seller_name.strip())
         object.__setattr__(self, "retailer", self.retailer.strip())
         object.__setattr__(self, "currency", currency)

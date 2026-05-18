@@ -18,7 +18,7 @@ from typing import Any
 
 from pypdf import PdfReader
 
-from pc_build_recommender.domain.enums import ListingCondition, StockState
+from pc_build_recommender.domain.enums import ListingCondition, StockStatus
 from pc_build_recommender.domain.models import PriceSample, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
@@ -424,7 +424,7 @@ class BizgramControlledPDFAdapter:
             currency="SGD",
             base_price=price,
             shipping_price=Decimal("0.00"),
-            stock_status=StockState.UNKNOWN,
+            stock_status=StockStatus.UNKNOWN,
             seller_name="Bizgram",
             listing_url=BIZGRAM_PRICE_LIST_URL,
             first_seen_at=BIZGRAM_DOCUMENT_UPDATED_AT,
@@ -442,7 +442,7 @@ class BizgramControlledPDFAdapter:
             observed_at=BIZGRAM_DOCUMENT_UPDATED_AT,
             base_price=price,
             shipping_price=Decimal("0.00"),
-            stock_status=StockState.UNKNOWN,
+            stock_status=StockStatus.UNKNOWN,
             promotion_text="Bizgram price-list amount; stock and shipping not asserted",
         )
         raw_row = {

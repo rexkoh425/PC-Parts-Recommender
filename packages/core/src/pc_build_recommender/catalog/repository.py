@@ -24,7 +24,7 @@ from pc_build_recommender.domain import (
     ReviewNote,
     SearchQuery,
     SourceProvenance,
-    StockState,
+    StockStatus,
 )
 
 from .orm import (
@@ -270,7 +270,7 @@ class CatalogRepository:
         )
         if in_stock_only:
             statement = statement.where(
-                RetailerListingRecord.stock_status == StockState.IN_STOCK.value
+                RetailerListingRecord.stock_status == StockStatus.IN_STOCK.value
             )
         if max_total_price is not None:
             statement = statement.where(
@@ -356,7 +356,7 @@ class CatalogRepository:
         *,
         product_id: str | None = None,
         retailer: str | None = None,
-        stock_status: StockState | None = None,
+        stock_status: StockStatus | None = None,
         limit: int = 100,
     ) -> list[RetailerListing]:
         if not 1 <= limit <= 1000:
@@ -376,7 +376,7 @@ class CatalogRepository:
 
     def cheapest_in_stock_listing(self, product_id: str) -> RetailerListing | None:
         listings = self.list_listings(
-            product_id=product_id, stock_status=StockState.IN_STOCK, limit=1
+            product_id=product_id, stock_status=StockStatus.IN_STOCK, limit=1
         )
         return listings[0] if listings else None
 

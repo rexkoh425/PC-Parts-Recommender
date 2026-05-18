@@ -35,7 +35,7 @@ from .enums import (
     MotherboardFormFactor,
     ProductStatus,
     SourceType,
-    StockState,
+    StockStatus,
     WorkloadLabel,
 )
 
@@ -130,7 +130,7 @@ class RetailerListing(DomainModel):
     currency: str = Field(default="SGD", pattern=r"^[A-Z]{3}$")
     base_price: Money
     shipping_price: Money = Decimal("0")
-    stock_status: StockState = StockState.UNKNOWN
+    stock_status: StockStatus = StockStatus.UNKNOWN
     seller_name: str | None = None
     listing_url: str = Field(min_length=1)
     first_seen_at: datetime = Field(default_factory=utc_now)
@@ -153,7 +153,7 @@ class PriceSample(DomainModel):
     observed_at: datetime = Field(default_factory=utc_now)
     base_price: Money
     shipping_price: Money = Decimal("0")
-    stock_status: StockState
+    stock_status: StockStatus
     promotion_text: str | None = None
 
     @property

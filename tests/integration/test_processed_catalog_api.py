@@ -35,7 +35,7 @@ from pc_build_recommender.domain import (
     ReviewNote,
     SourceProvenance,
     SourceType,
-    StockState,
+    StockStatus,
 )
 
 NOW = datetime(2026, 7, 22, tzinfo=UTC)
@@ -45,7 +45,7 @@ def _service(
     *,
     product_count: int = 1,
     condition: ListingCondition = ListingCondition.NEW,
-    stock_status: StockState = StockState.UNKNOWN,
+    stock_status: StockStatus = StockStatus.UNKNOWN,
     rights_ready: bool = False,
     snapshot_prices: tuple[Decimal, ...] | None = None,
     review_evidence: tuple[ReviewNote, ...] = (),
@@ -153,9 +153,9 @@ def _service(
         products_by_category={"gpu": product_count},
         matched_listings_by_category={"gpu": product_count},
         in_stock_listings_by_category=(
-            {"gpu": product_count} if stock_status is StockState.IN_STOCK else {}
+            {"gpu": product_count} if stock_status is StockStatus.IN_STOCK else {}
         ),
-        known_in_stock_listing_count=(product_count if stock_status is StockState.IN_STOCK else 0),
+        known_in_stock_listing_count=(product_count if stock_status is StockStatus.IN_STOCK else 0),
         data_version="processed-test-v1",
     )
     data = ProcessedCatalogData(
@@ -269,13 +269,13 @@ def test_processed_service_incomplete_compatibility_is_unknown() -> None:
 @pytest.mark.parametrize(
     ("condition", "stock_status"),
     [
-        (ListingCondition.USED, StockState.IN_STOCK),
-        (ListingCondition.NEW, StockState.OUT_OF_STOCK),
+        (ListingCondition.USED, StockStatus.IN_STOCK),
+        (ListingCondition.NEW, StockStatus.OUT_OF_STOCK),
     ],
 )
 def test_non_new_or_unavailable_offer_is_never_advertised_as_current_lowest(
     condition: ListingCondition,
-    stock_status: StockState,
+    stock_status: StockStatus,
 ) -> None:
     service = _service(
         condition=condition,
@@ -301,7 +301,7 @@ def test_non_new_or_unavailable_offer_is_never_advertised_as_current_lowest(
 
 def test_processed_price_summary_is_rights_gated_descriptive_and_newest_first() -> None:
     service = _service(
-        stock_status=StockState.IN_STOCK,
+        stock_status=StockStatus.IN_STOCK,
         rights_ready=True,
         snapshot_prices=tuple(Decimal(value) for value in (50, 100, 100, 100, 100, 100, 100, 100)),
     )
@@ -325,7 +325,7 @@ def test_processed_price_summary_is_rights_gated_descriptive_and_newest_first() 
 
 def test_processed_price_observation_response_is_bounded_to_newest_year() -> None:
     service = _service(
-        stock_status=StockState.IN_STOCK,
+        stock_status=StockStatus.IN_STOCK,
         rights_ready=True,
         snapshot_prices=tuple(Decimal(100 + day) for day in range(400)),
     )

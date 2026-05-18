@@ -11,7 +11,7 @@ from .models import (
     PriceIntelligence,
     PriceLabel,
     PriceObservation,
-    StockState,
+    StockStatus,
 )
 
 __all__ = [
@@ -20,7 +20,7 @@ __all__ = [
     "PriceIntelligence",
     "PriceLabel",
     "PriceObservation",
-    "StockState",
+    "StockStatus",
     "analyse_product_prices",
     "analyze_product_prices",
     "detect_mad_anomalies",
