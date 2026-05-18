@@ -1,7 +1,7 @@
 """Small, storage-agnostic contracts used by product retrieval.
 
 The retrieval package deliberately does not import database models.  Pipeline,
-API, and test callers can construct :class:`IndexedDocument` instances from
+API, and test callers can construct :class:`ProductDocument` instances from
 plain mappings while a database adapter can implement the same conversion at
 its boundary.
 """
@@ -19,7 +19,7 @@ def _normalise_text(value: object) -> str:
 
 
 @dataclass(frozen=True, slots=True)
-class IndexedDocument:
+class ProductDocument:
     """Canonical product text and filterable fields.
 
     ``attributes`` may contain either flat keys or nested category attributes.
@@ -55,7 +55,7 @@ class IndexedDocument:
         object.__setattr__(self, "attributes", dict(self.attributes))
 
     @classmethod
-    def from_mapping(cls, record: Mapping[str, Any]) -> IndexedDocument:
+    def from_mapping(cls, record: Mapping[str, Any]) -> ProductDocument:
         """Build a document from a canonical-product shaped mapping."""
 
         product_id = record.get("product_id", record.get("id"))
@@ -167,7 +167,7 @@ class FusedHit:
 class RetrievedCandidate:
     """A product with transparent per-retriever and fused evidence."""
 
-    product: IndexedDocument
+    product: ProductDocument
     rank: int
     rrf_score: float
     lexical_score: float = 0.0

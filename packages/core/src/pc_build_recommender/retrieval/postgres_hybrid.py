@@ -19,7 +19,7 @@ from pc_build_recommender.catalog.orm import (
 
 from .bm25 import BM25ProductIndex
 from .fusion import reciprocal_rank_fusion
-from .models import IndexedDocument, RetrievedCandidate, SearchHit, StructuredFilterSpec
+from .models import ProductDocument, RetrievedCandidate, SearchHit, StructuredFilterSpec
 from .postgres import PgVectorSearchBackend
 from .postgres_filters import (
     cheapest_price_expression,
@@ -357,7 +357,7 @@ class PostgresHybridRetriever:
         *,
         category: str,
         filters: StructuredFilterSpec,
-    ) -> dict[str, IndexedDocument]:
+    ) -> dict[str, ProductDocument]:
         if not product_ids:
             return {}
         price = cheapest_price_expression(in_stock_only=filters.in_stock_only).label("price_sgd")
@@ -381,13 +381,13 @@ class PostgresHybridRetriever:
                 candidate_ids=set(product_ids),
             )
         )
-        documents: dict[str, IndexedDocument] = {}
+        documents: dict[str, ProductDocument] = {}
         for row in session.execute(statement):
             attributes = dict(row.common_attributes or {})
             attributes.update(row.category_attributes or {})
             attributes["model"] = row.model
             attributes["manufacturer_part_number"] = row.manufacturer_part_number
-            documents[row.product_id] = IndexedDocument(
+            documents[row.product_id] = ProductDocument(
                 product_id=row.product_id,
                 category=row.category,
                 text=row.search_document or row.canonical_name,

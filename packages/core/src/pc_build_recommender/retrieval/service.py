@@ -8,7 +8,7 @@ from typing import Protocol, runtime_checkable
 from .bm25 import BM25ProductIndex
 from .filters import product_matches_filters
 from .fusion import reciprocal_rank_fusion
-from .models import IndexedDocument, RetrievedCandidate, SearchHit, StructuredFilterSpec
+from .models import ProductDocument, RetrievedCandidate, SearchHit, StructuredFilterSpec
 from .vector import InMemoryVectorIndex, VectorSearchBackend
 
 
@@ -35,7 +35,7 @@ class HybridProductRetriever:
 
     def __init__(
         self,
-        documents: Iterable[IndexedDocument | Mapping[str, object]],
+        documents: Iterable[ProductDocument | Mapping[str, object]],
         *,
         vector_backend: VectorSearchBackend | None = None,
         rrf_k: int = 60,
@@ -43,7 +43,7 @@ class HybridProductRetriever:
         if rrf_k < 1:
             raise ValueError("rrf_k must be positive")
         converted = tuple(
-            item if isinstance(item, IndexedDocument) else IndexedDocument.from_mapping(item)
+            item if isinstance(item, ProductDocument) else ProductDocument.from_mapping(item)
             for item in documents
         )
         ids = [document.product_id for document in converted]

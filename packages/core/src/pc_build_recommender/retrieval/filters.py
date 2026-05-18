@@ -6,7 +6,7 @@ import math
 from collections.abc import Collection
 from typing import Any
 
-from .models import IndexedDocument, StructuredFilterSpec
+from .models import ProductDocument, StructuredFilterSpec
 
 GPU_CATEGORIES = frozenset({"gpu", "gpus", "graphics_card", "graphics_cards"})
 MEMORY_CATEGORIES = frozenset({"memory", "ram", "memory_kit", "memory_kits"})
@@ -17,7 +17,7 @@ AVAILABLE_STOCK_STATES = frozenset(
 )
 
 
-def _first(document: IndexedDocument, *names: str) -> Any:
+def _first(document: ProductDocument, *names: str) -> Any:
     for name in names:
         value = document.get(name)
         if value is not None:
@@ -47,7 +47,7 @@ def _equals(actual: Any, required: Any) -> bool:
     return bool(actual == required)
 
 
-def product_matches_filters(document: IndexedDocument, filters: StructuredFilterSpec) -> bool:
+def product_matches_filters(document: ProductDocument, filters: StructuredFilterSpec) -> bool:
     """Return whether a product satisfies every applicable direct requirement.
 
     Required fields are strict for the component category they govern: missing
@@ -123,8 +123,8 @@ def product_matches_filters(document: IndexedDocument, filters: StructuredFilter
 
 
 def filter_products(
-    documents: Collection[IndexedDocument], filters: StructuredFilterSpec
-) -> list[IndexedDocument]:
+    documents: Collection[ProductDocument], filters: StructuredFilterSpec
+) -> list[ProductDocument]:
     """Filter a product collection while preserving its input order."""
 
     return [document for document in documents if product_matches_filters(document, filters)]

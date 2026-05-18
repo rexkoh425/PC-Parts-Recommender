@@ -29,7 +29,7 @@ from pc_build_recommender.retrieval import (
     BM25ProductIndex,
     FrozenCandidateQuery,
     PinnedCandidateSet,
-    IndexedDocument,
+    ProductDocument,
     RelevanceLabelSource,
     SentenceTransformerEmbeddingEncoder,
     evaluate_ranked_candidates,
@@ -283,7 +283,7 @@ def _load_embedding_artifact(
 
 
 def _complete_bm25_rankings(
-    dataset: PinnedCandidateSet, documents: Sequence[IndexedDocument]
+    dataset: PinnedCandidateSet, documents: Sequence[ProductDocument]
 ) -> dict[str, list[str]]:
     index = BM25ProductIndex(documents)
     rankings: dict[str, list[str]] = {}
@@ -528,7 +528,7 @@ def run_retrieval_silver_pilot(
         catalog_sha256=catalog_hash,
     )
     documents = tuple(
-        IndexedDocument(
+        ProductDocument(
             product_id=str(record["product_id"]),
             category=str(record["category"]),
             text=build_product_embedding_text(record),
