@@ -37,7 +37,7 @@ from pc_build_recommender.catalog import (
 from pc_build_recommender.domain import (
     BenchmarkResult,
     BuildRequestSpec,
-    BuildPreset,
+    BuildProfile,
     BuildRequirements,
     MasterProduct,
     CaseAttributes,
@@ -471,7 +471,7 @@ def _request(
     *,
     existing_products: list[ExistingComponent] | None = None,
     minimum_gpu_vram_gb: int = 16,
-    profiles: list[BuildPreset] | None = None,
+    profiles: list[BuildProfile] | None = None,
 ) -> BuildRequestSpec:
     return BuildRequestSpec(
         budget_sgd=Decimal("2500"),
@@ -491,9 +491,9 @@ def _request(
         raw_query="quiet 1440p development PC",
         requested_profiles=profiles
         or [
-            BuildPreset.BEST_OVERALL,
-            BuildPreset.BEST_VALUE,
-            BuildPreset.HIGHEST_PERFORMANCE,
+            BuildProfile.BEST_OVERALL,
+            BuildProfile.BEST_VALUE,
+            BuildProfile.HIGHEST_PERFORMANCE,
         ],
     )
 
@@ -555,7 +555,7 @@ def test_artifact_prediction_reaches_optimizer_presenter_and_api() -> None:
                 performance_artifacts=(artifact,),
                 random_seed=7,
             )
-            request = _request(profiles=[BuildPreset.HIGHEST_PERFORMANCE]).model_copy(
+            request = _request(profiles=[BuildProfile.HIGHEST_PERFORMANCE]).model_copy(
                 update={"workloads": [WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)]}
             )
             response = services.generate_builds.generate(
@@ -609,7 +609,7 @@ def test_observed_benchmark_precedes_artifact_for_the_same_route() -> None:
                 performance_artifacts=(artifact,),
                 random_seed=7,
             )
-            request = _request(profiles=[BuildPreset.HIGHEST_PERFORMANCE]).model_copy(
+            request = _request(profiles=[BuildProfile.HIGHEST_PERFORMANCE]).model_copy(
                 update={
                     "workloads": [WorkloadPreference(name=WorkloadLabel.GAMING_1440P, weight=1.0)]
                 }
@@ -658,7 +658,7 @@ def test_unpromoted_artifact_requires_explicit_development_opt_in() -> None:
                 allow_unpromoted_performance_models=True,
                 random_seed=7,
             )
-            request = _request(profiles=[BuildPreset.BEST_OVERALL]).model_copy(
+            request = _request(profiles=[BuildProfile.BEST_OVERALL]).model_copy(
                 update={"workloads": [WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)]}
             )
             response = services.generate_builds.generate(
@@ -771,7 +771,7 @@ def test_discontinued_product_is_retained_but_not_purchasable(application) -> No
                     product_id=product_id,
                 )
             ],
-            profiles=[BuildPreset.BEST_OVERALL],
+            profiles=[BuildProfile.BEST_OVERALL],
         ),
         request_id="req_retained_discontinued",
     )
@@ -830,7 +830,7 @@ def test_end_to_end_generation_is_versioned_valid_diverse_and_refresh_safe(
 
 
 def test_api_presenter_attributes_observed_scores_to_benchmark_evidence(application) -> None:
-    request = _request(profiles=[BuildPreset.BEST_OVERALL])
+    request = _request(profiles=[BuildProfile.BEST_OVERALL])
     response = application.generate_builds.generate(
         request,
         request_id="req_benchmark_evidence_contract",
@@ -873,7 +873,7 @@ def test_search_uses_wire_psu_alias_and_complete_build_compatibility(application
     assert all(item.product.category == ComponentKind.POWER_SUPPLY for item in psu_results)
 
     response = application.generate_builds.generate(
-        _request(profiles=[BuildPreset.BEST_OVERALL]),
+        _request(profiles=[BuildProfile.BEST_OVERALL]),
         request_id="req_search_compat",
     )
     build = response.builds[0]
@@ -900,7 +900,7 @@ def test_search_uses_wire_psu_alias_and_complete_build_compatibility(application
 def test_locked_existing_component_is_retained_and_excluded_from_budget(application) -> None:
     request = _request(
         existing_products=[ExistingComponent(category=ComponentKind.GPU, product_id="gpu_2")],
-        profiles=[BuildPreset.BEST_OVERALL],
+        profiles=[BuildProfile.BEST_OVERALL],
     )
     response = application.generate_builds.generate(request, request_id="req_locked")
     assert len(response.builds) == 1
@@ -921,7 +921,7 @@ def test_used_only_product_is_not_acquired_but_can_be_retained(application) -> N
     assert "gpu_used_only" not in {item.product_id for item in search_results}
 
     ordinary = application.generate_builds.generate(
-        _request(profiles=[BuildPreset.BEST_OVERALL]),
+        _request(profiles=[BuildProfile.BEST_OVERALL]),
         request_id="req_no_used_acquisition",
     ).builds[0]
     assert "gpu_used_only" not in {item.product_id for item in ordinary.components}
@@ -934,7 +934,7 @@ def test_used_only_product_is_not_acquired_but_can_be_retained(application) -> N
                     product_id="gpu_used_only",
                 )
             ],
-            profiles=[BuildPreset.BEST_OVERALL],
+            profiles=[BuildProfile.BEST_OVERALL],
         ),
         request_id="req_used_retained",
     ).builds[0]
@@ -949,7 +949,7 @@ def test_used_only_product_is_not_acquired_but_can_be_retained(application) -> N
 def test_owned_component_can_be_explicitly_included_in_budget(application) -> None:
     request = _request(
         existing_products=[ExistingComponent(category=ComponentKind.GPU, product_id="gpu_2")],
-        profiles=[BuildPreset.BEST_OVERALL],
+        profiles=[BuildProfile.BEST_OVERALL],
     )
     response = application.generate_builds.generate(
         request,
@@ -969,7 +969,7 @@ def test_replacing_owned_component_turns_replacement_into_acquisition_cost(appli
             existing_products=[
                 ExistingComponent(category=ComponentKind.GPU, product_id="gpu_2")
             ],
-            profiles=[BuildPreset.BEST_OVERALL],
+            profiles=[BuildProfile.BEST_OVERALL],
         ),
         request_id="req_owned_replace_initial",
     ).builds[0]
@@ -998,7 +998,7 @@ def test_infeasible_request_returns_reasons_and_suggested_relaxations(applicatio
     response = application.generate_builds.generate(
         _request(
             minimum_gpu_vram_gb=64,
-            profiles=[BuildPreset.BEST_OVERALL],
+            profiles=[BuildProfile.BEST_OVERALL],
         ),
         request_id="req_infeasible",
     )
@@ -1014,7 +1014,7 @@ def test_infeasible_request_returns_reasons_and_suggested_relaxations(applicatio
 
 def test_replacement_modes_preserve_cost_and_lock_semantics(application) -> None:
     initial = application.generate_builds.generate(
-        _request(profiles=[BuildPreset.BEST_OVERALL]),
+        _request(profiles=[BuildProfile.BEST_OVERALL]),
         request_id="req_replace_initial",
     ).builds[0]
     current_gpu = next(
@@ -1085,7 +1085,7 @@ def test_populated_replacement_survives_restart_with_original_ownership_and_time
                 existing_products=[
                     ExistingComponent(category=ComponentKind.GPU, product_id="gpu_2")
                 ],
-                profiles=[BuildPreset.BEST_OVERALL],
+                profiles=[BuildProfile.BEST_OVERALL],
             ),
             request_id="req_restart_owned_initial",
         ).builds[0]
@@ -1170,7 +1170,7 @@ def test_non_unique_durable_integrity_failure_is_storage_unavailable(
     application,
     tmp_path: Path,
 ) -> None:
-    request = _request(profiles=[BuildPreset.BEST_OVERALL])
+    request = _request(profiles=[BuildProfile.BEST_OVERALL])
     response = application.generate_builds.generate(
         request,
         request_id="req_missing_catalog_fk",
@@ -1197,7 +1197,7 @@ def test_non_feasible_optimizer_status_is_preserved_in_response_and_store(
     application.generate_builds.optimizer = _NonFeasibleOptimizer(status)
     request_id = f"req_status_{status.value}"
     response = application.generate_builds.generate(
-        _request(profiles=[BuildPreset.BEST_OVERALL]),
+        _request(profiles=[BuildProfile.BEST_OVERALL]),
         request_id=request_id,
     )
 
@@ -1211,7 +1211,7 @@ def test_non_feasible_optimizer_status_is_preserved_in_response_and_store(
 
 def test_replacement_preserves_non_feasible_optimizer_status(application) -> None:
     initial = application.generate_builds.generate(
-        _request(profiles=[BuildPreset.BEST_OVERALL]),
+        _request(profiles=[BuildProfile.BEST_OVERALL]),
         request_id="req_status_replace_initial",
     ).builds[0]
     current_gpu = next(

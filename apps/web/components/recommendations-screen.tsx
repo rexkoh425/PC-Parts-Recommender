@@ -8,14 +8,14 @@ import { categoryLabels, formatScore, formatSgd, profileLabels } from "@/lib/for
 import { oneBasedRank } from "@/lib/interactions";
 import { useSavedBuilds } from "@/lib/use-saved-builds";
 import type {
-  BuildPreset,
+  BuildProfile,
   BuildResult,
   GenerateBuildsResponse,
   SuggestedRelaxation,
 } from "@/lib/types";
 import { BuildCard } from "./build-card";
 
-const profileOrder: BuildPreset[] = [
+const profileOrder: BuildProfile[] = [
   "best_overall",
   "best_value",
   "highest_performance",

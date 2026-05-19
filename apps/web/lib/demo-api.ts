@@ -1,7 +1,7 @@
 import type {
   BenchmarkObservation,
   BuildComponent,
-  BuildPreset,
+  BuildProfile,
   BuildRequest,
   BuildResult,
   CompatibilityCheck,
@@ -46,7 +46,7 @@ interface DemoProduct {
 }
 
 interface DemoTemplate {
-  profile: BuildPreset;
+  profile: BuildProfile;
   product_ids: string[];
   overall_score: number;
   value_score: number;
@@ -389,7 +389,7 @@ const templates: DemoTemplate[] = [
   },
 ];
 
-const profileExplanation: Record<BuildPreset, string> = {
+const profileExplanation: Record<BuildProfile, string> = {
   best_overall: "Balances workload fit, value, efficiency, and future flexibility.",
   best_value: "Keeps the strongest workload-per-dollar trade-off in this controlled catalogue.",
   highest_performance: "Allocates more of the budget to the highest relative CPU and GPU scores.",

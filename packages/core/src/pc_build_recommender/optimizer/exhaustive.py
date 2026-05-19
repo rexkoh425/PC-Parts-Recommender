@@ -6,7 +6,7 @@ import itertools
 import math
 from dataclasses import dataclass
 
-from pc_build_recommender.domain import BuildPreset
+from pc_build_recommender.domain import BuildProfile
 
 from .engine import _solution_from_selected
 from .models import (
@@ -23,7 +23,7 @@ from .validation import eligible_candidates, normalise_validator_result, validat
 class ExhaustiveResult:
     """All feasible solutions in descending objective order for a reduced catalogue."""
 
-    profile: BuildPreset
+    profile: BuildProfile
     solutions: tuple[OptimizationSolution, ...]
     combinations_evaluated: int
 
@@ -35,12 +35,12 @@ class ExhaustiveResult:
 def enumerate_feasible_builds(
     problem: OptimizationProblem,
     *,
-    profile: BuildPreset | None = None,
+    profile: BuildProfile | None = None,
     max_combinations: int = 1_000_000,
 ) -> ExhaustiveResult:
     """Enumerate a deliberately small catalogue as an independent optimiser oracle."""
 
-    selected_profile = BuildPreset(profile or problem.profiles[0])
+    selected_profile = BuildProfile(profile or problem.profiles[0])
     eligible = eligible_candidates(problem)
     grouped = tuple(
         tuple(candidate for candidate in eligible if candidate.category == category)

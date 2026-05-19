@@ -6,7 +6,7 @@ from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from pc_build_recommender.domain import (
-    BuildPreset,
+    BuildProfile,
     CompatVerdict,
     ComponentKind,
 )
@@ -79,7 +79,7 @@ def _problem(
     values: dict[str, object] = {
         "candidates": catalogue,
         "budget_cents": 200_000,
-        "profiles": (BuildPreset.BEST_OVERALL,),
+        "profiles": (BuildProfile.BEST_OVERALL,),
         "minimum_gpu_vram_gb": 16,
         "minimum_memory_gb": 32,
         "minimum_storage_gb": 2_000,

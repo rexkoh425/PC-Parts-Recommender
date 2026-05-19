@@ -14,7 +14,7 @@ from typing import Any, ClassVar
 
 from pc_build_recommender.domain import (
     BuildRequestSpec,
-    BuildPreset,
+    BuildProfile,
     MasterProduct,
     CompatVerdict,
     ComponentKind,
@@ -231,9 +231,9 @@ class ProfileWeights:
             raise ValueError("price_penalty_divisor must be positive")
 
 
-PROFILE_WEIGHTS: Mapping[BuildPreset, ProfileWeights] = {
-    BuildPreset.BEST_OVERALL: ProfileWeights(45, 25, 10, 10, 5, 5),
-    BuildPreset.BEST_VALUE: ProfileWeights(
+PROFILE_WEIGHTS: Mapping[BuildProfile, ProfileWeights] = {
+    BuildProfile.BEST_OVERALL: ProfileWeights(45, 25, 10, 10, 5, 5),
+    BuildProfile.BEST_VALUE: ProfileWeights(
         20,
         55,
         10,
@@ -242,9 +242,9 @@ PROFILE_WEIGHTS: Mapping[BuildPreset, ProfileWeights] = {
         5,
         price_penalty_divisor=100,
     ),
-    BuildPreset.HIGHEST_PERFORMANCE: ProfileWeights(70, 10, 5, 5, 5, 5),
-    BuildPreset.MOST_UPGRADEABLE: ProfileWeights(20, 10, 10, 50, 5, 5),
-    BuildPreset.LOWEST_POWER: ProfileWeights(
+    BuildProfile.HIGHEST_PERFORMANCE: ProfileWeights(70, 10, 5, 5, 5, 5),
+    BuildProfile.MOST_UPGRADEABLE: ProfileWeights(20, 10, 10, 50, 5, 5),
+    BuildProfile.LOWEST_POWER: ProfileWeights(
         10,
         10,
         10,
@@ -271,7 +271,7 @@ class OptimizationProblem:
 
     candidates: tuple[OptimizationCandidate, ...]
     budget_cents: int
-    profiles: tuple[BuildPreset, ...] = tuple(BuildPreset)
+    profiles: tuple[BuildProfile, ...] = tuple(BuildProfile)
     locked_product_ids: frozenset[str] = field(default_factory=frozenset)
     minimum_gpu_vram_gb: int | None = None
     minimum_memory_gb: int | None = None
@@ -303,7 +303,7 @@ class OptimizationProblem:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "candidates", tuple(self.candidates))
-        object.__setattr__(self, "profiles", tuple(BuildPreset(p) for p in self.profiles))
+        object.__setattr__(self, "profiles", tuple(BuildProfile(p) for p in self.profiles))
         object.__setattr__(self, "locked_product_ids", frozenset(self.locked_product_ids))
         object.__setattr__(
             self,
@@ -376,7 +376,7 @@ class OptimizationProblem:
 
 @dataclass(frozen=True, slots=True)
 class ProfileSolveRecord:
-    profile: BuildPreset
+    profile: BuildProfile
     status: OptimizationStatus
     wall_time_seconds: float
     objective_value: int | None = None
@@ -386,7 +386,7 @@ class ProfileSolveRecord:
 class OptimizationSolution:
     """One independently validated complete build."""
 
-    profile: BuildPreset
+    profile: BuildProfile
     selected: Mapping[ComponentKind, OptimizationCandidate]
     total_price_cents: int
     catalog_total_price_cents: int

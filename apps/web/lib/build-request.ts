@@ -1,5 +1,5 @@
 import type {
-  BuildPreset,
+  BuildProfile,
   BuildRequest,
   ExistingProductInput,
   WorkloadLabel,
@@ -26,7 +26,7 @@ export interface BuildFormValues {
   excluded_brands: string;
   existing_products: ExistingProductInput[];
   max_builds: number;
-  requested_profiles: BuildPreset[];
+  requested_profiles: BuildProfile[];
 }
 
 export type BuildFormErrors = Partial<Record<keyof BuildFormValues | "form", string>>;

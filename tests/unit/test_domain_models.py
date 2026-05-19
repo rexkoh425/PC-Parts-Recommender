@@ -12,7 +12,7 @@ from pc_build_recommender.domain import (
     BuildRequestSpec,
     BuildGenerationResponse,
     BuildPreferences,
-    BuildPreset,
+    BuildProfile,
     BuildRecommendation,
     MasterProduct,
     CaseAttributes,
@@ -199,7 +199,7 @@ def _complete_components() -> list[BuildComponentSelection]:
 def _build_payload() -> dict[str, object]:
     return {
         "build_id": "build_complete",
-        "profile": BuildPreset.BEST_OVERALL,
+        "profile": BuildProfile.BEST_OVERALL,
         "total_price_sgd": 800,
         "overall_score": 80,
         "components": _complete_components(),

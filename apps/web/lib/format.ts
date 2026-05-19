@@ -1,4 +1,4 @@
-import type { BuildPreset, ComponentKind, WorkloadLabel } from "./types";
+import type { BuildProfile, ComponentKind, WorkloadLabel } from "./types";
 
 const sgdFormatter = new Intl.NumberFormat("en-SG", {
   style: "currency",
@@ -20,7 +20,7 @@ export function clampScore(value: number | null | undefined): number {
   return Math.max(0, Math.min(100, value));
 }
 
-export const profileLabels: Record<BuildPreset, string> = {
+export const profileLabels: Record<BuildProfile, string> = {
   best_overall: "Best overall",
   best_value: "Best value",
   highest_performance: "Highest performance",

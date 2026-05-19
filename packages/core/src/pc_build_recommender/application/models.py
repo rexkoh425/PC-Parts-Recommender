@@ -18,7 +18,7 @@ from pydantic import Field
 from pc_build_recommender.domain import (
     BenchmarkResult,
     BuildGenerationResponse,
-    BuildPreset,
+    BuildProfile,
     MasterProduct,
     CompatVerdict,
     DomainModel,
@@ -58,7 +58,7 @@ class ReplacementMode(StrEnum):
 class OptimizerProfileStatus(DomainModel):
     """One profile-specific CP-SAT outcome retained for transport adapters."""
 
-    profile: BuildPreset
+    profile: BuildProfile
     status: OptimizationStatus
     wall_time_seconds: float = Field(ge=0)
     objective_value: int | None = None

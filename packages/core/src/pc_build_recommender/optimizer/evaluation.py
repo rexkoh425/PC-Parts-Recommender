@@ -30,7 +30,7 @@ from pc_build_recommender.compatibility import (
     DEFAULT_RULE_VERSION,
     CompatibilityEngine,
 )
-from pc_build_recommender.domain import BuildPreset, CompatVerdict, ComponentKind
+from pc_build_recommender.domain import BuildProfile, CompatVerdict, ComponentKind
 
 from .engine import BuildOptimizer
 from .models import (
@@ -910,7 +910,7 @@ def generate_optimizer_problem(
         if expected_kind == "budget_infeasible"
         else minimum_total + max(10_000, minimum_total // 3)
     )
-    profile = tuple(BuildPreset)[(scenario_index + config.seed) % len(BuildPreset)]
+    profile = tuple(BuildProfile)[(scenario_index + config.seed) % len(BuildProfile)]
     return expected_kind, OptimizationProblem(
         candidates=candidates,
         budget_cents=budget_cents,
@@ -1303,7 +1303,7 @@ def _solution_from_output_record(
     raw_profile = output.get("profile")
     raw_status = output.get("solver_status")
     try:
-        profile = BuildPreset(str(raw_profile))
+        profile = BuildProfile(str(raw_profile))
         solver_status = OptimizationStatus[str(raw_status)]
     except (KeyError, ValueError) as exc:
         raise OptimizerEvaluationError("retained output profile or status is invalid") from exc
@@ -1339,7 +1339,7 @@ def _profile_records_from_scenario(
         if raw_objective is not None and type(raw_objective) is not int:
             raise OptimizerEvaluationError("profile objective_value must be an integer or null")
         try:
-            profile = BuildPreset(str(raw_record.get("profile")))
+            profile = BuildProfile(str(raw_record.get("profile")))
             status = OptimizationStatus[str(raw_record.get("status"))]
         except (KeyError, ValueError) as exc:
             raise OptimizerEvaluationError("profile solve record is invalid") from exc

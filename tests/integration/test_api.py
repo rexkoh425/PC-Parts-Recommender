@@ -12,7 +12,7 @@ from services.api.main import create_app
 from services.api.models import GenerateBuildsRequest
 from services.api.settings import ApiSettings
 
-from pc_build_recommender.domain import BuildPreset as DomainBuildProfile
+from pc_build_recommender.domain import BuildProfile as DomainBuildProfile
 
 
 @pytest.fixture
