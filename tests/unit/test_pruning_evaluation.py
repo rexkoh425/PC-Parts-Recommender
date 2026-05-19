@@ -13,7 +13,7 @@ from pc_build_recommender.retrieval import (
     CandidatePopulationDeclaration,
     CandidatePopulationScope,
     FrozenCandidateQuery,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     FrozenPruningStage,
     QueryGroupSplit,
     PruningClaimPolicy,
@@ -35,7 +35,7 @@ def _dataset(
     *,
     label_source: RelevanceLabelSource = RelevanceLabelSource.HUMAN,
     complete_qrels: bool = True,
-) -> PinnedCandidateSet:
+) -> FrozenCandidateSet:
     candidate_ids = tuple(f"p-{index}" for index in range(10))
     labels = {candidate_id: 0 for candidate_id in candidate_ids}
     labels["p-0"] = 4
@@ -54,7 +54,7 @@ def _dataset(
         for index in range(5)
     ]
     human = label_source is RelevanceLabelSource.HUMAN
-    return PinnedCandidateSet.create(
+    return FrozenCandidateSet.create(
         "pruning-human-v1",
         queries,
         label_source=label_source,
@@ -64,7 +64,7 @@ def _dataset(
     )
 
 
-def _stages(dataset: PinnedCandidateSet) -> tuple[FrozenPruningStage, ...]:
+def _stages(dataset: FrozenCandidateSet) -> tuple[FrozenPruningStage, ...]:
     initial = {query.query_id: query.candidate_ids for query in dataset.queries}
     first = {query.query_id: ("p-0", "p-1", "p-2", "p-3", "p-4") for query in dataset.queries}
     second = {query.query_id: ("p-0", "p-4") for query in dataset.queries}
@@ -100,7 +100,7 @@ def _removal_reasons(
 
 
 def _population(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     *,
     scope: CandidatePopulationScope = CandidatePopulationScope.FULL_ELIGIBLE_CORPUS,
 ) -> CandidatePopulationDeclaration:
@@ -133,7 +133,7 @@ def _provenance() -> PruningEvaluationProvenance:
 
 
 def _report(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     *,
     population: CandidatePopulationDeclaration | None = None,
 ) -> PruningEvaluationReport:
@@ -467,7 +467,7 @@ def test_retrieval_pool_metrics_are_explicitly_not_corpus_qualified() -> None:
 
 
 def test_pooled_and_macro_metrics_use_declared_weighting() -> None:
-    dataset = PinnedCandidateSet.create(
+    dataset = FrozenCandidateSet.create(
         "weighting-v1",
         (
             FrozenCandidateQuery(

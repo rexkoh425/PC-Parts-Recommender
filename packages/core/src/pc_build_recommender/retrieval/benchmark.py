@@ -17,7 +17,7 @@ from pc_build_recommender.evaluation.splits import deterministic_group_split
 
 from .evaluation import (
     FrozenCandidateQuery,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     RetrievalEvaluation,
     evaluate_ranked_candidates,
 )
@@ -135,7 +135,7 @@ class QueryGroupSplit:
     @classmethod
     def create(
         cls,
-        dataset: PinnedCandidateSet,
+        dataset: FrozenCandidateSet,
         *,
         version: str,
         query_group_ids: Mapping[str, str] | None = None,
@@ -194,7 +194,7 @@ class QueryGroupSplit:
             checksum=json_sha256(payload),
         )
 
-    def validate_dataset(self, dataset: PinnedCandidateSet) -> None:
+    def validate_dataset(self, dataset: FrozenCandidateSet) -> None:
         if dataset.checksum != self.dataset_checksum:
             raise ValueError("query split was created for a different frozen candidate set")
         if dataset.evidence_checksum != self.dataset_evidence_checksum:
@@ -204,7 +204,7 @@ class QueryGroupSplit:
 
     def queries_for(
         self,
-        dataset: PinnedCandidateSet,
+        dataset: FrozenCandidateSet,
         split_name: str,
     ) -> tuple[FrozenCandidateQuery, ...]:
         self.validate_dataset(dataset)
@@ -217,8 +217,8 @@ class QueryGroupSplit:
             raise ValueError(f"split {split_name!r} has no queries")
         return queries
 
-    def subset(self, dataset: PinnedCandidateSet, split_name: str) -> PinnedCandidateSet:
-        return PinnedCandidateSet.create(
+    def subset(self, dataset: FrozenCandidateSet, split_name: str) -> FrozenCandidateSet:
+        return FrozenCandidateSet.create(
             f"{dataset.version}:{split_name}",
             self.queries_for(dataset, split_name),
             label_source=dataset.label_source,
@@ -584,7 +584,7 @@ def load_diagnostic_ranking_artifact(path: str | Path) -> DiagnosticRankingArtif
 
 
 def _validate_complete_rankings(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     rankings: Mapping[str, Sequence[str]],
     *,
     model_name: str,
@@ -664,7 +664,7 @@ def _paired_metrics(
 
 
 def compare_ranked_models(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     rankings_by_model: Mapping[str, Mapping[str, Sequence[str]]],
     *,
     artifact_bound_rankings: Mapping[str, ArtifactBoundRankingEvidence] | None = None,

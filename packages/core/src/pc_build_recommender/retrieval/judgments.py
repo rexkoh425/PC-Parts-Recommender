@@ -13,7 +13,7 @@ from typing import Any
 
 from .evaluation import (
     FrozenCandidateQuery,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     RelevanceLabelSource,
 )
 
@@ -190,7 +190,7 @@ class AdjudicationSummary:
 
 @dataclass(frozen=True, slots=True)
 class AdjudicatedHumanLabelSet:
-    frozen_candidates: PinnedCandidateSet
+    frozen_candidates: FrozenCandidateSet
     summary: AdjudicationSummary
     judgment_manifest_sha256: str
 
@@ -326,7 +326,7 @@ class HumanJudgmentSet:
             )
 
         manifest_sha256 = self.content_sha256
-        frozen = PinnedCandidateSet.create(
+        frozen = FrozenCandidateSet.create(
             self.dataset_version,
             frozen_queries,
             label_source=RelevanceLabelSource.HUMAN,

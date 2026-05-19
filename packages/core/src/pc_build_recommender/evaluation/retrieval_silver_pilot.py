@@ -28,7 +28,7 @@ from numpy.typing import NDArray
 from pc_build_recommender.retrieval import (
     BM25ProductIndex,
     FrozenCandidateQuery,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     ProductDocument,
     RelevanceLabelSource,
     SentenceTransformerEmbeddingEncoder,
@@ -205,7 +205,7 @@ def build_frozen_silver_dataset(
     query_set: SilverQuerySet,
     *,
     catalog_sha256: str,
-) -> PinnedCandidateSet:
+) -> FrozenCandidateSet:
     """Create a checksummed candidate universe and silver qrels."""
 
     by_category: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
@@ -235,7 +235,7 @@ def build_frozen_silver_dataset(
             )
         )
     version = f"buildcores-silver-pilot-v1-{catalog_sha256[:12]}-{query_set.source_sha256[:12]}"
-    return PinnedCandidateSet.create(
+    return FrozenCandidateSet.create(
         version,
         queries,
         label_source=RelevanceLabelSource.SILVER,
@@ -283,7 +283,7 @@ def _load_embedding_artifact(
 
 
 def _complete_bm25_rankings(
-    dataset: PinnedCandidateSet, documents: Sequence[ProductDocument]
+    dataset: FrozenCandidateSet, documents: Sequence[ProductDocument]
 ) -> dict[str, list[str]]:
     index = BM25ProductIndex(documents)
     rankings: dict[str, list[str]] = {}
@@ -303,7 +303,7 @@ def _complete_bm25_rankings(
 
 
 def _complete_vector_rankings(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     *,
     matrix: NDArray[np.float32],
     id_rows: Sequence[Mapping[str, Any]],
@@ -352,7 +352,7 @@ def _complete_vector_rankings(
 
 
 def _complete_rrf_rankings(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     bm25: Mapping[str, Sequence[str]],
     vector: Mapping[str, Sequence[str]],
     *,
@@ -373,7 +373,7 @@ def _complete_rrf_rankings(
 
 
 def _single_query_metrics(query: FrozenCandidateQuery, ranking: Sequence[str]) -> dict[str, float]:
-    single = PinnedCandidateSet.create("single-query-slice-v1", [query])
+    single = FrozenCandidateSet.create("single-query-slice-v1", [query])
     result = evaluate_ranked_candidates(
         single,
         {query.query_id: ranking},
@@ -388,7 +388,7 @@ def _single_query_metrics(query: FrozenCandidateQuery, ranking: Sequence[str]) -
 
 
 def _model_metrics(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     rankings: Mapping[str, Sequence[str]],
 ) -> dict[str, Any]:
     aggregate = evaluate_ranked_candidates(dataset, rankings, recall_ks=(20, 50))

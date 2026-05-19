@@ -25,7 +25,7 @@ from pc_build_recommender.ranking import (
 )
 from pc_build_recommender.retrieval import (
     FrozenCandidateQuery,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     QueryGroupSplit,
     RelevanceLabelSource,
 )
@@ -487,7 +487,7 @@ def test_silver_lambdamart_training_metadata_is_never_promotable() -> None:
 @pytest.mark.model
 def test_human_lambdamart_verifies_exact_frozen_train_and_validation_membership() -> None:
     labeled_queries = _queries(6)
-    frozen_dataset = PinnedCandidateSet.create(
+    frozen_dataset = FrozenCandidateSet.create(
         "human-labels-v1",
         [
             FrozenCandidateQuery(
@@ -545,7 +545,7 @@ def test_human_lambdamart_verifies_exact_frozen_train_and_validation_membership(
     assert ranker.metadata.query_split_membership_verified
     assert ranker.metadata.query_group_split_checksum == split.checksum
 
-    silver_dataset = PinnedCandidateSet.create(
+    silver_dataset = FrozenCandidateSet.create(
         "silver-labels-v1",
         frozen_dataset.queries,
         label_source=RelevanceLabelSource.SILVER,

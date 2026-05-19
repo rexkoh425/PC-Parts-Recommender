@@ -6,14 +6,14 @@ import pytest
 
 from pc_build_recommender.retrieval import (
     FrozenCandidateQuery,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     evaluate_ranked_candidates,
     ndcg_at_k,
 )
 
 
-def _dataset() -> PinnedCandidateSet:
-    return PinnedCandidateSet.create(
+def _dataset() -> FrozenCandidateSet:
+    return FrozenCandidateSet.create(
         "retrieval-test-v1",
         [
             FrozenCandidateQuery(
@@ -39,14 +39,14 @@ def test_frozen_candidate_set_round_trips_with_checksum(tmp_path) -> None:
     path = tmp_path / "candidates.json"
 
     dataset.save(path)
-    loaded = PinnedCandidateSet.load(path)
+    loaded = FrozenCandidateSet.load(path)
 
     assert loaded == dataset
     payload = json.loads(path.read_text(encoding="utf-8"))
     payload["queries"][0]["candidate_ids"].append("tampered")
     path.write_text(json.dumps(payload), encoding="utf-8")
     with pytest.raises(ValueError, match="checksum"):
-        PinnedCandidateSet.load(path)
+        FrozenCandidateSet.load(path)
 
 
 def test_retrieval_metrics_use_same_frozen_candidate_universe() -> None:
@@ -65,7 +65,7 @@ def test_retrieval_metrics_use_same_frozen_candidate_universe() -> None:
 
 
 def test_retrieval_metrics_treat_missing_sparse_qrels_as_zero_grade() -> None:
-    dataset = PinnedCandidateSet.create(
+    dataset = FrozenCandidateSet.create(
         "sparse-qrels-v1",
         [
             FrozenCandidateQuery(

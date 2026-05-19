@@ -12,7 +12,7 @@ from training.train_ranking import main as ranking_main
 from pc_build_recommender.evaluation.manifest import json_sha256
 from pc_build_recommender.ranking import LambdaMARTRanker, load_ranker_promotion_decision
 from pc_build_recommender.retrieval import (
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     QueryGroupSplit,
     HumanJudgmentSet,
     LabelingQuery,
@@ -170,7 +170,7 @@ def _write_dataset_manifest(
         }.items()
     }
     human = load_human_judgment_set(human_path)
-    qrels = PinnedCandidateSet.load(qrels_path)
+    qrels = FrozenCandidateSet.load(qrels_path)
     split = QueryGroupSplit.load(split_path)
     manifest: dict[str, object] = {
         "schema_version": (

@@ -85,7 +85,7 @@ class FrozenCandidateQuery:
 
 
 @dataclass(frozen=True, slots=True)
-class PinnedCandidateSet:
+class FrozenCandidateSet:
     """Versioned, checksummed relevance set shared by every retrieval baseline."""
 
     version: str
@@ -163,7 +163,7 @@ class PinnedCandidateSet:
         adjudication_complete: bool = False,
         contains_synthetic_labels: bool = False,
         judgment_manifest_sha256: str | None = None,
-    ) -> PinnedCandidateSet:
+    ) -> FrozenCandidateSet:
         query_tuple = tuple(queries)
         checksum = hashlib.sha256(_stable_payload(version, query_tuple)).hexdigest()
         return cls(
@@ -203,7 +203,7 @@ class PinnedCandidateSet:
         )
 
     @classmethod
-    def load(cls, path: str | Path) -> PinnedCandidateSet:
+    def load(cls, path: str | Path) -> FrozenCandidateSet:
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
         queries = tuple(
             FrozenCandidateQuery(
@@ -308,7 +308,7 @@ def ndcg_at_k(
 
 
 def evaluate_ranked_candidates(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     ranked_product_ids: Mapping[str, Sequence[str]],
     *,
     recall_ks: Sequence[int] = (20, 50),

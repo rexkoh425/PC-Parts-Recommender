@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from pc_build_recommender.evaluation.manifest import json_sha256
 from pc_build_recommender.retrieval import (
     ArtifactBoundRankingEvidence,
-    PinnedCandidateSet,
+    FrozenCandidateSet,
     QueryGroupSplit,
     evaluate_ranked_candidates,
 )
@@ -40,7 +40,7 @@ class ArtifactBoundRankerOutput:
 
 def generate_artifact_bound_rankings(
     ranker: LambdaMARTRanker,
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     *,
     model_name: str,
     contexts: Mapping[str, RankingContext],
@@ -152,7 +152,7 @@ def generate_artifact_bound_rankings(
 
 
 def assert_complete_frozen_rankings(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     ranked_product_ids: Mapping[str, Sequence[str]],
 ) -> None:
     """Require each model to rank exactly the same products for every query."""
@@ -173,7 +173,7 @@ def assert_complete_frozen_rankings(
 
 
 def rankings_from_scores(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     scores: Mapping[str, Mapping[str, float]],
 ) -> dict[str, list[str]]:
     """Create stable rankings from externally-produced model scores."""
@@ -195,7 +195,7 @@ def rankings_from_scores(
 
 
 def evaluate_frozen_rankings(
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     ranked_product_ids: Mapping[str, Sequence[str]],
     *,
     baseline_ranked_product_ids: Mapping[str, Sequence[str]] | None = None,
@@ -228,7 +228,7 @@ def evaluate_frozen_rankings(
 
 def evaluate_product_ranker(
     ranker: ProductRanker,
-    dataset: PinnedCandidateSet,
+    dataset: FrozenCandidateSet,
     *,
     contexts: Mapping[str, RankingContext],
     candidates: Mapping[str, Sequence[ScoredCandidate]],
