@@ -14,7 +14,7 @@ from pc_build_recommender.data_rights import (
     production_catalog_rights_are_valid,
 )
 from pc_build_recommender.domain import (
-    MasterProduct,
+    CanonicalProduct,
     ComponentKind,
     RetailerListing,
     SourceProvenance,
@@ -476,7 +476,7 @@ class CatalogReadinessAccumulator:
             raise ValueError("canonical identity preflight was already observed")
         self.canonical_identity_preflight = report
 
-    def observe_product(self, product: MasterProduct) -> None:
+    def observe_product(self, product: CanonicalProduct) -> None:
         category = product.category.value
         self.product_count += 1
         self.products_by_category[category] += 1

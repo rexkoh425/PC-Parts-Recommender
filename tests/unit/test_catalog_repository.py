@@ -18,7 +18,7 @@ from pc_build_recommender.catalog import (
 )
 from pc_build_recommender.domain import (
     BenchmarkResult,
-    MasterProduct,
+    CanonicalProduct,
     ComponentKind,
     GPUAttributes,
     PriceSample,
@@ -39,8 +39,8 @@ def session() -> Session:
         yield value
 
 
-def _gpu() -> MasterProduct:
-    return MasterProduct(
+def _gpu() -> CanonicalProduct:
+    return CanonicalProduct(
         product_id="prod_gpu_1",
         category=ComponentKind.GPU,
         brand="ExampleGPU",

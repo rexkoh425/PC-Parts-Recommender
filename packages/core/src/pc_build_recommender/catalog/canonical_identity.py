@@ -14,7 +14,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from typing import Any
 
-from pc_build_recommender.domain import MasterProduct
+from pc_build_recommender.domain import CanonicalProduct
 from pc_build_recommender.entity_resolution.normalization import normalize_identifier
 
 CANONICAL_IDENTITY_PREFLIGHT_SCHEMA_VERSION = (
@@ -42,7 +42,7 @@ class CanonicalIdentityMember:
     manufacturer_part_number: str | None
 
     @classmethod
-    def from_product(cls, product: MasterProduct) -> CanonicalIdentityMember:
+    def from_product(cls, product: CanonicalProduct) -> CanonicalIdentityMember:
         return cls(
             product_id=product.product_id,
             category=product.category.value,
@@ -197,7 +197,7 @@ class CanonicalIdentityImportError(RuntimeError):
 
 
 def audit_canonical_product_identities(
-    products: Iterable[MasterProduct],
+    products: Iterable[CanonicalProduct],
 ) -> CanonicalIdentityPreflightReport:
     """Audit normalized brand/MPN identity without mutating the source catalogue."""
 
@@ -254,14 +254,14 @@ def audit_canonical_envelopes(
 ) -> CanonicalIdentityPreflightReport:
     """Validate and audit normalized canonical-product envelopes."""
 
-    products: list[MasterProduct] = []
+    products: list[CanonicalProduct] = []
     for envelope in envelopes:
         if envelope.get("record_type") != "canonical_product":
             raise ValueError("identity preflight requires canonical_product records")
         data = envelope.get("data")
         if not isinstance(data, Mapping):
             raise ValueError("canonical_product identity preflight requires a data object")
-        products.append(MasterProduct.model_validate(data))
+        products.append(CanonicalProduct.model_validate(data))
     return audit_canonical_product_identities(products)
 
 

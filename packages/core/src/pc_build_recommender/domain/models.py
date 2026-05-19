@@ -81,7 +81,7 @@ class SourceProvenance(DomainModel):
     extraction_confidence: Probability = 1.0
 
 
-class MasterProduct(DomainModel):
+class CanonicalProduct(DomainModel):
     product_id: str = Field(default_factory=lambda: new_id("prod"), min_length=1)
     category: ComponentKind
     brand: str = Field(min_length=1)
@@ -113,7 +113,7 @@ class MasterProduct(DomainModel):
         return parsed
 
     @model_validator(mode="after")
-    def attributes_match_category(self) -> MasterProduct:
+    def attributes_match_category(self) -> CanonicalProduct:
         expected_type = _ATTRIBUTE_TYPES[self.category]
         if not isinstance(self.category_attributes, expected_type):
             raise ValueError(f"{self.category.value} products require {expected_type.__name__}")
@@ -523,7 +523,7 @@ class InteractionRecord(DomainModel):
 
 
 # Compact aliases for API and optimiser integrations.
-Product = MasterProduct
+Product = CanonicalProduct
 Listing = RetailerListing
 BuildRequest = BuildRequestSpec
 BuildResponse = BuildGenerationResponse

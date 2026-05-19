@@ -12,7 +12,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from pc_build_recommender.domain import (
-    MasterProduct,
+    CanonicalProduct,
     ComponentKind,
     PriceSample,
     RetailerListing,
@@ -89,7 +89,7 @@ class _ProductIdentity:
     category_attributes: Mapping[str, Any]
 
     @classmethod
-    def from_product(cls, product: MasterProduct) -> _ProductIdentity:
+    def from_product(cls, product: CanonicalProduct) -> _ProductIdentity:
         return cls(
             product_id=product.product_id,
             category=product.category,
@@ -312,7 +312,7 @@ def stream_processed_catalog(
             record_type="canonical_product",
             path=product_path,
         )
-        product = MasterProduct.model_validate(data)
+        product = CanonicalProduct.model_validate(data)
         if product.product_id in products_by_id:
             raise ValueError(
                 f"processed BuildCores catalog contains duplicate product ID: {product.product_id}"
@@ -606,7 +606,7 @@ def validate_review_target(
                 record_type="canonical_product",
                 path=product_path,
             )
-            product = MasterProduct.model_validate(data)
+            product = CanonicalProduct.model_validate(data)
             if product.product_id == clean_product_id:
                 selected = _ProductIdentity.from_product(product)
                 break

@@ -15,7 +15,7 @@ from typing import Any, ClassVar
 from pc_build_recommender.domain import (
     BuildRequestSpec,
     BuildProfile,
-    MasterProduct,
+    CanonicalProduct,
     CompatVerdict,
     ComponentKind,
     RetailerListing,
@@ -129,7 +129,7 @@ class OptimizationCandidate:
     @classmethod
     def from_domain(
         cls,
-        product: MasterProduct,
+        product: CanonicalProduct,
         listing: RetailerListing | None,
         *,
         scores: CandidateScores | Mapping[str, float] | object | None = None,
@@ -342,7 +342,7 @@ class OptimizationProblem:
     def from_domain(
         cls,
         request: BuildRequestSpec,
-        products: Iterable[MasterProduct],
+        products: Iterable[CanonicalProduct],
         listings: Iterable[RetailerListing],
         *,
         scores_by_product: Mapping[str, CandidateScores | Mapping[str, float] | object]

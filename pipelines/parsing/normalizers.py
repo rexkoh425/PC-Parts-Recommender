@@ -31,7 +31,7 @@ from pc_build_recommender.domain.enums import (
     StorageFormFactor,
     StorageInterface,
 )
-from pc_build_recommender.domain.models import MasterProduct, SourceProvenance
+from pc_build_recommender.domain.models import CanonicalProduct, SourceProvenance
 from pipelines.sources.base import RawSnapshot, sha256_bytes
 
 NORMALISED_RECORD_SCHEMA_VERSION = "pc-build-recommender.normalised-record.v1"
@@ -459,7 +459,7 @@ def normalise_buildcores_product(
     snapshot: RawSnapshot,
     commit: str,
 ) -> dict[str, Any]:
-    """Map one BuildCores record and validate it through ``MasterProduct``."""
+    """Map one BuildCores record and validate it through ``CanonicalProduct``."""
 
     if source_category not in BUILDCORES_CATEGORY_MAP:
         raise ValueError(f"unsupported BuildCores category: {source_category}")
@@ -511,7 +511,7 @@ def normalise_buildcores_product(
         tags=list(dict.fromkeys(tag for tag in (series, source_category) if tag)),
     )
     category_attributes = _ATTRIBUTE_BUILDERS[source_category](record)
-    product = MasterProduct(
+    product = CanonicalProduct(
         product_id=product_id,
         category=BUILDCORES_CATEGORY_MAP[source_category],
         brand=brand,

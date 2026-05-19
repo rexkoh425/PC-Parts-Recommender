@@ -30,7 +30,7 @@ from pc_build_recommender.catalog.orm import (
     ProductEmbeddingRecord,
     SourceProvenanceRecord,
 )
-from pc_build_recommender.domain import MasterProduct
+from pc_build_recommender.domain import CanonicalProduct
 
 from .bm25 import BM25ProductIndex
 from .embedding_index import (
@@ -71,7 +71,7 @@ class ValidatedEmbeddingArtifact:
 
     artifact_dir: Path
     catalog_path: Path
-    products: tuple[MasterProduct, ...]
+    products: tuple[CanonicalProduct, ...]
     search_documents: tuple[str, ...]
     id_rows: tuple[EmbeddingIdRow, ...]
     vectors: NDArray[np.float32]
@@ -369,7 +369,7 @@ def validate_embedding_artifact(
 
     id_rows = _load_id_rows(id_map_path)
     records, source_files = load_normalized_product_jsonl(catalog)
-    products = tuple(MasterProduct.model_validate(record) for record in records)
+    products = tuple(CanonicalProduct.model_validate(record) for record in records)
     if len(id_rows) != len(products) or vectors.shape[0] != len(products):
         raise EmbeddingArtifactValidationError(
             "catalog, id-map, and embedding matrix row counts do not match"
@@ -525,7 +525,7 @@ class PostgresVectorCatalogRepository:
 
     @staticmethod
     def _product_values(
-        product: MasterProduct,
+        product: CanonicalProduct,
         search_document: str,
         search_document_hash: str,
     ) -> dict[str, Any]:
@@ -549,7 +549,7 @@ class PostgresVectorCatalogRepository:
         }
 
     @staticmethod
-    def _provenance_values(product: MasterProduct) -> list[dict[str, Any]]:
+    def _provenance_values(product: CanonicalProduct) -> list[dict[str, Any]]:
         values: list[dict[str, Any]] = []
         for provenance in product.provenance:
             row = provenance.model_dump(mode="python")

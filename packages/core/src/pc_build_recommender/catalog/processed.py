@@ -25,7 +25,7 @@ from sqlalchemy.orm import Session
 from pc_build_recommender.data_rights import DataUse, DataUseRights
 from pc_build_recommender.domain import (
     BenchmarkResult,
-    MasterProduct,
+    CanonicalProduct,
     ComponentKind,
     PriceSample,
     ProductStatus,
@@ -613,7 +613,7 @@ def _brand_prefix_matches(title: str, brand: str) -> bool:
     return bool(brand_tokens and title_tokens[: len(brand_tokens)] == brand_tokens)
 
 
-def _colour_conflict(title: str, product: MasterProduct) -> bool:
+def _colour_conflict(title: str, product: CanonicalProduct) -> bool:
     title_colours = _COLOUR_TOKENS.intersection(tokenize(title))
     if len(title_colours) > 1:
         # A combined retailer row cannot identify one unique colour SKU.
@@ -625,7 +625,7 @@ def _colour_conflict(title: str, product: MasterProduct) -> bool:
     return bool(product_colours and title_colours.isdisjoint(product_colours))
 
 
-def _numeric_conflict(title: str, product: MasterProduct) -> bool:
+def _numeric_conflict(title: str, product: CanonicalProduct) -> bool:
     listing = ListingRecord(
         listing_id="candidate",
         title=title,
@@ -746,7 +746,7 @@ class ProcessedCatalogStats:
 
 @dataclass(frozen=True, slots=True)
 class ProcessedCatalogData:
-    products: tuple[MasterProduct, ...]
+    products: tuple[CanonicalProduct, ...]
     listings: tuple[RetailerListing, ...]
     price_snapshots: tuple[PriceSample, ...]
     stats: ProcessedCatalogStats
@@ -811,10 +811,10 @@ def _listing_source_provenance(
 def _automatic_candidates(
     title: str,
     category: ComponentKind,
-    products: Sequence[MasterProduct],
-) -> tuple[MasterProduct, ...]:
+    products: Sequence[CanonicalProduct],
+) -> tuple[CanonicalProduct, ...]:
     title_identifier = normalize_identifier(title)
-    result: list[MasterProduct] = []
+    result: list[CanonicalProduct] = []
     for product in products:
         if product.category != category or not _brand_prefix_matches(title, product.brand):
             continue
@@ -893,10 +893,10 @@ def load_processed_catalog(
             minimum_recall=entity_resolution_policy.minimum_recall,
             minimum_f1=entity_resolution_policy.minimum_f1,
         )
-    products: list[MasterProduct] = []
+    products: list[CanonicalProduct] = []
     for envelope in iter_jsonl_objects(product_path, max_line_bytes=max_line_bytes):
         data = _require_envelope(envelope, record_type="canonical_product", path=product_path)
-        product = MasterProduct.model_validate(data)
+        product = CanonicalProduct.model_validate(data)
         products.append(product)
         readiness_accumulator.observe_product(product)
     product_ids = [product.product_id for product in products]
@@ -989,7 +989,7 @@ def load_processed_catalog(
         category = _category(metadata.get("category"))
         title = source_listing.title
         source_listing_id = source_listing.source_listing_id
-        selected: MasterProduct | None = None
+        selected: CanonicalProduct | None = None
         method: str | None = None
         outcome: MappingOutcome
         outcome_candidates: tuple[str, ...] = ()
@@ -1241,7 +1241,7 @@ class InMemoryCatalogReader:
         status: ProductStatus | None = ProductStatus.ACTIVE,
         offset: int = 0,
         limit: int = 100,
-    ) -> list[MasterProduct]:
+    ) -> list[CanonicalProduct]:
         if offset < 0 or not 1 <= limit <= 1000:
             raise ValueError("offset must be nonnegative and limit must be between 1 and 1000")
         items = [
@@ -1253,7 +1253,7 @@ class InMemoryCatalogReader:
         ]
         return list(items[offset : offset + limit])
 
-    def get_product(self, product_id: str) -> MasterProduct | None:
+    def get_product(self, product_id: str) -> CanonicalProduct | None:
         return self._products.get(product_id)
 
     def list_listings(

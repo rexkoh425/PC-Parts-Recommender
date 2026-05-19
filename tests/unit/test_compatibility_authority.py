@@ -17,7 +17,7 @@ from pc_build_recommender.compatibility import (
 )
 from pc_build_recommender.domain import (
     BenchmarkResult,
-    MasterProduct,
+    CanonicalProduct,
     CaseAttributes,
     ComponentKind,
     GPUAttributes,
@@ -33,7 +33,7 @@ NOW = datetime(2026, 7, 22, tzinfo=UTC)
 
 
 class CatalogReaderFixture:
-    def __init__(self, products: tuple[MasterProduct, ...]) -> None:
+    def __init__(self, products: tuple[CanonicalProduct, ...]) -> None:
         self.products = products
 
     def list_products(
@@ -44,7 +44,7 @@ class CatalogReaderFixture:
         status: ProductStatus | None = ProductStatus.ACTIVE,
         offset: int = 0,
         limit: int = 100,
-    ) -> list[MasterProduct]:
+    ) -> list[CanonicalProduct]:
         products = [
             product
             for product in self.products
@@ -54,7 +54,7 @@ class CatalogReaderFixture:
         ]
         return products[offset : offset + limit]
 
-    def get_product(self, product_id: str) -> MasterProduct | None:
+    def get_product(self, product_id: str) -> CanonicalProduct | None:
         return next(
             (product for product in self.products if product.product_id == product_id),
             None,
@@ -97,11 +97,11 @@ def _provenance(product_id: str, source_type: SourceType) -> SourceProvenance:
     )
 
 
-def _products(source_type: SourceType) -> tuple[MasterProduct, MasterProduct]:
+def _products(source_type: SourceType) -> tuple[CanonicalProduct, CanonicalProduct]:
     gpu_id = "prod_authority_gpu"
     case_id = "prod_authority_case"
     return (
-        MasterProduct(
+        CanonicalProduct(
             product_id=gpu_id,
             category=ComponentKind.GPU,
             brand="Example",
@@ -112,7 +112,7 @@ def _products(source_type: SourceType) -> tuple[MasterProduct, MasterProduct]:
             created_at=NOW,
             updated_at=NOW,
         ),
-        MasterProduct(
+        CanonicalProduct(
             product_id=case_id,
             category=ComponentKind.CASE,
             brand="Example",

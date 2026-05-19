@@ -17,7 +17,7 @@ from pc_build_recommender.domain import (
     BuildPreferences,
     BuildProfile,
     BuildRequirements,
-    MasterProduct,
+    CanonicalProduct,
     CaseAttributes,
     CompatVerdict,
     ComponentKind,
@@ -364,7 +364,7 @@ def test_infeasibility_diagnostics_name_missing_eligible_category() -> None:
     assert any("no eligible gpu" in reason for reason in result.infeasibility_reasons)
 
 
-def _product(category: ComponentKind, product_id: str) -> MasterProduct:
+def _product(category: ComponentKind, product_id: str) -> CanonicalProduct:
     attributes = {
         ComponentKind.CPU: CPUAttributes(socket="AM5", peak_power_watts=120),
         ComponentKind.GPU: GPUAttributes(
@@ -388,7 +388,7 @@ def _product(category: ComponentKind, product_id: str) -> MasterProduct:
         ComponentKind.COOLER: DomainCoolerAttributes(supported_sockets=["AM5"]),
         ComponentKind.CASE: CaseAttributes(case_size="mid_tower"),
     }[category]
-    return MasterProduct(
+    return CanonicalProduct(
         product_id=product_id,
         category=category,
         brand="Brand",

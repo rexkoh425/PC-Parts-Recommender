@@ -26,7 +26,7 @@ from pc_build_recommender.catalog import (
     init_database,
 )
 from pc_build_recommender.domain import (
-    MasterProduct,
+    CanonicalProduct,
     ComponentKind,
     GPUAttributes,
     ListingCondition,
@@ -55,7 +55,7 @@ def _service(
         raise ValueError("product_count must be positive")
     if snapshot_prices is not None and product_count != 1:
         raise ValueError("snapshot_prices requires a single-product fixture")
-    base_product = MasterProduct(
+    base_product = CanonicalProduct(
         product_id="prod_real_gpu",
         category=ComponentKind.GPU,
         brand="ASUS",
