@@ -9,7 +9,7 @@ from typing import Any
 
 from pc_build_recommender.compatibility import CompatibilityEngine
 from pc_build_recommender.domain import (
-    BuildRequestSpec,
+    BuildGenerationRequest,
     ComponentKind,
     WorkloadLabel,
     WorkloadPerformanceSignal,
@@ -104,7 +104,7 @@ class PreparedCandidates:
         )
 
 
-def build_query_text(request: BuildRequestSpec) -> str:
+def build_query_text(request: BuildGenerationRequest) -> str:
     """Create a stable search query from the authoritative structured request."""
 
     parts: list[str] = []
@@ -137,7 +137,7 @@ def build_query_text(request: BuildRequestSpec) -> str:
 
 
 def filters_by_category(
-    request: BuildRequestSpec,
+    request: BuildGenerationRequest,
     *,
     locked_by_category: Mapping[str, str] | None = None,
 ) -> dict[str, StructuredFilterSpec]:
@@ -213,7 +213,7 @@ class CandidatePipeline:
 
     def prepare(
         self,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         *,
         request_id: str,
     ) -> PreparedCandidates:
@@ -302,7 +302,7 @@ class CandidatePipeline:
 
     def _validate_locked_products(
         self,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         locked_by_category: Mapping[str, str],
     ) -> list[str]:
         reasons: list[str] = []
@@ -514,7 +514,7 @@ class CandidatePipeline:
 
     @staticmethod
     def _suggest_relaxations(
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         empty_categories: Sequence[str],
     ) -> list[str]:
         suggestions: list[str] = []

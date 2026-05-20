@@ -14,7 +14,7 @@ from pc_build_recommender.compatibility import (
 )
 from pc_build_recommender.domain import (
     BuildComponentSelection,
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildRecommendation,
     CompatibilityCheck,
     CompatVerdict,
@@ -60,7 +60,7 @@ def compatibility_checks(report: CompatibilityReport) -> list[CompatibilityCheck
 
 
 def _workload_scores(
-    request: BuildRequestSpec,
+    request: BuildGenerationRequest,
     selected: Iterable[RankedCatalogItem],
 ) -> dict[WorkloadLabel, float]:
     items = tuple(selected)
@@ -85,7 +85,7 @@ def _workload_scores(
 def recommendation_from_solution(
     solution: OptimizationSolution,
     report: CompatibilityReport,
-    request: BuildRequestSpec,
+    request: BuildGenerationRequest,
     prepared: PreparedCandidates,
     *,
     no_cost_product_ids: frozenset[str] = frozenset(),

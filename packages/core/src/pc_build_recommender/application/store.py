@@ -8,7 +8,7 @@ from threading import RLock
 from typing import Protocol
 
 from pc_build_recommender.domain import (
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildRecommendation,
 )
 
@@ -21,7 +21,7 @@ from .models import (
 
 @dataclass(frozen=True, slots=True)
 class StoredGeneration:
-    request: BuildRequestSpec
+    request: BuildGenerationRequest
     response: ApplicationBuildGenerationResponse
     no_cost_product_ids: frozenset[str]
     owned_product_ids: frozenset[str]
@@ -33,7 +33,7 @@ class ResultStore(Protocol):
 
     def save(
         self,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         response: ApplicationBuildGenerationResponse,
         *,
         no_cost_product_ids: frozenset[str] | None = None,
@@ -46,7 +46,7 @@ class ResultStore(Protocol):
 
     def get_response(self, request_id: str) -> ApplicationBuildGenerationResponse | None: ...
 
-    def get_request(self, request_id: str) -> BuildRequestSpec | None: ...
+    def get_request(self, request_id: str) -> BuildGenerationRequest | None: ...
 
     def request_id_for_build(self, build_id: str) -> str | None: ...
 
@@ -73,7 +73,7 @@ class InMemoryResultStore:
 
     def save(
         self,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         response: ApplicationBuildGenerationResponse,
         *,
         no_cost_product_ids: frozenset[str] | None = None,
@@ -143,7 +143,7 @@ class InMemoryResultStore:
         value = self.get_generation(request_id)
         return None if value is None else value.response
 
-    def get_request(self, request_id: str) -> BuildRequestSpec | None:
+    def get_request(self, request_id: str) -> BuildGenerationRequest | None:
         value = self.get_generation(request_id)
         return None if value is None else value.request
 

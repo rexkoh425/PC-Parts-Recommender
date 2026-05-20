@@ -356,7 +356,7 @@ class BuildPreferences(DomainModel):
         return self
 
 
-class BuildRequestSpec(DomainModel):
+class BuildGenerationRequest(DomainModel):
     budget_sgd: Annotated[Decimal, Field(gt=0, decimal_places=2)]
     workloads: list[WorkloadPreference] = Field(min_length=1)
     existing_products: list[ExistingComponent] = Field(default_factory=list)
@@ -373,7 +373,7 @@ class BuildRequestSpec(DomainModel):
     )
 
     @model_validator(mode="after")
-    def request_is_unambiguous(self) -> BuildRequestSpec:
+    def request_is_unambiguous(self) -> BuildGenerationRequest:
         workload_names = [workload.name for workload in self.workloads]
         if len(set(workload_names)) != len(workload_names):
             raise ValueError("workload names must be unique")
@@ -525,6 +525,6 @@ class InteractionRecord(DomainModel):
 # Compact aliases for API and optimiser integrations.
 Product = CanonicalProduct
 Listing = RetailerListing
-BuildRequest = BuildRequestSpec
+BuildRequest = BuildGenerationRequest
 BuildResponse = BuildGenerationResponse
 BuildComponent = BuildComponentSelection

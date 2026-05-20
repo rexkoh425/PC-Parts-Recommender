@@ -9,7 +9,7 @@ from pydantic import ValidationError
 from pc_build_recommender.domain import (
     BenchmarkValueKind,
     BuildComponentSelection,
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildGenerationResponse,
     BuildPreferences,
     BuildProfile,
@@ -92,7 +92,7 @@ def test_missing_compatibility_data_remains_unknown_to_callers() -> None:
 
 
 def test_build_request_enforces_weight_sum_and_uniqueness() -> None:
-    valid = BuildRequestSpec(
+    valid = BuildGenerationRequest(
         budget_sgd=Decimal("2500"),
         workloads=[
             WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=0.6),
@@ -104,7 +104,7 @@ def test_build_request_enforces_weight_sum_and_uniqueness() -> None:
     )
     assert sum(item.weight for item in valid.workloads) == pytest.approx(1.0)
 
-    target_request = BuildRequestSpec(
+    target_request = BuildGenerationRequest(
         budget_sgd=2500,
         workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)],
         performance_target="  120 FPS at 1440p high settings  ",
@@ -112,20 +112,20 @@ def test_build_request_enforces_weight_sum_and_uniqueness() -> None:
     assert target_request.performance_target == "120 FPS at 1440p high settings"
 
     with pytest.raises(ValidationError, match="at most 200 characters"):
-        BuildRequestSpec(
+        BuildGenerationRequest(
             budget_sgd=2500,
             workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)],
             performance_target="x" * 201,
         )
 
     with pytest.raises(ValidationError, match="sum to 1.0"):
-        BuildRequestSpec(
+        BuildGenerationRequest(
             budget_sgd=2500,
             workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=0.8)],
         )
 
     with pytest.raises(ValidationError, match="workload names must be unique"):
-        BuildRequestSpec(
+        BuildGenerationRequest(
             budget_sgd=2500,
             workloads=[
                 WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=0.5),
@@ -134,7 +134,7 @@ def test_build_request_enforces_weight_sum_and_uniqueness() -> None:
         )
 
     with pytest.raises(ValidationError, match="one existing product"):
-        BuildRequestSpec(
+        BuildGenerationRequest(
             budget_sgd=2500,
             workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)],
             existing_products=[

@@ -13,7 +13,7 @@ from enum import StrEnum
 from typing import Any, ClassVar
 
 from pc_build_recommender.domain import (
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildProfile,
     CanonicalProduct,
     CompatVerdict,
@@ -341,7 +341,7 @@ class OptimizationProblem:
     @classmethod
     def from_domain(
         cls,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         products: Iterable[CanonicalProduct],
         listings: Iterable[RetailerListing],
         *,

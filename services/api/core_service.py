@@ -32,7 +32,7 @@ from pc_build_recommender.catalog import (
 )
 from pc_build_recommender.compatibility import AUTHORITATIVE_COMPATIBILITY_POLICY
 from pc_build_recommender.domain import (
-    BuildRequestSpec as DomainBuildRequest,
+    BuildGenerationRequest as DomainBuildRequest,
 )
 from pc_build_recommender.domain import (
     BuildPreferences as DomainPreferences,
