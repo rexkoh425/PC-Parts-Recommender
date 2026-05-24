@@ -232,4 +232,156 @@ class _CpModelState:
             <= len(REQUIRED_CATEGORIES) - 1
         )
 
-# TODO: rest of this module still to come.
+
+class BuildOptimizer:
+    """Generate objective-profile builds with fail-closed validation and diversity."""
+
+    def __init__(self, *, max_validator_rejections: int = 50) -> None:
+        if max_validator_rejections < 1:
+            raise ValueError("max_validator_rejections must be positive")
+        self.max_validator_rejections = max_validator_rejections
+
+    def optimize(
+        self,
+        problem: OptimizationProblem,
+        *,
+        max_solutions: int | None = None,
+    ) -> OptimizationResult:
+        """Solve for up to ``max_solutions`` diverse, independently validated builds."""
+
+        requested_count = len(problem.profiles) if max_solutions is None else max_solutions
+        if requested_count < 1:
+            raise ValueError("max_solutions must be positive")
+        precheck_reasons = list(diagnose_problem(problem))
+        eligible = eligible_candidates(problem)
+        if precheck_reasons:
+            return OptimizationResult(
+                status=OptimizationStatus.INFEASIBLE,
+                solutions=(),
+                infeasibility_reasons=tuple(precheck_reasons),
+            )
+
+        profiles = tuple(itertools.islice(itertools.cycle(problem.profiles), requested_count))
+        solutions: list[OptimizationSolution] = []
+        records: list[ProfileSolveRecord] = []
+        validator_reasons: list[str] = []
+        rejected_by_validator = 0
+
+        unlocked_meaningful_count = sum(
+            1
+            for category in problem.meaningful_categories
+            if not any(
+                candidate.category == category
+                for candidate in problem.candidates
+                if candidate.product_id in problem.locked_product_ids
+            )
+        )
+        for profile_index, profile in enumerate(profiles):
+            if profile_index > 0 and unlocked_meaningful_count < problem.diversity_distance:
+                precheck_reasons.append(
+                    "fewer than two unlocked meaningful categories are available "
+                    "for a diverse build"
+                )
+                break
+
+            state = _CpModelState(problem, eligible, solutions)
+            state.set_objective(profile)
+            final_status = OptimizationStatus.UNKNOWN
+            final_wall_time = 0.0
+            final_objective: int | None = None
+            accepted: OptimizationSolution | None = None
+
+            for _ in range(self.max_validator_rejections + 1):
+                solver = cp_model.CpSolver()
+                solver.parameters.max_time_in_seconds = problem.time_limit_seconds
+                solver.parameters.num_search_workers = 1
+                solver.parameters.random_seed = problem.random_seed
+                status_code = solver.solve(state.model)
+                final_status = _solver_status(status_code)
+                final_wall_time += solver.wall_time
+                if final_status not in (OptimizationStatus.OPTIMAL, OptimizationStatus.FEASIBLE):
+                    break
+
+                selected = {
+                    candidate.category: candidate
+                    for candidate in eligible
+                    if solver.boolean_value(state.variables[candidate.product_id])
+                }
+                objective_value = round(solver.objective_value)
+                validation_errors = list(validate_selected_build(problem, selected))
+                validator_result: object | None = None
+                if not validation_errors and problem.independent_validator is not None:
+                    try:
+                        validator_result = problem.independent_validator(selected)
+                    except Exception as exc:  # defensive boundary around a caller-supplied hook
+                        validation_errors = [
+                            f"independent validator raised {type(exc).__name__}: {exc}"
+                        ]
+                    else:
+                        validation_errors = list(normalise_validator_result(validator_result))
+                if not validation_errors:
+                    accepted = _solution_from_selected(
+                        problem,
+                        selected,
+                        profile=profile,
+                        objective_value=objective_value,
+                        solver_status=final_status,
+                        compatibility_report=validator_result,
+                    )
+                    final_objective = objective_value
+                    break
+
+                rejected_by_validator += 1
+                validator_reasons.extend(validation_errors)
+                state.forbid_exact_solution(selected)
+                if rejected_by_validator >= self.max_validator_rejections:
+                    break
+
+            records.append(
+                ProfileSolveRecord(
+                    profile=profile,
+                    status=final_status,
+                    wall_time_seconds=final_wall_time,
+                    objective_value=final_objective,
+                )
+            )
+            if accepted is None:
+                if final_status == OptimizationStatus.INFEASIBLE and solutions:
+                    precheck_reasons.append(
+                        f"no additional build can differ by at least "
+                        f"{problem.diversity_distance} meaningful components"
+                    )
+                break
+            solutions.append(accepted)
+
+        reasons = list(dict.fromkeys((*precheck_reasons, *validator_reasons)))
+        if not solutions and not reasons:
+            reasons.append(
+                "no combination satisfies all budget, compatibility, and power constraints"
+            )
+        if solutions and len(solutions) < requested_count and not reasons:
+            reasons.append(
+                f"only {len(solutions)} of {requested_count} requested builds are feasible"
+            )
+
+        if not solutions:
+            final_result_status = records[-1].status if records else OptimizationStatus.INFEASIBLE
+            if final_result_status == OptimizationStatus.OPTIMAL:
+                final_result_status = OptimizationStatus.INFEASIBLE
+        elif len(solutions) == requested_count and all(
+            record.status == OptimizationStatus.OPTIMAL for record in records
+        ):
+            final_result_status = OptimizationStatus.OPTIMAL
+        else:
+            final_result_status = OptimizationStatus.FEASIBLE
+
+        return OptimizationResult(
+            status=final_result_status,
+            solutions=tuple(solutions),
+            infeasibility_reasons=tuple(reasons),
+            profile_statuses=tuple(records),
+            rejected_by_validator=rejected_by_validator,
+        )
+
+    # A readable alias for application services.
+    generate = optimize
