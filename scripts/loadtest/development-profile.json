@@ -1,0 +1,53 @@
+{
+  "schema_version": "pc-build-recommender.locust-load-profile.v1",
+  "profile_name": "development-demo-api-mix",
+  "reportability": "development_only",
+  "search": {
+    "method": "POST",
+    "path": "/v1/products/search",
+    "body": {
+      "query": "1440p gaming GPU",
+      "category": "gpu",
+      "in_stock_only": false,
+      "limit": 20
+    },
+    "expected_statuses": [200],
+    "task_weight": 4
+  },
+  "build": {
+    "method": "POST",
+    "path": "/v1/builds/generate",
+    "body": {
+      "budget_sgd": 2500,
+      "workloads": [
+        {
+          "name": "gaming_1440p",
+          "weight": 0.7
+        },
+        {
+          "name": "local_ai",
+          "weight": 0.3
+        }
+      ],
+      "requirements": {
+        "minimum_gpu_vram_gb": 12,
+        "minimum_memory_gb": 32,
+        "storage_gb": 1000,
+        "wifi_required": true,
+        "case_size": "mid_tower",
+        "in_stock_only": false
+      },
+      "preferences": {
+        "noise": "medium",
+        "upgradeability": "high",
+        "power_efficiency": "medium"
+      },
+      "max_builds": 1,
+      "requested_profiles": [
+        "best_overall"
+      ]
+    },
+    "expected_statuses": [200],
+    "task_weight": 1
+  }
+}

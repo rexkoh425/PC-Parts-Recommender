@@ -1,0 +1,5 @@
+# Locust writes platform-native CSV bytes. Preserve captured evidence byte-for-byte so the
+# content hashes in each load-evidence summary remain reproducible across checkout platforms.
+# Treat the raw capture as opaque evidence as well: a platform-specific CRLF sequence must not
+# be normalized or rendered as a textual source-code diff.
+artifacts/evaluation/load/**/*.csv -text -diff
