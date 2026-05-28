@@ -1,0 +1,4 @@
+load_from:
+  - python_module:
+      module_name: pipelines.definitions
+      working_directory: /app
