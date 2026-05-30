@@ -23,7 +23,7 @@ import type {
   ComponentKind,
   PerformanceSignal,
   ReplacementResponse,
-  WorkloadLabel,
+  WorkloadName,
 } from "@/lib/types";
 import { useSavedBuilds } from "@/lib/use-saved-builds";
 import { sharedBuildHref } from "@/lib/shared-build";
@@ -97,7 +97,7 @@ function formatSignedSgd(value: number): string {
 
 function workloadLabel(workload: string): string {
   return workload in workloadLabels
-    ? workloadLabels[workload as WorkloadLabel]
+    ? workloadLabels[workload as WorkloadName]
     : humanizeToken(workload);
 }
 

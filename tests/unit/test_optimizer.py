@@ -31,7 +31,7 @@ from pc_build_recommender.domain import (
     RetailerListing,
     StockStatus,
     StorageAttributes,
-    WorkloadLabel,
+    WorkloadName,
     WorkloadPreference,
 )
 from pc_build_recommender.domain import CoolerAttributes as DomainCoolerAttributes
@@ -441,7 +441,7 @@ def test_domain_adapter_uses_cheapest_listing_and_owned_lock_costs_zero() -> Non
     listings[-1] = listings[-1].model_copy(update={"listing_id": "listing-gpu-cheap"})
     request = BuildGenerationRequest(
         budget_sgd=Decimal("700"),
-        workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1)],
+        workloads=[WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=1)],
         existing_products=[ExistingComponent(category=ComponentKind.GPU, product_id="gpu")],
         requirements=BuildRequirements(
             minimum_gpu_vram_gb=16,

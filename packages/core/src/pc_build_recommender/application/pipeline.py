@@ -11,7 +11,7 @@ from pc_build_recommender.compatibility import CompatibilityEngine
 from pc_build_recommender.domain import (
     BuildGenerationRequest,
     ComponentKind,
-    WorkloadLabel,
+    WorkloadName,
     WorkloadPerformanceSignal,
 )
 from pc_build_recommender.ranking import (
@@ -445,7 +445,7 @@ class CandidatePipeline:
             observations = item.workload_benchmarks.get(workload, ())
             if observed_score is not None and observations:
                 result[workload] = WorkloadPerformanceSignal(
-                    workload=WorkloadLabel(workload),
+                    workload=WorkloadName(workload),
                     metric="normalised comparable benchmark score",
                     unit="relative index",
                     score=observed_score,

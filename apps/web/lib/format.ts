@@ -1,4 +1,4 @@
-import type { BuildProfile, ComponentKind, WorkloadLabel } from "./types";
+import type { BuildProfile, ComponentKind, WorkloadName } from "./types";
 
 const sgdFormatter = new Intl.NumberFormat("en-SG", {
   style: "currency",
@@ -39,7 +39,7 @@ export const categoryLabels: Record<ComponentKind, string> = {
   case: "Case",
 };
 
-export const workloadLabels: Record<WorkloadLabel, string> = {
+export const workloadLabels: Record<WorkloadName, string> = {
   gaming_1080p: "1080p gaming",
   gaming_1440p: "1440p gaming",
   gaming_4k: "4K gaming",

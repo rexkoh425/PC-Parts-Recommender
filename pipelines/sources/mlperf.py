@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from pc_build_recommender.domain.enums import WorkloadLabel
+from pc_build_recommender.domain.enums import WorkloadName
 from pc_build_recommender.domain.models import BenchmarkResult
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
@@ -188,7 +188,7 @@ class MLPerfInferenceAdapter:
         benchmark = BenchmarkResult(
             benchmark_id=benchmark_id,
             product_id=external_product_id,
-            workload=WorkloadLabel.LOCAL_AI,
+            workload=WorkloadName.LOCAL_AI,
             benchmark_name="MLPerf Inference",
             benchmark_version=str(row.get("version") or "v6.0").strip(),
             score=score,

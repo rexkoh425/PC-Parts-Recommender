@@ -66,7 +66,7 @@ from pc_build_recommender.domain import (
     StorageAttributes,
     StorageFormFactor,
     StorageInterface,
-    WorkloadLabel,
+    WorkloadName,
     WorkloadPreference,
 )
 from pc_build_recommender.optimizer import OptimizationResult, OptimizationStatus
@@ -109,7 +109,7 @@ class _FeatureBooster:
 
 def _performance_artifact(
     *,
-    workload: WorkloadLabel,
+    workload: WorkloadName,
     feature: str = "memory_bandwidth_gbps",
     divisor: float = 6.0,
     promotable: bool = True,
@@ -369,9 +369,9 @@ def _seed_repository(session: Session) -> CatalogRepository:
 
             if category in (ComponentKind.CPU, ComponentKind.GPU):
                 workload = (
-                    WorkloadLabel.SOFTWARE_DEVELOPMENT
+                    WorkloadName.SOFTWARE_DEVELOPMENT
                     if category == ComponentKind.CPU
-                    else WorkloadLabel.GAMING_1440P
+                    else WorkloadName.GAMING_1440P
                 )
                 repository.upsert_benchmark(
                     BenchmarkResult(
@@ -476,8 +476,8 @@ def _request(
     return BuildGenerationRequest(
         budget_sgd=Decimal("2500"),
         workloads=[
-            WorkloadPreference(name=WorkloadLabel.GAMING_1440P, weight=0.6),
-            WorkloadPreference(name=WorkloadLabel.SOFTWARE_DEVELOPMENT, weight=0.4),
+            WorkloadPreference(name=WorkloadName.GAMING_1440P, weight=0.6),
+            WorkloadPreference(name=WorkloadName.SOFTWARE_DEVELOPMENT, weight=0.4),
         ],
         existing_products=existing_products or [],
         requirements=BuildRequirements(
@@ -548,7 +548,7 @@ def test_artifact_prediction_reaches_optimizer_presenter_and_api() -> None:
     try:
         with Session(engine) as session:
             repository = _seed_repository(session)
-            artifact = _performance_artifact(workload=WorkloadLabel.LOCAL_AI)
+            artifact = _performance_artifact(workload=WorkloadName.LOCAL_AI)
             services = create_application_services(
                 repository,
                 data_version="test-catalog-v1",
@@ -556,7 +556,7 @@ def test_artifact_prediction_reaches_optimizer_presenter_and_api() -> None:
                 random_seed=7,
             )
             request = _request(profiles=[BuildProfile.HIGHEST_PERFORMANCE]).model_copy(
-                update={"workloads": [WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)]}
+                update={"workloads": [WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=1.0)]}
             )
             response = services.generate_builds.generate(
                 request,
@@ -571,11 +571,11 @@ def test_artifact_prediction_reaches_optimizer_presenter_and_api() -> None:
             signal = gpu.performance_signals[0]
 
             assert gpu.product_id == "gpu_2"
-            assert signal.workload is WorkloadLabel.LOCAL_AI
+            assert signal.workload is WorkloadName.LOCAL_AI
             assert signal.basis == "predicted"
             assert signal.model_version == artifact.model_version
             assert signal.score == pytest.approx(signal.relative_score)
-            assert build.workload_scores[WorkloadLabel.LOCAL_AI] == pytest.approx(signal.score)
+            assert build.workload_scores[WorkloadName.LOCAL_AI] == pytest.approx(signal.score)
             assert response.performance_model.startswith("promotion-eligible[gpu/local_ai=")
 
             adapter = object.__new__(CoreRecommendationService)
@@ -602,7 +602,7 @@ def test_observed_benchmark_precedes_artifact_for_the_same_route() -> None:
     try:
         with Session(engine) as session:
             repository = _seed_repository(session)
-            artifact = _performance_artifact(workload=WorkloadLabel.GAMING_1440P)
+            artifact = _performance_artifact(workload=WorkloadName.GAMING_1440P)
             services = create_application_services(
                 repository,
                 data_version="test-catalog-v1",
@@ -611,7 +611,7 @@ def test_observed_benchmark_precedes_artifact_for_the_same_route() -> None:
             )
             request = _request(profiles=[BuildProfile.HIGHEST_PERFORMANCE]).model_copy(
                 update={
-                    "workloads": [WorkloadPreference(name=WorkloadLabel.GAMING_1440P, weight=1.0)]
+                    "workloads": [WorkloadPreference(name=WorkloadName.GAMING_1440P, weight=1.0)]
                 }
             )
             response = services.generate_builds.generate(
@@ -641,7 +641,7 @@ def test_unpromoted_artifact_requires_explicit_development_opt_in() -> None:
         with Session(engine) as session:
             repository = _seed_repository(session)
             artifact = _performance_artifact(
-                workload=WorkloadLabel.LOCAL_AI,
+                workload=WorkloadName.LOCAL_AI,
                 promotable=False,
             )
             with pytest.raises(RuntimeError, match="explicit development opt-in"):
@@ -659,7 +659,7 @@ def test_unpromoted_artifact_requires_explicit_development_opt_in() -> None:
                 random_seed=7,
             )
             request = _request(profiles=[BuildProfile.BEST_OVERALL]).model_copy(
-                update={"workloads": [WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)]}
+                update={"workloads": [WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=1.0)]}
             )
             response = services.generate_builds.generate(
                 request,
@@ -675,7 +675,7 @@ def test_unpromoted_artifact_requires_explicit_development_opt_in() -> None:
             assert signal.decision == "model_not_promotion_eligible"
             assert signal.score is None
             assert signal.model_version == artifact.model_version
-            assert WorkloadLabel.LOCAL_AI not in response.builds[0].workload_scores
+            assert WorkloadName.LOCAL_AI not in response.builds[0].workload_scores
             assert response.performance_model.startswith("development-relative[")
     finally:
         engine.dispose()
@@ -693,7 +693,7 @@ def test_production_composition_requires_exact_promoted_performance_routes() -> 
             )
             retriever = HybridProductRetriever(catalog.documents)
             ranker = _PromotedRanker()
-            artifact = _performance_artifact(workload=WorkloadLabel.LOCAL_AI)
+            artifact = _performance_artifact(workload=WorkloadName.LOCAL_AI)
             active = ActiveServingModels(
                 catalog_data_version="test-catalog-v1",
                 retrieval_model=retriever.retrieval_model_version,

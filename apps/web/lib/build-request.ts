@@ -2,7 +2,7 @@ import type {
   BuildProfile,
   BuildRequest,
   ExistingProductInput,
-  WorkloadLabel,
+  WorkloadName,
 } from "./types";
 
 export const MAX_PERFORMANCE_TARGET_LENGTH = 200;
@@ -10,8 +10,8 @@ export const MAX_PERFORMANCE_TARGET_LENGTH = 200;
 export interface BuildFormValues {
   budget_sgd: number;
   performance_target: string;
-  primary_workload: WorkloadLabel;
-  secondary_workload: WorkloadLabel | "none";
+  primary_workload: WorkloadName;
+  secondary_workload: WorkloadName | "none";
   primary_weight_percent: number;
   minimum_gpu_vram_gb: number;
   minimum_memory_gb: number;

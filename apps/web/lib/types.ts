@@ -11,7 +11,7 @@ export const componentCategories = [
 
 export type ComponentKind = (typeof componentCategories)[number];
 
-export type WorkloadLabel =
+export type WorkloadName =
   | "gaming_1080p"
   | "gaming_1440p"
   | "gaming_4k"
@@ -39,7 +39,7 @@ export interface BuildRequest {
   budget_sgd: number;
   performance_target?: string;
   workloads: Array<{
-    name: WorkloadLabel;
+    name: WorkloadName;
     weight: number;
   }>;
   existing_products: ExistingProductInput[];

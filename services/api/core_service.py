@@ -59,7 +59,7 @@ from pc_build_recommender.domain import (
     InteractionRecord as DomainInteractionEvent,
 )
 from pc_build_recommender.domain import (
-    WorkloadLabel as DomainWorkload,
+    WorkloadName as DomainWorkload,
 )
 from pc_build_recommender.performance_models import (
     PerformanceModelArtifact,

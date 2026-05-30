@@ -114,7 +114,7 @@ class CoolerType(StrEnum):
     AIO = "aio"
 
 
-class WorkloadLabel(StrEnum):
+class WorkloadName(StrEnum):
     GAMING_1080P = "gaming_1080p"
     GAMING_1440P = "gaming_1440p"
     GAMING_4K = "gaming_4k"

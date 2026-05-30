@@ -32,7 +32,7 @@ from .enums import (
     StockStatus,
     StorageFormFactor,
     StorageInterface,
-    WorkloadLabel,
+    WorkloadName,
 )
 from .models import (
     BenchmarkResult,
@@ -119,7 +119,7 @@ __all__ = [
     "StorageAttributes",
     "StorageFormFactor",
     "StorageInterface",
-    "WorkloadLabel",
+    "WorkloadName",
     "WorkloadPerformanceSignal",
     "WorkloadPreference",
     "new_id",

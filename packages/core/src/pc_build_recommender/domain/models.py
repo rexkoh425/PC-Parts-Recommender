@@ -36,7 +36,7 @@ from .enums import (
     ProductStatus,
     SourceType,
     StockStatus,
-    WorkloadLabel,
+    WorkloadName,
 )
 
 Money = Annotated[Decimal, Field(ge=0, decimal_places=2)]
@@ -164,7 +164,7 @@ class PriceSample(DomainModel):
 class BenchmarkResult(DomainModel):
     benchmark_id: str = Field(default_factory=lambda: new_id("bench"), min_length=1)
     product_id: str = Field(min_length=1)
-    workload: WorkloadLabel
+    workload: WorkloadName
     benchmark_name: str = Field(min_length=1)
     benchmark_version: str = Field(min_length=1)
     score: float
@@ -179,7 +179,7 @@ class BenchmarkResult(DomainModel):
 
 
 class PerformanceEstimate(DomainModel):
-    workload: WorkloadLabel
+    workload: WorkloadName
     score: float
     value_kind: BenchmarkValueKind
     model_version: str | None = None
@@ -196,7 +196,7 @@ class PerformanceEstimate(DomainModel):
 class WorkloadPerformanceSignal(DomainModel):
     """Request-scoped measured or model-derived component performance evidence."""
 
-    workload: WorkloadLabel
+    workload: WorkloadName
     metric: str = Field(min_length=1)
     unit: str | None = None
     score: float | None = Field(default=None, ge=0)
@@ -310,7 +310,7 @@ class SearchQuery(DomainModel):
 
 
 class WorkloadPreference(DomainModel):
-    name: WorkloadLabel
+    name: WorkloadName
     weight: float = Field(gt=0, le=1)
 
 
@@ -438,7 +438,7 @@ class BuildRecommendation(DomainModel):
     total_price_sgd: Money
     overall_score: Score
     components: list[BuildComponentSelection]
-    workload_scores: dict[WorkloadLabel, Score] = Field(default_factory=dict)
+    workload_scores: dict[WorkloadName, Score] = Field(default_factory=dict)
     compatibility_status: CompatVerdict
     compatibility_checks: list[CompatibilityCheck] = Field(default_factory=list)
     estimated_power_watts: float | None = Field(default=None, ge=0)
