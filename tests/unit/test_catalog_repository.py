@@ -19,7 +19,7 @@ from pc_build_recommender.catalog import (
 from pc_build_recommender.domain import (
     BenchmarkResult,
     CanonicalProduct,
-    ComponentKind,
+    ComponentCategory,
     GPUAttributes,
     PriceSample,
     RetailerListing,
@@ -42,7 +42,7 @@ def session() -> Session:
 def _gpu() -> CanonicalProduct:
     return CanonicalProduct(
         product_id="prod_gpu_1",
-        category=ComponentKind.GPU,
+        category=ComponentCategory.GPU,
         brand="ExampleGPU",
         model="Inference 16G",
         manufacturer_part_number="EG-16-A",
@@ -96,7 +96,7 @@ def test_product_listing_and_filtered_search_round_trip(session: Session) -> Non
 
     results = repository.search_products(
         "16 GB inference",
-        category=ComponentKind.GPU,
+        category=ComponentCategory.GPU,
         in_stock_only=True,
         max_total_price=Decimal("1000"),
     )

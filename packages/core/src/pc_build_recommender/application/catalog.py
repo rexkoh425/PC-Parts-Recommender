@@ -20,7 +20,7 @@ from pc_build_recommender.compatibility import (
 from pc_build_recommender.domain import (
     BenchmarkResult,
     CanonicalProduct,
-    ComponentKind,
+    ComponentCategory,
     ListingCondition,
     ProductStatus,
     RetailerListing,
@@ -37,12 +37,12 @@ type CompatibilityEvidencePolicy = Literal["controlled_non_production", "authori
 _COMPATIBILITY_EVIDENCE_POLICIES = frozenset(
     {CONTROLLED_NON_PRODUCTION_POLICY, AUTHORITATIVE_COMPATIBILITY_POLICY}
 )
-_COMPATIBILITY_CRITICAL_FIELDS: Mapping[ComponentKind, frozenset[str]] = {
-    ComponentKind.CPU: frozenset({"socket", "generation", "peak_power_watts"}),
-    ComponentKind.GPU: frozenset(
+_COMPATIBILITY_CRITICAL_FIELDS: Mapping[ComponentCategory, frozenset[str]] = {
+    ComponentCategory.CPU: frozenset({"socket", "generation", "peak_power_watts"}),
+    ComponentCategory.GPU: frozenset(
         {"length_mm", "slot_width", "board_power_watts", "power_connectors"}
     ),
-    ComponentKind.MOTHERBOARD: frozenset(
+    ComponentCategory.MOTHERBOARD: frozenset(
         {
             "socket",
             "chipset",
@@ -57,12 +57,12 @@ _COMPATIBILITY_CRITICAL_FIELDS: Mapping[ComponentKind, frozenset[str]] = {
             "bios_version",
         }
     ),
-    ComponentKind.MEMORY: frozenset({"memory_type", "capacity_gb", "module_count"}),
-    ComponentKind.STORAGE: frozenset({"interface", "form_factor"}),
-    ComponentKind.POWER_SUPPLY: frozenset(
+    ComponentCategory.MEMORY: frozenset({"memory_type", "capacity_gb", "module_count"}),
+    ComponentCategory.STORAGE: frozenset({"interface", "form_factor"}),
+    ComponentCategory.POWER_SUPPLY: frozenset(
         {"wattage", "form_factor", "pcie_connectors", "eps_connectors", "atx_version"}
     ),
-    ComponentKind.COOLER: frozenset(
+    ComponentCategory.COOLER: frozenset(
         {
             "cooler_type",
             "supported_sockets",
@@ -71,7 +71,7 @@ _COMPATIBILITY_CRITICAL_FIELDS: Mapping[ComponentKind, frozenset[str]] = {
             "estimated_cooling_capacity_watts",
         }
     ),
-    ComponentKind.CASE: frozenset(
+    ComponentCategory.CASE: frozenset(
         {
             "supported_motherboard_sizes",
             "maximum_gpu_length_mm",
@@ -91,7 +91,7 @@ class CatalogReader(Protocol):
     def list_products(
         self,
         *,
-        category: ComponentKind | None = None,
+        category: ComponentCategory | None = None,
         brand: str | None = None,
         status: ProductStatus | None = ProductStatus.ACTIVE,
         offset: int = 0,

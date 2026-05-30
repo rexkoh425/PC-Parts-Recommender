@@ -19,7 +19,7 @@ from pc_build_recommender.catalog import (
 )
 from pc_build_recommender.domain import (
     CanonicalProduct,
-    ComponentKind,
+    ComponentCategory,
     GPUAttributes,
     RetailerListing,
     StockStatus,
@@ -35,7 +35,7 @@ NOW = datetime(2026, 7, 29, tzinfo=UTC)
 def _product(product_id: str = "product-1") -> CanonicalProduct:
     return CanonicalProduct(
         product_id=product_id,
-        category=ComponentKind.GPU,
+        category=ComponentCategory.GPU,
         brand="Example",
         model=f"Model {product_id}",
         manufacturer_part_number=f"MPN-{product_id}",

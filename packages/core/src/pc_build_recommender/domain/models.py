@@ -28,7 +28,7 @@ from .enums import (
     BuildProfile,
     CaseSize,
     CompatVerdict,
-    ComponentKind,
+    ComponentCategory,
     InteractionType,
     ListingCondition,
     MemoryType,
@@ -54,15 +54,15 @@ def utc_now() -> datetime:
     return datetime.now(UTC)
 
 
-_ATTRIBUTE_TYPES: dict[ComponentKind, type[ComponentAttributes]] = {
-    ComponentKind.CPU: CPUAttributes,
-    ComponentKind.GPU: GPUAttributes,
-    ComponentKind.MOTHERBOARD: MotherboardAttributes,
-    ComponentKind.MEMORY: MemoryAttributes,
-    ComponentKind.STORAGE: StorageAttributes,
-    ComponentKind.POWER_SUPPLY: PowerSupplyAttributes,
-    ComponentKind.COOLER: CoolerAttributes,
-    ComponentKind.CASE: CaseAttributes,
+_ATTRIBUTE_TYPES: dict[ComponentCategory, type[ComponentAttributes]] = {
+    ComponentCategory.CPU: CPUAttributes,
+    ComponentCategory.GPU: GPUAttributes,
+    ComponentCategory.MOTHERBOARD: MotherboardAttributes,
+    ComponentCategory.MEMORY: MemoryAttributes,
+    ComponentCategory.STORAGE: StorageAttributes,
+    ComponentCategory.POWER_SUPPLY: PowerSupplyAttributes,
+    ComponentCategory.COOLER: CoolerAttributes,
+    ComponentCategory.CASE: CaseAttributes,
 }
 
 
@@ -83,7 +83,7 @@ class SourceProvenance(DomainModel):
 
 class CanonicalProduct(DomainModel):
     product_id: str = Field(default_factory=lambda: new_id("prod"), min_length=1)
-    category: ComponentKind
+    category: ComponentCategory
     brand: str = Field(min_length=1)
     model: str = Field(min_length=1)
     manufacturer_part_number: str | None = None
@@ -107,7 +107,7 @@ class CanonicalProduct(DomainModel):
         attributes = value.get("category_attributes")
         if category_value is None or not isinstance(attributes, dict):
             return value
-        category = ComponentKind(category_value)
+        category = ComponentCategory(category_value)
         parsed = dict(value)
         parsed["category_attributes"] = _ATTRIBUTE_TYPES[category].model_validate(attributes)
         return parsed
@@ -272,8 +272,8 @@ class WorkloadPerformanceSignal(DomainModel):
 class CompatibilityRule(DomainModel):
     rule_id: str = Field(default_factory=lambda: new_id("rule"), min_length=1)
     rule_version: str = Field(min_length=1)
-    left_category: ComponentKind
-    right_category: ComponentKind
+    left_category: ComponentCategory
+    right_category: ComponentCategory
     rule_type: str = Field(min_length=1)
     severity: CompatVerdict
     required_fields: list[str] = Field(default_factory=list)
@@ -315,7 +315,7 @@ class WorkloadPreference(DomainModel):
 
 
 class ExistingComponent(DomainModel):
-    category: ComponentKind
+    category: ComponentCategory
     product_id: str = Field(min_length=1)
     listing_id: str | None = None
     purchase_price_sgd: Money | None = None
@@ -402,7 +402,7 @@ class CompatibilityCheck(DomainModel):
 
 
 class BuildComponentSelection(DomainModel):
-    category: ComponentKind
+    category: ComponentCategory
     product_id: str = Field(min_length=1)
     listing_id: str | None = None
     canonical_name: str = Field(min_length=1)
@@ -423,7 +423,7 @@ class BuildComponentSelection(DomainModel):
 
 
 class ComponentAlternative(DomainModel):
-    category: ComponentKind
+    category: ComponentCategory
     product_id: str = Field(min_length=1)
     listing_id: str | None = None
     canonical_name: str = Field(min_length=1)
@@ -452,7 +452,7 @@ class BuildRecommendation(DomainModel):
         if len(set(categories)) != len(categories):
             raise ValueError("a build cannot select multiple components in one category")
         selected_categories = set(categories)
-        required_categories = set(ComponentKind)
+        required_categories = set(ComponentCategory)
         if selected_categories != required_categories:
             missing = sorted(
                 category.value for category in required_categories - selected_categories

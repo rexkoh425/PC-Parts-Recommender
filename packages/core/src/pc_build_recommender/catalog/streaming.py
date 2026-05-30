@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 
 from pc_build_recommender.domain import (
     CanonicalProduct,
-    ComponentKind,
+    ComponentCategory,
     PriceSample,
     RetailerListing,
     ReviewNote,
@@ -79,7 +79,7 @@ _COLOUR_TOKENS = frozenset(
 @dataclass(frozen=True, slots=True)
 class _ProductIdentity:
     product_id: str
-    category: ComponentKind
+    category: ComponentCategory
     brand: str
     model: str
     canonical_name: str
@@ -127,7 +127,7 @@ class ReviewTarget:
     listing_id: str
     source_listing_id: str
     title: str
-    category: ComponentKind
+    category: ComponentCategory
     product_id: str | None = None
 
 
@@ -169,7 +169,7 @@ def _colour_conflict(title: str, product: _ProductIdentity) -> bool:
 
 def _identity_candidates(
     title: str,
-    category: ComponentKind,
+    category: ComponentCategory,
     products: Sequence[_ProductIdentity],
 ) -> tuple[_ProductIdentity, ...]:
     title_identifier = normalize_identifier(title)

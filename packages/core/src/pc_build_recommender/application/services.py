@@ -17,7 +17,7 @@ from pc_build_recommender.domain import (
     BuildRecommendation,
     CompatVerdict,
     ComponentAlternative,
-    ComponentKind,
+    ComponentCategory,
     ExistingComponent,
     RetailerListing,
     StockStatus,
@@ -55,18 +55,18 @@ from .presenter import recommendation_from_solution
 from .store import InMemoryResultStore, ResultStore
 
 _CATEGORY_ALIASES = {
-    "psu": ComponentKind.POWER_SUPPLY.value,
-    "power_supply_unit": ComponentKind.POWER_SUPPLY.value,
-    "cpu_cooler": ComponentKind.COOLER.value,
-    "ram": ComponentKind.MEMORY.value,
-    "chassis": ComponentKind.CASE.value,
+    "psu": ComponentCategory.POWER_SUPPLY.value,
+    "power_supply_unit": ComponentCategory.POWER_SUPPLY.value,
+    "cpu_cooler": ComponentCategory.COOLER.value,
+    "ram": ComponentCategory.MEMORY.value,
+    "chassis": ComponentCategory.CASE.value,
 }
 
 
-def _category(value: ComponentKind | str) -> ComponentKind:
-    raw = value.value if isinstance(value, ComponentKind) else value
+def _category(value: ComponentCategory | str) -> ComponentCategory:
+    raw = value.value if isinstance(value, ComponentCategory) else value
     normalised = str(raw).strip().casefold().replace("-", "_").replace(" ", "_")
-    return ComponentKind(_CATEGORY_ALIASES.get(normalised, normalised))
+    return ComponentCategory(_CATEGORY_ALIASES.get(normalised, normalised))
 
 
 def _pair_status(report: CompatibilityReport) -> CompatVerdict:
@@ -106,7 +106,7 @@ class SearchProductsService:
         self,
         query: str,
         *,
-        category: ComponentKind | str,
+        category: ComponentCategory | str,
         filters: StructuredFilters | None = None,
         top_k: int = 20,
         compatible_with_build_id: str | None = None,
@@ -127,7 +127,7 @@ class SearchProductsService:
         self,
         query: str,
         *,
-        category: ComponentKind | str,
+        category: ComponentCategory | str,
         filters: StructuredFilters | None = None,
         top_k: int = 20,
         compatible_with_build_id: str | None = None,
@@ -425,7 +425,7 @@ class GenerateBuildsService:
         ]
 
         def independent_validator(
-            selected: Mapping[ComponentKind, OptimizationCandidate],
+            selected: Mapping[ComponentCategory, OptimizationCandidate],
         ) -> CompatibilityReport:
             records = {
                 category.value: self.catalog.require(candidate.product_id).compatibility_record
@@ -548,7 +548,7 @@ class GenerateBuildsService:
             previous = {component.category: component.product_id for component in build.components}
             differences = sum(
                 selected[category] != previous[category]
-                for category in ComponentKind
+                for category in ComponentCategory
                 if category not in locked_categories
             )
             if differences < 2:
@@ -567,7 +567,7 @@ class GenerateBuildsService:
         alternatives: list[ComponentAlternative] = []
         selected_ids = {candidate.product_id for candidate in solution.selected.values()}
         acquisition_total = build.total_price_sgd
-        for category in ComponentKind:
+        for category in ComponentCategory:
             selected_candidate = solution.selected[category]
             if selected_candidate.product_id in no_cost_product_ids:
                 continue
@@ -695,7 +695,7 @@ class ReplaceComponentService:
         self,
         build_id: str,
         *,
-        category: ComponentKind | str,
+        category: ComponentCategory | str,
         replacement_product_id: str,
         mode: ReplacementMode | str = ReplacementMode.LOCK_OTHER_COMPONENTS,
         request_id: str | None = None,
@@ -721,7 +721,7 @@ class ReplaceComponentService:
         old_product_id = current_by_category[requested_category].product_id
         locked: list[ExistingComponent] = []
         labels: dict[str, str] = {}
-        for component_category in ComponentKind:
+        for component_category in ComponentCategory:
             current = current_by_category[component_category]
             product_id = (
                 replacement_product_id

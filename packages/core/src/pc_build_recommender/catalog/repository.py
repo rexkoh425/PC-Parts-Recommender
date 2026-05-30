@@ -16,7 +16,7 @@ from pc_build_recommender.domain import (
     BuildRecommendation,
     CanonicalProduct,
     CompatibilityRule,
-    ComponentKind,
+    ComponentCategory,
     InteractionRecord,
     PriceSample,
     ProductStatus,
@@ -193,7 +193,7 @@ class CatalogRepository:
     def _apply_product_filters(
         statement: Select[tuple[CanonicalProductRecord]],
         *,
-        category: ComponentKind | None,
+        category: ComponentCategory | None,
         brand: str | None,
         status: ProductStatus | None,
     ) -> Select[tuple[CanonicalProductRecord]]:
@@ -208,7 +208,7 @@ class CatalogRepository:
     def list_products(
         self,
         *,
-        category: ComponentKind | None = None,
+        category: ComponentCategory | None = None,
         brand: str | None = None,
         status: ProductStatus | None = ProductStatus.ACTIVE,
         offset: int = 0,
@@ -228,7 +228,7 @@ class CatalogRepository:
         self,
         query: str,
         *,
-        category: ComponentKind | None = None,
+        category: ComponentCategory | None = None,
         brand: str | None = None,
         status: ProductStatus | None = ProductStatus.ACTIVE,
         in_stock_only: bool = False,

@@ -36,7 +36,7 @@ from pipelines.sources.web_product import (
 )
 
 from pc_build_recommender.data_rights import DataUseRights
-from pc_build_recommender.domain.enums import ComponentKind
+from pc_build_recommender.domain.enums import ComponentCategory
 
 SOURCE_NAME = "fixture_web_publication"
 RUN_SHA256 = "7" * 64
@@ -88,7 +88,7 @@ def _policy() -> WebSourcePolicy:
             retention_days=7,
             deletion_required=True,
         ),
-        url_categories={PRODUCT_URL: ComponentKind.GPU},
+        url_categories={PRODUCT_URL: ComponentCategory.GPU},
         usage_scope=WebUsageScope.INTERNAL_RESEARCH,
     )
 

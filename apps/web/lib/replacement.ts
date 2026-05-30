@@ -1,7 +1,7 @@
 import type {
   BuildResult,
   CompatVerdict,
-  ComponentKind,
+  ComponentCategory,
   ProductSearchItem,
   ReplacementCandidate,
   ReplacementOption,
@@ -9,7 +9,7 @@ import type {
 } from "./types";
 
 export interface ReplacementChangeSummary {
-  changedCategories: ComponentKind[];
+  changedCategories: ComponentCategory[];
   priceDeltaSgd: number;
   powerDeltaW: number | null;
   workloadScoreDeltas: Array<[string, number]>;

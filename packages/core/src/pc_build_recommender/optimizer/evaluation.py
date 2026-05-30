@@ -30,7 +30,7 @@ from pc_build_recommender.compatibility import (
     DEFAULT_RULE_VERSION,
     CompatibilityEngine,
 )
-from pc_build_recommender.domain import BuildProfile, CompatVerdict, ComponentKind
+from pc_build_recommender.domain import BuildProfile, CompatVerdict, ComponentCategory
 
 from .engine import BuildOptimizer
 from .models import (
@@ -305,9 +305,9 @@ def _candidate_errors_independently(
     if candidate.brand.casefold() in problem.excluded_brands:
         errors.append("candidate brand is excluded")
 
-    if candidate.category is ComponentKind.CPU and candidate.power_draw_watts is None:
+    if candidate.category is ComponentCategory.CPU and candidate.power_draw_watts is None:
         errors.append("CPU peak power is unknown")
-    elif candidate.category is ComponentKind.GPU:
+    elif candidate.category is ComponentCategory.GPU:
         vram = candidate.attributes.get("vram_gb")
         if problem.minimum_gpu_vram_gb is not None and (
             vram is None or int(vram) < problem.minimum_gpu_vram_gb
@@ -315,7 +315,7 @@ def _candidate_errors_independently(
             errors.append("GPU VRAM does not satisfy the minimum")
         if candidate.power_draw_watts is None:
             errors.append("GPU board power is unknown")
-    elif candidate.category is ComponentKind.MEMORY:
+    elif candidate.category is ComponentCategory.MEMORY:
         capacity = candidate.attributes.get("capacity_gb")
         if problem.minimum_memory_gb is not None and (
             capacity is None or int(capacity) < problem.minimum_memory_gb
@@ -325,13 +325,13 @@ def _candidate_errors_independently(
             candidate.attributes.get("memory_type")
         ) != _normalise_scalar(problem.required_memory_type):
             errors.append("memory type does not satisfy the requirement")
-    elif candidate.category is ComponentKind.STORAGE:
+    elif candidate.category is ComponentCategory.STORAGE:
         capacity = candidate.attributes.get("capacity_gb")
         if problem.minimum_storage_gb is not None and (
             capacity is None or int(capacity) < problem.minimum_storage_gb
         ):
             errors.append("storage capacity does not satisfy the minimum")
-    elif candidate.category is ComponentKind.MOTHERBOARD:
+    elif candidate.category is ComponentCategory.MOTHERBOARD:
         if problem.wifi_required and candidate.attributes.get("wifi_support") is not True:
             errors.append("motherboard Wi-Fi support is absent or unknown")
         if problem.required_memory_type is not None and _normalise_scalar(
@@ -343,13 +343,13 @@ def _candidate_errors_independently(
         ) != _normalise_scalar(problem.required_motherboard_form_factor):
             errors.append("motherboard form factor does not satisfy the requirement")
     elif (
-        candidate.category is ComponentKind.CASE
+        candidate.category is ComponentCategory.CASE
         and problem.required_case_size is not None
         and _normalise_scalar(candidate.attributes.get("case_size"))
         != _normalise_scalar(problem.required_case_size)
     ):
         errors.append("case size does not satisfy the requirement")
-    elif candidate.category is ComponentKind.POWER_SUPPLY:
+    elif candidate.category is ComponentCategory.POWER_SUPPLY:
         if candidate.psu_wattage is None:
             errors.append("PSU wattage is unknown")
         if candidate.eps_connectors is None:
@@ -368,7 +368,7 @@ def _candidate_errors_independently(
 def _candidate_power_watts_independently(
     problem: OptimizationProblem, candidate: OptimizationCandidate
 ) -> int:
-    if candidate.category is ComponentKind.POWER_SUPPLY:
+    if candidate.category is ComponentCategory.POWER_SUPPLY:
         return 0
     if candidate.power_draw_watts is not None:
         return int(candidate.power_draw_watts)
@@ -442,12 +442,12 @@ def _compatibility_component(candidate: OptimizationCandidate) -> dict[str, obje
         "status": "active",
         **candidate.attributes,
     }
-    if candidate.category is ComponentKind.CPU:
+    if candidate.category is ComponentCategory.CPU:
         component["peak_power_w"] = candidate.power_draw_watts
-    elif candidate.category is ComponentKind.GPU:
+    elif candidate.category is ComponentCategory.GPU:
         component["board_power_w"] = candidate.power_draw_watts
         component["required_power_connectors"] = dict(candidate.required_power_connectors)
-    elif candidate.category is ComponentKind.POWER_SUPPLY:
+    elif candidate.category is ComponentCategory.POWER_SUPPLY:
         component["wattage"] = candidate.psu_wattage
         component["pcie_connectors"] = dict(candidate.provided_power_connectors)
         component["eps_connectors"] = candidate.eps_connectors
@@ -455,7 +455,7 @@ def _compatibility_component(candidate: OptimizationCandidate) -> dict[str, obje
 
 
 def _versioned_compatibility_errors(
-    selected: Mapping[ComponentKind, OptimizationCandidate],
+    selected: Mapping[ComponentCategory, OptimizationCandidate],
 ) -> tuple[str, ...]:
     components = {
         category.value: _compatibility_component(candidate)
@@ -490,7 +490,7 @@ def _versioned_compatibility_errors(
 
 
 def _versioned_compatibility_evidence(
-    selected: Mapping[ComponentKind, OptimizationCandidate],
+    selected: Mapping[ComponentCategory, OptimizationCandidate],
 ) -> dict[str, object]:
     components = {
         category.value: _compatibility_component(candidate)
@@ -569,8 +569,8 @@ def independently_validate_solution(
                 f"forbidden pair {pair.left_product_id}/{pair.right_product_id} was selected"
             )
 
-    gpu = selected[ComponentKind.GPU]
-    psu = selected[ComponentKind.POWER_SUPPLY]
+    gpu = selected[ComponentCategory.GPU]
+    psu = selected[ComponentCategory.POWER_SUPPLY]
     if not _connectors_satisfy_independently(
         gpu.required_power_connectors, psu.provided_power_connectors
     ):
@@ -583,7 +583,7 @@ def independently_validate_solution(
     estimated_load = problem.base_power_watts + sum(
         _candidate_power_watts_independently(problem, candidate)
         for candidate in selected.values()
-        if candidate.category is not ComponentKind.POWER_SUPPLY
+        if candidate.category is not ComponentCategory.POWER_SUPPLY
     )
     required_psu = math.ceil(estimated_load * (100 + problem.power_headroom_percent) / 100)
     if psu.psu_wattage is None or psu.psu_wattage < required_psu:
@@ -691,15 +691,15 @@ def _independent_result_errors(
     )
 
 
-_PRICE_RANGES: Mapping[ComponentKind, tuple[int, int]] = {
-    ComponentKind.CPU: (15_000, 35_000),
-    ComponentKind.GPU: (35_000, 85_000),
-    ComponentKind.MOTHERBOARD: (12_000, 28_000),
-    ComponentKind.MEMORY: (8_000, 20_000),
-    ComponentKind.STORAGE: (6_000, 16_000),
-    ComponentKind.POWER_SUPPLY: (8_000, 18_000),
-    ComponentKind.COOLER: (3_000, 12_000),
-    ComponentKind.CASE: (5_000, 16_000),
+_PRICE_RANGES: Mapping[ComponentCategory, tuple[int, int]] = {
+    ComponentCategory.CPU: (15_000, 35_000),
+    ComponentCategory.GPU: (35_000, 85_000),
+    ComponentCategory.MOTHERBOARD: (12_000, 28_000),
+    ComponentCategory.MEMORY: (8_000, 20_000),
+    ComponentCategory.STORAGE: (6_000, 16_000),
+    ComponentCategory.POWER_SUPPLY: (8_000, 18_000),
+    ComponentCategory.COOLER: (3_000, 12_000),
+    ComponentCategory.CASE: (5_000, 16_000),
 }
 
 
@@ -718,7 +718,7 @@ def _scores(rng: random.Random) -> CandidateScores:
 def _generated_candidate(
     *,
     scenario_index: int,
-    category: ComponentKind,
+    category: ComponentCategory,
     candidate_index: int,
     rng: random.Random,
     minimum_gpu_vram_gb: int,
@@ -733,7 +733,7 @@ def _generated_candidate(
     provided_power_connectors: Mapping[str, int] = {}
     eps_connectors: int | None = None
     recommended_psu_watts: int | None = None
-    if category is ComponentKind.CPU:
+    if category is ComponentCategory.CPU:
         power_draw_watts = rng.randint(65, 125)
         attributes.update(
             socket="AM5",
@@ -742,7 +742,7 @@ def _generated_candidate(
             supported_chipsets=["B650"],
             peak_power_w=power_draw_watts,
         )
-    elif category is ComponentKind.GPU:
+    elif category is ComponentCategory.GPU:
         attributes["vram_gb"] = minimum_gpu_vram_gb + candidate_index * 4
         power_draw_watts = rng.randint(180, 320)
         required_power_connectors = {"8-pin PCIe": 1 + candidate_index % 2}
@@ -754,7 +754,7 @@ def _generated_candidate(
             board_power_w=power_draw_watts,
             required_power_connectors=dict(required_power_connectors),
         )
-    elif category is ComponentKind.MOTHERBOARD:
+    elif category is ComponentCategory.MOTHERBOARD:
         attributes.update(
             socket="AM5",
             chipset="B650",
@@ -768,19 +768,19 @@ def _generated_candidate(
             m2_slots=3,
             sata_ports=6,
         )
-    elif category is ComponentKind.MEMORY:
+    elif category is ComponentCategory.MEMORY:
         attributes.update(
             memory_type="DDR5",
             capacity_gb=minimum_memory_gb + candidate_index * 16,
             module_count=2,
         )
-    elif category is ComponentKind.STORAGE:
+    elif category is ComponentCategory.STORAGE:
         attributes.update(
             capacity_gb=minimum_storage_gb + candidate_index * 500,
             interface="M.2 NVMe",
             form_factor="M.2 2280",
         )
-    elif category is ComponentKind.POWER_SUPPLY:
+    elif category is ComponentCategory.POWER_SUPPLY:
         psu_wattage = 850 + candidate_index * 100
         provided_power_connectors = {"8-pin PCIe": 3}
         eps_connectors = 2
@@ -789,13 +789,13 @@ def _generated_candidate(
             form_factor="ATX",
             pcie_connectors=dict(provided_power_connectors),
         )
-    elif category is ComponentKind.COOLER:
+    elif category is ComponentCategory.COOLER:
         attributes.update(
             cooler_type="air",
             supported_sockets=["AM5"],
             height_mm=150 + candidate_index * 5,
         )
-    elif category is ComponentKind.CASE:
+    elif category is ComponentCategory.CASE:
         attributes.update(
             case_size="mid_tower",
             dust_filter=True,
@@ -926,7 +926,7 @@ def generate_optimizer_problem(
         excluded_brands=frozenset({"ExcludedGeneratedBrand"}),
         required_features=(
             FeatureRequirement(
-                ComponentKind.CASE,
+                ComponentCategory.CASE,
                 "dust_filter",
                 operator=FeatureOperator.TRUTHY,
             ),
@@ -1287,7 +1287,7 @@ def _solution_from_output_record(
     if not isinstance(raw_selected, Mapping):
         raise OptimizerEvaluationError("selected_product_ids must be an object")
     catalogue = {candidate.product_id: candidate for candidate in problem.candidates}
-    selected: dict[ComponentKind, OptimizationCandidate] = {}
+    selected: dict[ComponentCategory, OptimizationCandidate] = {}
     for category in REQUIRED_CATEGORIES:
         product_id = raw_selected.get(category.value)
         if not isinstance(product_id, str):

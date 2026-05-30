@@ -24,7 +24,7 @@ class ApiModel(BaseModel):
     )
 
 
-class ComponentKind(StrEnum):
+class ComponentCategory(StrEnum):
     CPU = "cpu"
     GPU = "gpu"
     MOTHERBOARD = "motherboard"
@@ -35,7 +35,7 @@ class ComponentKind(StrEnum):
     CASE = "case"
 
 
-REQUIRED_CATEGORIES = tuple(ComponentKind)
+REQUIRED_CATEGORIES = tuple(ComponentCategory)
 
 
 class WorkloadName(StrEnum):
@@ -83,7 +83,7 @@ class WorkloadInput(ApiModel):
 
 class ExistingProductInput(ApiModel):
     product_id: str = Field(min_length=1, max_length=200)
-    category: ComponentKind
+    category: ComponentCategory
     canonical_name: str | None = Field(default=None, max_length=300)
     include_in_budget: bool = False
 
@@ -220,7 +220,7 @@ class CompatibilityCheck(ApiModel):
     rule_id: str
     status: CompatVerdict
     message: str
-    affected_categories: list[ComponentKind] = Field(default_factory=list)
+    affected_categories: list[ComponentCategory] = Field(default_factory=list)
     evidence_source: str | None = None
 
 
@@ -233,7 +233,7 @@ class ExplanationItem(ApiModel):
 class ReplacementCandidate(ApiModel):
     product_id: str
     canonical_name: str
-    category: ComponentKind
+    category: ComponentCategory
     price_sgd: float = Field(ge=0)
     retailer: str | None = None
     performance_delta: float | None = None
@@ -244,7 +244,7 @@ class ReplacementCandidate(ApiModel):
 
 
 class BuildComponent(ApiModel):
-    category: ComponentKind
+    category: ComponentCategory
     product_id: str
     listing_id: str | None = None
     canonical_name: str
@@ -303,7 +303,7 @@ class BuildResult(ApiModel):
 class PublicBuildComponent(ApiModel):
     """A public component projection with no listing, ownership, or internal identifiers."""
 
-    category: ComponentKind
+    category: ComponentCategory
     canonical_name: str = Field(min_length=1, max_length=400)
     brand: str | None = Field(default=None, max_length=120)
     price_sgd: float | None = Field(default=None, ge=0)
@@ -382,7 +382,7 @@ class AdminPriceFreshness(ApiModel):
 
 
 class AdminMissingField(ApiModel):
-    category: ComponentKind
+    category: ComponentCategory
     field_group: str = Field(min_length=1, max_length=120)
     missing_product_count: int = Field(ge=0)
     product_count: int = Field(ge=0)
@@ -419,7 +419,7 @@ class AdminOperationsResponse(ApiModel):
 class InfeasibilityReason(ApiModel):
     code: str
     message: str
-    affected_categories: list[ComponentKind] = Field(default_factory=list)
+    affected_categories: list[ComponentCategory] = Field(default_factory=list)
 
 
 class SuggestedRelaxation(ApiModel):
@@ -475,7 +475,7 @@ class GenerateBuildsResponse(ApiModel):
 
 class ProductSearchRequest(ApiModel):
     query: str = Field(default="", max_length=500)
-    category: ComponentKind | None = None
+    category: ComponentCategory | None = None
     compatible_with_build_id: str | None = None
     brand: str | None = None
     in_stock_only: bool = True
@@ -629,7 +629,7 @@ def resolve_product_search_page(request: ProductSearchRequest) -> int:
 
 class ProductSearchItem(ApiModel):
     product_id: str
-    category: ComponentKind
+    category: ComponentCategory
     canonical_name: str
     brand: str | None = None
     model: str | None = None
@@ -827,14 +827,14 @@ class ProductReviewsResponse(ApiModel):
 
 
 class ReplacementRequest(ApiModel):
-    category: ComponentKind
+    category: ComponentCategory
     replacement_product_id: str
     mode: Literal["lock_other_components", "reoptimize_unlocked"] = "lock_other_components"
 
 
 class ReplacementResponse(ApiModel):
     build: BuildResult
-    changed_categories: list[ComponentKind]
+    changed_categories: list[ComponentCategory]
     price_delta_sgd: float
     workload_score_deltas: dict[str, float]
     new_warnings: list[CompatibilityCheck]
@@ -850,7 +850,7 @@ class ReplacementResponse(ApiModel):
 
 class CompatibilityComponent(ApiModel):
     product_id: str | None = None
-    category: ComponentKind
+    category: ComponentCategory
     canonical_name: str | None = None
     attributes: dict[str, Any] = Field(default_factory=dict)
 

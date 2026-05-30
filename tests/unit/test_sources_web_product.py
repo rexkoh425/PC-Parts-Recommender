@@ -27,7 +27,7 @@ from pipelines.sources.web_product import (
 from scripts.fetch_open_data import main as fetch_open_data_main
 
 from pc_build_recommender.data_rights import DataUse, DataUseRights
-from pc_build_recommender.domain.enums import ComponentKind
+from pc_build_recommender.domain.enums import ComponentCategory
 
 HOST = "shop.example.test"
 PRODUCT_URL = f"https://{HOST}/products/fixture-gpu"
@@ -150,7 +150,7 @@ def _policy(
     rights: DataUseRights | None = None,
     allowed_hosts: tuple[str, ...] = (HOST,),
     terms_sha256: str | None = None,
-    url_categories: dict[str, ComponentKind] | None = None,
+    url_categories: dict[str, ComponentCategory] | None = None,
     unknown_shipping: UnknownShippingPolicy = UnknownShippingPolicy.REJECT,
 ) -> WebSourcePolicy:
     return WebSourcePolicy(
@@ -169,7 +169,7 @@ def _policy(
         licence_or_access_note="Fixture legal review; robots is compliance, not a licence.",
         rights=rights or _rights(enabled=usage_scope == WebUsageScope.PRODUCTION_CATALOG),
         acquisition_authority=_authority(),
-        url_categories=url_categories or {PRODUCT_URL: ComponentKind.GPU},
+        url_categories=url_categories or {PRODUCT_URL: ComponentCategory.GPU},
         usage_scope=usage_scope,
         unknown_shipping=unknown_shipping,
         requests_per_second=10,
@@ -403,7 +403,7 @@ def test_acquisition_retention_cannot_exceed_rights_for_any_scope(
 def test_policy_mapping_requires_terms_rights_authority_and_exact_categories() -> None:
     payload = _policy().to_dict()
     restored = WebSourcePolicy.from_mapping(payload)
-    assert restored.url_categories[PRODUCT_URL] == ComponentKind.GPU
+    assert restored.url_categories[PRODUCT_URL] == ComponentCategory.GPU
 
     for required_field in ("rights", "acquisition_authority", "canonical_terms_sha256"):
         incomplete = dict(payload)
@@ -480,7 +480,7 @@ def test_control_documents_cannot_be_category_mapped_as_products(
     expected_error: str,
 ) -> None:
     with pytest.raises(WebCrawlPolicyError, match=expected_error):
-        _policy(url_categories={control_url: ComponentKind.GPU})
+        _policy(url_categories={control_url: ComponentCategory.GPU})
 
 
 @pytest.mark.parametrize("expired_gate", ["acquisition", "consent"])
@@ -956,10 +956,10 @@ def test_same_host_redirect_requires_an_explicit_same_category_target(tmp_path) 
         return base_transport.handle_request(request)
 
     for categories in (
-        {PRODUCT_URL: ComponentKind.GPU},
+        {PRODUCT_URL: ComponentCategory.GPU},
         {
-            PRODUCT_URL: ComponentKind.GPU,
-            target_url: ComponentKind.CPU,
+            PRODUCT_URL: ComponentCategory.GPU,
+            target_url: ComponentCategory.CPU,
         },
     ):
         adapter = _adapter(
@@ -989,8 +989,8 @@ def test_same_host_redirect_to_explicit_same_category_target_is_followed(tmp_pat
 
     policy = _policy(
         url_categories={
-            PRODUCT_URL: ComponentKind.GPU,
-            target_url: ComponentKind.GPU,
+            PRODUCT_URL: ComponentCategory.GPU,
+            target_url: ComponentCategory.GPU,
         }
     )
     result = _adapter(tmp_path, policy, httpx.MockTransport(handler)).crawl([PRODUCT_URL])

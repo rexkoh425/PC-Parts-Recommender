@@ -16,7 +16,7 @@ from pc_build_recommender.domain import (
     CanonicalProduct,
     CompatibilityCheck,
     CompatVerdict,
-    ComponentKind,
+    ComponentCategory,
     RetailerListing,
     StockStatus,
 )
@@ -90,7 +90,7 @@ def candidate_from_domain(
 ) -> OptimizationCandidate:
     """Project a canonical product and offer using only public domain fields."""
 
-    category = ComponentKind(product.category)
+    category = ComponentCategory(product.category)
     attributes_object = product.category_attributes
     attributes = dict(_as_mapping(attributes_object))
 
@@ -111,16 +111,16 @@ def candidate_from_domain(
     provided_connectors: Mapping[str, int] = {}
     eps_connectors: int | None = None
     recommended_psu: int | None = None
-    if category == ComponentKind.CPU:
+    if category == ComponentCategory.CPU:
         power = attributes.get("peak_power_watts") or attributes.get("tdp_watts")
         power_draw = None if power is None else int(float(power) + 0.999999)
-    elif category == ComponentKind.GPU:
+    elif category == ComponentCategory.GPU:
         power = attributes.get("board_power_watts")
         power_draw = None if power is None else int(float(power) + 0.999999)
         required_connectors = dict(attributes.get("power_connectors") or {})
         recommended_psu_value = attributes.get("recommended_psu_watts")
         recommended_psu = None if recommended_psu_value is None else int(recommended_psu_value)
-    elif category == ComponentKind.POWER_SUPPLY:
+    elif category == ComponentCategory.POWER_SUPPLY:
         wattage = attributes.get("wattage")
         psu_wattage = None if wattage is None else int(wattage)
         provided_connectors = dict(attributes.get("pcie_connectors") or {})
@@ -177,7 +177,7 @@ def _compatibility_validator(engine: object) -> IndependentValidator:
     if not callable(checker):
         raise TypeError("compatibility_engine must expose check_complete_build or check_build")
 
-    def validate(selected: Mapping[ComponentKind, OptimizationCandidate]) -> object:
+    def validate(selected: Mapping[ComponentCategory, OptimizationCandidate]) -> object:
         components: dict[str, Mapping[str, Any]] = {}
         for category, candidate in selected.items():
             source = candidate.source_product
@@ -353,8 +353,8 @@ def solution_to_domain(
         if check.status == CompatVerdict.WARNING
     ]
     components = []
-    for category in ComponentKind:
-        # ComponentKind has an alias, so iterating yields only canonical values.
+    for category in ComponentCategory:
+        # ComponentCategory has an alias, so iterating yields only canonical values.
         candidate = selected[category]
         weighted_score = (
             candidate.scores.performance

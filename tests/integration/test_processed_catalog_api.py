@@ -27,7 +27,7 @@ from pc_build_recommender.catalog import (
 )
 from pc_build_recommender.domain import (
     CanonicalProduct,
-    ComponentKind,
+    ComponentCategory,
     GPUAttributes,
     ListingCondition,
     PriceSample,
@@ -57,7 +57,7 @@ def _service(
         raise ValueError("snapshot_prices requires a single-product fixture")
     base_product = CanonicalProduct(
         product_id="prod_real_gpu",
-        category=ComponentKind.GPU,
+        category=ComponentCategory.GPU,
         brand="ASUS",
         model="Prime RTX 5060 Ti",
         manufacturer_part_number="PRIME-RTX5060TI-O16G",

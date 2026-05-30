@@ -20,7 +20,7 @@ from urllib.parse import quote
 
 import httpx
 
-from pc_build_recommender.domain.enums import ComponentKind
+from pc_build_recommender.domain.enums import ComponentCategory
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION
 from pipelines.sources.base import (
     ParsedBatch,
@@ -66,8 +66,8 @@ _FIXTURE_ACQUISITION_MODE = "local_fixture"
 # Wikidata identity context. GTIN remains globally unique and therefore does not require this
 # context. Add new classes or manufacturers only with an official Wikidata evidence link and
 # a regression fixture.
-_EXACT_NAME_INSTANCE_IDS: dict[ComponentKind, frozenset[str]] = {
-    ComponentKind.CPU: frozenset({"Q122967152"}),  # CPU model
+_EXACT_NAME_INSTANCE_IDS: dict[ComponentCategory, frozenset[str]] = {
+    ComponentCategory.CPU: frozenset({"Q122967152"}),  # CPU model
 }
 _REVIEWED_MANUFACTURER_ENTITY_IDS: dict[str, frozenset[str]] = {
     "amd": frozenset({"Q128896"}),
@@ -100,7 +100,7 @@ class WikidataCandidate:
             raise ValueError("candidate_id must not be blank")
         if not self.canonical_name.strip():
             raise ValueError("canonical_name must not be blank")
-        ComponentKind(self.category)
+        ComponentCategory(self.category)
 
     @classmethod
     def from_mapping(cls, value: Mapping[str, Any]) -> WikidataCandidate:
@@ -122,7 +122,7 @@ def load_wikidata_candidates(
     *,
     max_records: int = DEFAULT_MAX_RECORDS,
     maximum_line_bytes: int = DEFAULT_MAXIMUM_LINE_BYTES,
-    categories: Sequence[ComponentKind | str] | None = None,
+    categories: Sequence[ComponentCategory | str] | None = None,
 ) -> list[WikidataCandidate]:
     """Stream a bounded, optionally category-targeted candidate file into memory.
 
@@ -135,10 +135,10 @@ def load_wikidata_candidates(
     _validate_max_records(max_records)
     if maximum_line_bytes <= 0:
         raise ValueError("maximum_line_bytes must be positive")
-    selected_categories: frozenset[ComponentKind] | None = None
+    selected_categories: frozenset[ComponentCategory] | None = None
     if categories is not None:
         try:
-            selected_categories = frozenset(ComponentKind(value) for value in categories)
+            selected_categories = frozenset(ComponentCategory(value) for value in categories)
         except ValueError as exc:
             raise ValueError(
                 "Wikidata candidate categories must be supported PC categories"
@@ -182,7 +182,7 @@ def load_wikidata_candidates(
                     f"Wikidata candidate line {line_number} is missing a product data object"
                 )
             candidate = WikidataCandidate.from_mapping(data)
-            if selected_categories is not None and ComponentKind(candidate.category) not in (
+            if selected_categories is not None and ComponentCategory(candidate.category) not in (
                 selected_categories
             ):
                 continue
@@ -898,7 +898,7 @@ def _reviewed_identity_context_matches(
     if not expected_manufacturers or manufacturer_ids.isdisjoint(expected_manufacturers):
         return False
 
-    category = ComponentKind(candidate.category)
+    category = ComponentCategory(candidate.category)
     allowed_instance_ids = _EXACT_NAME_INSTANCE_IDS.get(category)
     if allowed_instance_ids is None:
         instance_ids = set(_entity_claim_values(entity, "P31"))

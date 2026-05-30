@@ -18,7 +18,7 @@ from pc_build_recommender.domain import (
     CaseAttributes,
     CompatibilityCheck,
     CompatVerdict,
-    ComponentKind,
+    ComponentCategory,
     CoolerAttributes,
     CPUAttributes,
     ExistingComponent,
@@ -36,26 +36,26 @@ from pc_build_recommender.domain import (
 @pytest.mark.parametrize(
     ("category", "attributes", "attribute_type"),
     [
-        (ComponentKind.CPU, {"socket": "AM5", "core_count": 8}, CPUAttributes),
-        (ComponentKind.GPU, {"vram_gb": 16}, GPUAttributes),
+        (ComponentCategory.CPU, {"socket": "AM5", "core_count": 8}, CPUAttributes),
+        (ComponentCategory.GPU, {"vram_gb": 16}, GPUAttributes),
         (
-            ComponentKind.MOTHERBOARD,
+            ComponentCategory.MOTHERBOARD,
             {"socket": "AM5", "memory_type": "ddr5"},
             MotherboardAttributes,
         ),
-        (ComponentKind.MEMORY, {"memory_type": "ddr5", "capacity_gb": 32}, MemoryAttributes),
-        (ComponentKind.STORAGE, {"capacity_gb": 2000}, StorageAttributes),
-        (ComponentKind.POWER_SUPPLY, {"wattage": 850}, PowerSupplyAttributes),
-        (ComponentKind.COOLER, {"supported_sockets": ["AM5"]}, CoolerAttributes),
+        (ComponentCategory.MEMORY, {"memory_type": "ddr5", "capacity_gb": 32}, MemoryAttributes),
+        (ComponentCategory.STORAGE, {"capacity_gb": 2000}, StorageAttributes),
+        (ComponentCategory.POWER_SUPPLY, {"wattage": 850}, PowerSupplyAttributes),
+        (ComponentCategory.COOLER, {"supported_sockets": ["AM5"]}, CoolerAttributes),
         (
-            ComponentKind.CASE,
+            ComponentCategory.CASE,
             {"maximum_gpu_length_mm": 360},
             CaseAttributes,
         ),
     ],
 )
 def test_product_parses_attributes_for_all_eight_categories(
-    category: ComponentKind,
+    category: ComponentCategory,
     attributes: dict[str, object],
     attribute_type: type[object],
 ) -> None:
@@ -76,7 +76,7 @@ def test_product_parses_attributes_for_all_eight_categories(
 def test_product_rejects_attributes_from_a_different_category() -> None:
     with pytest.raises(ValidationError, match="GPUAttributes"):
         CanonicalProduct(
-            category=ComponentKind.GPU,
+            category=ComponentCategory.GPU,
             brand="Example",
             model="Wrong",
             canonical_name="Example Wrong",
@@ -99,7 +99,7 @@ def test_build_request_enforces_weight_sum_and_uniqueness() -> None:
             WorkloadPreference(name=WorkloadName.GAMING_1440P, weight=0.4),
         ],
         existing_products=[
-            ExistingComponent(category=ComponentKind.GPU, product_id="prod_gpu")
+            ExistingComponent(category=ComponentCategory.GPU, product_id="prod_gpu")
         ],
     )
     assert sum(item.weight for item in valid.workloads) == pytest.approx(1.0)
@@ -138,8 +138,8 @@ def test_build_request_enforces_weight_sum_and_uniqueness() -> None:
             budget_sgd=2500,
             workloads=[WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=1.0)],
             existing_products=[
-                ExistingComponent(category=ComponentKind.GPU, product_id="gpu_one"),
-                ExistingComponent(category=ComponentKind.GPU, product_id="gpu_two"),
+                ExistingComponent(category=ComponentCategory.GPU, product_id="gpu_one"),
+                ExistingComponent(category=ComponentCategory.GPU, product_id="gpu_two"),
             ],
         )
 
@@ -192,7 +192,7 @@ def _complete_components() -> list[BuildComponentSelection]:
             component_score=80,
             selection_reason="Best feasible candidate.",
         )
-        for category in ComponentKind
+        for category in ComponentCategory
     ]
 
 
@@ -212,7 +212,7 @@ def _build_payload() -> dict[str, object]:
 
 def test_returned_build_requires_exactly_one_component_from_all_eight_categories() -> None:
     complete = BuildRecommendation.model_validate(_build_payload())
-    assert {component.category for component in complete.components} == set(ComponentKind)
+    assert {component.category for component in complete.components} == set(ComponentCategory)
 
     incomplete = _build_payload()
     incomplete["components"] = _complete_components()[:-1]

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { CatalogueScreen } from "@/components/catalogue-screen";
-import { componentCategories, type ComponentKind } from "@/lib/types";
+import { componentCategories, type ComponentCategory } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Component catalogue",
@@ -8,9 +8,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/catalogue" },
 };
 
-function validCategory(value?: string): ComponentKind | undefined {
-  return componentCategories.includes(value as ComponentKind)
-    ? (value as ComponentKind)
+function validCategory(value?: string): ComponentCategory | undefined {
+  return componentCategories.includes(value as ComponentCategory)
+    ? (value as ComponentCategory)
     : undefined;
 }
 

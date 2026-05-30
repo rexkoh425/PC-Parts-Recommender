@@ -26,7 +26,7 @@ from pc_build_recommender.data_rights import DataUse, DataUseRights
 from pc_build_recommender.domain import (
     BenchmarkResult,
     CanonicalProduct,
-    ComponentKind,
+    ComponentCategory,
     PriceSample,
     ProductStatus,
     RetailerListing,
@@ -98,9 +98,9 @@ _AWARE_ISO_TIMESTAMP = re.compile(
 _SHA256 = re.compile(r"\A[0-9a-f]{64}\Z")
 
 _CATEGORY_ALIASES = {
-    "psu": ComponentKind.POWER_SUPPLY,
-    "power_supply": ComponentKind.POWER_SUPPLY,
-    "cpu_cooler": ComponentKind.COOLER,
+    "psu": ComponentCategory.POWER_SUPPLY,
+    "power_supply": ComponentCategory.POWER_SUPPLY,
+    "cpu_cooler": ComponentCategory.COOLER,
 }
 _COLOUR_TOKENS = frozenset(
     {
@@ -120,9 +120,9 @@ _COLOUR_TOKENS = frozenset(
 )
 
 
-def _category(value: object) -> ComponentKind:
+def _category(value: object) -> ComponentCategory:
     normalised = str(value).strip().casefold().replace("-", "_").replace(" ", "_")
-    return _CATEGORY_ALIASES.get(normalised, ComponentKind(normalised))
+    return _CATEGORY_ALIASES.get(normalised, ComponentCategory(normalised))
 
 
 def _sha256(path: Path) -> str:
@@ -712,13 +712,13 @@ class ProcessedCatalogStats:
 
     @property
     def has_complete_priced_coverage(self) -> bool:
-        return self.priced_categories == frozenset(category.value for category in ComponentKind)
+        return self.priced_categories == frozenset(category.value for category in ComponentCategory)
 
     @property
     def has_complete_in_stock_coverage(self) -> bool:
         return frozenset(
             category for category, count in self.in_stock_listings_by_category.items() if count > 0
-        ) == frozenset(category.value for category in ComponentKind)
+        ) == frozenset(category.value for category in ComponentCategory)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -810,7 +810,7 @@ def _listing_source_provenance(
 
 def _automatic_candidates(
     title: str,
-    category: ComponentKind,
+    category: ComponentCategory,
     products: Sequence[CanonicalProduct],
 ) -> tuple[CanonicalProduct, ...]:
     title_identifier = normalize_identifier(title)
@@ -1236,7 +1236,7 @@ class InMemoryCatalogReader:
     def list_products(
         self,
         *,
-        category: ComponentKind | None = None,
+        category: ComponentCategory | None = None,
         brand: str | None = None,
         status: ProductStatus | None = ProductStatus.ACTIVE,
         offset: int = 0,

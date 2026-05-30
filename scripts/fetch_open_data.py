@@ -62,7 +62,7 @@ from pipelines.sources.wikidata import (  # noqa: E402
     load_wikidata_candidates,
 )
 
-from pc_build_recommender.domain.enums import ComponentKind  # noqa: E402
+from pc_build_recommender.domain.enums import ComponentCategory  # noqa: E402
 
 PORTFOLIO_BUILDCORES_LIMITS = {
     "CPU": 250,
@@ -166,7 +166,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--wikidata-category",
         action="append",
-        choices=tuple(category.value for category in ComponentKind),
+        choices=tuple(category.value for category in ComponentCategory),
         help=(
             "Optional canonical-product category to collect; repeat for several categories. "
             "The filter is applied before any official API request."

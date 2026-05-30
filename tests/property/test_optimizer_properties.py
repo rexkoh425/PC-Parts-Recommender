@@ -8,7 +8,7 @@ from hypothesis import strategies as st
 from pc_build_recommender.domain import (
     BuildProfile,
     CompatVerdict,
-    ComponentKind,
+    ComponentCategory,
 )
 from pc_build_recommender.optimizer import (
     BuildOptimizer,
@@ -22,7 +22,7 @@ from pc_build_recommender.optimizer import (
 
 
 def _candidate(
-    category: ComponentKind,
+    category: ComponentCategory,
     suffix: str,
     *,
     price_cents: int = 10_000,
@@ -30,22 +30,22 @@ def _candidate(
 ) -> OptimizationCandidate:
     attributes: dict[str, object] = {}
     extra: dict[str, object] = {}
-    if category == ComponentKind.CPU:
+    if category == ComponentCategory.CPU:
         extra["power_draw_watts"] = 100
-    elif category == ComponentKind.GPU:
+    elif category == ComponentCategory.GPU:
         attributes["vram_gb"] = 16
         extra.update(
             power_draw_watts=200,
             required_power_connectors={"pcie_8pin": 1},
             recommended_psu_watts=600,
         )
-    elif category == ComponentKind.MEMORY:
+    elif category == ComponentCategory.MEMORY:
         attributes.update(capacity_gb=32, memory_type="ddr5")
-    elif category == ComponentKind.STORAGE:
+    elif category == ComponentCategory.STORAGE:
         attributes["capacity_gb"] = 2_000
-    elif category == ComponentKind.MOTHERBOARD:
+    elif category == ComponentCategory.MOTHERBOARD:
         attributes.update(wifi_support=True, memory_type="ddr5")
-    elif category == ComponentKind.POWER_SUPPLY:
+    elif category == ComponentCategory.POWER_SUPPLY:
         extra.update(
             psu_wattage=750,
             provided_power_connectors={"pcie_8pin": 2},
@@ -69,7 +69,7 @@ def _candidate(
 
 
 def _catalogue() -> tuple[OptimizationCandidate, ...]:
-    return tuple(_candidate(category, "a") for category in ComponentKind)
+    return tuple(_candidate(category, "a") for category in ComponentCategory)
 
 
 def _problem(
@@ -100,7 +100,7 @@ def test_every_returned_build_has_exact_cardinality_and_respects_integer_budget(
     gpu_price: int,
 ) -> None:
     catalogue = tuple(
-        replace(item, price_cents=gpu_price) if item.category == ComponentKind.GPU else item
+        replace(item, price_cents=gpu_price) if item.category == ComponentCategory.GPU else item
         for item in _catalogue()
     )
     request = _problem(catalogue, budget_cents=budget)
@@ -128,13 +128,13 @@ def test_cp_sat_objective_matches_exhaustive_search(
     gpu_score_b: int,
 ) -> None:
     base = _catalogue()
-    cpu = next(item for item in base if item.category == ComponentKind.CPU)
-    gpu = next(item for item in base if item.category == ComponentKind.GPU)
+    cpu = next(item for item in base if item.category == ComponentCategory.CPU)
+    gpu = next(item for item in base if item.category == ComponentCategory.GPU)
     catalogue = tuple(
         replace(item, scores=replace(item.scores, performance=cpu_score_a))
-        if item.category == ComponentKind.CPU
+        if item.category == ComponentCategory.CPU
         else replace(item, scores=replace(item.scores, performance=gpu_score_a))
-        if item.category == ComponentKind.GPU
+        if item.category == ComponentCategory.GPU
         else item
         for item in base
     ) + (
@@ -168,8 +168,8 @@ def test_adding_a_hard_incompatibility_never_increases_feasible_set(
     right_suffix: str,
 ) -> None:
     base = _catalogue()
-    cpu = next(item for item in base if item.category == ComponentKind.CPU)
-    motherboard = next(item for item in base if item.category == ComponentKind.MOTHERBOARD)
+    cpu = next(item for item in base if item.category == ComponentCategory.CPU)
+    motherboard = next(item for item in base if item.category == ComponentCategory.MOTHERBOARD)
     catalogue = base + (
         replace(cpu, product_id="cpu-b"),
         replace(motherboard, product_id="motherboard-b"),
@@ -208,17 +208,17 @@ def test_increasing_psu_wattage_cannot_create_a_capacity_failure(
     base = _catalogue()
     powered = tuple(
         replace(item, power_draw_watts=cpu_power)
-        if item.category == ComponentKind.CPU
+        if item.category == ComponentCategory.CPU
         else replace(item, power_draw_watts=gpu_power)
-        if item.category == ComponentKind.GPU
+        if item.category == ComponentCategory.GPU
         else replace(item, psu_wattage=lower_wattage)
-        if item.category == ComponentKind.POWER_SUPPLY
+        if item.category == ComponentCategory.POWER_SUPPLY
         else item
         for item in base
     )
     stronger = tuple(
         replace(item, psu_wattage=lower_wattage + increase)
-        if item.category == ComponentKind.POWER_SUPPLY
+        if item.category == ComponentCategory.POWER_SUPPLY
         else item
         for item in powered
     )

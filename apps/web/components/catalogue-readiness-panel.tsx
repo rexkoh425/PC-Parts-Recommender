@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { getFreshness, USING_DEMO_DATA } from "@/lib/api";
 import { categoryLabels, humanizeToken } from "@/lib/format";
-import type { ComponentKind, FreshnessSummary } from "@/lib/types";
+import type { ComponentCategory, FreshnessSummary } from "@/lib/types";
 
-const requiredCategories: ComponentKind[] = [
+const requiredCategories: ComponentCategory[] = [
   "cpu",
   "gpu",
   "motherboard",
@@ -20,7 +20,7 @@ function countCoveredCategories(values: Record<string, number>): number {
   return requiredCategories.filter((category) => (values[category] ?? 0) > 0).length;
 }
 
-function labelForCategory(category: ComponentKind): string {
+function labelForCategory(category: ComponentCategory): string {
   return categoryLabels[category] ?? humanizeToken(category);
 }
 

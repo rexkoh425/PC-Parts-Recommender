@@ -2,7 +2,7 @@ import {
   componentCategories,
   type BuildProfile,
   type BuildResult,
-  type ComponentKind,
+  type ComponentCategory,
   type PublicBuildSnapshot,
 } from "./types";
 
@@ -18,10 +18,10 @@ const profileValues = new Set<BuildProfile>([
   "most_upgradeable",
   "lowest_power",
 ]);
-const categoryValues = new Set<ComponentKind>(componentCategories);
+const categoryValues = new Set<ComponentCategory>(componentCategories);
 
 export interface SharedBuildComponent {
-  category: ComponentKind;
+  category: ComponentCategory;
   canonical_name: string;
   brand?: string;
   price_sgd: number | null;
@@ -198,7 +198,7 @@ export function sharedSnapshotFromApi(snapshot: PublicBuildSnapshot): SharedBuil
 }
 
 function parseComponent(value: unknown): SharedBuildComponent | undefined {
-  if (!isRecord(value) || typeof value.category !== "string" || !categoryValues.has(value.category as ComponentKind)) {
+  if (!isRecord(value) || typeof value.category !== "string" || !categoryValues.has(value.category as ComponentCategory)) {
     return undefined;
   }
   const canonicalName = boundedText(value.canonical_name);
@@ -208,7 +208,7 @@ function parseComponent(value: unknown): SharedBuildComponent | undefined {
   const componentScore = boundedNumber(value.component_score, 0, 100);
   const selectionReason = boundedText(value.selection_reason);
   return {
-    category: value.category as ComponentKind,
+    category: value.category as ComponentCategory,
     canonical_name: canonicalName,
     ...(brand ? { brand } : {}),
     price_sgd: price,
