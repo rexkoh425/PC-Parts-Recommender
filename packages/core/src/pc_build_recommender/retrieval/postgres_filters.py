@@ -14,7 +14,7 @@ from pc_build_recommender.catalog.orm import (
     RetailerListingRecord,
 )
 
-from .models import StructuredFilterSpec
+from .models import StructuredFilters
 
 AVAILABLE_STOCK_VALUES = ("in_stock",)
 CATEGORY_ALIASES = {
@@ -130,7 +130,7 @@ def _attribute_equals(field_name: str, required: Any) -> ColumnElement[bool]:
 def postgres_structured_predicates(
     *,
     category: str,
-    filters: StructuredFilterSpec | None,
+    filters: StructuredFilters | None,
     candidate_ids: set[str] | frozenset[str] | None = None,
 ) -> list[ColumnElement[bool]]:
     """Compile direct requirements into fail-closed SQL predicates."""

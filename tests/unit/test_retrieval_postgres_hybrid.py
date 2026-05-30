@@ -12,7 +12,7 @@ from pc_build_recommender.retrieval.embedding_index import embedding_encoder_fin
 from pc_build_recommender.retrieval.models import (
     ProductDocument,
     SearchHit,
-    StructuredFilterSpec,
+    StructuredFilters,
 )
 from pc_build_recommender.retrieval.postgres import PgVectorSearchBackend
 from pc_build_recommender.retrieval.postgres_filters import (
@@ -88,8 +88,8 @@ class _Bm25SqlSession:
         return _Result([("prod_a", 0.0), ("prod_b", 0.0)])
 
 
-def _strict_gpu_filters() -> StructuredFilterSpec:
-    return StructuredFilterSpec(
+def _strict_gpu_filters() -> StructuredFilters:
+    return StructuredFilters(
         maximum_price_sgd=900,
         minimum_gpu_vram_gb=16,
         excluded_brands=frozenset({"blocked"}),
@@ -217,7 +217,7 @@ def test_pgvector_rejects_a_caller_supplied_encoder_fingerprint() -> None:
 
 
 def test_structured_filters_reject_non_scalar_dynamic_equality() -> None:
-    filters = StructuredFilterSpec(
+    filters = StructuredFilters(
         in_stock_only=False,
         attribute_equals={"tags": ["ai", "quiet"]},
     )

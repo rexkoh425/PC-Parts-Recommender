@@ -32,7 +32,7 @@ from pc_build_recommender.optimizer import (
     OptimizationStatus,
     PairwiseCompatibility,
 )
-from pc_build_recommender.retrieval import StructuredFilterSpec
+from pc_build_recommender.retrieval import StructuredFilters
 
 from .catalog import ApplicationCatalog
 from .models import (
@@ -107,7 +107,7 @@ class SearchProductsService:
         query: str,
         *,
         category: ComponentKind | str,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
         top_k: int = 20,
         compatible_with_build_id: str | None = None,
     ) -> list[SearchProductResult]:
@@ -128,7 +128,7 @@ class SearchProductsService:
         query: str,
         *,
         category: ComponentKind | str,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
         top_k: int = 20,
         compatible_with_build_id: str | None = None,
     ) -> SearchProductsOutcome:
@@ -140,7 +140,7 @@ class SearchProductsService:
         hits = self.pipeline.retriever.retrieve(
             query or category_value.replace("_", " "),
             category=category_value,
-            filters=filters or StructuredFilterSpec(),
+            filters=filters or StructuredFilters(),
             top_k=top_k,
         )
         retrieved_candidates = len(hits)

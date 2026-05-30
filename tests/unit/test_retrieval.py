@@ -10,7 +10,7 @@ from pc_build_recommender.retrieval import (
     ProductDocument,
     SearchHit,
     StableHashEmbeddingEncoder,
-    StructuredFilterSpec,
+    StructuredFilters,
     product_matches_filters,
     reciprocal_rank_fusion,
 )
@@ -122,7 +122,7 @@ def test_reciprocal_rank_fusion_uses_rank_not_raw_score() -> None:
 def test_structured_filters_are_strict_for_applicable_category(
     products: list[ProductDocument],
 ) -> None:
-    filters = StructuredFilterSpec(
+    filters = StructuredFilters(
         maximum_price_sgd=1200,
         minimum_gpu_vram_gb=16,
         excluded_brands=frozenset({"intel"}),
@@ -134,7 +134,7 @@ def test_structured_filters_are_strict_for_applicable_category(
     assert not product_matches_filters(products[2], filters)  # price and stock
     # A GPU-only minimum must not remove unrelated CPU products.
     assert product_matches_filters(
-        products[3], StructuredFilterSpec(minimum_gpu_vram_gb=16, in_stock_only=True)
+        products[3], StructuredFilters(minimum_gpu_vram_gb=16, in_stock_only=True)
     )
 
 
@@ -146,7 +146,7 @@ def test_hybrid_retrieval_filters_before_source_top_k(
     candidates = retriever.retrieve(
         "24 GB local AI inference",
         category="gpu",
-        filters=StructuredFilterSpec(maximum_price_sgd=1200, minimum_gpu_vram_gb=16),
+        filters=StructuredFilters(maximum_price_sgd=1200, minimum_gpu_vram_gb=16),
         top_k=5,
     )
 
@@ -163,7 +163,7 @@ def test_hybrid_retrieval_source_pools_use_the_same_filter_gate(
     candidates, source_pools = retriever.retrieve_with_source_pools(
         "24 GB local AI inference",
         category="gpu",
-        filters=StructuredFilterSpec(maximum_price_sgd=1200, minimum_gpu_vram_gb=16),
+        filters=StructuredFilters(maximum_price_sgd=1200, minimum_gpu_vram_gb=16),
         top_k=5,
         per_source_k=5,
     )
@@ -186,8 +186,8 @@ def test_retrieve_categories_keeps_independent_candidate_pools(
         "development and 1440p gaming",
         ["cpu", "gpu"],
         filters_by_category={
-            "gpu": StructuredFilterSpec(maximum_price_sgd=1000),
-            "cpu": StructuredFilterSpec(maximum_price_sgd=800),
+            "gpu": StructuredFilters(maximum_price_sgd=1000),
+            "cpu": StructuredFilters(maximum_price_sgd=800),
         },
     )
 

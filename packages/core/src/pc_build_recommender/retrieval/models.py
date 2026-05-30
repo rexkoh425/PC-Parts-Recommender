@@ -184,7 +184,7 @@ class RetrievedCandidate:
 
 
 @dataclass(frozen=True, slots=True)
-class StructuredFilterSpec:
+class StructuredFilters:
     """Direct product requirements applied before scored retrieval.
 
     ``allowed_product_ids`` is intended for IDs approved by an external

@@ -6,7 +6,7 @@ import math
 from collections.abc import Collection
 from typing import Any
 
-from .models import ProductDocument, StructuredFilterSpec
+from .models import ProductDocument, StructuredFilters
 
 GPU_CATEGORIES = frozenset({"gpu", "gpus", "graphics_card", "graphics_cards"})
 MEMORY_CATEGORIES = frozenset({"memory", "ram", "memory_kit", "memory_kits"})
@@ -47,7 +47,7 @@ def _equals(actual: Any, required: Any) -> bool:
     return bool(actual == required)
 
 
-def product_matches_filters(document: ProductDocument, filters: StructuredFilterSpec) -> bool:
+def product_matches_filters(document: ProductDocument, filters: StructuredFilters) -> bool:
     """Return whether a product satisfies every applicable direct requirement.
 
     Required fields are strict for the component category they govern: missing
@@ -123,7 +123,7 @@ def product_matches_filters(document: ProductDocument, filters: StructuredFilter
 
 
 def filter_products(
-    documents: Collection[ProductDocument], filters: StructuredFilterSpec
+    documents: Collection[ProductDocument], filters: StructuredFilters
 ) -> list[ProductDocument]:
     """Filter a product collection while preserving its input order."""
 

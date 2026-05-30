@@ -8,7 +8,7 @@ from typing import Protocol, runtime_checkable
 from .bm25 import BM25ProductIndex
 from .filters import product_matches_filters
 from .fusion import reciprocal_rank_fusion
-from .models import ProductDocument, RetrievedCandidate, SearchHit, StructuredFilterSpec
+from .models import ProductDocument, RetrievedCandidate, SearchHit, StructuredFilters
 from .vector import InMemoryVectorIndex, VectorSearchBackend
 
 
@@ -24,7 +24,7 @@ class ProductRetriever(Protocol):
         query: str,
         *,
         category: str,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
         top_k: int = 50,
         per_source_k: int | None = None,
     ) -> list[RetrievedCandidate]: ...
@@ -70,7 +70,7 @@ class HybridProductRetriever:
         query: str,
         *,
         category: str,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
         top_k: int = 50,
         per_source_k: int | None = None,
     ) -> list[RetrievedCandidate]:
@@ -95,7 +95,7 @@ class HybridProductRetriever:
         query: str,
         *,
         category: str,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
         top_k: int = 50,
         per_source_k: int | None = None,
     ) -> tuple[list[RetrievedCandidate], Mapping[str, tuple[SearchHit, ...]]]:
@@ -115,7 +115,7 @@ class HybridProductRetriever:
         source_k = per_source_k if per_source_k is not None else max(50, top_k)
         if source_k < 1:
             raise ValueError("per_source_k must be positive")
-        active_filters = filters or StructuredFilterSpec()
+        active_filters = filters or StructuredFilters()
         category_key = category.casefold()
         allowed_ids = {
             product_id
@@ -187,7 +187,7 @@ class HybridProductRetriever:
         query: str,
         categories: Sequence[str],
         *,
-        filters_by_category: Mapping[str, StructuredFilterSpec] | None = None,
+        filters_by_category: Mapping[str, StructuredFilters] | None = None,
         top_k_per_category: int = 50,
     ) -> dict[str, list[RetrievedCandidate]]:
         """Retrieve independent candidate pools for build optimisation."""

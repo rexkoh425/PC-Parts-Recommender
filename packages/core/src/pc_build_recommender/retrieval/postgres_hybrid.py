@@ -19,7 +19,7 @@ from pc_build_recommender.catalog.orm import (
 
 from .bm25 import BM25ProductIndex
 from .fusion import reciprocal_rank_fusion
-from .models import ProductDocument, RetrievedCandidate, SearchHit, StructuredFilterSpec
+from .models import ProductDocument, RetrievedCandidate, SearchHit, StructuredFilters
 from .postgres import PgVectorSearchBackend
 from .postgres_filters import (
     cheapest_price_expression,
@@ -96,7 +96,7 @@ class PostgresFullTextSearchBackend:
         *,
         category: str,
         top_k: int,
-        filters: StructuredFilterSpec | None,
+        filters: StructuredFilters | None,
         candidate_ids: set[str] | frozenset[str] | None,
     ) -> list[SearchHit]:
         normalized_query = _validated_query(query)
@@ -151,7 +151,7 @@ class PostgresFullTextSearchBackend:
         category: str,
         top_k: int = 50,
         candidate_ids: set[str] | frozenset[str] | None = None,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
     ) -> list[SearchHit]:
         with self._session_factory() as session:
             return self._search_session(
@@ -201,7 +201,7 @@ class PostgresBm25SearchBackend:
         session: Session,
         *,
         category: str,
-        filters: StructuredFilterSpec | None,
+        filters: StructuredFilters | None,
         candidate_ids: set[str] | frozenset[str] | None,
     ) -> set[str]:
         statement = (
@@ -236,7 +236,7 @@ class PostgresBm25SearchBackend:
         *,
         category: str,
         top_k: int,
-        filters: StructuredFilterSpec | None,
+        filters: StructuredFilters | None,
         candidate_ids: set[str] | frozenset[str] | None,
     ) -> list[SearchHit]:
         normalized_query = _validated_query(query)
@@ -265,7 +265,7 @@ class PostgresBm25SearchBackend:
         category: str,
         top_k: int = 50,
         candidate_ids: set[str] | frozenset[str] | None = None,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
     ) -> list[SearchHit]:
         with self._session_factory() as session:
             return self._search_session(
@@ -356,7 +356,7 @@ class PostgresHybridRetriever:
         product_ids: Sequence[str],
         *,
         category: str,
-        filters: StructuredFilterSpec,
+        filters: StructuredFilters,
     ) -> dict[str, ProductDocument]:
         if not product_ids:
             return {}
@@ -404,7 +404,7 @@ class PostgresHybridRetriever:
         query_vector: NDArray[np.float32],
         *,
         category: str,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
         top_k: int = 50,
         per_source_k: int | None = None,
     ) -> list[RetrievedCandidate]:
@@ -415,7 +415,7 @@ class PostgresHybridRetriever:
         if source_k < 1:
             raise ValueError("per_source_k must be positive")
         _validated_top_k(source_k)
-        active_filters = filters or StructuredFilterSpec()
+        active_filters = filters or StructuredFilters()
         category_key = normalize_postgres_category(category)
         with self._session_factory() as session, session.begin():
             session.execute(text("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ ONLY"))
@@ -490,7 +490,7 @@ class PostgresHybridRetriever:
         query: str,
         *,
         category: str,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
         top_k: int = 50,
         per_source_k: int | None = None,
     ) -> list[RetrievedCandidate]:
@@ -511,7 +511,7 @@ class PostgresHybridRetriever:
         query: str,
         categories: Sequence[str],
         *,
-        filters_by_category: Mapping[str, StructuredFilterSpec] | None = None,
+        filters_by_category: Mapping[str, StructuredFilters] | None = None,
         top_k_per_category: int = 50,
     ) -> dict[str, list[RetrievedCandidate]]:
         configured_filters = filters_by_category or {}

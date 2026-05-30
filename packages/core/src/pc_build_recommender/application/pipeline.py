@@ -23,7 +23,7 @@ from pc_build_recommender.ranking import (
 from pc_build_recommender.retrieval import (
     ProductRetriever,
     RetrievedCandidate,
-    StructuredFilterSpec,
+    StructuredFilters,
     product_matches_filters,
 )
 
@@ -140,13 +140,13 @@ def filters_by_category(
     request: BuildGenerationRequest,
     *,
     locked_by_category: Mapping[str, str] | None = None,
-) -> dict[str, StructuredFilterSpec]:
+) -> dict[str, StructuredFilters]:
     """Translate authoritative structured requirements into scoped filters."""
 
     locked = locked_by_category or {}
     requirements = request.requirements
     excluded = frozenset(request.preferences.excluded_brands)
-    result: dict[str, StructuredFilterSpec] = {}
+    result: dict[str, StructuredFilters] = {}
     for category in REQUIRED_CATEGORIES:
         attribute_equals: dict[str, Any] = {}
         attribute_minimums: dict[str, float] = {}
@@ -162,7 +162,7 @@ def filters_by_category(
             required_form_factor = requirements.required_motherboard_form_factor.value
 
         locked_id = locked.get(category)
-        result[category] = StructuredFilterSpec(
+        result[category] = StructuredFilters(
             maximum_price_sgd=(None if locked_id is not None else float(request.budget_sgd)),
             minimum_gpu_vram_gb=(
                 float(requirements.minimum_gpu_vram_gb)
