@@ -3,7 +3,7 @@ import type {
   AdminOperationsResponse,
   BuildRequest,
   BuildShareCreated,
-  BuildResult,
+  BuildSummary,
   CompatibilityCheckRequest,
   CompatibilityCheckResponse,
   FreshnessSummary,
@@ -207,12 +207,12 @@ function readCachedRequest(requestId: string): GenerateBuildsResponse | undefine
   }
 }
 
-export function readCachedBuild(buildId: string): BuildResult | undefined {
+export function readCachedBuild(buildId: string): BuildSummary | undefined {
   if (typeof window === "undefined") return undefined;
   const value = window.sessionStorage.getItem(`${buildCachePrefix}${buildId}`);
   if (!value) return undefined;
   try {
-    return JSON.parse(value) as BuildResult;
+    return JSON.parse(value) as BuildSummary;
   } catch {
     return undefined;
   }
@@ -265,14 +265,14 @@ export async function getRequestBuilds(
 export async function getBuild(
   buildId: string,
   options: ApiRequestOptions = {},
-): Promise<BuildResult> {
+): Promise<BuildSummary> {
   if (USING_DEMO_DATA) {
     const cached = readCachedBuild(buildId);
     if (cached) return cached;
     throw new ApiError("This demo build is not available in this browser session.", 404);
   }
   try {
-    const response = await apiRequest<BuildResult | { build: BuildResult }>(
+    const response = await apiRequest<BuildSummary | { build: BuildSummary }>(
       `/v1/builds/${encodeURIComponent(buildId)}`,
       undefined,
       options,
@@ -412,7 +412,7 @@ export async function replaceComponent(
     throw new ApiError("This demo build is not available in this browser session.", 404);
   }
   const response = USING_DEMO_DATA
-    ? replaceDemoComponent(cachedBuild as BuildResult, request)
+    ? replaceDemoComponent(cachedBuild as BuildSummary, request)
     : await apiRequest<ReplacementResponse>(
         `/v1/builds/${encodeURIComponent(buildId)}/replace`,
         {

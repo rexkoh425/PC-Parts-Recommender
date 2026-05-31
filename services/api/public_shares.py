@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from services.api.models import BuildResult, PublicBuildComponent, PublicBuildSnapshot
+from services.api.models import BuildSummary, PublicBuildComponent, PublicBuildSnapshot
 
 _MAX_PUBLIC_EXPLANATIONS = 4
 _MAX_PUBLIC_WARNINGS = 4
@@ -15,7 +15,7 @@ def _bounded_text(value: str | None, maximum: int = 500) -> str | None:
     return normalized[:maximum] if normalized else None
 
 
-def public_build_snapshot(build: BuildResult) -> PublicBuildSnapshot:
+def public_build_snapshot(build: BuildSummary) -> PublicBuildSnapshot:
     """Project a full build response into data safe for a public, durable link.
 
     This function intentionally does not copy build/request/product/listing IDs, retailer or

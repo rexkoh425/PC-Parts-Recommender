@@ -7,7 +7,7 @@ import {
   replacementStatusLabel,
   summarizeReplacementChange,
 } from "../lib/replacement";
-import type { BuildResult, CompatVerdict, ReplacementCandidate } from "../lib/types";
+import type { BuildSummary, CompatVerdict, ReplacementCandidate } from "../lib/types";
 
 function candidate(
   id: string,
@@ -91,7 +91,7 @@ describe("replacement compatibility boundary", () => {
       rule_version: "compat-v2",
       solver_version: "solver-v2",
       solver_status: "OPTIMAL",
-    } satisfies BuildResult;
+    } satisfies BuildSummary;
 
     const summary = summarizeReplacementChange(
       { estimated_peak_power_w: 612 },

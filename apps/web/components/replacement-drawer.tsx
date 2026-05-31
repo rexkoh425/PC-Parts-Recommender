@@ -18,7 +18,7 @@ import {
 } from "@/lib/replacement";
 import { runtimeCapabilities } from "@/lib/runtime";
 import type {
-  BuildResult,
+  BuildSummary,
   ComponentCategory,
   ReplacementOption,
   ReplacementRequest,
@@ -32,7 +32,7 @@ export function ReplacementDrawer({
   onClose,
   onReplaced,
 }: {
-  build: BuildResult;
+  build: BuildSummary;
   category: ComponentCategory;
   onClose(): void;
   onReplaced(response: ReplacementResponse): void;

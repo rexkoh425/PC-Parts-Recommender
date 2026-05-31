@@ -137,7 +137,7 @@ export interface BuildComponent {
   alternatives?: ReplacementCandidate[];
 }
 
-export interface BuildResult {
+export interface BuildSummary {
   build_id: string;
   request_id?: string;
   profile: BuildProfile;
@@ -232,7 +232,7 @@ export interface GenerateBuildsResponse {
   rule_version: string;
   solver_version: string;
   solver_status: string;
-  builds: BuildResult[];
+  builds: BuildSummary[];
   infeasibility?: InfeasibilityExplanation | null;
   request?: BuildRequest;
 }
@@ -417,7 +417,7 @@ export interface ReplacementRequest {
 }
 
 export interface ReplacementResponse {
-  build: BuildResult;
+  build: BuildSummary;
   changed_categories: ComponentCategory[];
   price_delta_sgd: number;
   workload_score_deltas: Record<string, number>;

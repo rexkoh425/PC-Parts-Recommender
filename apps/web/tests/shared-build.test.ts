@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { decodeSharedBuild, encodeSharedBuild, publicBuildSnapshot } from "../lib/shared-build";
-import type { BuildResult } from "../lib/types";
+import type { BuildSummary } from "../lib/types";
 
-const build: BuildResult = {
+const build: BuildSummary = {
   build_id: "internal-build-id",
   request_id: "private-request-id",
   profile: "best_overall",
@@ -14,7 +14,7 @@ const build: BuildResult = {
   components: [
     "cpu", "gpu", "motherboard", "memory", "storage", "psu", "cooler", "case",
   ].map((category, index) => ({
-    category: category as BuildResult["components"][number]["category"],
+    category: category as BuildSummary["components"][number]["category"],
     product_id: `private-product-${category}`,
     listing_id: `private-listing-${category}`,
     canonical_name: `Component ${index}`,

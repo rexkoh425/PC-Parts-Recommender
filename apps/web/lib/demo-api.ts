@@ -3,7 +3,7 @@ import type {
   BuildComponent,
   BuildProfile,
   BuildRequest,
-  BuildResult,
+  BuildSummary,
   CompatibilityCheck,
   CompatibilityCheckRequest,
   CompatibilityCheckResponse,
@@ -544,7 +544,7 @@ function buildFromTemplate(
   request: BuildRequest,
   requestId: string,
   generatedAt: string,
-): BuildResult | undefined {
+): BuildSummary | undefined {
   const selected = new Map<ComponentCategory, DemoProduct>();
   for (const productId of template.product_ids) {
     const product = byId.get(productId);
@@ -637,7 +637,7 @@ export function generateDemoBuilds(request: BuildRequest): GenerateBuildsRespons
     : templates;
   const builds = requestedTemplates
     .map((template) => buildFromTemplate(template, request, requestId, generatedAt))
-    .filter((build): build is BuildResult => Boolean(build))
+    .filter((build): build is BuildSummary => Boolean(build))
     .slice(0, request.max_builds ?? 5);
 
   if (builds.length === 0) {
@@ -875,7 +875,7 @@ export function checkDemoCompatibility(
 }
 
 export function replaceDemoComponent(
-  build: BuildResult,
+  build: BuildSummary,
   request: ReplacementRequest,
 ): ReplacementResponse {
   const replacement = requireDemoProduct(request.replacement_product_id);
@@ -894,7 +894,7 @@ export function replaceDemoComponent(
     selection_reasons: ["Applied after compatibility screening against the fixed demo build."],
   };
   const priceDelta = replacement.price_sgd - previous.price_sgd;
-  const nextBuild: BuildResult = {
+  const nextBuild: BuildSummary = {
     ...build,
     build_id: `${build.build_id}-swap-${replacement.product_id}`,
     total_price_sgd: build.total_price_sgd + priceDelta,
