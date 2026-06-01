@@ -11,7 +11,7 @@ from pc_build_recommender.explanations import (
     MetricEvidence,
     ReasonKind,
     ReplacementComparison,
-    ReviewNote,
+    ReviewEvidence,
     SelectionReason,
     StoredSourceCitation,
     explain_build_selection,
@@ -195,7 +195,7 @@ def test_review_summary_uses_only_stored_confident_evidence_and_never_echoes_pro
     review_a = source("review-a", "review")
     review_b = source("review-b", "review")
     evidence = [
-        ReviewNote(
+        ReviewEvidence(
             evidence_id="e1",
             aspect="Noise",
             sentiment="negative",
@@ -203,7 +203,7 @@ def test_review_summary_uses_only_stored_confident_evidence_and_never_echoes_pro
             confidence=0.9,
             citation=review_a,
         ),
-        ReviewNote(
+        ReviewEvidence(
             evidence_id="e2",
             aspect="Noise",
             sentiment="positive",
@@ -211,7 +211,7 @@ def test_review_summary_uses_only_stored_confident_evidence_and_never_echoes_pro
             confidence=0.8,
             citation=review_b,
         ),
-        ReviewNote(
+        ReviewEvidence(
             evidence_id="weak",
             aspect="Thermals",
             sentiment="negative",
@@ -233,7 +233,7 @@ def test_review_summary_uses_only_stored_confident_evidence_and_never_echoes_pro
 
 def test_duplicate_review_evidence_ids_are_counted_once() -> None:
     review = source("review", "review")
-    item = ReviewNote(
+    item = ReviewEvidence(
         evidence_id="e1",
         aspect="Build quality",
         sentiment="positive",

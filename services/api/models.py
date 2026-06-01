@@ -811,7 +811,7 @@ class ProductBenchmarksResponse(ApiModel):
     performance_model_version: str
 
 
-class ReviewNote(ApiModel):
+class ReviewEvidence(ApiModel):
     aspect: str
     sentiment: Literal["positive", "neutral", "negative", "mixed"]
     evidence_text: str
@@ -822,7 +822,7 @@ class ReviewNote(ApiModel):
 
 class ProductReviewsResponse(ApiModel):
     product_id: str
-    evidence: list[ReviewNote]
+    evidence: list[ReviewEvidence]
     data_version: str
 
 

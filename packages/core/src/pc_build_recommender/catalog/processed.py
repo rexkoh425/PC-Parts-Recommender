@@ -30,7 +30,7 @@ from pc_build_recommender.domain import (
     PriceSample,
     ProductStatus,
     RetailerListing,
-    ReviewNote,
+    ReviewEvidence,
     SourceProvenance,
     StockStatus,
 )
@@ -214,7 +214,7 @@ def _load_review_evidence_record(
     *,
     path: Path,
     known_product_ids: frozenset[str],
-) -> ReviewNote:
+) -> ReviewEvidence:
     """Validate one explicitly permitted review-evidence envelope.
 
     The artifact intentionally accepts no generic review or crawler shape.  An
@@ -247,7 +247,7 @@ def _load_review_evidence_record(
     if not isinstance(raw_data, Mapping):
         raise ValueError(f"review evidence record is missing a data object in {path}")
     try:
-        evidence = ReviewNote.model_validate(raw_data)
+        evidence = ReviewEvidence.model_validate(raw_data)
     except (TypeError, ValueError) as error:
         raise ValueError(f"invalid review evidence in {path}: {error}") from error
     if evidence.product_id not in known_product_ids:
@@ -350,7 +350,7 @@ def load_review_evidence(
     *,
     known_product_ids: Iterable[str],
     max_line_bytes: int = DEFAULT_MAX_JSONL_LINE_BYTES,
-) -> tuple[ReviewNote, ...]:
+) -> tuple[ReviewEvidence, ...]:
     """Load a bounded, permitted review-evidence release artifact.
 
     ``None`` denotes an intentionally review-free catalogue release.  In a
@@ -364,7 +364,7 @@ def load_review_evidence(
     if not path.is_file():
         raise FileNotFoundError(f"review evidence artifact not found: {path}")
     products = frozenset(known_product_ids)
-    evidence_by_id: dict[str, ReviewNote] = {}
+    evidence_by_id: dict[str, ReviewEvidence] = {}
     for envelope in iter_jsonl_objects(path, max_line_bytes=max_line_bytes):
         evidence = _load_review_evidence_record(
             envelope,
@@ -750,7 +750,7 @@ class ProcessedCatalogData:
     listings: tuple[RetailerListing, ...]
     price_snapshots: tuple[PriceSample, ...]
     stats: ProcessedCatalogStats
-    review_evidence: tuple[ReviewNote, ...] = ()
+    review_evidence: tuple[ReviewEvidence, ...] = ()
     match_method_by_listing: Mapping[str, str] = field(default_factory=dict)
     listing_provenance: tuple[SourceProvenance, ...] = ()
     mapping_decisions: tuple[MappingDecision, ...] = ()
@@ -1225,7 +1225,7 @@ class InMemoryCatalogReader:
             key: tuple(sorted(value, key=lambda item: item.benchmark_id))
             for key, value in benchmark_groups.items()
         }
-        review_groups: dict[str, list[ReviewNote]] = defaultdict(list)
+        review_groups: dict[str, list[ReviewEvidence]] = defaultdict(list)
         for evidence in data.review_evidence:
             review_groups[evidence.product_id].append(evidence)
         self._review_evidence = {
@@ -1287,7 +1287,7 @@ class InMemoryCatalogReader:
             if workload is None or item.workload.value == workload
         ]
 
-    def list_review_evidence(self, product_id: str) -> list[ReviewNote]:
+    def list_review_evidence(self, product_id: str) -> list[ReviewEvidence]:
         return list(self._review_evidence.get(product_id, ()))
 
     def list_price_snapshots(self, listing_id: str) -> list[PriceSample]:

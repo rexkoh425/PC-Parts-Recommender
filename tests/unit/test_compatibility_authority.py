@@ -23,7 +23,7 @@ from pc_build_recommender.domain import (
     GPUAttributes,
     ProductStatus,
     RetailerListing,
-    ReviewNote,
+    ReviewEvidence,
     SourceProvenance,
     SourceType,
     StockStatus,
@@ -75,7 +75,7 @@ class CatalogReaderFixture:
     ) -> list[BenchmarkResult]:
         return []
 
-    def list_review_evidence(self, product_id: str) -> list[ReviewNote]:
+    def list_review_evidence(self, product_id: str) -> list[ReviewEvidence]:
         return []
 
 

@@ -16,7 +16,7 @@ from pc_build_recommender.domain import (
     ComponentCategory,
     PriceSample,
     RetailerListing,
-    ReviewNote,
+    ReviewEvidence,
     StockStatus,
 )
 from pc_build_recommender.entity_resolution import (
@@ -343,7 +343,7 @@ def stream_processed_catalog(
         )
         for product in products_by_id.values()
     )
-    review_evidence: tuple[ReviewNote, ...] = load_review_evidence(
+    review_evidence: tuple[ReviewEvidence, ...] = load_review_evidence(
         review_evidence_path,
         known_product_ids=products_by_id,
         max_line_bytes=max_line_bytes,

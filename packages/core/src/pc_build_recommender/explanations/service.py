@@ -14,7 +14,7 @@ from .types import (
     MetricDelta,
     MetricEvidence,
     ReplacementComparison,
-    ReviewNote,
+    ReviewEvidence,
     normalise_citations,
 )
 
@@ -154,7 +154,7 @@ def _count_phrase(count: int, singular: str, plural: str) -> str:
 
 
 def summarize_review_evidence(
-    evidence: Iterable[ReviewNote],
+    evidence: Iterable[ReviewEvidence],
     *,
     minimum_confidence: float = 0.6,
 ) -> Explanation:
@@ -167,11 +167,11 @@ def summarize_review_evidence(
 
     if not 0 <= minimum_confidence <= 1:
         raise ValueError("minimum_confidence must be between zero and one")
-    unique: dict[str, ReviewNote] = {}
+    unique: dict[str, ReviewEvidence] = {}
     for item in evidence:
         if item.confidence >= minimum_confidence:
             unique.setdefault(item.evidence_id, item)
-    grouped: dict[str, list[ReviewNote]] = defaultdict(list)
+    grouped: dict[str, list[ReviewEvidence]] = defaultdict(list)
     for item in unique.values():
         grouped[item.aspect.strip()].append(item)
 

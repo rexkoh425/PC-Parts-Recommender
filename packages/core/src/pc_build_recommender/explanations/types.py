@@ -222,7 +222,7 @@ class ReplacementComparison:
 
 
 @dataclass(frozen=True, slots=True)
-class ReviewNote:
+class ReviewEvidence:
     evidence_id: str
     aspect: str
     sentiment: str

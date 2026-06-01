@@ -21,7 +21,7 @@ from pc_build_recommender.domain import (
     PriceSample,
     ProductStatus,
     RetailerListing,
-    ReviewNote,
+    ReviewEvidence,
     SearchQuery,
     SourceProvenance,
     StockStatus,
@@ -568,7 +568,7 @@ class CatalogRepository:
             for record in self.session.scalars(statement)
         ]
 
-    def upsert_review_evidence(self, evidence: ReviewNote) -> ReviewNote:
+    def upsert_review_evidence(self, evidence: ReviewEvidence) -> ReviewEvidence:
         record = self.session.get(ReviewEvidenceRecord, evidence.evidence_id)
         values = evidence.model_dump(exclude={"evidence_id"})
         if record is None:
@@ -578,16 +578,16 @@ class CatalogRepository:
             for key, value in values.items():
                 setattr(record, key, value)
         self.session.flush()
-        return ReviewNote.model_validate({"evidence_id": record.evidence_id, **values})
+        return ReviewEvidence.model_validate({"evidence_id": record.evidence_id, **values})
 
-    def list_review_evidence(self, product_id: str) -> list[ReviewNote]:
+    def list_review_evidence(self, product_id: str) -> list[ReviewEvidence]:
         statement = (
             select(ReviewEvidenceRecord)
             .where(ReviewEvidenceRecord.product_id == product_id)
             .order_by(ReviewEvidenceRecord.aspect, ReviewEvidenceRecord.evidence_id)
         )
         return [
-            ReviewNote.model_validate(
+            ReviewEvidence.model_validate(
                 {
                     column: getattr(record, column)
                     for column in (
