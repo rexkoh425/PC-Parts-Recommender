@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from pc_build_recommender.domain import (
     CanonicalProduct,
     ComponentCategory,
-    PriceSample,
+    PriceSnapshot,
     RetailerListing,
     ReviewEvidence,
     StockStatus,
@@ -395,7 +395,7 @@ def stream_processed_catalog(
 
         offer_count += 1
         source_listing = RetailerListing.model_validate(raw_listing)
-        snapshot = PriceSample.model_validate(raw_snapshot)
+        snapshot = PriceSnapshot.model_validate(raw_snapshot)
         if source_listing.listing_id in seen_listing_ids:
             raise ValueError(f"duplicate retailer listing ID: {source_listing.listing_id}")
         if snapshot.snapshot_id in seen_snapshot_ids:

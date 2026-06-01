@@ -21,7 +21,7 @@ from pc_build_recommender.domain import (
     CanonicalProduct,
     ComponentCategory,
     GPUAttributes,
-    PriceSample,
+    PriceSnapshot,
     RetailerListing,
     SourceProvenance,
     SourceType,
@@ -111,7 +111,7 @@ def test_price_snapshots_are_idempotent_per_listing_and_time(session: Session) -
     observed = datetime(2026, 7, 22, 1, tzinfo=UTC)
 
     repository.upsert_price_snapshot(
-        PriceSample(
+        PriceSnapshot(
             snapshot_id="price_first_id",
             listing_id="listing_gpu_1",
             observed_at=observed,
@@ -120,7 +120,7 @@ def test_price_snapshots_are_idempotent_per_listing_and_time(session: Session) -
         )
     )
     repository.upsert_price_snapshot(
-        PriceSample(
+        PriceSnapshot(
             snapshot_id="price_duplicate_natural_key",
             listing_id="listing_gpu_1",
             observed_at=observed,

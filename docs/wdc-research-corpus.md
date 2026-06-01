@@ -24,7 +24,7 @@ sets these gates explicitly:
 The original row remains recoverable from its content-addressed raw snapshot. Each selected record
 retains the snapshot SHA-256, source URL, historical page URL, source-line number, raw-line SHA-256,
 retrieval time, parser version, and access note. Historical prices remain strings and are labelled
-as 2020 observations; the importer never creates a `RetailerListing` or `PriceSample`.
+as 2020 observations; the importer never creates a `RetailerListing` or `PriceSnapshot`.
 
 ## Run it
 

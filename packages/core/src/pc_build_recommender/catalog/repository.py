@@ -18,7 +18,7 @@ from pc_build_recommender.domain import (
     CompatibilityRule,
     ComponentCategory,
     InteractionRecord,
-    PriceSample,
+    PriceSnapshot,
     ProductStatus,
     RetailerListing,
     ReviewEvidence,
@@ -389,8 +389,8 @@ class CatalogRepository:
         return True
 
     @staticmethod
-    def _to_price(record: PriceSnapshotRecord) -> PriceSample:
-        return PriceSample.model_validate(
+    def _to_price(record: PriceSnapshotRecord) -> PriceSnapshot:
+        return PriceSnapshot.model_validate(
             {
                 "snapshot_id": record.snapshot_id,
                 "listing_id": record.listing_id,
@@ -402,7 +402,7 @@ class CatalogRepository:
             }
         )
 
-    def upsert_price_snapshot(self, snapshot: PriceSample) -> PriceSample:
+    def upsert_price_snapshot(self, snapshot: PriceSnapshot) -> PriceSnapshot:
         record = self.session.get(PriceSnapshotRecord, snapshot.snapshot_id)
         if record is None:
             record = self.session.scalar(
@@ -424,7 +424,7 @@ class CatalogRepository:
 
     add_price_snapshot = upsert_price_snapshot
 
-    def list_price_snapshots(self, listing_id: str, *, limit: int = 1000) -> list[PriceSample]:
+    def list_price_snapshots(self, listing_id: str, *, limit: int = 1000) -> list[PriceSnapshot]:
         statement = (
             select(PriceSnapshotRecord)
             .where(PriceSnapshotRecord.listing_id == listing_id)

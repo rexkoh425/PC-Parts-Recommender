@@ -34,7 +34,7 @@ from pc_build_recommender.domain.enums import (
     ListingCondition,
     StockStatus,
 )
-from pc_build_recommender.domain.models import PriceSample, RetailerListing
+from pc_build_recommender.domain.models import PriceSnapshot, RetailerListing
 from pipelines.checks.quality import (
     DATA_QUALITY_SCHEMA_VERSION,
     DataQualityReport,
@@ -833,7 +833,7 @@ class AwinLocalFeedAdapter:
             first_seen_at=observed_at,
             last_seen_at=observed_at,
         )
-        price_snapshot = PriceSample(
+        price_snapshot = PriceSnapshot(
             snapshot_id=stable_identifier(
                 "price",
                 listing_id,
