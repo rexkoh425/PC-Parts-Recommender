@@ -1,0 +1,99 @@
+{
+  "artifact_kind": "compatibility_generated_scenario_evaluation",
+  "artifact_sha256": "c09c0b2d69ffd95ff4ea8ea8084c58747e16110b7fbb284d2b84d4c5c5ab1985",
+  "assertions": {
+    "engine_rule_and_exact_outcome": 351000,
+    "failed": 0,
+    "independent_oracle": 170000,
+    "monotonic": 5300,
+    "total": 526300
+  },
+  "claim_scope": "Engineering validation on deterministically generated configurations; not evidence of 10,000 observed market builds.",
+  "evaluation_passed": true,
+  "expected_nonpass_outcomes": {
+    "compat.cpu_motherboard.chipset_bios|FAIL": 1000,
+    "compat.cpu_motherboard.socket|FAIL": 1000,
+    "compat.gpu_case.length|FAIL": 1000,
+    "compat.gpu_case.length|UNKNOWN": 1000,
+    "compat.gpu_case.slot_width|FAIL": 1000,
+    "compat.memory_motherboard.generation|FAIL": 1000,
+    "compat.motherboard.resource_conflicts|FAIL": 1000,
+    "compat.power_supply.capacity|FAIL": 1000,
+    "compat.power_supply.gpu_connectors|FAIL": 1000,
+    "compat.power_supply.transient_capacity|FAIL": 1000
+  },
+  "market_builds_evaluated": 0,
+  "memory_strategy": {
+    "mode": "streaming_counters_and_incremental_sha256",
+    "retained_scenario_records": 0,
+    "writes_per_scenario": 0
+  },
+  "monotonic_invariants": {
+    "adding_required_connectors_cannot_create_shortage": 1000,
+    "ddr4_never_passes_ddr5_only_motherboard": 1000,
+    "increasing_capacity_and_clearance_preserves_feasibility": 100,
+    "increasing_psu_wattage_repairs_power_failure": 100,
+    "missing_clearance_never_passes": 1000,
+    "reducing_gpu_clearance_cannot_repair_failure": 1000,
+    "reducing_gpu_slot_clearance_cannot_repair_failure": 1000,
+    "removing_hard_resource_conflict_restores_feasibility": 100
+  },
+  "observed_nonpass_outcomes": {
+    "compat.cpu_motherboard.chipset_bios|FAIL": 1000,
+    "compat.cpu_motherboard.socket|FAIL": 1000,
+    "compat.gpu_case.length|FAIL": 1000,
+    "compat.gpu_case.length|UNKNOWN": 1000,
+    "compat.gpu_case.slot_width|FAIL": 1000,
+    "compat.memory_motherboard.generation|FAIL": 1000,
+    "compat.motherboard.resource_conflicts|FAIL": 1000,
+    "compat.power_supply.capacity|FAIL": 1000,
+    "compat.power_supply.gpu_connectors|FAIL": 1000,
+    "compat.power_supply.transient_capacity|FAIL": 1000
+  },
+  "oracle_mismatch_count": 0,
+  "overall_status_counts": {
+    "FAIL": 8000,
+    "PASS": 1000,
+    "UNKNOWN": 1000
+  },
+  "power_policy": {
+    "accessory_allowance_w": 100.0,
+    "gpu_transient_multiplier": 1.25,
+    "headroom_ratio": 0.25
+  },
+  "rule_version": "compat_v2",
+  "scenario_count": 10000,
+  "scenario_counts": {
+    "bios_failure": 1000,
+    "connector_failure": 1000,
+    "ddr_failure": 1000,
+    "gpu_length_failure": 1000,
+    "gpu_slot_failure": 1000,
+    "missing_data": 1000,
+    "power_failure": 1000,
+    "resource_failure": 1000,
+    "socket_failure": 1000,
+    "valid": 1000
+  },
+  "scenario_kinds": [
+    "valid",
+    "socket_failure",
+    "ddr_failure",
+    "gpu_length_failure",
+    "gpu_slot_failure",
+    "connector_failure",
+    "bios_failure",
+    "power_failure",
+    "resource_failure",
+    "missing_data"
+  ],
+  "scenario_provenance": "deterministically_generated_not_observed_market_builds",
+  "scenario_stream_sha256": "69a673bf1f02f727e3db58979e19f57db1f074c8c2dd85121987edf871294e9b",
+  "schema_version": 1,
+  "seed": 20260722,
+  "source_sha256": {
+    "compatibility_engine": "afb4947eb2ec576a3a8e8a6f1f57fbf8fd54f50fef6a4b660f516a5dd3a8740a",
+    "evaluation_harness": "03e9ab234f0c46ff2058082f25500d95cdd511c1f0e8d79f4993e8e01bd4a960"
+  },
+  "total_rule_results_checked": 341000
+}
