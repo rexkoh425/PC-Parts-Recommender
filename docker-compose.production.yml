@@ -1,0 +1,801 @@
+name: ${COMPOSE_PROJECT_NAME:?Set COMPOSE_PROJECT_NAME in the validated production env file}
+
+x-logging: &bounded-logging
+  driver: json-file
+  options:
+    max-size: ${PCBR_LOG_MAX_SIZE:-20m}
+    max-file: ${PCBR_LOG_MAX_FILES:-5}
+    tag: "pcbr/{{.Name}}/{{.ID}}"
+
+x-runtime-security: &runtime-security
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  logging: *bounded-logging
+
+x-dagster-environment: &dagster-environment
+  DAGSTER_HOME: /app/.dagster
+  DAGSTER_POSTGRES_HOST: postgres
+  DAGSTER_POSTGRES_PORT: "5432"
+  DAGSTER_POSTGRES_DB: ${PCBR_DAGSTER_DATABASE:?Set PCBR_DAGSTER_DATABASE}
+  DAGSTER_POSTGRES_USER: ${PCBR_DAGSTER_USER:?Set PCBR_DAGSTER_USER}
+  DAGSTER_POSTGRES_PASSWORD_FILE: /run/secrets/dagster_password
+  DAGSTER_MAX_CONCURRENT_RUNS: ${PCBR_DAGSTER_MAX_CONCURRENT_RUNS:-1}
+  RAW_DATA_DIR: /app/data/raw
+  PROCESSED_DATA_DIR: /app/data/processed
+  PIPELINE_OPERATIONS_DIR: /app/data/operations
+  SOURCE_REGISTRY_PATH: /app/config/source_registry.yaml
+  DATA_VERSION: ${PCBR_API_DATA_VERSION:?Set PCBR_API_DATA_VERSION}
+  RANKING_MODEL_VERSION: ${PCBR_API_RANKING_MODEL_VERSION:?Set PCBR_API_RANKING_MODEL_VERSION}
+  COMPATIBILITY_RULE_VERSION: ${PCBR_API_COMPATIBILITY_RULE_VERSION:?Set PCBR_API_COMPATIBILITY_RULE_VERSION}
+
+services:
+  postgres:
+    image: ${PCBR_POSTGRES_IMAGE:?Set PCBR_POSTGRES_IMAGE to an immutable digest}
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    logging: *bounded-logging
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${PCBR_POSTGRES_ADMIN_USER:?Set PCBR_POSTGRES_ADMIN_USER}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_admin_password
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256 --auth-local=scram-sha-256
+      PCBR_DATABASE_NAME: ${PCBR_DATABASE_NAME:?Set PCBR_DATABASE_NAME}
+      PCBR_MIGRATOR_USER: ${PCBR_MIGRATOR_USER:?Set PCBR_MIGRATOR_USER}
+      PCBR_APP_USER: ${PCBR_APP_USER:?Set PCBR_APP_USER}
+      PCBR_DAGSTER_DATABASE: ${PCBR_DAGSTER_DATABASE:?Set PCBR_DAGSTER_DATABASE}
+      PCBR_DAGSTER_USER: ${PCBR_DAGSTER_USER:?Set PCBR_DAGSTER_USER}
+      PCBR_MLFLOW_DATABASE: ${PCBR_MLFLOW_DATABASE:?Set PCBR_MLFLOW_DATABASE}
+      PCBR_MLFLOW_USER: ${PCBR_MLFLOW_USER:?Set PCBR_MLFLOW_USER}
+      PCBR_MONITOR_USER: ${PCBR_MONITOR_USER:?Set PCBR_MONITOR_USER}
+    secrets:
+      - postgres_admin_password
+      - postgres_migrator_password
+      - postgres_app_password
+      - postgres_dagster_password
+      - postgres_mlflow_password
+      - postgres_monitor_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/postgres/init-roles.sh:/docker-entrypoint-initdb.d/10-pcbr-roles.sh:ro
+    networks:
+      - data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${PCBR_POSTGRES_ADMIN_USER:?Set PCBR_POSTGRES_ADMIN_USER} -d postgres",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    command:
+      - postgres
+      - -c
+      - max_connections=${PCBR_POSTGRES_MAX_CONNECTIONS:-100}
+      - -c
+      - shared_buffers=${PCBR_POSTGRES_SHARED_BUFFERS:-1GB}
+      - -c
+      - effective_cache_size=${PCBR_POSTGRES_EFFECTIVE_CACHE_SIZE:-3GB}
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - password_encryption=scram-sha-256
+      - -c
+      - log_min_duration_statement=${PCBR_POSTGRES_SLOW_QUERY_MS:-500}
+      - -c
+      - log_lock_waits=on
+      - -c
+      - log_connections=on
+      - -c
+      - log_disconnections=on
+      - -c
+      - log_line_prefix=time=%m pid=%p user=%u db=%d app=%a client=%h
+      - -c
+      - statement_timeout=30s
+      - -c
+      - idle_in_transaction_session_timeout=60s
+    mem_limit: ${PCBR_POSTGRES_MEMORY:-4g}
+    cpus: ${PCBR_POSTGRES_CPUS:-2.0}
+    pids_limit: 256
+    shm_size: 256m
+    stop_grace_period: 1m
+    ulimits:
+      nofile:
+        soft: 8192
+        hard: 16384
+
+  migrate:
+    image: ${PCBR_API_IMAGE:?Set PCBR_API_IMAGE to an immutable digest}
+    restart: "no"
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    environment:
+      PCBR_DATABASE_HOST: postgres
+      PCBR_DATABASE_PORT: "5432"
+      PCBR_DATABASE_NAME: ${PCBR_DATABASE_NAME:?Set PCBR_DATABASE_NAME}
+      PCBR_DATABASE_USER: ${PCBR_MIGRATOR_USER:?Set PCBR_MIGRATOR_USER}
+      PCBR_DATABASE_PASSWORD_FILE: /run/secrets/database_password
+      PCBR_RUN_MIGRATIONS: "true"
+    secrets:
+      - source: postgres_migrator_password
+        target: database_password
+    command: ["true"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - data
+    mem_limit: 512m
+    cpus: 0.5
+    pids_limit: 64
+
+  catalog-release:
+    image: ${PCBR_API_IMAGE:?Set PCBR_API_IMAGE to an immutable digest}
+    restart: "no"
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    environment:
+      PCBR_DATABASE_HOST: postgres
+      PCBR_DATABASE_PORT: "5432"
+      PCBR_DATABASE_NAME: ${PCBR_DATABASE_NAME:?Set PCBR_DATABASE_NAME}
+      PCBR_DATABASE_USER: ${PCBR_MIGRATOR_USER:?Set PCBR_MIGRATOR_USER}
+      PCBR_DATABASE_PASSWORD_FILE: /run/secrets/database_password
+      PCBR_RUN_MIGRATIONS: "false"
+    secrets:
+      - source: postgres_migrator_password
+        target: database_password
+    volumes:
+      - type: bind
+        source: ${PCBR_BUILDCORES_CATALOG_FILE:?Set PCBR_BUILDCORES_CATALOG_FILE}
+        target: /run/pcbr-release/buildcores.jsonl
+        read_only: true
+      - type: bind
+        source: ${PCBR_GOVERNED_OFFERS_FILE:?Set PCBR_GOVERNED_OFFERS_FILE}
+        target: /run/pcbr-release/governed-offers.jsonl
+        read_only: true
+      - type: bind
+        source: ${PCBR_REVIEWED_MAPPING_FILE:?Set PCBR_REVIEWED_MAPPING_FILE}
+        target: /run/pcbr-release/reviewed-mappings.json
+        read_only: true
+      - type: bind
+        source: ${PCBR_REVIEW_EVIDENCE_FILE:?Set PCBR_REVIEW_EVIDENCE_FILE}
+        target: /run/pcbr-release/review-evidence.jsonl
+        read_only: true
+      - type: bind
+        source: ${PCBR_CATALOG_READINESS_ARTIFACT_FILE:?Set PCBR_CATALOG_READINESS_ARTIFACT_FILE}
+        target: /run/pcbr-release/catalog-readiness.json
+        read_only: true
+      - type: bind
+        source: ${PCBR_SERVING_RELEASE_DIR:?Set PCBR_SERVING_RELEASE_DIR}
+        target: /run/pcbr-serving
+        read_only: true
+    command:
+      - python
+      - scripts/import_catalog_release.py
+      - --buildcores
+      - /run/pcbr-release/buildcores.jsonl
+      - --offers
+      - /run/pcbr-release/governed-offers.jsonl
+      - --reviewed-mappings
+      - /run/pcbr-release/reviewed-mappings.json
+      - --review-evidence
+      - /run/pcbr-release/review-evidence.jsonl
+      - --serving-manifest
+      - /run/pcbr-serving/serving-manifest.json
+      - --serving-manifest-sha256
+      - ${PCBR_API_SERVING_MANIFEST_SHA256:?Set PCBR_API_SERVING_MANIFEST_SHA256}
+      - --require-production-ready
+      - --require-migrated-schema
+      - --readiness-artifact
+      - /run/pcbr-release/catalog-readiness.json
+      - --expected-data-version
+      - ${PCBR_API_DATA_VERSION:?Set PCBR_API_DATA_VERSION}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    networks:
+      - data
+    mem_limit: ${PCBR_CATALOG_RELEASE_MEMORY:-2g}
+    cpus: ${PCBR_CATALOG_RELEASE_CPUS:-1.0}
+    pids_limit: 64
+
+  api:
+    image: ${PCBR_API_IMAGE:?Set PCBR_API_IMAGE to an immutable digest}
+    restart: unless-stopped
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    environment:
+      PCBR_DATABASE_HOST: postgres
+      PCBR_DATABASE_PORT: "5432"
+      PCBR_DATABASE_NAME: ${PCBR_DATABASE_NAME:?Set PCBR_DATABASE_NAME}
+      PCBR_DATABASE_USER: ${PCBR_APP_USER:?Set PCBR_APP_USER}
+      PCBR_DATABASE_PASSWORD_FILE: /run/secrets/database_password
+      PCBR_RUN_MIGRATIONS: "false"
+      PCBR_API_ENVIRONMENT: ${PCBR_API_ENVIRONMENT:?Set PCBR_API_ENVIRONMENT}
+      PCBR_API_SERVICE_MODE: ${PCBR_API_SERVICE_MODE:?Set PCBR_API_SERVICE_MODE}
+      PCBR_API_DOCS_ENABLED: ${PCBR_API_DOCS_ENABLED:?Set PCBR_API_DOCS_ENABLED}
+      PCBR_API_LOG_LEVEL: ${PCBR_API_LOG_LEVEL:-INFO}
+      PCBR_API_CORS_ORIGINS: '${PCBR_API_CORS_ORIGINS:?Set PCBR_API_CORS_ORIGINS}'
+      PCBR_API_DATA_VERSION: ${PCBR_API_DATA_VERSION:?Set PCBR_API_DATA_VERSION}
+      PCBR_API_RANKING_MODEL_VERSION: ${PCBR_API_RANKING_MODEL_VERSION:?Set PCBR_API_RANKING_MODEL_VERSION}
+      PCBR_API_COMPATIBILITY_RULE_VERSION: ${PCBR_API_COMPATIBILITY_RULE_VERSION:?Set PCBR_API_COMPATIBILITY_RULE_VERSION}
+      PCBR_API_SOLVER_VERSION: ${PCBR_API_SOLVER_VERSION:?Set PCBR_API_SOLVER_VERSION}
+      PCBR_API_STALE_AFTER_HOURS: ${PCBR_API_STALE_AFTER_HOURS:-24}
+      PCBR_API_PIPELINE_OPERATIONS_PATH: /run/pcbr-operations
+      PCBR_API_PIPELINE_OPERATIONS_WINDOW_HOURS: ${PCBR_API_PIPELINE_OPERATIONS_WINDOW_HOURS:-168}
+      PCBR_API_MAX_REQUEST_BODY_BYTES: ${PCBR_API_MAX_REQUEST_BODY_BYTES:-1048576}
+      PCBR_API_BUILD_GENERATION_MAX_CONCURRENCY: ${PCBR_API_BUILD_GENERATION_MAX_CONCURRENCY:-1}
+      PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE: ${PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE:-8}
+      PCBR_API_BUILD_GENERATION_QUEUE_TIMEOUT_SECONDS: ${PCBR_API_BUILD_GENERATION_QUEUE_TIMEOUT_SECONDS:-2}
+      PCBR_API_ADMIN_TOKEN_FILE: /run/secrets/admin_token
+      PCBR_API_BUILDCORES_CATALOG_PATH: /run/pcbr-data/buildcores.jsonl
+      PCBR_API_GOVERNED_OFFERS_PATH: /run/pcbr-data/governed-offers.jsonl
+      PCBR_API_REVIEWED_MAPPING_PATH: /run/pcbr-data/reviewed-mappings.json
+      PCBR_API_REVIEW_EVIDENCE_PATH: /run/pcbr-data/review-evidence.jsonl
+      PCBR_API_SERVING_MANIFEST_PATH: /run/pcbr-serving/serving-manifest.json
+      PCBR_API_SERVING_MANIFEST_SHA256: ${PCBR_API_SERVING_MANIFEST_SHA256:?Set PCBR_API_SERVING_MANIFEST_SHA256}
+      PCBR_API_SEMANTIC_ENCODER_BUNDLE_PATH: /run/pcbr-serving/encoders/${PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256:?Set PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256}
+      PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256: ${PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256:?Set PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256}
+    secrets:
+      - source: postgres_app_password
+        target: database_password
+      - source: api_admin_token
+        target: admin_token
+    volumes:
+      - type: bind
+        source: ${PCBR_BUILDCORES_CATALOG_FILE:?Set PCBR_BUILDCORES_CATALOG_FILE}
+        target: /run/pcbr-data/buildcores.jsonl
+        read_only: true
+      - type: bind
+        source: ${PCBR_GOVERNED_OFFERS_FILE:?Set PCBR_GOVERNED_OFFERS_FILE}
+        target: /run/pcbr-data/governed-offers.jsonl
+        read_only: true
+      - type: bind
+        source: ${PCBR_REVIEWED_MAPPING_FILE:?Set PCBR_REVIEWED_MAPPING_FILE}
+        target: /run/pcbr-data/reviewed-mappings.json
+        read_only: true
+      - type: bind
+        source: ${PCBR_REVIEW_EVIDENCE_FILE:?Set PCBR_REVIEW_EVIDENCE_FILE}
+        target: /run/pcbr-data/review-evidence.jsonl
+        read_only: true
+      - type: bind
+        source: ${PCBR_SERVING_RELEASE_DIR:?Set PCBR_SERVING_RELEASE_DIR}
+        target: /run/pcbr-serving
+        read_only: true
+      - type: bind
+        source: ${PCBR_PIPELINE_OPERATIONS_DIR:?Set PCBR_PIPELINE_OPERATIONS_DIR}
+        target: /run/pcbr-operations
+        read_only: true
+    depends_on:
+      catalog-release:
+        condition: service_completed_successfully
+    networks:
+      - edge
+      - data
+    ports:
+      - target: 8000
+        published: ${PCBR_API_PORT:-8000}
+        host_ip: ${PCBR_BIND_ADDRESS:-127.0.0.1}
+        protocol: tcp
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=3)",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 30s
+    mem_limit: ${PCBR_API_MEMORY:-3g}
+    cpus: ${PCBR_API_CPUS:-2.0}
+    pids_limit: 128
+    stop_grace_period: 30s
+    ulimits:
+      nofile:
+        soft: 4096
+        hard: 8192
+
+  web:
+    image: ${PCBR_WEB_IMAGE:?Set PCBR_WEB_IMAGE to an immutable digest}
+    restart: unless-stopped
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+      - /app/apps/web/.next/cache:size=128m,uid=1000,gid=1000
+    environment:
+      NEXT_PUBLIC_API_URL: ${PCBR_PUBLIC_API_URL:?Set PCBR_PUBLIC_API_URL}
+      NEXT_TELEMETRY_DISABLED: "1"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - edge
+    ports:
+      - target: 3000
+        published: ${PCBR_WEB_PORT:-3000}
+        host_ip: ${PCBR_BIND_ADDRESS:-127.0.0.1}
+        protocol: tcp
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 30s
+    mem_limit: ${PCBR_WEB_MEMORY:-1g}
+    cpus: ${PCBR_WEB_CPUS:-1.0}
+    pids_limit: 128
+    stop_grace_period: 30s
+
+  dagster-code:
+    profiles: ["pipeline"]
+    image: ${PCBR_DAGSTER_IMAGE:?Set PCBR_DAGSTER_IMAGE to an immutable digest}
+    restart: unless-stopped
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+    environment: *dagster-environment
+    secrets:
+      - source: postgres_dagster_password
+        target: dagster_password
+    volumes:
+      - dagster-state:/app/.dagster
+      - ./infra/dagster.production.yaml:/app/.dagster/dagster.yaml:ro
+      - type: bind
+        source: ${PCBR_PIPELINE_DATA_DIR:?Set PCBR_PIPELINE_DATA_DIR}
+        target: /app/data
+      - type: bind
+        source: ${PCBR_PIPELINE_OPERATIONS_DIR:?Set PCBR_PIPELINE_OPERATIONS_DIR}
+        target: /app/data/operations
+      - type: bind
+        source: ${PCBR_PIPELINE_ARTIFACTS_DIR:?Set PCBR_PIPELINE_ARTIFACTS_DIR}
+        target: /app/artifacts
+    command:
+      [
+        "dagster",
+        "api",
+        "grpc",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "4000",
+        "--module-name",
+        "pipelines.definitions",
+      ]
+    expose:
+      - "4000"
+    healthcheck:
+      test: ["CMD", "dagster", "api", "grpc-health-check", "--port", "4000"]
+      interval: 20s
+      timeout: 10s
+      retries: 6
+      start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - data
+      - pipeline
+      - control
+    mem_limit: ${PCBR_DAGSTER_CODE_MEMORY:-4g}
+    cpus: ${PCBR_DAGSTER_CPUS:-2.0}
+    pids_limit: 256
+    stop_grace_period: 1m
+
+  dagster-webserver:
+    profiles: ["pipeline"]
+    image: ${PCBR_DAGSTER_IMAGE:?Set PCBR_DAGSTER_IMAGE to an immutable digest}
+    restart: unless-stopped
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    environment: *dagster-environment
+    secrets:
+      - source: postgres_dagster_password
+        target: dagster_password
+    volumes:
+      - dagster-state:/app/.dagster
+      - ./infra/dagster.production.yaml:/app/.dagster/dagster.yaml:ro
+      - ./infra/dagster.production.workspace.yaml:/app/.dagster/workspace.yaml:ro
+    command:
+      [
+        "dagster-webserver",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "3001",
+        "--workspace",
+        "/app/.dagster/workspace.yaml",
+      ]
+    depends_on:
+      dagster-code:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - edge
+      - data
+      - control
+    ports:
+      - target: 3001
+        published: ${PCBR_DAGSTER_PORT:-3001}
+        host_ip: ${PCBR_BIND_ADDRESS:-127.0.0.1}
+        protocol: tcp
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3001/server_info', timeout=3)",
+        ]
+      interval: 20s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    mem_limit: ${PCBR_DAGSTER_CONTROL_MEMORY:-1g}
+    cpus: 1.0
+    pids_limit: 128
+
+  dagster-daemon:
+    profiles: ["pipeline"]
+    image: ${PCBR_DAGSTER_IMAGE:?Set PCBR_DAGSTER_IMAGE to an immutable digest}
+    restart: unless-stopped
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    environment: *dagster-environment
+    secrets:
+      - source: postgres_dagster_password
+        target: dagster_password
+    volumes:
+      - dagster-state:/app/.dagster
+      - ./infra/dagster.production.yaml:/app/.dagster/dagster.yaml:ro
+      - ./infra/dagster.production.workspace.yaml:/app/.dagster/workspace.yaml:ro
+    command: ["dagster-daemon", "run", "--workspace", "/app/.dagster/workspace.yaml"]
+    depends_on:
+      dagster-code:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    networks:
+      - data
+      - control
+    healthcheck:
+      test: ["CMD", "dagster-daemon", "liveness-check"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
+    mem_limit: ${PCBR_DAGSTER_CONTROL_MEMORY:-1g}
+    cpus: 1.0
+    pids_limit: 128
+    stop_grace_period: 1m
+
+  mlflow-migrate:
+    profiles: ["mlops"]
+    image: ${PCBR_MLFLOW_IMAGE:?Set PCBR_MLFLOW_IMAGE to an immutable digest}
+    restart: "no"
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+    environment:
+      MLFLOW_POSTGRES_HOST: postgres
+      MLFLOW_POSTGRES_PORT: "5432"
+      MLFLOW_POSTGRES_DATABASE: ${PCBR_MLFLOW_DATABASE:?Set PCBR_MLFLOW_DATABASE}
+      MLFLOW_POSTGRES_USER: ${PCBR_MLFLOW_USER:?Set PCBR_MLFLOW_USER}
+      MLFLOW_POSTGRES_PASSWORD_FILE: /run/secrets/mlflow_password
+    secrets:
+      - source: postgres_mlflow_password
+        target: mlflow_password
+    command: ["migrate"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - data
+    mem_limit: 512m
+    cpus: 0.5
+    pids_limit: 64
+
+  mlflow:
+    profiles: ["mlops"]
+    image: ${PCBR_MLFLOW_IMAGE:?Set PCBR_MLFLOW_IMAGE to an immutable digest}
+    restart: unless-stopped
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+    environment:
+      MLFLOW_POSTGRES_HOST: postgres
+      MLFLOW_POSTGRES_PORT: "5432"
+      MLFLOW_POSTGRES_DATABASE: ${PCBR_MLFLOW_DATABASE:?Set PCBR_MLFLOW_DATABASE}
+      MLFLOW_POSTGRES_USER: ${PCBR_MLFLOW_USER:?Set PCBR_MLFLOW_USER}
+      MLFLOW_POSTGRES_PASSWORD_FILE: /run/secrets/mlflow_password
+      MLFLOW_ARTIFACT_ROOT: /mlartifacts
+      MLFLOW_WORKERS: "2"
+      MLFLOW_REQUEST_TIMEOUT_SECONDS: "120"
+    secrets:
+      - source: postgres_mlflow_password
+        target: mlflow_password
+    volumes:
+      - type: bind
+        source: ${PCBR_MLFLOW_ARTIFACTS_DIR:?Set PCBR_MLFLOW_ARTIFACTS_DIR}
+        target: /mlartifacts
+    depends_on:
+      mlflow-migrate:
+        condition: service_completed_successfully
+    networks:
+      - edge
+      - data
+    ports:
+      - target: 5000
+        published: ${PCBR_MLFLOW_PORT:-5000}
+        host_ip: ${PCBR_BIND_ADDRESS:-127.0.0.1}
+        protocol: tcp
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health', timeout=3)",
+        ]
+      interval: 20s
+      timeout: 5s
+      retries: 6
+      start_period: 45s
+    mem_limit: ${PCBR_MLFLOW_MEMORY:-2g}
+    cpus: ${PCBR_MLFLOW_CPUS:-1.0}
+    pids_limit: 256
+    stop_grace_period: 1m
+
+  postgres-exporter:
+    profiles: ["observability"]
+    image: ${PCBR_POSTGRES_EXPORTER_IMAGE:?Set PCBR_POSTGRES_EXPORTER_IMAGE to an immutable digest}
+    restart: unless-stopped
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    environment:
+      POSTGRES_EXPORTER_HOST: postgres
+      POSTGRES_EXPORTER_PORT: "5432"
+      POSTGRES_EXPORTER_DATABASE: postgres
+      POSTGRES_EXPORTER_USER: ${PCBR_MONITOR_USER:?Set PCBR_MONITOR_USER}
+      POSTGRES_EXPORTER_PASSWORD_FILE: /run/secrets/postgres_monitor_password
+      PG_EXPORTER_DISABLE_SETTINGS_METRICS: "false"
+    secrets:
+      - postgres_monitor_password
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - data
+      - observability
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9187/metrics"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    mem_limit: 256m
+    cpus: 0.25
+    pids_limit: 64
+
+  blackbox-exporter:
+    profiles: ["observability"]
+    image: ${PCBR_BLACKBOX_EXPORTER_IMAGE:?Set PCBR_BLACKBOX_EXPORTER_IMAGE to an immutable digest}
+    restart: unless-stopped
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    command: ["--config.file=/etc/blackbox/blackbox.yml"]
+    volumes:
+      - ./infra/monitoring/blackbox.yml:/etc/blackbox/blackbox.yml:ro
+    networks:
+      - edge
+      - observability
+    mem_limit: 128m
+    cpus: 0.25
+    pids_limit: 64
+
+  prometheus:
+    profiles: ["observability"]
+    image: ${PCBR_PROMETHEUS_IMAGE:?Set PCBR_PROMETHEUS_IMAGE to an immutable digest}
+    restart: unless-stopped
+    <<: *runtime-security
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=15d
+      - --web.enable-lifecycle=false
+    volumes:
+      - prometheus-data:/prometheus
+      - ./infra/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./infra/monitoring/alerts.yml:/etc/prometheus/rules/alerts.yml:ro
+    depends_on:
+      postgres-exporter:
+        condition: service_healthy
+      blackbox-exporter:
+        condition: service_started
+    networks:
+      - edge
+      - observability
+    ports:
+      - target: 9090
+        published: ${PCBR_PROMETHEUS_PORT:-9090}
+        host_ip: ${PCBR_BIND_ADDRESS:-127.0.0.1}
+        protocol: tcp
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:9090/-/ready"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    mem_limit: ${PCBR_OBSERVABILITY_MEMORY:-1g}
+    cpus: 1.0
+    pids_limit: 128
+
+  backup-postgres:
+    profiles: ["operations"]
+    image: ${PCBR_POSTGRES_IMAGE:?Set PCBR_POSTGRES_IMAGE to an immutable digest}
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging: *bounded-logging
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: ${PCBR_POSTGRES_ADMIN_USER:?Set PCBR_POSTGRES_ADMIN_USER}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_admin_password
+      PCBR_DATABASE_NAME: ${PCBR_DATABASE_NAME:?Set PCBR_DATABASE_NAME}
+      PCBR_DAGSTER_DATABASE: ${PCBR_DAGSTER_DATABASE:?Set PCBR_DAGSTER_DATABASE}
+      PCBR_MLFLOW_DATABASE: ${PCBR_MLFLOW_DATABASE:?Set PCBR_MLFLOW_DATABASE}
+      PCBR_BACKUP_ROOT: /backups/postgres
+    secrets:
+      - postgres_admin_password
+    volumes:
+      - type: bind
+        source: ${PCBR_BACKUP_DIR:?Set PCBR_BACKUP_DIR}
+        target: /backups
+      - ./infra/ops/backup-postgres.sh:/ops/backup-postgres.sh:ro
+    command: ["/bin/sh", "/ops/backup-postgres.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - data
+    mem_limit: 1g
+    cpus: 1.0
+    pids_limit: 64
+
+  backup-artifacts:
+    profiles: ["operations"]
+    image: ${PCBR_ALPINE_IMAGE:?Set PCBR_ALPINE_IMAGE to an immutable digest}
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging: *bounded-logging
+    environment:
+      PCBR_BACKUP_ROOT: /backups/artifacts
+    volumes:
+      - type: bind
+        source: ${PCBR_BACKUP_DIR:?Set PCBR_BACKUP_DIR}
+        target: /backups
+      - dagster-state:/dagster-state:ro
+      - type: bind
+        source: ${PCBR_MLFLOW_ARTIFACTS_DIR:?Set PCBR_MLFLOW_ARTIFACTS_DIR}
+        target: /mlflow-artifacts
+        read_only: true
+      - type: bind
+        source: ${PCBR_PIPELINE_ARTIFACTS_DIR:?Set PCBR_PIPELINE_ARTIFACTS_DIR}
+        target: /pipeline-artifacts
+        read_only: true
+      - ./infra/ops/backup-volumes.sh:/ops/backup-volumes.sh:ro
+    command: ["/bin/sh", "/ops/backup-volumes.sh"]
+    mem_limit: 1g
+    cpus: 1.0
+    pids_limit: 64
+
+  restore-postgres:
+    profiles: ["restore"]
+    image: ${PCBR_POSTGRES_IMAGE:?Set PCBR_POSTGRES_IMAGE to an immutable digest}
+    restart: "no"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging: *bounded-logging
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: ${PCBR_POSTGRES_ADMIN_USER:?Set PCBR_POSTGRES_ADMIN_USER}
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_admin_password
+      PCBR_DATABASE_NAME: ${PCBR_DATABASE_NAME:?Set PCBR_DATABASE_NAME}
+      PCBR_MIGRATOR_USER: ${PCBR_MIGRATOR_USER:?Set PCBR_MIGRATOR_USER}
+      PCBR_DAGSTER_DATABASE: ${PCBR_DAGSTER_DATABASE:?Set PCBR_DAGSTER_DATABASE}
+      PCBR_DAGSTER_USER: ${PCBR_DAGSTER_USER:?Set PCBR_DAGSTER_USER}
+      PCBR_MLFLOW_DATABASE: ${PCBR_MLFLOW_DATABASE:?Set PCBR_MLFLOW_DATABASE}
+      PCBR_MLFLOW_USER: ${PCBR_MLFLOW_USER:?Set PCBR_MLFLOW_USER}
+      PCBR_RESTORE_SET: ${PCBR_RESTORE_SET:-REFUSED}
+      PCBR_RESTORE_CONFIRM: ${PCBR_RESTORE_CONFIRM:-REFUSED}
+    secrets:
+      - postgres_admin_password
+    volumes:
+      - type: bind
+        source: ${PCBR_BACKUP_DIR:?Set PCBR_BACKUP_DIR}
+        target: /backups
+        read_only: true
+      - ./infra/ops/restore-postgres.sh:/ops/restore-postgres.sh:ro
+    command: ["/bin/sh", "/ops/restore-postgres.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - data
+    mem_limit: 1g
+    cpus: 1.0
+    pids_limit: 64
+
+secrets:
+  postgres_admin_password:
+    file: ${PCBR_POSTGRES_ADMIN_PASSWORD_FILE:?Set PCBR_POSTGRES_ADMIN_PASSWORD_FILE}
+  postgres_migrator_password:
+    file: ${PCBR_MIGRATOR_PASSWORD_FILE:?Set PCBR_MIGRATOR_PASSWORD_FILE}
+  postgres_app_password:
+    file: ${PCBR_APP_PASSWORD_FILE:?Set PCBR_APP_PASSWORD_FILE}
+  postgres_dagster_password:
+    file: ${PCBR_DAGSTER_PASSWORD_FILE:?Set PCBR_DAGSTER_PASSWORD_FILE}
+  postgres_mlflow_password:
+    file: ${PCBR_MLFLOW_PASSWORD_FILE:?Set PCBR_MLFLOW_PASSWORD_FILE}
+  postgres_monitor_password:
+    file: ${PCBR_MONITOR_PASSWORD_FILE:?Set PCBR_MONITOR_PASSWORD_FILE}
+  api_admin_token:
+    file: ${PCBR_API_ADMIN_TOKEN_FILE:?Set PCBR_API_ADMIN_TOKEN_FILE}
+
+volumes:
+  postgres-data:
+  dagster-state:
+  prometheus-data:
+
+networks:
+  edge:
+  data:
+    internal: true
+  control:
+    internal: true
+  observability:
+    internal: true
+  pipeline:
