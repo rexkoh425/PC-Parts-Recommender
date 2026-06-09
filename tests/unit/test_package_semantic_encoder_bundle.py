@@ -108,7 +108,7 @@ def test_package_encoder_bundle_rejects_a_manifest_with_the_wrong_encoder_contra
     tmp_path: Path,
 ) -> None:
     source = _source_bundle(tmp_path)
-    manifest = _embedding_manifest(tmp_path, fingerprint="0" * 65)
+    manifest = _embedding_manifest(tmp_path, fingerprint="0" * 64)
 
     with pytest.raises(EncoderBundlePublicationError, match="fingerprint"):
         package_encoder_bundle(
