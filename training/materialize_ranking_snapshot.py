@@ -28,7 +28,7 @@ from pc_build_recommender.evaluation.manifest import (
     json_sha256,
 )
 from pc_build_recommender.ranking import (
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
     RankingFeatureBuilder,
 )
@@ -303,7 +303,7 @@ def _load_prelabel_rows(
             try:
                 context = RankingContext(**context_payload)
                 ranking_candidates = tuple(
-                    ScoredCandidate(**candidate) for candidate in candidate_payloads
+                    RankingCandidate(**candidate) for candidate in candidate_payloads
                 )
                 feature_batch = feature_builder.build(context, ranking_candidates)
             except (TypeError, ValueError) as error:

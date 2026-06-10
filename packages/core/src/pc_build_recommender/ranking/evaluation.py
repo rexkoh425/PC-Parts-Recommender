@@ -15,7 +15,7 @@ from pc_build_recommender.retrieval import (
 )
 
 from .lambdamart import LambdaMARTRanker, relative_ndcg_improvement
-from .models import ProductRanker, ScoredCandidate, RankingContext
+from .models import ProductRanker, RankingCandidate, RankingContext
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,7 +44,7 @@ def generate_artifact_bound_rankings(
     *,
     model_name: str,
     contexts: Mapping[str, RankingContext],
-    candidates: Mapping[str, Sequence[ScoredCandidate]],
+    candidates: Mapping[str, Sequence[RankingCandidate]],
     query_split: QueryGroupSplit | None = None,
     split_name: str | None = None,
 ) -> ArtifactBoundRankerOutput:
@@ -231,7 +231,7 @@ def evaluate_product_ranker(
     dataset: FrozenCandidateSet,
     *,
     contexts: Mapping[str, RankingContext],
-    candidates: Mapping[str, Sequence[ScoredCandidate]],
+    candidates: Mapping[str, Sequence[RankingCandidate]],
     baseline_ranked_product_ids: Mapping[str, Sequence[str]] | None = None,
 ) -> FrozenRankingEvaluation:
     """Run a ranker end-to-end while guarding candidate-set parity."""

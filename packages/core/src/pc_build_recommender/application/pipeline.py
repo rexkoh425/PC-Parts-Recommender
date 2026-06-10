@@ -17,7 +17,7 @@ from pc_build_recommender.domain import (
 from pc_build_recommender.ranking import (
     ProductRanker,
     RankedCandidate,
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
 )
 from pc_build_recommender.retrieval import (
@@ -396,7 +396,7 @@ class CandidatePipeline:
         context: RankingContext,
         candidates: Sequence[RetrievedCandidate],
     ) -> list[RankedCatalogItem]:
-        ranking_candidates: list[ScoredCandidate] = []
+        ranking_candidates: list[RankingCandidate] = []
         performance_by_product: dict[str, Mapping[str, WorkloadPerformanceSignal]] = {}
         for candidate in candidates:
             item = self.catalog.require(candidate.product_id)
@@ -425,7 +425,7 @@ class CandidatePipeline:
             if predicted_score is not None:
                 signals["predicted_workload_score"] = predicted_score
             ranking_candidates.append(
-                ScoredCandidate.from_retrieved(
+                RankingCandidate.from_retrieved(
                     candidate,
                     workload_scores=request_workloads,
                     signals=signals,

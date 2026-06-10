@@ -21,7 +21,7 @@ def _finite_mapping(name: str, values: Mapping[str, float]) -> dict[str, float]:
 
 
 @dataclass(frozen=True, slots=True)
-class ScoredCandidate:
+class RankingCandidate:
     """A filtered component plus soft evidence used for ranking.
 
     There is deliberately no ``compatible`` feature.  Hard compatibility is an
@@ -68,7 +68,7 @@ class ScoredCandidate:
         *,
         workload_scores: Mapping[str, float] | None = None,
         signals: Mapping[str, float] | None = None,
-    ) -> ScoredCandidate:
+    ) -> RankingCandidate:
         return cls(
             product_id=candidate.product_id,
             category=candidate.product.category,
@@ -135,7 +135,7 @@ class RankingContext:
 @dataclass(frozen=True, slots=True)
 class RankingQuery:
     context: RankingContext
-    candidates: tuple[ScoredCandidate, ...]
+    candidates: tuple[RankingCandidate, ...]
 
     def __post_init__(self) -> None:
         if not self.candidates:
@@ -146,7 +146,7 @@ class RankingQuery:
 
     @classmethod
     def create(
-        cls, context: RankingContext, candidates: Sequence[ScoredCandidate]
+        cls, context: RankingContext, candidates: Sequence[RankingCandidate]
     ) -> RankingQuery:
         return cls(context=context, candidates=tuple(candidates))
 
@@ -154,7 +154,7 @@ class RankingQuery:
 @dataclass(frozen=True, slots=True)
 class LabeledRankingQuery:
     context: RankingContext
-    candidates: tuple[ScoredCandidate, ...]
+    candidates: tuple[RankingCandidate, ...]
     relevance_grades: tuple[int, ...]
 
     def __post_init__(self) -> None:
@@ -171,7 +171,7 @@ class LabeledRankingQuery:
     def create(
         cls,
         context: RankingContext,
-        candidates: Sequence[ScoredCandidate],
+        candidates: Sequence[RankingCandidate],
         relevance_grades: Sequence[int],
     ) -> LabeledRankingQuery:
         return cls(
@@ -352,7 +352,7 @@ class RankerMetadata:
 
 @dataclass(frozen=True, slots=True)
 class RankedCandidate:
-    candidate: ScoredCandidate
+    candidate: RankingCandidate
     score: float
     rank: int
     ranker_version: str
@@ -381,6 +381,6 @@ class ProductRanker(Protocol):
         """Whether scoring uses bytes loaded through the verified artifact manifest."""
 
     def rank_query(
-        self, context: RankingContext, candidates: Sequence[ScoredCandidate]
+        self, context: RankingContext, candidates: Sequence[RankingCandidate]
     ) -> list[RankedCandidate]:
         """Rank a pre-filtered candidate set."""

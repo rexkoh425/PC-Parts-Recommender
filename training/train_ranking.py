@@ -6,7 +6,7 @@ Input is JSONL with one query per row::
      "candidates": [{"product_id": "gpu-1", "category": "gpu",
                      "relevance_grade": 4, ...}]}
 
-Candidate fields follow :class:`ScoredCandidate`.  Silver or synthetic labels may be
+Candidate fields follow :class:`RankingCandidate`.  Silver or synthetic labels may be
 used only for an explicitly enabled pipeline diagnostic and always produce a
 non-promotable artifact.  The retrieval silver pilot's frozen-candidate document alone
 is intentionally insufficient: ranking features must be snapshotted with every grade.
@@ -27,7 +27,7 @@ from pc_build_recommender.ranking import (
     LabeledRankingQuery,
     LambdaMARTRanker,
     RankerMetadata,
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
     relative_ndcg_improvement,
 )
@@ -101,7 +101,7 @@ class _RankingScorePredictor(Protocol):
     def predict(
         self,
         context: RankingContext,
-        candidates: Sequence[ScoredCandidate],
+        candidates: Sequence[RankingCandidate],
     ) -> Any:
         """Return one finite ranking score per candidate."""
 
@@ -122,7 +122,7 @@ def _load_queries(path: Path) -> tuple[LabeledRankingQuery, ...]:
         raw_candidates = row.get("candidates")
         if not isinstance(raw_candidates, list):
             raise ValueError(f"row {row_number} candidates must be a JSON array")
-        candidates: list[ScoredCandidate] = []
+        candidates: list[RankingCandidate] = []
         grades: list[int] = []
         for candidate_number, raw_candidate in enumerate(raw_candidates, start=1):
             payload = _mapping(
@@ -141,7 +141,7 @@ def _load_queries(path: Path) -> tuple[LabeledRankingQuery, ...]:
                     "must be an integer from 0 to 4"
                 )
             grade = raw_grade
-            candidates.append(ScoredCandidate(**payload))
+            candidates.append(RankingCandidate(**payload))
             grades.append(grade)
         queries.append(
             LabeledRankingQuery.create(

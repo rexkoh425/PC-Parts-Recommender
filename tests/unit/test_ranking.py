@@ -4,7 +4,7 @@ import pytest
 
 from pc_build_recommender.ranking import (
     HeuristicRanker,
-    ScoredCandidate,
+    RankingCandidate,
     RankingContext,
     RankingFeatureBuilder,
 )
@@ -17,8 +17,8 @@ def _candidate(
     workload: float,
     vector: float,
     reliability: float,
-) -> ScoredCandidate:
-    return ScoredCandidate(
+) -> RankingCandidate:
+    return RankingCandidate(
         product_id=product_id,
         category="gpu",
         price_sgd=price,
@@ -41,7 +41,7 @@ def _candidate(
 
 def test_hard_compatibility_cannot_be_a_ranking_signal() -> None:
     with pytest.raises(ValueError, match="compatibility must be filtered"):
-        ScoredCandidate(
+        RankingCandidate(
             product_id="bad",
             category="gpu",
             signals={"hard_compatible": 1.0},
@@ -49,7 +49,7 @@ def test_hard_compatibility_cannot_be_a_ranking_signal() -> None:
 
 
 def test_feature_builder_records_observed_vs_predicted_basis() -> None:
-    candidate = ScoredCandidate(
+    candidate = RankingCandidate(
         product_id="gpu-a",
         category="gpu",
         price_sgd=1000,
