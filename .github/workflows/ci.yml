@@ -1,0 +1,156 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install locked environment
+        run: uv sync --locked
+      - name: Lint
+        run: uv run ruff check packages/core/src services pipelines tests db
+      - name: Type check
+        run: uv run mypy packages/core/src services
+      - name: Test
+        run: uv run pytest -m "not integration and not slow"
+      - name: Verify optional-dependency-safe pipeline import
+        run: >-
+          uv run python -c "import pipelines.definitions as d;
+          assert d.defs is None"
+
+  pipeline-definitions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install Dagster extra
+        run: uv sync --locked --extra pipeline
+      - name: Load Dagster definitions
+        run: >-
+          uv run python -c "from pipelines.definitions import defs;
+          assert defs is not None"
+
+  web-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - name: Install web dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint:web
+      - name: Type check
+        run: npm --workspace apps/web run typecheck
+      - name: Unit test
+        run: npm --workspace apps/web run test
+      - name: Production build
+        run: npm run build:web
+
+  migration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: pc_build_recommender
+          POSTGRES_USER: pcbr
+          POSTGRES_PASSWORD: pcbr_ci_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U pcbr -d pc_build_recommender"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgresql+psycopg://pcbr:pcbr_ci_only@localhost:5432/pc_build_recommender
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install locked environment
+        run: uv sync --locked
+      - name: Upgrade, downgrade, and re-upgrade schema
+        run: |
+          uv run alembic -c db/alembic.ini upgrade head
+          uv run alembic -c db/alembic.ini downgrade base
+          uv run alembic -c db/alembic.ini upgrade head
+          uv run alembic -c db/alembic.ini current
+
+  compose-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Render default and optional service profiles
+        run: |
+          docker compose --env-file .env.example config --quiet
+          docker compose --env-file .env.example --profile pipeline --profile mlops config --quiet
+
+  production-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install locked environment
+        run: uv sync --locked
+      - name: Prove the production template fails closed
+        run: |
+          if uv run python scripts/validate_production_env.py \
+            --env-file .env.production.example; then
+            echo "The placeholder production template unexpectedly passed validation" >&2
+            exit 1
+          fi
+      - name: Generate an isolated valid contract fixture
+        run: >-
+          uv run python -m scripts.create_production_contract_fixture
+          --fixture-root .ci-production
+          --env-file .env.production.ci
+      - name: Validate and render every production profile
+        run: |
+          uv run python scripts/validate_production_env.py \
+            --env-file .env.production.ci
+          docker compose --env-file .env.production.ci \
+            -f docker-compose.production.yml \
+            --profile pipeline --profile mlops --profile observability \
+            --profile operations --profile restore config --quiet
+          docker compose --env-file .env.production.ci \
+            -f docker-compose.production.yml \
+            --profile pipeline --profile mlops --profile observability \
+            --profile operations --profile restore config --format json \
+            | uv run python scripts/verify_production_release_contract.py
