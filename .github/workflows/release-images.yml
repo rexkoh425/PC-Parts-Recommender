@@ -1,0 +1,110 @@
+name: release-images
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Immutable release label such as 2026.07.22-abcdef0
+        required: true
+        type: string
+      public_api_url:
+        description: HTTPS API origin compiled into the Next.js browser bundle
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+
+concurrency:
+  group: release-images-${{ inputs.release_tag }}
+  cancel-in-progress: false
+
+jobs:
+  validate-inputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate release label and public API origin
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          PUBLIC_API_URL: ${{ inputs.public_api_url }}
+        run: |
+          [[ "$RELEASE_TAG" =~ ^[0-9A-Za-z][0-9A-Za-z._-]{0,63}$ ]]
+          [[ "$PUBLIC_API_URL" =~ ^https://[^/]+$ ]]
+
+  build-push-attest:
+    needs: validate-inputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: api
+            dockerfile: infra/api.Dockerfile
+          - name: web
+            dockerfile: infra/web.Dockerfile
+          - name: dagster
+            dockerfile: infra/dagster.Dockerfile
+          - name: mlflow
+            dockerfile: infra/mlflow.Dockerfile
+          - name: postgres-exporter
+            dockerfile: infra/postgres-exporter.Dockerfile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Normalize image name
+        id: image
+        shell: bash
+        env:
+          RAW_IMAGE: ghcr.io/${{ github.repository_owner }}/pcbr-${{ matrix.name }}
+        run: echo "name=${RAW_IMAGE,,}" >> "$GITHUB_OUTPUT"
+      - name: Build release candidate locally
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          load: true
+          push: false
+          tags: pcbr/${{ matrix.name }}:release-candidate
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ inputs.public_api_url }}
+          cache-from: type=gha,scope=release-${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=release-${{ matrix.name }}
+      - name: Scan candidate before publication
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: pcbr/${{ matrix.name }}:release-candidate
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: "1"
+          format: table
+      - name: Push immutable image with supply-chain metadata
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ steps.image.outputs.name }}:${{ inputs.release_tag }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ inputs.public_api_url }}
+          cache-from: type=gha,scope=release-${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=release-${{ matrix.name }}
+          provenance: mode=max
+          sbom: true
+      - name: Attest image provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ steps.image.outputs.name }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+      - name: Emit deployment reference
+        run: echo '${{ steps.image.outputs.name }}@${{ steps.build.outputs.digest }}'
