@@ -15,7 +15,7 @@ from pc_build_recommender.domain import (
     BuildRecommendation,
     CanonicalProduct,
     CompatibilityCheck,
-    CompatVerdict,
+    CompatibilityStatus,
     ComponentCategory,
     RetailerListing,
     StockStatus,
@@ -343,14 +343,14 @@ def solution_to_domain(
             )
         )
     overall_status = (
-        CompatVerdict.WARNING
-        if any(check.status == CompatVerdict.WARNING for check in compatibility_checks)
-        else CompatVerdict.PASS
+        CompatibilityStatus.WARNING
+        if any(check.status == CompatibilityStatus.WARNING for check in compatibility_checks)
+        else CompatibilityStatus.PASS
     )
     report_warnings = [
         check.message
         for check in compatibility_checks
-        if check.status == CompatVerdict.WARNING
+        if check.status == CompatibilityStatus.WARNING
     ]
     components = []
     for category in ComponentCategory:

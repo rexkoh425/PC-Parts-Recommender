@@ -6,7 +6,7 @@ import math
 from collections import Counter
 from collections.abc import Mapping, Sequence
 
-from pc_build_recommender.domain import CompatVerdict, ComponentCategory
+from pc_build_recommender.domain import CompatibilityStatus, ComponentCategory
 
 from .models import (
     REQUIRED_CATEGORIES,
@@ -268,7 +268,7 @@ def normalise_validator_result(result: object) -> tuple[str, ...]:
                 status = _domain_compatibility_status(raw_status)
             except ValueError:
                 return (f"independent validator returned unrecognized status {raw_status!r}",)
-            if status in (CompatVerdict.FAIL, CompatVerdict.UNKNOWN):
+            if status in (CompatibilityStatus.FAIL, CompatibilityStatus.UNKNOWN):
                 blocking_messages.append(f"compatibility status is {status.value}")
         for item in result.get("results", ()):
             item_mapping = item if isinstance(item, Mapping) else {}
@@ -283,7 +283,7 @@ def normalise_validator_result(result: object) -> tuple[str, ...]:
                     f"compatibility result has unrecognized status {item_status!r}"
                 )
                 continue
-            if status in (CompatVerdict.FAIL, CompatVerdict.UNKNOWN):
+            if status in (CompatibilityStatus.FAIL, CompatibilityStatus.UNKNOWN):
                 message = item_mapping.get("message", getattr(item, "message", status.value))
                 blocking_messages.append(str(message))
         if feasibility_value is False or blocking_messages:

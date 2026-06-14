@@ -89,7 +89,7 @@ from services.api.models import (
     CompatibilityCheck,
     CompatibilityCheckRequest,
     CompatibilityCheckResponse,
-    CompatVerdict,
+    CompatibilityStatus,
     ComponentCategory,
     ExplanationItem,
     FreshnessResponse,
@@ -220,9 +220,9 @@ def _review_sentiment_label(value: float) -> Literal["positive", "neutral", "neg
     return "neutral"
 
 
-def _api_status(value: object) -> CompatVerdict:
+def _api_status(value: object) -> CompatibilityStatus:
     raw = getattr(value, "value", value)
-    return CompatVerdict(str(raw).casefold())
+    return CompatibilityStatus(str(raw).casefold())
 
 
 def _optimizer_status(response: ApplicationBuildGenerationResponse) -> SolverStatus:
@@ -1337,7 +1337,7 @@ class CoreRecommendationService(RecommendationApplication):
                 checks.append(
                     CompatibilityCheck(
                         rule_id="exactly-one-per-category",
-                        status=CompatVerdict.FAIL,
+                        status=CompatibilityStatus.FAIL,
                         message=f"Multiple {item.category.value} components were supplied.",
                         affected_categories=[item.category],
                     )
@@ -1348,7 +1348,7 @@ class CoreRecommendationService(RecommendationApplication):
                 checks.append(
                     CompatibilityCheck(
                         rule_id="verified-catalog-product",
-                        status=CompatVerdict.UNKNOWN,
+                        status=CompatibilityStatus.UNKNOWN,
                         message="Compatibility requires a verified canonical product and category.",
                         affected_categories=[item.category],
                     )
@@ -1369,7 +1369,7 @@ class CoreRecommendationService(RecommendationApplication):
             checks.append(
                 CompatibilityCheck(
                     rule_id="complete-build",
-                    status=CompatVerdict.UNKNOWN,
+                    status=CompatibilityStatus.UNKNOWN,
                     message="A complete decision requires all eight component categories.",
                     affected_categories=missing,
                 )
@@ -1377,7 +1377,7 @@ class CoreRecommendationService(RecommendationApplication):
         status = self._aggregate_status(checks)
         return CompatibilityCheckResponse(
             status=status,
-            is_feasible=status in {CompatVerdict.PASS, CompatVerdict.WARNING},
+            is_feasible=status in {CompatibilityStatus.PASS, CompatibilityStatus.WARNING},
             checks=checks,
             rule_version=self.services.versions.rule_version,
             data_version=self.services.versions.data_version,
@@ -1628,7 +1628,7 @@ class CoreRecommendationService(RecommendationApplication):
                 )
             )
         checks = [self._domain_check(item) for item in build.compatibility_checks]
-        warning_checks = [item for item in checks if item.status is CompatVerdict.WARNING]
+        warning_checks = [item for item in checks if item.status is CompatibilityStatus.WARNING]
         selected_prices = {item.category: item.price_sgd for item in build.components}
         alternatives = [
             ReplacementCandidate(
@@ -1711,15 +1711,15 @@ class CoreRecommendationService(RecommendationApplication):
         )
 
     @staticmethod
-    def _aggregate_status(checks: Sequence[CompatibilityCheck]) -> CompatVerdict:
+    def _aggregate_status(checks: Sequence[CompatibilityCheck]) -> CompatibilityStatus:
         statuses = {item.status for item in checks}
-        if CompatVerdict.FAIL in statuses:
-            return CompatVerdict.FAIL
-        if CompatVerdict.UNKNOWN in statuses:
-            return CompatVerdict.UNKNOWN
-        if CompatVerdict.WARNING in statuses:
-            return CompatVerdict.WARNING
-        return CompatVerdict.PASS
+        if CompatibilityStatus.FAIL in statuses:
+            return CompatibilityStatus.FAIL
+        if CompatibilityStatus.UNKNOWN in statuses:
+            return CompatibilityStatus.UNKNOWN
+        if CompatibilityStatus.WARNING in statuses:
+            return CompatibilityStatus.WARNING
+        return CompatibilityStatus.PASS
 
 
 def create_processed_catalog_service(

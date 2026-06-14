@@ -7,7 +7,7 @@ from hypothesis import strategies as st
 
 from pc_build_recommender.domain import (
     BuildProfile,
-    CompatVerdict,
+    CompatibilityStatus,
     ComponentCategory,
 )
 from pc_build_recommender.optimizer import (
@@ -181,7 +181,7 @@ def test_adding_a_hard_incompatibility_never_increases_feasible_set(
             PairwiseCompatibility(
                 f"cpu-{left_suffix}",
                 f"motherboard-{right_suffix}",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
             ),
         ),
     )

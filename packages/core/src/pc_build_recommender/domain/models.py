@@ -27,7 +27,7 @@ from .enums import (
     BenchmarkValueKind,
     BuildProfile,
     CaseSize,
-    CompatVerdict,
+    CompatibilityStatus,
     ComponentCategory,
     InteractionType,
     ListingCondition,
@@ -275,7 +275,7 @@ class CompatibilityRule(DomainModel):
     left_category: ComponentCategory
     right_category: ComponentCategory
     rule_type: str = Field(min_length=1)
-    severity: CompatVerdict
+    severity: CompatibilityStatus
     required_fields: list[str] = Field(default_factory=list)
     message_template: str = Field(min_length=1)
     evidence_source: str = Field(min_length=1)
@@ -396,7 +396,7 @@ class BuildGenerationRequest(DomainModel):
 
 class CompatibilityCheck(DomainModel):
     rule_id: str | None = None
-    status: CompatVerdict
+    status: CompatibilityStatus
     message: str = Field(min_length=1)
     component_ids: list[str] = Field(default_factory=list)
 
@@ -439,7 +439,7 @@ class BuildRecommendation(DomainModel):
     overall_score: Score
     components: list[BuildComponentSelection]
     workload_scores: dict[WorkloadName, Score] = Field(default_factory=dict)
-    compatibility_status: CompatVerdict
+    compatibility_status: CompatibilityStatus
     compatibility_checks: list[CompatibilityCheck] = Field(default_factory=list)
     estimated_power_watts: float | None = Field(default=None, ge=0)
     warnings: list[str] = Field(default_factory=list)
@@ -467,7 +467,7 @@ class BuildRecommendation(DomainModel):
                 f"a returned build must contain exactly all eight categories ({detail})"
             )
 
-        hard_outcomes = {CompatVerdict.FAIL, CompatVerdict.UNKNOWN}
+        hard_outcomes = {CompatibilityStatus.FAIL, CompatibilityStatus.UNKNOWN}
         if self.compatibility_status in hard_outcomes:
             raise ValueError("returned builds cannot have FAIL or UNKNOWN compatibility status")
         hard_checks = [
@@ -475,8 +475,8 @@ class BuildRecommendation(DomainModel):
         ]
         if hard_checks:
             raise ValueError("returned builds cannot contain FAIL or UNKNOWN compatibility checks")
-        if self.compatibility_status == CompatVerdict.PASS and any(
-            check.status == CompatVerdict.WARNING for check in self.compatibility_checks
+        if self.compatibility_status == CompatibilityStatus.PASS and any(
+            check.status == CompatibilityStatus.WARNING for check in self.compatibility_checks
         ):
             raise ValueError("a passing build cannot contain WARNING compatibility checks")
         return self

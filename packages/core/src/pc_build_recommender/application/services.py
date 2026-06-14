@@ -10,12 +10,12 @@ from pc_build_recommender.compatibility import (
     CompatibilityReport,
 )
 from pc_build_recommender.compatibility import (
-    CompatVerdict as EngineCompatibilityStatus,
+    CompatibilityStatus as EngineCompatibilityStatus,
 )
 from pc_build_recommender.domain import (
     BuildGenerationRequest,
     BuildRecommendation,
-    CompatVerdict,
+    CompatibilityStatus,
     ComponentAlternative,
     ComponentCategory,
     ExistingComponent,
@@ -69,14 +69,14 @@ def _category(value: ComponentCategory | str) -> ComponentCategory:
     return ComponentCategory(_CATEGORY_ALIASES.get(normalised, normalised))
 
 
-def _pair_status(report: CompatibilityReport) -> CompatVerdict:
+def _pair_status(report: CompatibilityReport) -> CompatibilityStatus:
     if report.status == EngineCompatibilityStatus.FAIL:
-        return CompatVerdict.FAIL
+        return CompatibilityStatus.FAIL
     if report.status == EngineCompatibilityStatus.UNKNOWN:
-        return CompatVerdict.UNKNOWN
+        return CompatibilityStatus.UNKNOWN
     if report.status == EngineCompatibilityStatus.WARNING:
-        return CompatVerdict.WARNING
-    return CompatVerdict.PASS
+        return CompatibilityStatus.WARNING
+    return CompatibilityStatus.PASS
 
 
 def _non_pass_message(report: CompatibilityReport) -> str:
@@ -144,7 +144,7 @@ class SearchProductsService:
             top_k=top_k,
         )
         retrieved_candidates = len(hits)
-        compatibility_statuses: dict[str, CompatVerdict] = {}
+        compatibility_statuses: dict[str, CompatibilityStatus] = {}
         filtered_incompatible = 0
         filtered_unknown = 0
         if compatible_with_build_id is not None:
@@ -461,7 +461,7 @@ class GenerateBuildsService:
                         right.item.compatibility_record,
                     )
                     status = _pair_status(report)
-                    if status == CompatVerdict.PASS:
+                    if status == CompatibilityStatus.PASS:
                         continue
                     constraints.append(
                         PairwiseCompatibility(

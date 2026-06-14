@@ -12,7 +12,7 @@ from .engine import (
 from .models import (
     CompatibilityReport,
     CompatibilityResult,
-    CompatVerdict,
+    CompatibilityStatus,
     MissingDataRiskLevel,
     MissingDataRiskSummary,
     PowerPolicy,
@@ -27,7 +27,7 @@ __all__ = [
     "CompatibilityEngine",
     "CompatibilityReport",
     "CompatibilityResult",
-    "CompatVerdict",
+    "CompatibilityStatus",
     "MissingDataRiskLevel",
     "MissingDataRiskSummary",
     "PowerPolicy",

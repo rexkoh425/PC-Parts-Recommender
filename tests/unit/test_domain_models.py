@@ -17,7 +17,7 @@ from pc_build_recommender.domain import (
     CanonicalProduct,
     CaseAttributes,
     CompatibilityCheck,
-    CompatVerdict,
+    CompatibilityStatus,
     ComponentCategory,
     CoolerAttributes,
     CPUAttributes,
@@ -203,9 +203,9 @@ def _build_payload() -> dict[str, object]:
         "total_price_sgd": 800,
         "overall_score": 80,
         "components": _complete_components(),
-        "compatibility_status": CompatVerdict.PASS,
+        "compatibility_status": CompatibilityStatus.PASS,
         "compatibility_checks": [
-            CompatibilityCheck(status=CompatVerdict.PASS, message="All sockets match.")
+            CompatibilityCheck(status=CompatibilityStatus.PASS, message="All sockets match.")
         ],
     }
 
@@ -220,9 +220,9 @@ def test_returned_build_requires_exactly_one_component_from_all_eight_categories
         BuildRecommendation.model_validate(incomplete)
 
 
-@pytest.mark.parametrize("status", [CompatVerdict.FAIL, CompatVerdict.UNKNOWN])
+@pytest.mark.parametrize("status", [CompatibilityStatus.FAIL, CompatibilityStatus.UNKNOWN])
 def test_returned_build_rejects_hard_compatibility_status(
-    status: CompatVerdict,
+    status: CompatibilityStatus,
 ) -> None:
     payload = _build_payload()
     payload["compatibility_status"] = status
@@ -231,12 +231,12 @@ def test_returned_build_rejects_hard_compatibility_status(
         BuildRecommendation.model_validate(payload)
 
 
-@pytest.mark.parametrize("status", [CompatVerdict.FAIL, CompatVerdict.UNKNOWN])
+@pytest.mark.parametrize("status", [CompatibilityStatus.FAIL, CompatibilityStatus.UNKNOWN])
 def test_returned_build_rejects_hard_compatibility_checks(
-    status: CompatVerdict,
+    status: CompatibilityStatus,
 ) -> None:
     payload = _build_payload()
-    payload["compatibility_status"] = CompatVerdict.WARNING
+    payload["compatibility_status"] = CompatibilityStatus.WARNING
     payload["compatibility_checks"] = [
         CompatibilityCheck(status=status, message="Compatibility could not be established.")
     ]
@@ -247,16 +247,16 @@ def test_returned_build_rejects_hard_compatibility_checks(
 
 def test_returned_build_allows_warning_without_hard_failures() -> None:
     payload = _build_payload()
-    payload["compatibility_status"] = CompatVerdict.WARNING
+    payload["compatibility_status"] = CompatibilityStatus.WARNING
     payload["compatibility_checks"] = [
         CompatibilityCheck(
-            status=CompatVerdict.WARNING,
+            status=CompatibilityStatus.WARNING,
             message="BIOS version should be confirmed before assembly.",
         )
     ]
 
     build = BuildRecommendation.model_validate(payload)
-    assert build.compatibility_status == CompatVerdict.WARNING
+    assert build.compatibility_status == CompatibilityStatus.WARNING
 
 
 def test_retailer_timestamp_contract_uses_real_datetimes() -> None:

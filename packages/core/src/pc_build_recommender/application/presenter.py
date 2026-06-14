@@ -10,14 +10,14 @@ from pc_build_recommender.compatibility import (
     CompatibilityReport,
 )
 from pc_build_recommender.compatibility import (
-    CompatVerdict as EngineCompatibilityStatus,
+    CompatibilityStatus as EngineCompatibilityStatus,
 )
 from pc_build_recommender.domain import (
     BuildComponentSelection,
     BuildGenerationRequest,
     BuildRecommendation,
     CompatibilityCheck,
-    CompatVerdict,
+    CompatibilityStatus,
     WorkloadName,
 )
 from pc_build_recommender.optimizer.models import OptimizationSolution
@@ -25,8 +25,8 @@ from pc_build_recommender.optimizer.models import OptimizationSolution
 from .pipeline import PreparedCandidates, RankedCatalogItem
 
 
-def _domain_status(status: EngineCompatibilityStatus) -> CompatVerdict:
-    return CompatVerdict(status.value.casefold())
+def _domain_status(status: EngineCompatibilityStatus) -> CompatibilityStatus:
+    return CompatibilityStatus(status.value.casefold())
 
 
 def _component_ids(evidence: Mapping[str, Any]) -> list[str]:
@@ -145,9 +145,9 @@ def recommendation_from_solution(
 
     checks = compatibility_checks(report)
     warning_messages = [
-        check.message for check in checks if check.status == CompatVerdict.WARNING
+        check.message for check in checks if check.status == CompatibilityStatus.WARNING
     ]
-    status = CompatVerdict.WARNING if warning_messages else CompatVerdict.PASS
+    status = CompatibilityStatus.WARNING if warning_messages else CompatibilityStatus.PASS
     overall_score = round(
         sum(component.component_score for component in components) / len(components),
         6,

@@ -13,7 +13,7 @@ from pc_build_recommender.compatibility import (
     COMPATIBILITY_AUTHORITY_KEY,
     CONTROLLED_NON_PRODUCTION_POLICY,
     CompatibilityEngine,
-    CompatVerdict,
+    CompatibilityStatus,
 )
 from pc_build_recommender.domain import (
     BenchmarkResult,
@@ -143,9 +143,9 @@ def test_community_only_compatibility_fields_are_unknown_in_authoritative_mode()
     report = _pair_report(catalog)
 
     assert catalog.compatibility_evidence_policy == AUTHORITATIVE_COMPATIBILITY_POLICY
-    assert report.status is CompatVerdict.UNKNOWN
+    assert report.status is CompatibilityStatus.UNKNOWN
     assert {result.rule_id for result in report.results} == {"compat.evidence.authority"}
-    assert all(result.status is CompatVerdict.UNKNOWN for result in report.results)
+    assert all(result.status is CompatibilityStatus.UNKNOWN for result in report.results)
     assert all(
         "non-authoritative community data" in result.evidence["authority"]["reason"]
         for result in report.results
@@ -161,12 +161,12 @@ def test_manufacturer_authoritative_fields_receive_normal_rule_results() -> None
 
     report = _pair_report(catalog)
 
-    assert report.status is CompatVerdict.PASS
+    assert report.status is CompatibilityStatus.PASS
     assert {result.rule_id for result in report.results} == {
         "compat.gpu_case.length",
         "compat.gpu_case.slot_width",
     }
-    assert all(result.status is CompatVerdict.PASS for result in report.results)
+    assert all(result.status is CompatibilityStatus.PASS for result in report.results)
     assert catalog.has_authoritative_compatibility_coverage is True
 
 
@@ -181,7 +181,7 @@ def test_controlled_demo_policy_is_explicitly_non_production_and_unchanged() -> 
         COMPATIBILITY_AUTHORITY_KEY
     ]
 
-    assert report.status is CompatVerdict.PASS
+    assert report.status is CompatibilityStatus.PASS
     assert authority["decision"] == "controlled_non_production"
     assert authority["production_eligible"] is False
     assert catalog.has_authoritative_compatibility_coverage is False
@@ -211,4 +211,4 @@ def test_processed_catalog_composition_enforces_authoritative_policy(
         service.services.catalog.compatibility_evidence_policy == AUTHORITATIVE_COMPATIBILITY_POLICY
     )
     assert service.services.catalog.has_authoritative_compatibility_coverage is False
-    assert _pair_report(service.services.catalog).status is CompatVerdict.UNKNOWN
+    assert _pair_report(service.services.catalog).status is CompatibilityStatus.UNKNOWN

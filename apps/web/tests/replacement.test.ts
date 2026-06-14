@@ -7,11 +7,11 @@ import {
   replacementStatusLabel,
   summarizeReplacementChange,
 } from "../lib/replacement";
-import type { BuildSummary, CompatVerdict, ReplacementCandidate } from "../lib/types";
+import type { BuildSummary, CompatibilityStatus, ReplacementCandidate } from "../lib/types";
 
 function candidate(
   id: string,
-  status?: CompatVerdict,
+  status?: CompatibilityStatus,
 ): ReplacementCandidate {
   return {
     product_id: id,

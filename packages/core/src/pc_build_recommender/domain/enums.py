@@ -128,7 +128,7 @@ class BenchmarkValueKind(StrEnum):
     PREDICTED = "predicted"
 
 
-class CompatVerdict(StrEnum):
+class CompatibilityStatus(StrEnum):
     PASS = "pass"
     FAIL = "fail"
     WARNING = "warning"
