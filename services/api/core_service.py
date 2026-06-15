@@ -56,7 +56,7 @@ from pc_build_recommender.domain import (
     WorkloadPreference,
 )
 from pc_build_recommender.domain import (
-    InteractionRecord as DomainInteractionEvent,
+    InteractionEvent as DomainInteractionEvent,
 )
 from pc_build_recommender.domain import (
     WorkloadName as DomainWorkload,
@@ -98,7 +98,7 @@ from services.api.models import (
     InfeasibilityExplanation,
     InfeasibilityReason,
     InteractionAccepted,
-    InteractionRecord,
+    InteractionEvent,
     InvalidProductSearchCursor,
     PerformanceBenchmarkEvidence,
     PerformanceSignal,
@@ -401,7 +401,7 @@ class CoreRecommendationService(RecommendationApplication):
             }
         )
         self._mutation_lock = asyncio.Lock()
-        self._interactions: list[tuple[str, InteractionRecord, datetime]] = []
+        self._interactions: list[tuple[str, InteractionEvent, datetime]] = []
         self._generated_at_by_request: dict[str, datetime] = {}
 
     async def ready(self) -> bool:
@@ -1383,7 +1383,7 @@ class CoreRecommendationService(RecommendationApplication):
             data_version=self.services.versions.data_version,
         )
 
-    async def record_interaction(self, event: InteractionRecord) -> InteractionAccepted:
+    async def record_interaction(self, event: InteractionEvent) -> InteractionAccepted:
         event_id = f"evt_{uuid4().hex}"
         accepted_at = datetime.now(UTC)
         canonical_event = event.model_copy(

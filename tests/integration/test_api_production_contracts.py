@@ -44,7 +44,7 @@ from pc_build_recommender.domain import (
     ComponentCategory as DomainCategory,
 )
 from pc_build_recommender.domain import (
-    InteractionRecord as DomainInteractionEvent,
+    InteractionEvent as DomainInteractionEvent,
 )
 from pc_build_recommender.optimizer import OptimizationStatus
 from pc_build_recommender.pipeline_operations import write_pipeline_operation_event

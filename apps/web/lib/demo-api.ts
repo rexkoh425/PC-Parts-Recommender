@@ -11,7 +11,7 @@ import type {
   FreshnessSummary,
   GenerateBuildsResponse,
   InteractionAccepted,
-  InteractionRecord,
+  InteractionEvent,
   PriceObservation,
   ProductBenchmarksResponse,
   ProductDetail,
@@ -934,7 +934,7 @@ export function getDemoFreshness(): FreshnessSummary {
   };
 }
 
-export function acceptDemoInteraction(event: InteractionRecord): InteractionAccepted {
+export function acceptDemoInteraction(event: InteractionEvent): InteractionAccepted {
   void event;
   return {
     event_id: randomId("demo-event"),

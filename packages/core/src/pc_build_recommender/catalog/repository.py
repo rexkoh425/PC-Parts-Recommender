@@ -17,7 +17,7 @@ from pc_build_recommender.domain import (
     CanonicalProduct,
     CompatibilityRule,
     ComponentCategory,
-    InteractionRecord,
+    InteractionEvent,
     PriceSnapshot,
     ProductStatus,
     RetailerListing,
@@ -706,7 +706,7 @@ class CatalogRepository:
             }
         )
 
-    def add_interaction(self, event: InteractionRecord) -> InteractionRecord:
+    def add_interaction(self, event: InteractionEvent) -> InteractionEvent:
         if self.session.get(InteractionEventRecord, event.event_id) is not None:
             raise ValueError(f"interaction already exists: {event.event_id}")
         values = event.model_dump(exclude={"event_id", "metadata"})

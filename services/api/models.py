@@ -867,7 +867,7 @@ class CompatibilityCheckResponse(ApiModel):
     data_version: str
 
 
-class InteractionRecord(ApiModel):
+class InteractionEvent(ApiModel):
     event_type: Literal[
         "search_submitted",
         "build_generated",
@@ -906,7 +906,7 @@ class InteractionRecord(ApiModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def ranked_event_identifies_a_result(self) -> InteractionRecord:
+    def ranked_event_identifies_a_result(self) -> InteractionEvent:
         if self.rank_position is not None and self.product_id is None and self.build_id is None:
             raise ValueError("ranked events must reference a product or build")
         return self

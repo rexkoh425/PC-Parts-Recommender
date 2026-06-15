@@ -45,7 +45,7 @@ from services.api.models import (
     InfeasibilityExplanation,
     InfeasibilityReason,
     InteractionAccepted,
-    InteractionRecord,
+    InteractionEvent,
     InvalidProductSearchCursor,
     PerformanceSignal,
     PriceObservation,
@@ -112,7 +112,7 @@ class RecommendationApplication(Protocol):
         self, request: CompatibilityCheckRequest
     ) -> CompatibilityCheckResponse: ...
 
-    async def record_interaction(self, event: InteractionRecord) -> InteractionAccepted: ...
+    async def record_interaction(self, event: InteractionEvent) -> InteractionAccepted: ...
 
     async def freshness(self) -> FreshnessResponse: ...
 
@@ -640,7 +640,7 @@ class InMemoryRecommendationService:
         self._builds: dict[str, BuildSummary] = {}
         self._build_request_ids: dict[str, str] = {}
         self._build_shares: dict[str, _InMemoryBuildShare] = {}
-        self._interactions: list[tuple[str, InteractionRecord, datetime]] = []
+        self._interactions: list[tuple[str, InteractionEvent, datetime]] = []
         self._lock = asyncio.Lock()
 
     async def ready(self) -> bool:
@@ -1713,7 +1713,7 @@ class InMemoryRecommendationService:
             data_version=self.settings.data_version,
         )
 
-    async def record_interaction(self, event: InteractionRecord) -> InteractionAccepted:
+    async def record_interaction(self, event: InteractionEvent) -> InteractionAccepted:
         event_id = f"evt_{uuid4().hex}"
         accepted_at = datetime.now(UTC)
         canonical_event = event.model_copy(

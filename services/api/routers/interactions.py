@@ -6,7 +6,7 @@ from fastapi import APIRouter, status
 
 from services.api.dependencies import ApplicationDependency, SettingsDependency
 from services.api.metrics import DOMAIN_METRICS
-from services.api.models import InteractionAccepted, InteractionRecord
+from services.api.models import InteractionAccepted, InteractionEvent
 from services.api.routers.openapi import PAYLOAD_TOO_LARGE_ERROR, VALIDATION_ERROR
 
 router = APIRouter(prefix="/v1/interactions", tags=["interactions"])
@@ -19,7 +19,7 @@ router = APIRouter(prefix="/v1/interactions", tags=["interactions"])
     responses={**VALIDATION_ERROR, **PAYLOAD_TOO_LARGE_ERROR},
 )
 async def record_interaction(
-    event: InteractionRecord,
+    event: InteractionEvent,
     application: ApplicationDependency,
     settings: SettingsDependency,
 ) -> InteractionAccepted:
