@@ -45,7 +45,15 @@ from pc_build_recommender.entity_resolution import (
 from pc_build_recommender.entity_resolution.conflicts import find_numeric_conflicts
 from pc_build_recommender.entity_resolution.normalization import normalize_identifier, tokenize
 
-from .canonical_identity import audit_canonical_product_identities
+from .canonical_identity import (
+    CanonicalIdentityImportError,
+    CanonicalIdentityPreflightReport,
+    audit_canonical_product_identities,
+)
+from .canonical_identity_resolution import (
+    CanonicalIdentityResolutionSummary,
+    load_and_apply_canonical_identity_resolution,
+)
 from .entity_matcher import CatalogEntityMatcher, listing_record_from_offer
 from .er_gate import load_entity_resolution_evaluation
 from .mapping_review import (
@@ -396,6 +404,60 @@ def _require_envelope(
     if not isinstance(data, Mapping):
         raise ValueError(f"processed record is missing a data object in {path}")
     return data
+
+
+def _require_explicit_production_product_fields(
+    data: Mapping[str, object],
+    *,
+    path: Path,
+) -> None:
+    """Reject production rows that would receive runtime identity/freshness defaults."""
+
+    for field_name in ("product_id", "created_at", "updated_at"):
+        value = data.get(field_name)
+        if value is None or (isinstance(value, str) and not value.strip()):
+            raise ValueError(
+                "production canonical product requires an explicit "
+                f"{field_name}: {path}"
+            )
+    provenance = data.get("provenance")
+    if not isinstance(provenance, list):
+        raise ValueError(f"production canonical product provenance must be an array: {path}")
+    for index, raw_item in enumerate(provenance):
+        if not isinstance(raw_item, Mapping):
+            raise ValueError(
+                "production canonical product provenance entries must be objects: "
+                f"{path}"
+            )
+        for field_name in ("provenance_id", "retrieved_at"):
+            value = raw_item.get(field_name)
+            if value is None or (isinstance(value, str) and not value.strip()):
+                raise ValueError(
+                    "production canonical product provenance requires an explicit "
+                    f"{field_name} at index {index}: {path}"
+                )
+
+
+def _require_explicit_production_offer_fields(
+    listing: Mapping[str, object],
+    snapshot: Mapping[str, object],
+    *,
+    path: Path,
+) -> None:
+    """Reject offer rows whose identity or freshness would be assigned at parse time."""
+
+    for field_name in ("listing_id", "first_seen_at", "last_seen_at"):
+        value = listing.get(field_name)
+        if value is None or (isinstance(value, str) and not value.strip()):
+            raise ValueError(
+                f"production retailer listing requires an explicit {field_name}: {path}"
+            )
+    for field_name in ("snapshot_id", "observed_at"):
+        value = snapshot.get(field_name)
+        if value is None or (isinstance(value, str) and not value.strip()):
+            raise ValueError(
+                f"production price snapshot requires an explicit {field_name}: {path}"
+            )
 
 
 def _validate_controlled_offer_rights(envelope: Mapping[str, Any]) -> None:
@@ -755,6 +817,7 @@ class ProcessedCatalogData:
     listing_provenance: tuple[SourceProvenance, ...] = ()
     mapping_decisions: tuple[MappingDecision, ...] = ()
     readiness: CatalogReadinessReport | None = None
+    canonical_identity_resolution: CanonicalIdentityResolutionSummary | None = None
 
     def __post_init__(self) -> None:
         product_ids = {product.product_id for product in self.products}
@@ -786,6 +849,72 @@ class ProcessedCatalogData:
             "match_method_by_listing",
             MappingProxyType(dict(self.match_method_by_listing)),
         )
+
+
+@dataclass(frozen=True, slots=True)
+class EffectiveCanonicalProducts:
+    """One deterministic canonical universe used by ER, embeddings, and persistence."""
+
+    products: tuple[CanonicalProduct, ...]
+    source_preflight: CanonicalIdentityPreflightReport
+    effective_preflight: CanonicalIdentityPreflightReport
+    resolution: CanonicalIdentityResolutionSummary | None = None
+
+
+def load_effective_canonical_products(
+    buildcores_path: str | Path,
+    *,
+    canonical_identity_resolution_path: str | Path | None = None,
+    canonical_identity_resolution_sha256: str | None = None,
+    max_line_bytes: int = DEFAULT_MAX_JSONL_LINE_BYTES,
+    require_production_fields: bool = False,
+) -> EffectiveCanonicalProducts:
+    """Load and, when pinned, resolve the exact production canonical product set."""
+
+    product_path = Path(buildcores_path).resolve()
+    if not product_path.is_file():
+        raise FileNotFoundError(f"BuildCores processed catalog not found: {product_path}")
+    if (canonical_identity_resolution_path is None) != (
+        canonical_identity_resolution_sha256 is None
+    ):
+        raise ValueError(
+            "canonical identity resolution requires both an artifact path and exact SHA-256"
+        )
+
+    source_products: list[CanonicalProduct] = []
+    for envelope in iter_jsonl_objects(product_path, max_line_bytes=max_line_bytes):
+        data = _require_envelope(envelope, record_type="canonical_product", path=product_path)
+        if require_production_fields:
+            _require_explicit_production_product_fields(data, path=product_path)
+        source_products.append(CanonicalProduct.model_validate(data))
+    source_preflight = audit_canonical_product_identities(source_products)
+    if source_preflight.duplicate_product_id_groups:
+        raise CanonicalIdentityImportError(source_preflight)
+
+    if canonical_identity_resolution_path is None:
+        if require_production_fields and not source_preflight.production_ready:
+            raise CanonicalIdentityImportError(source_preflight)
+        products = tuple(sorted(source_products, key=lambda item: item.product_id))
+        return EffectiveCanonicalProducts(
+            products=products,
+            source_preflight=source_preflight,
+            effective_preflight=source_preflight,
+        )
+
+    assert canonical_identity_resolution_sha256 is not None
+    application = load_and_apply_canonical_identity_resolution(
+        canonical_identity_resolution_path,
+        expected_artifact_sha256=canonical_identity_resolution_sha256,
+        source_catalog_path=product_path,
+        products=source_products,
+        source_preflight=source_preflight,
+    )
+    return EffectiveCanonicalProducts(
+        products=application.products,
+        source_preflight=source_preflight,
+        effective_preflight=application.summary.effective_preflight,
+        resolution=application.summary,
+    )
 
 
 def _listing_source_provenance(
@@ -839,6 +968,8 @@ def load_processed_catalog(
     entity_resolution_runtime: EntityResolutionRuntime | None = None,
     entity_resolution_policy: EntityResolutionPolicy | None = None,
     entity_resolution_binding_sha256: str | None = None,
+    canonical_identity_resolution_path: str | Path | None = None,
+    canonical_identity_resolution_sha256: str | None = None,
     allow_unpromoted_entity_resolution: bool = False,
     require_production_entity_resolution: bool = False,
     production_policy: ProductionCatalogPolicy | None = None,
@@ -893,17 +1024,22 @@ def load_processed_catalog(
             minimum_recall=entity_resolution_policy.minimum_recall,
             minimum_f1=entity_resolution_policy.minimum_f1,
         )
-    products: list[CanonicalProduct] = []
-    for envelope in iter_jsonl_objects(product_path, max_line_bytes=max_line_bytes):
-        data = _require_envelope(envelope, record_type="canonical_product", path=product_path)
-        product = CanonicalProduct.model_validate(data)
-        products.append(product)
+    effective_catalog = load_effective_canonical_products(
+        product_path,
+        canonical_identity_resolution_path=canonical_identity_resolution_path,
+        canonical_identity_resolution_sha256=canonical_identity_resolution_sha256,
+        max_line_bytes=max_line_bytes,
+        require_production_fields=(
+            production_policy is not None
+            or require_production_entity_resolution
+            or canonical_identity_resolution_path is not None
+        ),
+    )
+    products = list(effective_catalog.products)
+    for product in products:
         readiness_accumulator.observe_product(product)
-    product_ids = [product.product_id for product in products]
-    if len(product_ids) != len(set(product_ids)):
-        raise ValueError("processed BuildCores catalog contains duplicate product IDs")
     readiness_accumulator.observe_canonical_identity_preflight(
-        audit_canonical_product_identities(products)
+        effective_catalog.effective_preflight
     )
     products_by_id = {product.product_id: product for product in products}
     review_evidence = load_review_evidence(
@@ -967,6 +1103,12 @@ def load_processed_catalog(
             raise ValueError("retailer record requires listing and price_snapshot objects")
         if not isinstance(metadata, Mapping):
             raise ValueError("retailer record requires normalisation metadata")
+        if production_policy is not None or require_production_entity_resolution:
+            _require_explicit_production_offer_fields(
+                raw_listing,
+                raw_snapshot,
+                path=resolved_offer_path,
+            )
         _validate_offer_governance(envelope, metadata)
         readiness_accumulator.observe_offer_rights(envelope.get("data_use_rights"))
         offer_count += 1
@@ -1130,8 +1272,7 @@ def load_processed_catalog(
     if offer_count != accounted_offers:
         raise AssertionError("every retailer offer must have exactly one mapping outcome")
 
-    version_material = "|".join(
-        (
+    version_parts = [
             _sha256(product_path),
             _sha256(resolved_offer_path),
             _sha256(Path(reviewed_mapping_path).resolve())
@@ -1152,8 +1293,12 @@ def load_processed_catalog(
                 if entity_resolution_evaluation_path is not None
                 else "no-entity-resolution-evaluation"
             ),
-        )
-    )
+        ]
+    # Preserve the established no-resolution data version. A reviewed production
+    # transformation extends it with the exact immutable resolution identity.
+    if canonical_identity_resolution_sha256 is not None:
+        version_parts.append(canonical_identity_resolution_sha256)
+    version_material = "|".join(version_parts)
     data_version = "processed-" + hashlib.sha256(version_material.encode()).hexdigest()[:16]
     product_counts = Counter(product.category.value for product in products)
     stats = ProcessedCatalogStats(
@@ -1197,6 +1342,7 @@ def load_processed_catalog(
         listing_provenance=tuple(sorted(listing_provenance, key=lambda item: item.provenance_id)),
         mapping_decisions=tuple(sorted(decisions, key=lambda item: item.listing_id)),
         readiness=readiness,
+        canonical_identity_resolution=effective_catalog.resolution,
     )
 
 
