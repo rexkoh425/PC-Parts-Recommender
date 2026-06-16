@@ -711,6 +711,7 @@ class CatalogRepository:
             raise ValueError(f"interaction already exists: {event.event_id}")
         values = event.model_dump(exclude={"event_id", "metadata"})
         values["event_type"] = event.event_type.value
+        values["trust_level"] = event.trust_level.value
         record = InteractionEventRecord(
             event_id=event.event_id,
             event_metadata=event.metadata,

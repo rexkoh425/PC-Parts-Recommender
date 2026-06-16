@@ -138,7 +138,7 @@ class ProductionCatalogPolicy:
     require_production_offer_rights: bool = True
     require_complete_listing_provenance: bool = True
     minimum_er_precision: float = 0.99
-    minimum_er_labelled_pairs: int = 1000
+    minimum_er_labelled_pairs: int = 2500
     require_promoted_entity_resolution_model: bool = True
 
     def __post_init__(self) -> None:
