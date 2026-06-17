@@ -1,15 +1,47 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Iterator
 
 import pytest
 from scripts import import_catalog_release
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import Session
 
 from pc_build_recommender.application import ServingConfigurationError
 from pc_build_recommender.evaluation.manifest import sha256_file
+
+
+def test_release_sessions_cannot_commit_past_the_outer_release_transaction() -> None:
+    engine = create_engine("sqlite:///:memory:")
+    try:
+        with engine.begin() as connection:
+            connection.execute(text("CREATE TABLE release_probe (value INTEGER NOT NULL)"))
+
+        with (
+            pytest.raises(RuntimeError, match="final identity failed"),
+            engine.begin() as connection,
+        ):
+            factory = import_catalog_release._release_session_factory(connection)
+            with import_catalog_release.session_scope(factory) as session:
+                session.execute(text("INSERT INTO release_probe (value) VALUES (1)"))
+            # The vector repository owns a normal Session/transaction over the same bound
+            # connection. Its inner commit must also remain subordinate to the release.
+            with Session(connection) as vector_session, vector_session.begin():
+                vector_session.execute(text("INSERT INTO release_probe (value) VALUES (2)"))
+            # The durable identity verifier opens a read-only session and closes it without an
+            # explicit commit. That close must leave the outer transaction authoritative too.
+            with factory() as identity_session:
+                assert identity_session.scalar(text("SELECT COUNT(*) FROM release_probe")) == 2
+            assert connection.scalar(text("SELECT COUNT(*) FROM release_probe")) == 2
+            raise RuntimeError("final identity failed")
+
+        with engine.connect() as connection:
+            assert connection.scalar(text("SELECT COUNT(*) FROM release_probe")) == 0
+    finally:
+        engine.dispose()
 
 
 def _embedding_manifest(
@@ -150,7 +182,18 @@ def test_release_sequence_is_non_destructive_and_finishes_with_exact_identity(
         dataset_content_hash="b" * 64,
         product_count=1,
     )
-    release = SimpleNamespace(manifest_sha256="c" * 64)
+    release = SimpleNamespace(
+        manifest_sha256="c" * 64,
+        source_release=SimpleNamespace(
+            manifest_sha256="d" * 64,
+            source_name="fixture-source",
+            raw_snapshot_sha256="e" * 64,
+            processed_run_sha256="f" * 64,
+            authority_expires_at=SimpleNamespace(isoformat=lambda: "2099-01-01T00:00:00+00:00"),
+            accepted_count=1,
+            rejected_count=0,
+        ),
+    )
 
     monkeypatch.setattr(
         import_catalog_release,
@@ -173,7 +216,20 @@ def test_release_sequence_is_non_destructive_and_finishes_with_exact_identity(
         lambda *_args, **_kwargs: events.append("verify-readiness"),
     )
 
+    connection = object()
+
     class FakeEngine:
+        @contextmanager
+        def begin(self) -> Iterator[object]:
+            events.append("release-transaction-begin")
+            try:
+                yield connection
+            except Exception:
+                events.append("release-transaction-rollback")
+                raise
+            else:
+                events.append("release-transaction-commit")
+
         def dispose(self) -> None:
             events.append("dispose")
 
@@ -185,10 +241,13 @@ def test_release_sequence_is_non_destructive_and_finishes_with_exact_identity(
     )
 
     class FakeStore:
-        session_factory = object()
-
-        def __init__(self, actual_engine: object) -> None:
+        def __init__(
+            self,
+            actual_engine: object,
+            session_factory: object | None = None,
+        ) -> None:
             assert actual_engine is engine
+            self.session_factory = session_factory or object()
 
         def verify_schema(self) -> None:
             events.append("schema")
@@ -202,9 +261,22 @@ def test_release_sequence_is_non_destructive_and_finishes_with_exact_identity(
             events.append("exact-identity")
 
     monkeypatch.setattr(import_catalog_release, "SqlAlchemyDurableStore", FakeStore)
+    release_factory = object()
+
+    def fake_release_session_factory(actual_connection: object) -> object:
+        assert actual_connection is connection
+        events.append("bind-release-transaction")
+        return release_factory
+
+    monkeypatch.setattr(
+        import_catalog_release,
+        "_release_session_factory",
+        fake_release_session_factory,
+    )
 
     @contextmanager
-    def fake_session_scope(_factory: object) -> Iterator[object]:
+    def fake_session_scope(actual_factory: object) -> Iterator[object]:
+        assert actual_factory is release_factory
         yield object()
 
     monkeypatch.setattr(import_catalog_release, "session_scope", fake_session_scope)
@@ -219,8 +291,8 @@ def test_release_sequence_is_non_destructive_and_finishes_with_exact_identity(
             return {"product_count": 1}
 
     class FakeVectorRepository:
-        def __init__(self, actual_engine: object) -> None:
-            assert actual_engine is engine
+        def __init__(self, actual_connection: object) -> None:
+            assert actual_connection is connection
 
         def import_artifact(
             self,
@@ -248,6 +320,8 @@ def test_release_sequence_is_non_destructive_and_finishes_with_exact_identity(
         review_evidence=tmp_path / "evidence.jsonl",
         serving_manifest=tmp_path / "serving-manifest.json",
         serving_manifest_sha256="c" * 64,
+        source_registry=tmp_path / "source-registry.yaml",
+        source_trust_root_sha256="d" * 64,
         readiness_artifact=tmp_path / "readiness.json",
         expected_data_version="catalog-v1",
         database_url="postgresql+psycopg://release.invalid/pcbr",
@@ -263,12 +337,16 @@ def test_release_sequence_is_non_destructive_and_finishes_with_exact_identity(
         "engine",
         "schema",
         "stale-preflight",
+        "release-transaction-begin",
+        "bind-release-transaction",
         "catalog-upsert",
         "vector-import",
         "exact-identity",
+        "release-transaction-commit",
         "dispose",
     ]
     assert report["identity_verification"] == "exact"
+    assert report["atomic_release_transaction"] is True
     assert report["destructive_reconciliation_performed"] is False
 
 
@@ -344,6 +422,8 @@ def test_stale_preflight_blocks_all_catalogue_writes(
             review_evidence=tmp_path / "evidence.jsonl",
             serving_manifest=tmp_path / "serving-manifest.json",
             serving_manifest_sha256="c" * 64,
+            source_registry=tmp_path / "source-registry.yaml",
+            source_trust_root_sha256="d" * 64,
             readiness_artifact=tmp_path / "readiness.json",
             expected_data_version="catalog-v1",
             database_url="postgresql+psycopg://release.invalid/pcbr",

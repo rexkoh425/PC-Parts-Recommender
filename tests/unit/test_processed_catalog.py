@@ -13,6 +13,7 @@ from services.api.settings import ApiSettings
 
 from pc_build_recommender.catalog import (
     REVIEW_EVIDENCE_SCHEMA_VERSION,
+    CanonicalIdentityImportError,
     CatalogRepository,
     InMemoryCatalogReader,
     MappingOutcome,
@@ -47,7 +48,8 @@ def _write_jsonl(path: Path, rows: list[dict[str, object]]) -> None:
 def _product(
     *,
     product_id: str = "prod_asus_5060ti",
-    mpn: str = "PRIME-RTX5060TI-O16G",
+    brand: str = "ASUS",
+    mpn: str | None = "PRIME-RTX5060TI-O16G",
     vram_gb: int = 16,
 ) -> dict[str, object]:
     return {
@@ -58,10 +60,10 @@ def _product(
         "data": {
             "product_id": product_id,
             "category": "gpu",
-            "brand": "ASUS",
+            "brand": brand,
             "model": "Prime RTX 5060 Ti",
             "manufacturer_part_number": mpn,
-            "canonical_name": f"ASUS Prime RTX 5060 Ti {vram_gb}GB",
+            "canonical_name": f"{brand} Prime RTX 5060 Ti {vram_gb}GB",
             "status": "active",
             "common_attributes": {"colour": "Black"},
             "category_attributes": {
@@ -233,12 +235,12 @@ def _er_evaluation(
     *,
     synthetic: bool = False,
     precision: float = 0.995,
-    labelled_pair_count: int = 1000,
+    labelled_pair_count: int = 2500,
 ) -> None:
     path.write_text(
         json.dumps(
             {
-                "schema_version": "pc-build-recommender.er-production-evaluation.v2",
+                "schema_version": "pc-build-recommender.er-production-evaluation.v3",
                 "evaluation_id": "er-eval-fixture-v1",
                 "dataset_version": "human-labels-fixture-v1",
                 "model_version": "er-model-fixture-v1",
@@ -251,14 +253,33 @@ def _er_evaluation(
                 "review_queue_sha256": "b" * 64,
                 "frozen_test_groups_sha256": "c" * 64,
                 "auto_match_threshold": 0.98,
-                "precision_numerator": round(precision * labelled_pair_count),
-                "precision_denominator": labelled_pair_count,
+                "precision_numerator": round(precision * 1000),
+                "precision_denominator": 1000,
                 "precision_ci_lower": precision,
                 "precision_ci_upper": precision,
                 "recall": 0.95,
                 "f1": 0.97,
                 "reportable": True,
                 "deployment_eligible": True,
+                "label_dataset_sha256": "d" * 64,
+                "label_dataset_file_sha256": "e" * 64,
+                "decision_rows_sha256": "f" * 64,
+                "matcher_decision_version": "catalog-er-decision-v1",
+                "review_protocol": "blinded-independent-dual-review-with-adjudication-v1",
+                "max_candidates": 50,
+                "minimum_text_score": 0.12,
+                "minimum_auto_margin": 0.02,
+                "listing_count": 1000,
+                "independent_reviewer_count": 2,
+                "candidate_blocking_hits": 1000,
+                "candidate_blocking_denominator": 1000,
+                "candidate_blocking_recall": 1.0,
+                "winner_selection_correct": 1000,
+                "winner_selection_denominator": 1000,
+                "winner_selection_accuracy": 1.0,
+                "ambiguity_case_count": 0,
+                "ambiguity_deferred_count": 0,
+                "ambiguity_false_auto_match_count": 0,
             }
         ),
         encoding="utf-8",
@@ -303,6 +324,139 @@ def test_streaming_and_in_memory_loaders_share_exact_mapping_decisions(tmp_path:
     assert [item.to_dict() for item in streamed.mapping_decisions] == [
         item.to_dict() for item in in_memory.mapping_decisions
     ]
+
+
+def test_streaming_identity_preflight_preserves_conflicts_for_development(
+    tmp_path: Path,
+) -> None:
+    products = tmp_path / "products.jsonl"
+    offers = tmp_path / "offers.jsonl"
+    rows = [
+        _product(
+            product_id="prod_conflict_b",
+            brand="ASUS",
+            mpn="PRIME-RTX5060TI-O16G",
+        ),
+        _product(
+            product_id="prod_missing_mpn",
+            brand="Example Brand",
+            mpn=None,
+        ),
+        _product(
+            product_id="prod_conflict_a",
+            brand="asus",
+            mpn="prime rtx5060ti o16g",
+        ),
+    ]
+    _write_jsonl(products, rows)
+    _write_jsonl(offers, [])
+
+    first = stream_processed_catalog(products, offers)
+    first_preflight = first.readiness.canonical_identity_preflight
+    assert first_preflight is not None
+    assert first.product_ids == (
+        "prod_conflict_a",
+        "prod_conflict_b",
+        "prod_missing_mpn",
+    )
+    assert first_preflight.record_count == 3
+    assert first_preflight.complete_identity_count == 2
+    assert [item.product_id for item in first_preflight.missing_mpn_products] == [
+        "prod_missing_mpn"
+    ]
+    assert [item.product_id for item in first_preflight.duplicate_identity_groups[0].products] == [
+        "prod_conflict_a",
+        "prod_conflict_b",
+    ]
+    assert first_preflight.production_ready is False
+
+    _write_jsonl(products, list(reversed(rows)))
+    second = stream_processed_catalog(products, offers)
+    second_preflight = second.readiness.canonical_identity_preflight
+    assert second_preflight is not None
+    assert second_preflight.to_dict() == first_preflight.to_dict()
+
+    engine = create_db_engine("sqlite:///:memory:")
+    init_database(engine)
+    factory = create_session_factory(engine)
+    with session_scope(factory) as session:
+        stream_processed_catalog(products, offers, session=session)
+    with session_scope(factory) as session:
+        persisted_ids = {
+            product.product_id for product in CatalogRepository(session).list_products()
+        }
+    assert persisted_ids == {
+        "prod_conflict_a",
+        "prod_conflict_b",
+        "prod_missing_mpn",
+    }
+    engine.dispose()
+
+
+def test_streaming_production_identity_preflight_fails_before_persistence(
+    tmp_path: Path,
+) -> None:
+    products = tmp_path / "products.jsonl"
+    offers = tmp_path / "offers.jsonl"
+    _write_jsonl(
+        products,
+        [
+            _product(product_id="prod_conflict_a"),
+            _product(
+                product_id="prod_conflict_b",
+                brand="asus",
+                mpn="prime rtx5060ti o16g",
+            ),
+        ],
+    )
+    _write_jsonl(offers, [])
+    engine = create_db_engine("sqlite:///:memory:")
+    init_database(engine)
+    factory = create_session_factory(engine)
+
+    with (
+        pytest.raises(CanonicalIdentityImportError) as captured,
+        session_scope(factory) as session,
+    ):
+        stream_processed_catalog(
+            products,
+            offers,
+            session=session,
+            require_production_ready=True,
+            production_policy=_rights_only_production_policy(),
+        )
+
+    assert captured.value.report.duplicate_identity_product_count == 2
+    with session_scope(factory) as session:
+        assert CatalogRepository(session).list_products() == []
+    engine.dispose()
+
+
+def test_streaming_duplicate_product_id_is_reported_without_overwrite(
+    tmp_path: Path,
+) -> None:
+    products = tmp_path / "products.jsonl"
+    offers = tmp_path / "offers.jsonl"
+    _write_jsonl(
+        products,
+        [
+            _product(product_id="prod_repeated", mpn=None),
+            _product(product_id="prod_repeated", mpn="SECOND-MPN"),
+        ],
+    )
+    _write_jsonl(offers, [])
+
+    with pytest.raises(CanonicalIdentityImportError) as captured:
+        stream_processed_catalog(products, offers)
+
+    report = captured.value.report
+    assert report.record_count == 2
+    duplicate_members = report.duplicate_product_id_groups[0].products
+    assert [item.manufacturer_part_number for item in duplicate_members] == [
+        None,
+        "SECOND-MPN",
+    ]
+    assert [item.product_id for item in report.missing_mpn_products] == ["prod_repeated"]
 
 
 def test_review_evidence_is_version_bound_and_persisted_by_both_catalog_paths(
@@ -825,9 +979,9 @@ def test_all_false_rights_are_quarantined_from_serving_catalogue(tmp_path: Path)
 @pytest.mark.parametrize(
     ("synthetic", "precision", "labelled_pair_count", "expected"),
     [
-        (True, 0.999, 1000, "evaluation is synthetic"),
-        (False, 0.98, 1000, "precision=0.9800 below minimum=0.9900"),
-        (False, 0.999, 999, "labelled_pair_count=999 below minimum=1000"),
+        (True, 0.999, 2500, "evaluation is synthetic"),
+        (False, 0.98, 2500, "precision=0.9800 below minimum=0.9900"),
+        (False, 0.999, 2499, "labelled_pair_count=2499 below minimum=2500"),
     ],
 )
 def test_er_evaluation_gate_rejects_nonqualifying_evidence(
@@ -878,6 +1032,50 @@ def test_missing_er_evaluation_is_a_production_blocker(tmp_path: Path) -> None:
             products,
             offers,
             entity_resolution_evaluation_path=tmp_path / "missing-er-evaluation.json",
+        )
+
+
+def test_production_load_rejects_product_without_explicit_updated_at(
+    tmp_path: Path,
+) -> None:
+    products = tmp_path / "products.jsonl"
+    offers = tmp_path / "offers.jsonl"
+    product = _product()
+    data = product["data"]
+    assert isinstance(data, dict)
+    data.pop("updated_at")
+    _write_jsonl(products, [product])
+    _write_jsonl(offers, [_offer()])
+
+    with pytest.raises(ValueError, match="explicit updated_at"):
+        load_processed_catalog(
+            products,
+            offers,
+            production_policy=_rights_only_production_policy(),
+        )
+
+    # Development inspection keeps the domain default for legacy fixtures.
+    assert load_processed_catalog(products, offers).products[0].updated_at is not None
+
+
+def test_production_stream_rejects_product_without_explicit_updated_at(
+    tmp_path: Path,
+) -> None:
+    products = tmp_path / "products.jsonl"
+    offers = tmp_path / "offers.jsonl"
+    product = _product()
+    data = product["data"]
+    assert isinstance(data, dict)
+    data.pop("updated_at")
+    _write_jsonl(products, [product])
+    _write_jsonl(offers, [_offer()])
+
+    with pytest.raises(ValueError, match="explicit updated_at"):
+        stream_processed_catalog(
+            products,
+            offers,
+            require_production_ready=True,
+            production_policy=_rights_only_production_policy(),
         )
 
 
