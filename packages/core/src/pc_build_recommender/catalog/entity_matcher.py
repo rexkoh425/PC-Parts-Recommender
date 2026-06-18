@@ -439,7 +439,13 @@ class CatalogEntityMatcher:
             "release_identity": release_identity,
             "thresholds": self.runtime.resolver.thresholds.to_dict(),
             "minimum_auto_margin": self.minimum_auto_margin,
+            "winner_product_id": winner.product.product_id,
             "winner_margin": margin,
+            "raw_threshold_outcome": decision.outcome.value,
+            "would_auto_match_if_authorized": bool(
+                decision.outcome is MatchOutcome.AUTO_MATCH
+                and (margin is None or margin >= self.minimum_auto_margin)
+            ),
             "candidate_count": len(candidates),
             "safe_candidate_count": len(safe_candidates),
             "evidence_candidates": evidence_rows,

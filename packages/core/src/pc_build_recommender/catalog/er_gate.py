@@ -3,6 +3,8 @@
 from pc_build_recommender.entity_resolution.release_contracts import (
     ER_EVALUATION_SCHEMA_VERSION,
     ER_EVALUATION_SCHEMA_VERSION_V2,
+    ER_EVALUATION_SCHEMA_VERSION_V3,
+    ER_EVALUATION_SCHEMA_VERSION_V4,
     EntityResolutionProductionEvaluation,
     load_entity_resolution_evaluation,
 )
@@ -14,6 +16,8 @@ EntityResolutionEvaluation = EntityResolutionProductionEvaluation
 __all__ = [
     "ER_EVALUATION_SCHEMA_VERSION",
     "ER_EVALUATION_SCHEMA_VERSION_V2",
+    "ER_EVALUATION_SCHEMA_VERSION_V3",
+    "ER_EVALUATION_SCHEMA_VERSION_V4",
     "EntityResolutionEvaluation",
     "load_entity_resolution_evaluation",
 ]
