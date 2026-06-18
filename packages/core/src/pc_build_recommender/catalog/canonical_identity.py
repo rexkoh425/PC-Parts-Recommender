@@ -17,9 +17,7 @@ from typing import Any
 from pc_build_recommender.domain import CanonicalProduct
 from pc_build_recommender.entity_resolution.normalization import normalize_identifier
 
-CANONICAL_IDENTITY_PREFLIGHT_SCHEMA_VERSION = (
-    "pc-build-recommender.canonical-identity-preflight.v1"
-)
+CANONICAL_IDENTITY_PREFLIGHT_SCHEMA_VERSION = "pc-build-recommender.canonical-identity-preflight.v1"
 
 
 def _canonical_json(value: object) -> bytes:
@@ -76,9 +74,7 @@ class CanonicalIdentityConflictGroup:
     def to_dict(self) -> dict[str, Any]:
         return {
             "normalized_brand": self.normalized_brand,
-            "normalized_manufacturer_part_number": (
-                self.normalized_manufacturer_part_number
-            ),
+            "normalized_manufacturer_part_number": (self.normalized_manufacturer_part_number),
             "product_count": len(self.products),
             "products": [product.to_dict() for product in self.products],
             "required_resolution": "manual_identity_review",
@@ -165,9 +161,7 @@ class CanonicalIdentityPreflightReport:
             "missing_brand_products": [
                 product.to_dict() for product in self.missing_brand_products
             ],
-            "missing_mpn_products": [
-                product.to_dict() for product in self.missing_mpn_products
-            ],
+            "missing_mpn_products": [product.to_dict() for product in self.missing_mpn_products],
             "duplicate_identity_groups": [
                 group.to_dict() for group in self.duplicate_identity_groups
             ],
@@ -177,8 +171,7 @@ class CanonicalIdentityPreflightReport:
             "production_ready": self.production_ready,
             "production_blockers": list(self.blockers()),
             "resolution_policy": (
-                "retain_all_source_rows_and_require_manual_review; "
-                "never_auto_merge_or_drop"
+                "retain_all_source_rows_and_require_manual_review; never_auto_merge_or_drop"
             ),
         }
         payload["content_sha256"] = hashlib.sha256(_canonical_json(payload)).hexdigest()
@@ -190,10 +183,77 @@ class CanonicalIdentityImportError(RuntimeError):
 
     def __init__(self, report: CanonicalIdentityPreflightReport) -> None:
         super().__init__(
-            "canonical identity preflight blocked database import: "
-            + "; ".join(report.blockers())
+            "canonical identity preflight blocked database import: " + "; ".join(report.blockers())
         )
         self.report = report
+
+
+def _member_sort_key(member: CanonicalIdentityMember) -> tuple[str, str, str, str]:
+    return (
+        member.product_id,
+        member.category,
+        member.brand,
+        member.manufacturer_part_number or "",
+    )
+
+
+class CanonicalIdentityPreflightAccumulator:
+    """Memory-bounded accumulator for one canonical catalogue import."""
+
+    def __init__(self) -> None:
+        self._identity_groups: dict[tuple[str, str], list[CanonicalIdentityMember]] = defaultdict(
+            list
+        )
+        self._product_id_groups: dict[str, list[CanonicalIdentityMember]] = defaultdict(list)
+        self._missing_brand: list[CanonicalIdentityMember] = []
+        self._missing_mpn: list[CanonicalIdentityMember] = []
+        self._record_count = 0
+        self._complete_identity_count = 0
+
+    def observe(self, product: CanonicalProduct) -> None:
+        """Observe one source row without merging, dropping, or mutating it."""
+
+        self._record_count += 1
+        member = CanonicalIdentityMember.from_product(product)
+        self._product_id_groups[member.product_id].append(member)
+        brand = normalize_identifier(member.brand)
+        mpn = normalize_identifier(member.manufacturer_part_number)
+        if not brand:
+            self._missing_brand.append(member)
+        if not mpn:
+            self._missing_mpn.append(member)
+        if brand and mpn:
+            self._complete_identity_count += 1
+            self._identity_groups[(brand, mpn)].append(member)
+
+    def finish(self) -> CanonicalIdentityPreflightReport:
+        """Return deterministic diagnostics for every observed source row."""
+
+        duplicate_identities = tuple(
+            CanonicalIdentityConflictGroup(
+                normalized_brand=brand,
+                normalized_manufacturer_part_number=mpn,
+                products=tuple(sorted(members, key=_member_sort_key)),
+            )
+            for (brand, mpn), members in sorted(self._identity_groups.items())
+            if len(members) > 1
+        )
+        duplicate_product_ids = tuple(
+            DuplicateProductIdGroup(
+                product_id=product_id,
+                products=tuple(sorted(members, key=_member_sort_key)),
+            )
+            for product_id, members in sorted(self._product_id_groups.items())
+            if len(members) > 1
+        )
+        return CanonicalIdentityPreflightReport(
+            record_count=self._record_count,
+            complete_identity_count=self._complete_identity_count,
+            missing_brand_products=tuple(sorted(self._missing_brand, key=_member_sort_key)),
+            missing_mpn_products=tuple(sorted(self._missing_mpn, key=_member_sort_key)),
+            duplicate_identity_groups=duplicate_identities,
+            duplicate_product_id_groups=duplicate_product_ids,
+        )
 
 
 def audit_canonical_product_identities(
@@ -201,52 +261,10 @@ def audit_canonical_product_identities(
 ) -> CanonicalIdentityPreflightReport:
     """Audit normalized brand/MPN identity without mutating the source catalogue."""
 
-    identity_groups: dict[tuple[str, str], list[CanonicalIdentityMember]] = defaultdict(list)
-    product_id_groups: dict[str, list[CanonicalIdentityMember]] = defaultdict(list)
-    missing_brand: list[CanonicalIdentityMember] = []
-    missing_mpn: list[CanonicalIdentityMember] = []
-    record_count = 0
-    complete_identity_count = 0
-
+    accumulator = CanonicalIdentityPreflightAccumulator()
     for product in products:
-        record_count += 1
-        member = CanonicalIdentityMember.from_product(product)
-        product_id_groups[member.product_id].append(member)
-        brand = normalize_identifier(member.brand)
-        mpn = normalize_identifier(member.manufacturer_part_number)
-        if not brand:
-            missing_brand.append(member)
-        if not mpn:
-            missing_mpn.append(member)
-        if brand and mpn:
-            complete_identity_count += 1
-            identity_groups[(brand, mpn)].append(member)
-
-    duplicate_identities = tuple(
-        CanonicalIdentityConflictGroup(
-            normalized_brand=brand,
-            normalized_manufacturer_part_number=mpn,
-            products=tuple(sorted(members)),
-        )
-        for (brand, mpn), members in sorted(identity_groups.items())
-        if len(members) > 1
-    )
-    duplicate_product_ids = tuple(
-        DuplicateProductIdGroup(
-            product_id=product_id,
-            products=tuple(sorted(members)),
-        )
-        for product_id, members in sorted(product_id_groups.items())
-        if len(members) > 1
-    )
-    return CanonicalIdentityPreflightReport(
-        record_count=record_count,
-        complete_identity_count=complete_identity_count,
-        missing_brand_products=tuple(sorted(missing_brand)),
-        missing_mpn_products=tuple(sorted(missing_mpn)),
-        duplicate_identity_groups=duplicate_identities,
-        duplicate_product_id_groups=duplicate_product_ids,
-    )
+        accumulator.observe(product)
+    return accumulator.finish()
 
 
 def audit_canonical_envelopes(
@@ -254,15 +272,15 @@ def audit_canonical_envelopes(
 ) -> CanonicalIdentityPreflightReport:
     """Validate and audit normalized canonical-product envelopes."""
 
-    products: list[CanonicalProduct] = []
+    accumulator = CanonicalIdentityPreflightAccumulator()
     for envelope in envelopes:
         if envelope.get("record_type") != "canonical_product":
             raise ValueError("identity preflight requires canonical_product records")
         data = envelope.get("data")
         if not isinstance(data, Mapping):
             raise ValueError("canonical_product identity preflight requires a data object")
-        products.append(CanonicalProduct.model_validate(data))
-    return audit_canonical_product_identities(products)
+        accumulator.observe(CanonicalProduct.model_validate(data))
+    return accumulator.finish()
 
 
 __all__ = [
@@ -270,6 +288,7 @@ __all__ = [
     "CanonicalIdentityConflictGroup",
     "CanonicalIdentityImportError",
     "CanonicalIdentityMember",
+    "CanonicalIdentityPreflightAccumulator",
     "CanonicalIdentityPreflightReport",
     "DuplicateProductIdGroup",
     "audit_canonical_envelopes",
