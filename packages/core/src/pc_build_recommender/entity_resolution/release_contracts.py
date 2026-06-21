@@ -20,6 +20,8 @@ from typing import Any, NoReturn, TypedDict, cast
 
 ER_EVALUATION_SCHEMA_VERSION = "pc-build-recommender.er-production-evaluation.v1"
 ER_EVALUATION_SCHEMA_VERSION_V2 = "pc-build-recommender.er-production-evaluation.v2"
+ER_EVALUATION_SCHEMA_VERSION_V3 = "pc-build-recommender.er-production-evaluation.v3"
+ER_EVALUATION_SCHEMA_VERSION_V4 = "pc-build-recommender.er-production-evaluation.v4"
 ER_POLICY_SCHEMA_VERSION = "pc-build-recommender.er-production-policy.v1"
 ER_RIGHTS_APPROVAL_SCHEMA_VERSION = "pc-build-recommender.er-rights-approval.v1"
 ER_RELEASE_IDENTITY_SCHEMA_VERSION = "pc-build-recommender.er-release-identity.v1"
@@ -29,7 +31,7 @@ ER_REQUIRED_APPROVED_USES = frozenset(
 )
 ER_PRODUCTION_TERRITORY = "SG"
 ER_MINIMUM_PRODUCTION_PRECISION = 0.99
-ER_MINIMUM_PRODUCTION_LABELLED_PAIRS = 1000
+ER_MINIMUM_PRODUCTION_LABELLED_PAIRS = 2500
 ER_MINIMUM_PRODUCTION_AUTO_MATCHES = 100
 ER_MINIMUM_PRODUCTION_RECALL = 0.94
 ER_MINIMUM_PRODUCTION_F1 = 0.96
@@ -221,7 +223,7 @@ def _sorted_unique_text_tuple(value: object, name: str) -> tuple[str, ...]:
 
 @dataclass(frozen=True, slots=True)
 class EntityResolutionProductionEvaluation:
-    """Frozen v2 human-labelled evaluation; eligibility comes from policy, not flags."""
+    """Frozen human-labelled evaluation; v4 binds and replays the full matcher release."""
 
     evaluation_id: str
     dataset_version: str
@@ -244,6 +246,44 @@ class EntityResolutionProductionEvaluation:
     f1: float | None = None
     reportable: bool | None = None
     deployment_eligible: bool | None = None
+    label_dataset_sha256: str | None = None
+    label_dataset_file_sha256: str | None = None
+    decision_rows_sha256: str | None = None
+    matcher_decision_version: str | None = None
+    review_protocol: str | None = None
+    max_candidates: int | None = None
+    minimum_text_score: float | None = None
+    minimum_auto_margin: float | None = None
+    listing_count: int | None = None
+    independent_reviewer_count: int | None = None
+    candidate_blocking_hits: int | None = None
+    candidate_blocking_denominator: int | None = None
+    candidate_blocking_recall: float | None = None
+    winner_selection_correct: int | None = None
+    winner_selection_denominator: int | None = None
+    winner_selection_accuracy: float | None = None
+    ambiguity_case_count: int | None = None
+    ambiguity_deferred_count: int | None = None
+    ambiguity_false_auto_match_count: int | None = None
+    canonical_catalogue_version: str | None = None
+    canonical_catalogue_sha256: str | None = None
+    canonical_catalogue_file_sha256: str | None = None
+    canonical_catalogue_product_count: int | None = None
+    in_catalogue_listing_count: int | None = None
+    unmatched_listing_count: int | None = None
+    anchor_auto_match_count: int | None = None
+    model_route_listing_count: int | None = None
+    model_in_catalogue_listing_count: int | None = None
+    model_unmatched_listing_count: int | None = None
+    model_hard_negative_pair_count: int | None = None
+    model_hard_negative_listing_count: int | None = None
+    model_auto_match_correct: int | None = None
+    model_auto_match_count: int | None = None
+    model_auto_match_precision: float | None = None
+    model_auto_match_precision_ci_lower: float | None = None
+    model_auto_match_precision_ci_upper: float | None = None
+    model_auto_match_recall: float | None = None
+    model_auto_match_f1: float | None = None
 
     def __post_init__(self) -> None:
         for name in ("evaluation_id", "dataset_version", "model_version", "label_source"):
@@ -256,9 +296,15 @@ class EntityResolutionProductionEvaluation:
         if self.schema_version not in {
             ER_EVALUATION_SCHEMA_VERSION,
             ER_EVALUATION_SCHEMA_VERSION_V2,
+            ER_EVALUATION_SCHEMA_VERSION_V3,
+            ER_EVALUATION_SCHEMA_VERSION_V4,
         }:
             raise EntityResolutionContractError("unsupported entity-resolution evaluation schema")
-        if self.schema_version == ER_EVALUATION_SCHEMA_VERSION_V2:
+        if self.schema_version in {
+            ER_EVALUATION_SCHEMA_VERSION_V2,
+            ER_EVALUATION_SCHEMA_VERSION_V3,
+            ER_EVALUATION_SCHEMA_VERSION_V4,
+        }:
             for name in (
                 "artifact_sha256",
                 "review_queue_sha256",
@@ -267,10 +313,23 @@ class EntityResolutionProductionEvaluation:
                 _sha256(getattr(self, name), name)
             _number(self.auto_match_threshold, "auto_match_threshold")
             numerator = _integer(self.precision_numerator, "precision_numerator")
-            denominator = _integer(self.precision_denominator, "precision_denominator", minimum=1)
+            denominator = _integer(
+                self.precision_denominator,
+                "precision_denominator",
+                minimum=(
+                    0
+                    if self.schema_version
+                    in {ER_EVALUATION_SCHEMA_VERSION_V3, ER_EVALUATION_SCHEMA_VERSION_V4}
+                    else 1
+                ),
+            )
             if numerator > denominator:
                 raise EntityResolutionContractError(
                     "precision_numerator cannot exceed precision_denominator"
+                )
+            if denominator == 0 and self.precision != 0.0:
+                raise EntityResolutionContractError(
+                    "precision must be zero when there are no automatic matches"
                 )
             lower = _number(self.precision_ci_lower, "precision_ci_lower")
             upper = _number(self.precision_ci_upper, "precision_ci_upper")
@@ -280,6 +339,191 @@ class EntityResolutionProductionEvaluation:
             _number(self.f1, "f1")
             _bool(self.reportable, "reportable")
             _bool(self.deployment_eligible, "deployment_eligible")
+        if self.schema_version in {
+            ER_EVALUATION_SCHEMA_VERSION_V3,
+            ER_EVALUATION_SCHEMA_VERSION_V4,
+        }:
+            for name in (
+                "label_dataset_sha256",
+                "label_dataset_file_sha256",
+                "decision_rows_sha256",
+            ):
+                _sha256(getattr(self, name), name)
+            _text(self.matcher_decision_version, "matcher_decision_version")
+            _text(self.review_protocol, "review_protocol")
+            _integer(self.max_candidates, "max_candidates", minimum=1)
+            _number(self.minimum_text_score, "minimum_text_score")
+            _number(self.minimum_auto_margin, "minimum_auto_margin")
+            listing_count = _integer(self.listing_count, "listing_count", minimum=1)
+            if denominator > listing_count:
+                raise EntityResolutionContractError(
+                    "automatic-match count cannot exceed listing_count"
+                )
+            _integer(
+                self.independent_reviewer_count,
+                "independent_reviewer_count",
+                minimum=2,
+            )
+            blocking_hits = _integer(self.candidate_blocking_hits, "candidate_blocking_hits")
+            blocking_denominator = _integer(
+                self.candidate_blocking_denominator,
+                "candidate_blocking_denominator",
+                minimum=1,
+            )
+            expected_denominator = (
+                _integer(
+                    self.in_catalogue_listing_count,
+                    "in_catalogue_listing_count",
+                    minimum=1,
+                )
+                if self.schema_version == ER_EVALUATION_SCHEMA_VERSION_V4
+                else listing_count
+            )
+            if (
+                blocking_denominator != expected_denominator
+                or blocking_hits > blocking_denominator
+            ):
+                raise EntityResolutionContractError(
+                    "candidate-blocking counts do not match listing_count"
+                )
+            blocking_recall = _number(
+                self.candidate_blocking_recall, "candidate_blocking_recall"
+            )
+            if abs(blocking_hits / blocking_denominator - blocking_recall) > 1e-9:
+                raise EntityResolutionContractError(
+                    "candidate-blocking recall does not match evidence counts"
+                )
+            winner_correct = _integer(
+                self.winner_selection_correct, "winner_selection_correct"
+            )
+            winner_denominator = _integer(
+                self.winner_selection_denominator,
+                "winner_selection_denominator",
+                minimum=1,
+            )
+            if winner_denominator != expected_denominator or winner_correct > winner_denominator:
+                raise EntityResolutionContractError(
+                    "winner-selection counts do not match listing_count"
+                )
+            winner_accuracy = _number(
+                self.winner_selection_accuracy, "winner_selection_accuracy"
+            )
+            if abs(winner_correct / winner_denominator - winner_accuracy) > 1e-9:
+                raise EntityResolutionContractError(
+                    "winner-selection accuracy does not match evidence counts"
+                )
+            ambiguity_cases = _integer(self.ambiguity_case_count, "ambiguity_case_count")
+            ambiguity_deferred = _integer(
+                self.ambiguity_deferred_count, "ambiguity_deferred_count"
+            )
+            ambiguity_false_auto = _integer(
+                self.ambiguity_false_auto_match_count,
+                "ambiguity_false_auto_match_count",
+            )
+            if ambiguity_deferred > ambiguity_cases or ambiguity_false_auto > ambiguity_cases:
+                raise EntityResolutionContractError(
+                    "ambiguity evidence counts cannot exceed ambiguity cases"
+                )
+        if self.schema_version == ER_EVALUATION_SCHEMA_VERSION_V4:
+            _text(self.canonical_catalogue_version, "canonical_catalogue_version")
+            _sha256(self.canonical_catalogue_sha256, "canonical_catalogue_sha256")
+            _sha256(
+                self.canonical_catalogue_file_sha256,
+                "canonical_catalogue_file_sha256",
+            )
+            _integer(
+                self.canonical_catalogue_product_count,
+                "canonical_catalogue_product_count",
+                minimum=1,
+            )
+            in_catalogue = _integer(
+                self.in_catalogue_listing_count,
+                "in_catalogue_listing_count",
+                minimum=1,
+            )
+            unmatched = _integer(
+                self.unmatched_listing_count,
+                "unmatched_listing_count",
+            )
+            listing_count = _integer(self.listing_count, "listing_count", minimum=1)
+            if in_catalogue + unmatched != listing_count:
+                raise EntityResolutionContractError(
+                    "in-catalogue and unmatched counts must equal listing_count"
+                )
+            anchor_auto = _integer(self.anchor_auto_match_count, "anchor_auto_match_count")
+            model_routes = _integer(
+                self.model_route_listing_count,
+                "model_route_listing_count",
+            )
+            model_in_catalogue = _integer(
+                self.model_in_catalogue_listing_count,
+                "model_in_catalogue_listing_count",
+            )
+            model_unmatched = _integer(
+                self.model_unmatched_listing_count,
+                "model_unmatched_listing_count",
+            )
+            if model_in_catalogue + model_unmatched != model_routes:
+                raise EntityResolutionContractError(
+                    "model-route coverage counts are inconsistent"
+                )
+            if model_routes > listing_count or model_unmatched > unmatched:
+                raise EntityResolutionContractError("model-route coverage exceeds label coverage")
+            model_hard_negative_pairs = _integer(
+                self.model_hard_negative_pair_count,
+                "model_hard_negative_pair_count",
+            )
+            model_hard_negative_listings = _integer(
+                self.model_hard_negative_listing_count,
+                "model_hard_negative_listing_count",
+            )
+            if model_hard_negative_listings > model_routes:
+                raise EntityResolutionContractError(
+                    "model hard-negative listing coverage exceeds model routes"
+                )
+            if model_hard_negative_pairs < model_hard_negative_listings:
+                raise EntityResolutionContractError(
+                    "model hard-negative pair coverage is inconsistent"
+                )
+            model_correct = _integer(
+                self.model_auto_match_correct,
+                "model_auto_match_correct",
+            )
+            model_count = _integer(
+                self.model_auto_match_count,
+                "model_auto_match_count",
+            )
+            if model_correct > model_count or model_count > model_routes:
+                raise EntityResolutionContractError("model automatic-match counts are invalid")
+            if anchor_auto + model_count != denominator:
+                raise EntityResolutionContractError(
+                    "anchor and model automatic-match counts do not match total support"
+                )
+            model_precision = _number(
+                self.model_auto_match_precision,
+                "model_auto_match_precision",
+            )
+            if model_count == 0:
+                if model_correct != 0 or model_precision != 0.0:
+                    raise EntityResolutionContractError(
+                        "zero-support model precision evidence is inconsistent"
+                    )
+            elif abs(model_correct / model_count - model_precision) > 1e-9:
+                raise EntityResolutionContractError(
+                    "model precision does not match evidence counts"
+                )
+            model_ci_lower = _number(
+                self.model_auto_match_precision_ci_lower,
+                "model_auto_match_precision_ci_lower",
+            )
+            model_ci_upper = _number(
+                self.model_auto_match_precision_ci_upper,
+                "model_auto_match_precision_ci_upper",
+            )
+            if model_ci_lower > model_ci_upper:
+                raise EntityResolutionContractError("model precision interval is inverted")
+            _number(self.model_auto_match_recall, "model_auto_match_recall")
+            _number(self.model_auto_match_f1, "model_auto_match_f1")
 
     def blockers(
         self,
@@ -288,8 +532,8 @@ class EntityResolutionProductionEvaluation:
         minimum_labelled_pairs: int,
     ) -> tuple[str, ...]:
         blockers: list[str] = []
-        if self.schema_version != ER_EVALUATION_SCHEMA_VERSION_V2:
-            blockers.append("entity-resolution evaluation schema is not production v2")
+        if self.schema_version != ER_EVALUATION_SCHEMA_VERSION_V4:
+            blockers.append("entity-resolution evaluation schema is not production v4")
         if self.synthetic:
             blockers.append("entity-resolution evaluation is synthetic")
         if self.label_source != "human_reviewed":
@@ -304,15 +548,36 @@ class EntityResolutionProductionEvaluation:
                 f"entity-resolution labelled_pair_count={self.labelled_pair_count} below "
                 f"minimum={minimum_labelled_pairs}"
             )
-        if self.schema_version == ER_EVALUATION_SCHEMA_VERSION_V2:
+        if self.schema_version in {
+            ER_EVALUATION_SCHEMA_VERSION_V2,
+            ER_EVALUATION_SCHEMA_VERSION_V3,
+            ER_EVALUATION_SCHEMA_VERSION_V4,
+        }:
             if self.precision_ci_lower is None or self.precision_ci_lower < minimum_precision:
                 blockers.append(
                     "entity-resolution precision confidence lower bound is below minimum"
                 )
             if self.precision_denominator is None or self.precision_numerator is None:
                 blockers.append("entity-resolution precision evidence counts are missing")
+            elif self.precision_denominator == 0:
+                if self.precision != 0.0:
+                    blockers.append(
+                        "entity-resolution precision must be zero without automatic matches"
+                    )
             elif abs(self.precision_numerator / self.precision_denominator - self.precision) > 1e-9:
                 blockers.append("entity-resolution precision does not match evidence counts")
+        if self.schema_version in {
+            ER_EVALUATION_SCHEMA_VERSION_V3,
+            ER_EVALUATION_SCHEMA_VERSION_V4,
+        }:
+            if self.candidate_blocking_recall is None:
+                blockers.append("entity-resolution candidate-blocking evidence is missing")
+            if self.winner_selection_accuracy is None:
+                blockers.append("entity-resolution winner-selection evidence is missing")
+            if self.ambiguity_false_auto_match_count:
+                blockers.append("entity-resolution ambiguity margin produced an automatic match")
+            if self.ambiguity_deferred_count != self.ambiguity_case_count:
+                blockers.append("entity-resolution ambiguity cases were not all deferred")
         return tuple(blockers)
 
     def to_dict(self) -> dict[str, Any]:
@@ -327,7 +592,11 @@ class EntityResolutionProductionEvaluation:
             "labelled_pair_count": self.labelled_pair_count,
             "evaluated_at": self.evaluated_at.isoformat(),
         }
-        if self.schema_version == ER_EVALUATION_SCHEMA_VERSION_V2:
+        if self.schema_version in {
+            ER_EVALUATION_SCHEMA_VERSION_V2,
+            ER_EVALUATION_SCHEMA_VERSION_V3,
+            ER_EVALUATION_SCHEMA_VERSION_V4,
+        }:
             payload.update(
                 {
                     "artifact_sha256": self.artifact_sha256,
@@ -342,6 +611,71 @@ class EntityResolutionProductionEvaluation:
                     "f1": self.f1,
                     "reportable": self.reportable,
                     "deployment_eligible": self.deployment_eligible,
+                }
+            )
+        if self.schema_version in {
+            ER_EVALUATION_SCHEMA_VERSION_V3,
+            ER_EVALUATION_SCHEMA_VERSION_V4,
+        }:
+            payload.update(
+                {
+                    "label_dataset_sha256": self.label_dataset_sha256,
+                    "label_dataset_file_sha256": self.label_dataset_file_sha256,
+                    "decision_rows_sha256": self.decision_rows_sha256,
+                    "matcher_decision_version": self.matcher_decision_version,
+                    "review_protocol": self.review_protocol,
+                    "max_candidates": self.max_candidates,
+                    "minimum_text_score": self.minimum_text_score,
+                    "minimum_auto_margin": self.minimum_auto_margin,
+                    "listing_count": self.listing_count,
+                    "independent_reviewer_count": self.independent_reviewer_count,
+                    "candidate_blocking_hits": self.candidate_blocking_hits,
+                    "candidate_blocking_denominator": self.candidate_blocking_denominator,
+                    "candidate_blocking_recall": self.candidate_blocking_recall,
+                    "winner_selection_correct": self.winner_selection_correct,
+                    "winner_selection_denominator": self.winner_selection_denominator,
+                    "winner_selection_accuracy": self.winner_selection_accuracy,
+                    "ambiguity_case_count": self.ambiguity_case_count,
+                    "ambiguity_deferred_count": self.ambiguity_deferred_count,
+                    "ambiguity_false_auto_match_count": (
+                        self.ambiguity_false_auto_match_count
+                    ),
+                }
+            )
+        if self.schema_version == ER_EVALUATION_SCHEMA_VERSION_V4:
+            payload.update(
+                {
+                    "canonical_catalogue_version": self.canonical_catalogue_version,
+                    "canonical_catalogue_sha256": self.canonical_catalogue_sha256,
+                    "canonical_catalogue_file_sha256": (
+                        self.canonical_catalogue_file_sha256
+                    ),
+                    "canonical_catalogue_product_count": (
+                        self.canonical_catalogue_product_count
+                    ),
+                    "in_catalogue_listing_count": self.in_catalogue_listing_count,
+                    "unmatched_listing_count": self.unmatched_listing_count,
+                    "anchor_auto_match_count": self.anchor_auto_match_count,
+                    "model_route_listing_count": self.model_route_listing_count,
+                    "model_in_catalogue_listing_count": (
+                        self.model_in_catalogue_listing_count
+                    ),
+                    "model_unmatched_listing_count": self.model_unmatched_listing_count,
+                    "model_hard_negative_pair_count": self.model_hard_negative_pair_count,
+                    "model_hard_negative_listing_count": (
+                        self.model_hard_negative_listing_count
+                    ),
+                    "model_auto_match_correct": self.model_auto_match_correct,
+                    "model_auto_match_count": self.model_auto_match_count,
+                    "model_auto_match_precision": self.model_auto_match_precision,
+                    "model_auto_match_precision_ci_lower": (
+                        self.model_auto_match_precision_ci_lower
+                    ),
+                    "model_auto_match_precision_ci_upper": (
+                        self.model_auto_match_precision_ci_upper
+                    ),
+                    "model_auto_match_recall": self.model_auto_match_recall,
+                    "model_auto_match_f1": self.model_auto_match_f1,
                 }
             )
         return payload
@@ -374,6 +708,48 @@ _EVALUATION_V2_FIELDS = _EVALUATION_BASE_FIELDS | {
     "reportable",
     "deployment_eligible",
 }
+_EVALUATION_V3_FIELDS = _EVALUATION_V2_FIELDS | {
+    "label_dataset_sha256",
+    "label_dataset_file_sha256",
+    "decision_rows_sha256",
+    "matcher_decision_version",
+    "review_protocol",
+    "max_candidates",
+    "minimum_text_score",
+    "minimum_auto_margin",
+    "listing_count",
+    "independent_reviewer_count",
+    "candidate_blocking_hits",
+    "candidate_blocking_denominator",
+    "candidate_blocking_recall",
+    "winner_selection_correct",
+    "winner_selection_denominator",
+    "winner_selection_accuracy",
+    "ambiguity_case_count",
+    "ambiguity_deferred_count",
+    "ambiguity_false_auto_match_count",
+}
+_EVALUATION_V4_FIELDS = _EVALUATION_V3_FIELDS | {
+    "canonical_catalogue_version",
+    "canonical_catalogue_sha256",
+    "canonical_catalogue_file_sha256",
+    "canonical_catalogue_product_count",
+    "in_catalogue_listing_count",
+    "unmatched_listing_count",
+    "anchor_auto_match_count",
+    "model_route_listing_count",
+    "model_in_catalogue_listing_count",
+    "model_unmatched_listing_count",
+    "model_hard_negative_pair_count",
+    "model_hard_negative_listing_count",
+    "model_auto_match_correct",
+    "model_auto_match_count",
+    "model_auto_match_precision",
+    "model_auto_match_precision_ci_lower",
+    "model_auto_match_precision_ci_upper",
+    "model_auto_match_recall",
+    "model_auto_match_f1",
+}
 
 
 def load_entity_resolution_evaluation(
@@ -383,15 +759,28 @@ def load_entity_resolution_evaluation(
         return None
     _, payload, _ = _load_json_object(path)
     schema = payload.get("schema_version")
-    if schema not in {ER_EVALUATION_SCHEMA_VERSION, ER_EVALUATION_SCHEMA_VERSION_V2}:
+    if schema not in {
+        ER_EVALUATION_SCHEMA_VERSION,
+        ER_EVALUATION_SCHEMA_VERSION_V2,
+        ER_EVALUATION_SCHEMA_VERSION_V3,
+        ER_EVALUATION_SCHEMA_VERSION_V4,
+    }:
         raise EntityResolutionContractError("unsupported entity-resolution evaluation schema")
     _require_exact_fields(
         payload,
-        _EVALUATION_V2_FIELDS
+        _EVALUATION_V4_FIELDS
+        if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+        else _EVALUATION_V3_FIELDS
+        if schema == ER_EVALUATION_SCHEMA_VERSION_V3
+        else _EVALUATION_V2_FIELDS
         if schema == ER_EVALUATION_SCHEMA_VERSION_V2
         else _EVALUATION_BASE_FIELDS,
         contract="entity-resolution evaluation",
     )
+    is_listing_schema = schema in {
+        ER_EVALUATION_SCHEMA_VERSION_V3,
+        ER_EVALUATION_SCHEMA_VERSION_V4,
+    }
     return EntityResolutionProductionEvaluation(
         evaluation_id=_text(payload["evaluation_id"], "evaluation_id"),
         dataset_version=_text(payload["dataset_version"], "dataset_version"),
@@ -406,58 +795,353 @@ def load_entity_resolution_evaluation(
         schema_version=cast(str, schema),
         artifact_sha256=(
             _sha256(payload["artifact_sha256"], "artifact_sha256")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
         review_queue_sha256=(
             _sha256(payload["review_queue_sha256"], "review_queue_sha256")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
         frozen_test_groups_sha256=(
             _sha256(payload["frozen_test_groups_sha256"], "frozen_test_groups_sha256")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
         auto_match_threshold=(
             _number(payload["auto_match_threshold"], "auto_match_threshold")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
         precision_numerator=(
             _integer(payload["precision_numerator"], "precision_numerator")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
         precision_denominator=(
-            _integer(payload["precision_denominator"], "precision_denominator", minimum=1)
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            _integer(
+                payload["precision_denominator"],
+                "precision_denominator",
+                minimum=(
+                    0
+                    if schema
+                    in {ER_EVALUATION_SCHEMA_VERSION_V3, ER_EVALUATION_SCHEMA_VERSION_V4}
+                    else 1
+                ),
+            )
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
         precision_ci_lower=(
             _number(payload["precision_ci_lower"], "precision_ci_lower")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
         precision_ci_upper=(
             _number(payload["precision_ci_upper"], "precision_ci_upper")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
         recall=(
             _number(payload["recall"], "recall")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
-        f1=(_number(payload["f1"], "f1") if schema == ER_EVALUATION_SCHEMA_VERSION_V2 else None),
+        f1=(
+            _number(payload["f1"], "f1")
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
+            else None
+        ),
         reportable=(
             _bool(payload["reportable"], "reportable")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
             else None
         ),
         deployment_eligible=(
             _bool(payload["deployment_eligible"], "deployment_eligible")
-            if schema == ER_EVALUATION_SCHEMA_VERSION_V2
+            if schema in {
+                ER_EVALUATION_SCHEMA_VERSION_V2,
+                ER_EVALUATION_SCHEMA_VERSION_V3,
+                ER_EVALUATION_SCHEMA_VERSION_V4,
+            }
+            else None
+        ),
+        label_dataset_sha256=(
+            _sha256(payload["label_dataset_sha256"], "label_dataset_sha256")
+            if is_listing_schema
+            else None
+        ),
+        label_dataset_file_sha256=(
+            _sha256(payload["label_dataset_file_sha256"], "label_dataset_file_sha256")
+            if is_listing_schema
+            else None
+        ),
+        decision_rows_sha256=(
+            _sha256(payload["decision_rows_sha256"], "decision_rows_sha256")
+            if is_listing_schema
+            else None
+        ),
+        matcher_decision_version=(
+            _text(payload["matcher_decision_version"], "matcher_decision_version")
+            if is_listing_schema
+            else None
+        ),
+        review_protocol=(
+            _text(payload["review_protocol"], "review_protocol")
+            if is_listing_schema
+            else None
+        ),
+        max_candidates=(
+            _integer(payload["max_candidates"], "max_candidates", minimum=1)
+            if is_listing_schema
+            else None
+        ),
+        minimum_text_score=(
+            _number(payload["minimum_text_score"], "minimum_text_score")
+            if is_listing_schema
+            else None
+        ),
+        minimum_auto_margin=(
+            _number(payload["minimum_auto_margin"], "minimum_auto_margin")
+            if is_listing_schema
+            else None
+        ),
+        listing_count=(
+            _integer(payload["listing_count"], "listing_count", minimum=1)
+            if is_listing_schema
+            else None
+        ),
+        independent_reviewer_count=(
+            _integer(
+                payload["independent_reviewer_count"],
+                "independent_reviewer_count",
+                minimum=2,
+            )
+            if is_listing_schema
+            else None
+        ),
+        candidate_blocking_hits=(
+            _integer(payload["candidate_blocking_hits"], "candidate_blocking_hits")
+            if is_listing_schema
+            else None
+        ),
+        candidate_blocking_denominator=(
+            _integer(
+                payload["candidate_blocking_denominator"],
+                "candidate_blocking_denominator",
+                minimum=1,
+            )
+            if is_listing_schema
+            else None
+        ),
+        candidate_blocking_recall=(
+            _number(payload["candidate_blocking_recall"], "candidate_blocking_recall")
+            if is_listing_schema
+            else None
+        ),
+        winner_selection_correct=(
+            _integer(payload["winner_selection_correct"], "winner_selection_correct")
+            if is_listing_schema
+            else None
+        ),
+        winner_selection_denominator=(
+            _integer(
+                payload["winner_selection_denominator"],
+                "winner_selection_denominator",
+                minimum=1,
+            )
+            if is_listing_schema
+            else None
+        ),
+        winner_selection_accuracy=(
+            _number(payload["winner_selection_accuracy"], "winner_selection_accuracy")
+            if is_listing_schema
+            else None
+        ),
+        ambiguity_case_count=(
+            _integer(payload["ambiguity_case_count"], "ambiguity_case_count")
+            if is_listing_schema
+            else None
+        ),
+        ambiguity_deferred_count=(
+            _integer(payload["ambiguity_deferred_count"], "ambiguity_deferred_count")
+            if is_listing_schema
+            else None
+        ),
+        ambiguity_false_auto_match_count=(
+            _integer(
+                payload["ambiguity_false_auto_match_count"],
+                "ambiguity_false_auto_match_count",
+            )
+            if is_listing_schema
+            else None
+        ),
+        canonical_catalogue_version=(
+            _text(payload["canonical_catalogue_version"], "canonical_catalogue_version")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        canonical_catalogue_sha256=(
+            _sha256(payload["canonical_catalogue_sha256"], "canonical_catalogue_sha256")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        canonical_catalogue_file_sha256=(
+            _sha256(
+                payload["canonical_catalogue_file_sha256"],
+                "canonical_catalogue_file_sha256",
+            )
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        canonical_catalogue_product_count=(
+            _integer(
+                payload["canonical_catalogue_product_count"],
+                "canonical_catalogue_product_count",
+                minimum=1,
+            )
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        in_catalogue_listing_count=(
+            _integer(
+                payload["in_catalogue_listing_count"],
+                "in_catalogue_listing_count",
+                minimum=1,
+            )
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        unmatched_listing_count=(
+            _integer(payload["unmatched_listing_count"], "unmatched_listing_count")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        anchor_auto_match_count=(
+            _integer(payload["anchor_auto_match_count"], "anchor_auto_match_count")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_route_listing_count=(
+            _integer(payload["model_route_listing_count"], "model_route_listing_count")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_in_catalogue_listing_count=(
+            _integer(
+                payload["model_in_catalogue_listing_count"],
+                "model_in_catalogue_listing_count",
+            )
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_unmatched_listing_count=(
+            _integer(
+                payload["model_unmatched_listing_count"],
+                "model_unmatched_listing_count",
+            )
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_hard_negative_pair_count=(
+            _integer(
+                payload["model_hard_negative_pair_count"],
+                "model_hard_negative_pair_count",
+            )
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_hard_negative_listing_count=(
+            _integer(
+                payload["model_hard_negative_listing_count"],
+                "model_hard_negative_listing_count",
+            )
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_auto_match_correct=(
+            _integer(payload["model_auto_match_correct"], "model_auto_match_correct")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_auto_match_count=(
+            _integer(payload["model_auto_match_count"], "model_auto_match_count")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_auto_match_precision=(
+            _number(payload["model_auto_match_precision"], "model_auto_match_precision")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_auto_match_precision_ci_lower=(
+            _number(
+                payload["model_auto_match_precision_ci_lower"],
+                "model_auto_match_precision_ci_lower",
+            )
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_auto_match_precision_ci_upper=(
+            _number(
+                payload["model_auto_match_precision_ci_upper"],
+                "model_auto_match_precision_ci_upper",
+            )
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_auto_match_recall=(
+            _number(payload["model_auto_match_recall"], "model_auto_match_recall")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
+            else None
+        ),
+        model_auto_match_f1=(
+            _number(payload["model_auto_match_f1"], "model_auto_match_f1")
+            if schema == ER_EVALUATION_SCHEMA_VERSION_V4
             else None
         ),
     )
