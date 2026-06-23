@@ -164,6 +164,40 @@ class RankerPromotionPolicy:
         )
 
 
+PRODUCTION_RANKER_PROMOTION_POLICY = RankerPromotionPolicy()
+
+
+def assert_production_ranker_promotion_policy(
+    policy: RankerPromotionPolicy,
+) -> None:
+    """Reject a production policy that weakens any reviewed release threshold."""
+
+    floor = PRODUCTION_RANKER_PROMOTION_POLICY
+    failures: list[str] = []
+    if policy.minimum_test_query_groups < floor.minimum_test_query_groups:
+        failures.append("minimum_test_query_groups")
+    if policy.minimum_recall_at_50 < floor.minimum_recall_at_50:
+        failures.append("minimum_recall_at_50")
+    if (
+        policy.minimum_relative_ndcg_lift_percent_over_bm25
+        < floor.minimum_relative_ndcg_lift_percent_over_bm25
+    ):
+        failures.append("minimum_relative_ndcg_lift_percent_over_bm25")
+    if (
+        policy.minimum_bm25_ndcg_delta_ci_lower
+        < floor.minimum_bm25_ndcg_delta_ci_lower
+    ):
+        failures.append("minimum_bm25_ndcg_delta_ci_lower")
+    # A larger non-inferiority margin is weaker, unlike the minimum thresholds.
+    if policy.rrf_ndcg_noninferiority_margin > floor.rrf_ndcg_noninferiority_margin:
+        failures.append("rrf_ndcg_noninferiority_margin")
+    if failures:
+        raise ValueError(
+            "ranker promotion policy weakens production floors: "
+            + ", ".join(failures)
+        )
+
+
 @dataclass(frozen=True, slots=True)
 class RankerPromotionDecision:
     comparison_report_sha256: str
