@@ -57,9 +57,9 @@ uv run --no-sync python -m training.entity_resolution_review sample-active `
 Training is available only for a queue whose stored source policy permits it. The dedicated
 command splits by listing ID into training, calibration, threshold-selection, and test groups.
 Calibration and threshold selection are separate. The threshold maximises validation recall
-subject to at least 99% precision and minimum support; failure to meet the gate produces only a
-diagnostic artifact. A held-out grouped test precision gate is required before the artifact is
-placed under `deployable/`.
+subject to at least 99% precision and minimum support. Pairwise success still produces only a
+diagnostic artifact: it does not test deployed candidate blocking, winner selection, deterministic
+anchors, or the ambiguity margin.
 
 ```powershell
 uv run --no-sync python -m training.train_entity_resolution_human `
@@ -75,3 +75,31 @@ external transfer benchmarks must remain clearly separated from PC-domain human-
 human-label trainer and the transfer benchmark both preflight materialised input against the 55 GiB
 host-RAM cap before parsing it; their reports preserve the observed memory snapshot and conservative
 allocation estimate.
+
+## Listing-level release gate
+
+Production promotion requires a separate frozen PC-domain label set using
+`pc-build-recommender.er-listing-label-set.v1`. Every listing/product pair must have exactly two
+independent, attributable binary judgments. Agreeing reviewers determine the result directly;
+disagreement requires a third reviewer on a distinct assignment. Every evaluated listing must have
+exactly one independently resolved matching product. Candidate scores and blocking heuristics are
+not labels and cannot appear as reviewer judgments.
+
+The evaluator replays the catalogue matcher and measures candidate-blocking recall, raw winner
+accuracy, automatic-match precision/recall/F1, and below-margin ambiguity deferral. It binds the
+exact labels, per-listing decisions, policy, model core, serving evidence, and evaluation bytes:
+
+```powershell
+uv run --no-sync python -m training.evaluate_entity_resolution_listing `
+  --model-artifact artifacts/models/entity-resolution-human/diagnostic/lightgbm `
+  --labels artifacts/entity-resolution/frozen-listing-labels.json `
+  --policy artifacts/entity-resolution/production-policy.json `
+  --output-dir artifacts/entity-resolution/release-candidate `
+  --max-host-used-gb 55 --minimum-free-memory-mb 1024
+```
+
+The production floor is 2,500 independently reviewed pairs. Small fixtures are useful for contract
+and matcher diagnostics, but their manifest is always `diagnostic` and cannot authorize serving.
+Even a metric-qualified `promotion_candidate` is not production authority: a separate operator-
+reviewed rights approval must bind the exact model release, evaluation, policy, review queue, and
+frozen listing groups. The evaluator deliberately never generates that approval.
