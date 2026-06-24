@@ -15,20 +15,21 @@ from pathlib import Path
 from pc_build_recommender.ranking import (
     LabeledRankingQuery,
     LambdaMARTRanker,
-    RankerPromotionPolicy,
     RankingCandidate,
     evaluate_ranker_promotion,
     generate_artifact_bound_rankings,
-    write_ranker_promotion_decision,
 )
 from pc_build_recommender.retrieval import (
-    FrozenCandidateSet,
-    FrozenQueryGroupSplit,
     compare_ranked_models,
-    write_ranking_comparison_report,
 )
 from training._common import print_json
-from training.materialize_ranking_snapshot import verify_labeled_ranking_snapshot
+from training.ranking_evaluation_gate import (
+    RankingEvaluationIntent,
+    RankingEvaluationLedger,
+    assert_ranker_matches_lineage,
+    publish_ranking_evaluation,
+    verify_human_ranking_lineage,
+)
 from training.train_ranking import _load_queries, _validate_feature_snapshot_against_qrels
 
 
@@ -67,19 +68,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--qrels", required=True, type=Path)
     parser.add_argument("--frozen-query-split", required=True, type=Path)
     parser.add_argument("--ranker-model", required=True, type=Path)
+    parser.add_argument("--evaluation-intent", required=True, type=Path)
+    parser.add_argument("--ledger-dir", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
-    parser.add_argument("--challenger-model", default="lambdamart")
-    parser.add_argument("--n-resamples", type=int, default=1_000)
-    parser.add_argument("--seed", type=int, default=20260723)
-    parser.add_argument("--minimum-test-query-groups", type=int, default=50)
-    parser.add_argument("--minimum-recall-at-50", type=float, default=0.95)
-    parser.add_argument(
-        "--minimum-relative-ndcg-lift-percent-over-bm25",
-        type=float,
-        default=15.0,
-    )
-    parser.add_argument("--minimum-bm25-ndcg-delta-ci-lower", type=float, default=0.0)
-    parser.add_argument("--rrf-ndcg-noninferiority-margin", type=float, default=0.01)
     return parser
 
 
@@ -92,59 +83,46 @@ def main(argv: list[str] | None = None) -> int:
         args.qrels,
         args.frozen_query_split,
         args.ranker_model,
+        args.evaluation_intent,
     ):
         if not path.is_file():
             raise FileNotFoundError(path)
-    if args.n_resamples < 1:
-        raise ValueError("n_resamples must be positive")
 
-    qrels = FrozenCandidateSet.load(args.qrels)
-    if (
-        qrels.label_source.value != "human"
-        or not qrels.adjudication_complete
-        or qrels.contains_synthetic_labels
-        or qrels.judgment_manifest_sha256 is None
-    ):
-        raise ValueError("ranking promotion requires adjudicated, non-synthetic human qrels")
-    query_split = FrozenQueryGroupSplit.load(args.frozen_query_split)
-    query_split.validate_dataset(qrels)
-    if set(query_split.weights) != {"train", "validation", "test"}:
-        raise ValueError("frozen query split must contain train, validation, and test")
-
-    verified_snapshot = verify_labeled_ranking_snapshot(
+    intent = RankingEvaluationIntent.load(args.evaluation_intent)
+    intent.assert_runtime_bindings()
+    ranker = LambdaMARTRanker.load(args.ranker_model)
+    intent.assert_file_bindings(
+        ranking_path=args.feature_snapshot,
+        manifest_path=args.dataset_manifest,
+        human_judgments_path=args.human_judgments,
+        qrels_path=args.qrels,
+        query_split_path=args.frozen_query_split,
+        ranker=ranker,
+    )
+    ledger = RankingEvaluationLedger(args.ledger_dir)
+    # Claim before parsing judgments or producing test scores.  A semantic
+    # validation failure is therefore an auditable test access, not a free probe.
+    access_path = ledger.claim_access(intent)
+    lineage = verify_human_ranking_lineage(
         ranking_path=args.feature_snapshot,
         manifest_path=args.dataset_manifest,
         human_judgments_path=args.human_judgments,
         qrels_path=args.qrels,
         query_split_path=args.frozen_query_split,
     )
+    intent.assert_lineage(lineage)
+    assert_ranker_matches_lineage(ranker, lineage)
+    qrels = lineage.qrels
+    query_split = lineage.query_split
     queries = _load_queries(args.feature_snapshot)
     _validate_feature_snapshot_against_qrels(queries, qrels)
-    expected_groups = {query.query_id: query.query_group_id for query in qrels.queries}
-    if dict(query_split.query_group_ids) != expected_groups:
-        raise ValueError("frozen split query groups do not match the human qrels")
-
-    ranker = LambdaMARTRanker.load(args.ranker_model)
-    if ranker.metadata.query_group_split_checksum != query_split.checksum:
-        raise ValueError("ranker was trained against a different frozen query split")
-    if ranker.metadata.training_judgment_manifest_sha256 != qrels.judgment_manifest_sha256:
-        raise ValueError("ranker was trained against different human judgments")
-    if (
-        ranker.metadata.training_dataset_manifest_sha256
-        != verified_snapshot.manifest_sha256
-        or ranker.metadata.training_prelabel_snapshot_sha256
-        != verified_snapshot.prelabel_snapshot_sha256
-        or ranker.metadata.training_feature_contract_sha256
-        != verified_snapshot.feature_contract_sha256
-    ):
-        raise ValueError("ranker was trained against a different pre-label feature snapshot")
 
     contexts = {query.context.query_id: query.context for query in queries}
     candidates = {query.context.query_id: query.candidates for query in queries}
     bound = generate_artifact_bound_rankings(
         ranker,
         qrels,
-        model_name=args.challenger_model,
+        model_name=intent.challenger_model,
         contexts=contexts,
         candidates=candidates,
         query_split=query_split,
@@ -153,46 +131,60 @@ def main(argv: list[str] | None = None) -> int:
     rankings: dict[str, Mapping[str, Sequence[str]]] = {
         "bm25": _retrieval_ranking(queries, score_name="bm25_score"),
         "rrf_hybrid": _retrieval_ranking(queries, score_name="rrf_score"),
-        args.challenger_model: bound.rankings,
+        intent.challenger_model: bound.rankings,
     }
     report = compare_ranked_models(
         qrels,
         rankings,
-        artifact_bound_rankings={args.challenger_model: bound.evidence},
+        artifact_bound_rankings={intent.challenger_model: bound.evidence},
         baseline_model="bm25",
         reference_models=("bm25", "rrf_hybrid"),
         query_split=query_split,
         split_name="test",
-        n_resamples=args.n_resamples,
-        seed=args.seed,
-    )
-    policy = RankerPromotionPolicy(
-        minimum_test_query_groups=args.minimum_test_query_groups,
-        minimum_recall_at_50=args.minimum_recall_at_50,
-        minimum_relative_ndcg_lift_percent_over_bm25=(
-            args.minimum_relative_ndcg_lift_percent_over_bm25
-        ),
-        minimum_bm25_ndcg_delta_ci_lower=args.minimum_bm25_ndcg_delta_ci_lower,
-        rrf_ndcg_noninferiority_margin=args.rrf_ndcg_noninferiority_margin,
+        n_resamples=intent.n_resamples,
+        seed=intent.bootstrap_seed,
     )
     decision = evaluate_ranker_promotion(
         report,
-        challenger_model=args.challenger_model,
+        challenger_model=intent.challenger_model,
         ranker=ranker,
-        policy=policy,
+        policy=intent.policy,
     )
 
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-    report_path = write_ranking_comparison_report(
-        report,
-        args.output_dir / "ranking-comparison.json",
+    completion_path = ledger.record_completion(
+        intent,
+        comparison_report_sha256=report.report_sha256,
+        promotion_decision_sha256=decision.decision_sha256,
     )
-    decision_path = write_ranker_promotion_decision(
-        decision,
-        args.output_dir / "ranker-promotion-decision.json",
+    registration_path, recorded_access_path, recorded_completion_path = (
+        ledger.evidence_paths(intent)
     )
+    if recorded_access_path != access_path or recorded_completion_path != completion_path:
+        raise RuntimeError("ranking ledger returned inconsistent evidence paths")
+    # Publication happens only after the append-only completion record binds the
+    # exact report and decision. A passing decision can never escape half-sealed.
+    published = publish_ranking_evaluation(
+        output_root=args.output_dir,
+        intent=intent,
+        registration_path=registration_path,
+        access_path=access_path,
+        completion_path=completion_path,
+        comparison_report=report.to_dict(),
+        promotion_decision=decision.to_dict(),
+    )
+    report_path = published.output_dir / "ranking-comparison.json"
+    decision_path = published.output_dir / "ranker-promotion-decision.json"
     print_json(
         {
+            "evaluation_intent": str(args.evaluation_intent.resolve()),
+            "intent_sha256": intent.intent_sha256,
+            "cohort_sha256": intent.cohort_sha256,
+            "test_access_record": str(access_path.resolve()),
+            "completion_record": str(completion_path.resolve()),
+            "sealed_output_dir": str(published.output_dir.resolve()),
+            "bundle_manifest_sha256": published.bundle_manifest_sha256,
+            "evaluation_payload_sha256": published.evaluation_payload_sha256,
+            "ledger_identity_sha256": published.ledger_identity_sha256,
             "comparison_report": str(report_path.resolve()),
             "promotion_decision": str(decision_path.resolve()),
             "report_sha256": report.report_sha256,
