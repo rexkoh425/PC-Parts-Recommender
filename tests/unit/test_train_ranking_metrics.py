@@ -24,7 +24,7 @@ class _FixedScoreRanker:
         return self._scores
 
 
-def test_training_report_ndcg_matches_exponential_gain_evaluator() -> None:
+def test_validation_diagnostic_ndcg_matches_exponential_gain_evaluator() -> None:
     query = LabeledRankingQuery.create(
         RankingContext(query_id="q1"),
         (
@@ -57,7 +57,7 @@ def test_training_report_ndcg_matches_exponential_gain_evaluator() -> None:
     assert bm25 == 1.0
 
 
-def test_training_report_breaks_score_ties_by_product_id() -> None:
+def test_validation_diagnostic_breaks_score_ties_by_product_id() -> None:
     query = LabeledRankingQuery.create(
         RankingContext(query_id="q-tie"),
         (

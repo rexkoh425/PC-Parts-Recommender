@@ -5,12 +5,22 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from training import ranking_evaluation_gate as evaluation_gate
 from training._common import sha256_file
 from training.evaluate_ranking import main as evaluation_main
+from training.ranking_evaluation_gate import (
+    RankingEvaluationGateError,
+    verify_human_ranking_lineage,
+)
+from training.register_ranking_evaluation import main as registration_main
 from training.train_ranking import main as ranking_main
 
 from pc_build_recommender.evaluation.manifest import sha256_json
-from pc_build_recommender.ranking import LambdaMARTRanker, load_ranker_promotion_decision
+from pc_build_recommender.ranking import (
+    LambdaMARTRanker,
+    load_ranker_promotion_decision,
+    verify_ranking_evaluation_bundle,
+)
 from pc_build_recommender.retrieval import (
     FrozenCandidateSet,
     FrozenQueryGroupSplit,
@@ -226,8 +236,10 @@ def _write_dataset_manifest(
 
 def _write_lineage(
     tmp_path: Path,
+    *,
+    query_count: int = 12,
 ) -> tuple[HumanJudgmentSet, Path, Path, Path, FrozenQueryGroupSplit]:
-    judgments = _human_judgments()
+    judgments = _human_judgments(query_count)
     adjudicated = judgments.adjudicate()
     human_path = tmp_path / "human-judgments.json"
     qrels_path = tmp_path / "qrels.json"
@@ -290,6 +302,41 @@ def _human_cli_args(
     ]
 
 
+def _registration_cli_args(
+    *,
+    input_path: Path,
+    artifact_dir: Path,
+    human_path: Path,
+    qrels_path: Path,
+    split_path: Path,
+    intent_root: Path,
+    ledger_dir: Path,
+    seed: int = 20260723,
+) -> list[str]:
+    return [
+        "--feature-snapshot",
+        str(input_path),
+        "--dataset-manifest",
+        str(input_path.parent / "dataset-manifest.json"),
+        "--human-judgments",
+        str(human_path),
+        "--qrels",
+        str(qrels_path),
+        "--frozen-query-split",
+        str(split_path),
+        "--ranker-model",
+        str(artifact_dir / "ranker-artifact" / "ranker.txt"),
+        "--intent-root",
+        str(intent_root),
+        "--ledger-dir",
+        str(ledger_dir),
+        "--n-resamples",
+        "50",
+        "--seed",
+        str(seed),
+    ]
+
+
 @pytest.mark.model
 def test_human_ranking_cli_persists_verified_lineage_and_uses_frozen_split(
     tmp_path: Path,
@@ -338,8 +385,11 @@ def test_human_ranking_cli_persists_verified_lineage_and_uses_frozen_split(
     assert Path(report["artifact"]["model_path"]) == model_path.resolve()
     assert report["artifact"]["publication_intent_sha256"] == loaded.publication_intent_sha256
     assert report["ranker"]["promotion_eligible"] is True
-    assert report["promotion"]["eligible"] is False
-    assert any("150" in reason for reason in report["promotion"]["block_reasons"])
+    assert "heldout_test" not in report
+    assert report["validation_diagnostic"]["promotion_evidence"] is False
+    assert report["promotion_decision"]["emitted"] is False
+    assert "test_query_hashes" not in evidence
+    assert evidence["frozen_test_cohort"]["metrics_accessed"] is False
     assert report["resources"]["materialization_memory_expansion_factor"] == 12.0
     assert report["resources"]["materialization_runtime_memory_mb"] == 512.0
     assert report["resources"]["host_memory_preflight"]["max_used_gib"] == 55.0
@@ -354,9 +404,12 @@ def test_human_ranking_cli_persists_verified_lineage_and_uses_frozen_split(
 @pytest.mark.model
 def test_ranking_evaluation_cli_binds_loaded_artifact_and_writes_promotion(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _, human_path, qrels_path, split_path, _ = _write_lineage(tmp_path)
-    rows = _feature_rows()
+    _, human_path, qrels_path, split_path, _ = _write_lineage(
+        tmp_path, query_count=400
+    )
+    rows = _feature_rows(400)
     for row in rows:
         candidates = row["candidates"]
         assert isinstance(candidates, list)
@@ -367,6 +420,8 @@ def test_ranking_evaluation_cli_binds_loaded_artifact_and_writes_promotion(
     input_path = tmp_path / "ranking.jsonl"
     artifact_dir = tmp_path / "artifact"
     evaluation_dir = tmp_path / "evaluation"
+    intent_root = tmp_path / "evaluation-intents"
+    ledger_dir = tmp_path / "evaluation-ledger"
     _write_jsonl(input_path, rows)
     assert (
         ranking_main(
@@ -381,42 +436,102 @@ def test_ranking_evaluation_cli_binds_loaded_artifact_and_writes_promotion(
         == 0
     )
 
+    registration_args = _registration_cli_args(
+        input_path=input_path,
+        artifact_dir=artifact_dir,
+        human_path=human_path,
+        qrels_path=qrels_path,
+        split_path=split_path,
+        intent_root=intent_root,
+        ledger_dir=ledger_dir,
+    )
+    original_loader = evaluation_gate.load_human_judgment_set
+
+    def _unexpected_label_parse(_path: Path) -> None:
+        raise AssertionError("preregistration must not parse human test labels")
+
+    monkeypatch.setattr(evaluation_gate, "load_human_judgment_set", _unexpected_label_parse)
+    assert registration_main(registration_args) == 0
+    monkeypatch.setattr(evaluation_gate, "load_human_judgment_set", original_loader)
+    intent_paths = list(intent_root.glob("*.json"))
+    assert len(intent_paths) == 1
+    intent_path = intent_paths[0]
+    sealed_dir = evaluation_dir / intent_path.stem
+    evaluation_args = [
+        "--feature-snapshot",
+        str(input_path),
+        "--dataset-manifest",
+        str(input_path.parent / "dataset-manifest.json"),
+        "--human-judgments",
+        str(human_path),
+        "--qrels",
+        str(qrels_path),
+        "--frozen-query-split",
+        str(split_path),
+        "--ranker-model",
+        str(artifact_dir / "ranker-artifact" / "ranker.txt"),
+        "--evaluation-intent",
+        str(intent_path),
+        "--ledger-dir",
+        str(ledger_dir),
+        "--output-dir",
+        str(evaluation_dir),
+    ]
     assert (
-        evaluation_main(
-            [
-                "--feature-snapshot",
-                str(input_path),
-                "--dataset-manifest",
-                str(input_path.parent / "dataset-manifest.json"),
-                "--human-judgments",
-                str(human_path),
-                "--qrels",
-                str(qrels_path),
-                "--frozen-query-split",
-                str(split_path),
-                "--ranker-model",
-                str(artifact_dir / "ranker-artifact" / "ranker.txt"),
-                "--output-dir",
-                str(evaluation_dir),
-                "--n-resamples",
-                "50",
-                "--minimum-test-query-groups",
-                "1",
-                "--minimum-relative-ndcg-lift-percent-over-bm25",
-                "0",
-            ]
-        )
+        evaluation_main(evaluation_args)
         == 0
     )
 
     loaded = LambdaMARTRanker.load(artifact_dir / "ranker-artifact" / "ranker.txt")
-    report = load_ranking_comparison_report(evaluation_dir / "ranking-comparison.json")
-    decision = load_ranker_promotion_decision(evaluation_dir / "ranker-promotion-decision.json")
+    report_path = sealed_dir / "ranking-comparison.json"
+    decision_path = sealed_dir / "ranker-promotion-decision.json"
+    report = load_ranking_comparison_report(report_path)
+    decision = load_ranker_promotion_decision(decision_path)
     binding = report["artifact_bound_rankings"]["lambdamart"]
     assert decision.passed
     assert binding["artifact_identity"] == loaded.artifact_identity.to_dict()
     assert decision.ranker_model_sha256 == loaded.artifact_identity.model_sha256
     assert decision.measured_values["artifact_binding_sha256"] == binding["evidence_sha256"]
+    assert len(list((ledger_dir / "accesses").glob("*.json"))) == 1
+    assert len(list((ledger_dir / "completions").glob("*.json"))) == 1
+    verified_bundle = verify_ranking_evaluation_bundle(sealed_dir / "manifest.json")
+    assert verified_bundle.promotion_decision == decision
+    assert verified_bundle.comparison_report_path == report_path.resolve()
+    assert verified_bundle.n_resamples == 50
+    assert {
+        path.name for path in sealed_dir.iterdir() if path.is_file()
+    } == {
+        "evaluation-intent.json",
+        "ranking-test-registration.json",
+        "ranking-test-access.json",
+        "ranking-test-completion.json",
+        "ranking-comparison.json",
+        "ranker-promotion-decision.json",
+        "manifest.json",
+    }
+
+    sealed_bytes = {path.name: path.read_bytes() for path in sealed_dir.iterdir()}
+    assert evaluation_main(evaluation_args) == 0
+    assert {path.name: path.read_bytes() for path in sealed_dir.iterdir()} == sealed_bytes
+    assert len(list((ledger_dir / "accesses").glob("*.json"))) == 1
+
+    with pytest.raises(RankingEvaluationGateError, match="already registered"):
+        registration_main(
+            _registration_cli_args(
+                input_path=input_path,
+                artifact_dir=artifact_dir,
+                human_path=human_path,
+                qrels_path=qrels_path,
+                split_path=split_path,
+                intent_root=intent_root,
+                ledger_dir=ledger_dir,
+                seed=99,
+            )
+        )
+
+    report_path.write_text("{}\n", encoding="utf-8")
+    with pytest.raises(RankingEvaluationGateError, match="existing sealed evaluation"):
+        evaluation_main(evaluation_args)
 
 
 def test_human_ranking_cli_requires_complete_authoritative_lineage(tmp_path: Path) -> None:
@@ -535,6 +650,51 @@ def test_human_ranking_cli_rejects_qrels_from_different_judgment_manifest(
         )
 
     assert not artifact_dir.exists()
+
+
+def test_sealed_evaluator_independently_rejects_forged_two_reviewer_manifest(
+    tmp_path: Path,
+) -> None:
+    judgments, human_path, qrels_path, split_path, _ = _write_lineage(tmp_path)
+    input_path = tmp_path / "ranking.jsonl"
+    _write_jsonl(input_path, _feature_rows())
+    manifest_path = _write_dataset_manifest(
+        input_path=input_path,
+        human_path=human_path,
+        qrels_path=qrels_path,
+        split_path=split_path,
+    )
+
+    one_reviewer = replace(
+        judgments,
+        judgments=tuple(
+            judgment
+            for judgment in judgments.judgments
+            if judgment.reviewer_id == "reviewer-1"
+        ),
+    )
+    write_human_judgment_set(one_reviewer, human_path)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["human_judgments"]["content_sha256"] = one_reviewer.content_sha256
+    manifest["annotation_release"]["files"]["human-judgments.json"] = {
+        "sha256": sha256_file(human_path),
+        "size_bytes": human_path.stat().st_size,
+    }
+    manifest.pop("manifest_sha256")
+    manifest["manifest_sha256"] = sha256_json(manifest)
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(RankingEvaluationGateError, match="two independent"):
+        verify_human_ranking_lineage(
+            ranking_path=input_path,
+            manifest_path=manifest_path,
+            human_judgments_path=human_path,
+            qrels_path=qrels_path,
+            query_split_path=split_path,
+        )
 
 
 def test_human_ranking_cli_rejects_rechecksummed_split_group_drift(
