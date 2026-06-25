@@ -82,6 +82,13 @@ The Python contracts are exported from `pc_build_recommender.retrieval`:
 - `write_ranking_comparison_report()` writes a deterministic, hashed report;
 - `evaluate_ranker_promotion()` applies the fail-closed promotion policy.
 
+`training.train_ranking` emits validation diagnostics only. A final test evaluation must first be
+registered with `training.register_ranking_evaluation`, which binds one model artifact, policy,
+bootstrap configuration, and labeled snapshot to the cohort. The filesystem ledger grants that
+cohort to one intent, records access before labels are evaluated, permits only exact idempotent
+retries, and publishes a content-addressed no-replace evaluation bundle. A different intent cannot
+reuse an already claimed test cohort.
+
 The default promotion gate requires at least 50 frozen test query groups,
 pooled Recall@50 of at least 0.95, at least 15% relative NDCG@10 lift over BM25,
 a paired NDCG confidence interval that excludes zero, and non-inferiority to

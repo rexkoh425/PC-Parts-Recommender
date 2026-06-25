@@ -60,7 +60,7 @@ Fallback: exact trusted identifiers and deterministic rules may match; otherwise
 listing unmatched or queue it. An uncertain model result must never force a merge.
 
 Production authority cannot come from a command-line eligibility flag. Serving manifest schema
-`pc-build-recommender.serving-release.v3` binds the exact catalogue, offers, reviewed mappings,
+`pc-build-recommender.serving-release.v4` binds the exact catalogue, offers, reviewed mappings,
 review evidence, and entity-resolution model, metadata, fitted calibrator, serving evidence,
 human-labelled v2 evaluation, threshold policy, and rights approval. Their artifact-core,
 model-file, metadata, calibrator, evidence, evaluation, policy, rights, model-release, and
@@ -69,6 +69,11 @@ confidence-supported precision, recall/F1/support gates, active Singapore rights
 training/metrics/model serving, and the exact matcher/projection versions. Legacy self-attested
 booleans and direct diagnostic CLI paths confer no production authority. No genuine promoted
 PC-domain entity-resolution release is shipped.
+
+Version 4 also requires a content-addressed signed retailer-source release. Its raw snapshot,
+rejections, externally mounted current registry, independently configured trust-root pin, and source manifest are verified while the exact
+governed-offers file is supplied as the accepted-record artifact. This is an admission control,
+not model-quality evidence. The current schema admits one Awin source batch only.
 
 ## Performance regressors
 
