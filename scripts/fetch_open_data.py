@@ -34,6 +34,12 @@ from pipelines.retention.web import (  # noqa: E402
     WebRetentionError,
     write_web_processed_retention_receipt,
 )
+from pipelines.source_release import (  # noqa: E402
+    AuthorizedBatchAuthorityArtifacts,
+    AuthorizedBatchReleaseArtifacts,
+    VerifiedAuthorizedBatchRelease,
+    publish_awin_production_batch_release,
+)
 from pipelines.sources.awin_feed import AwinLocalFeedAdapter  # noqa: E402
 from pipelines.sources.base import ParsedBatch, RawSnapshot, sha256_file  # noqa: E402
 from pipelines.sources.bizgram_pdf import BizgramControlledPDFAdapter  # noqa: E402
@@ -246,6 +252,14 @@ def _parser() -> argparse.ArgumentParser:
         help=(
             "Reviewed source registry used to reject hosts whose current terms prohibit "
             "automated extraction before any governed-web request is sent."
+        ),
+    )
+    parser.add_argument(
+        "--authorized-release-root",
+        type=Path,
+        help=(
+            "Content-addressed control bundles for signed production source batches. "
+            "Defaults to <processed-root>/_authorized-source-releases."
         ),
     )
     parser.add_argument("--no-parquet", action="store_true")
@@ -536,12 +550,38 @@ def _run_awin_feed(args: argparse.Namespace) -> dict[str, Any]:
             "fail",
         }:
             raise ValueError("published Awin quality report is invalid")
+        policy = adapter.policy
+        production_release: VerifiedAuthorizedBatchRelease | None = None
+        if policy.production_catalog_eligible:
+            release_root = (
+                args.authorized_release_root
+                if args.authorized_release_root is not None
+                else args.processed_root / "_authorized-source-releases"
+            )
+            production_release = publish_awin_production_batch_release(
+                release_root=release_root,
+                artifacts=AuthorizedBatchReleaseArtifacts(
+                    raw_snapshot=snapshot.raw.path,
+                    raw_metadata=snapshot.raw.metadata_path,
+                    authorization_receipt=snapshot.authorization_receipt_path,
+                    records=artifacts.records_jsonl,
+                    rejections=artifacts.rejections_jsonl,
+                    processed_manifest=artifacts.manifest_json,
+                    quality_report=artifacts.quality_json,
+                ),
+                authority=AuthorizedBatchAuthorityArtifacts(
+                    policy=args.awin_policy_json,
+                    policy_signature=args.awin_policy_signature,
+                    trust_root=args.awin_trust_root,
+                    source_registry=args.source_registry,
+                ),
+                expected_trust_root_sha256=args.awin_trust_root_sha256,
+            )
     except (OSError, RuntimeError, TypeError, ValueError) as exc:
         # Feed/parser errors may include the operator's local filename. Do not
         # reflect it into structured logs or command output.
         raise ValueError(f"Awin feed ingestion failed ({type(exc).__name__})") from None
 
-    policy = adapter.policy
     return {
         "source_name": policy.source_name,
         "source_uri": policy.source_uri,
@@ -583,6 +623,17 @@ def _run_awin_feed(args: argparse.Namespace) -> dict[str, Any]:
             "sha256": sha256_file(artifacts.quality_json),
             "artifact_path": str(artifacts.quality_json),
         },
+        "production_release": (
+            {
+                "manifest_sha256": production_release.manifest_sha256,
+                "content_sha256": production_release.content_sha256,
+                "artifact_path": str(production_release.manifest_path),
+                "source_registry_sha256": production_release.source_registry_sha256,
+                "reused": production_release.reused,
+            }
+            if production_release is not None
+            else None
+        ),
     }
 
 
