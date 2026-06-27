@@ -61,7 +61,7 @@ def test_domain_metrics_render_recommendation_outcomes_without_dynamic_labels() 
     metrics.record_product_search(
         result_count=4,
         ranked_candidates=4,
-        retrieved_candidates=11,
+        retrieved_candidates=10,
         filtered_category=2,
         filtered_brand=1,
         filtered_incompatible=2,
