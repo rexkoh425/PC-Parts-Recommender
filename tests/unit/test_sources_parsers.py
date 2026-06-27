@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import zipfile
 from datetime import UTC, date, datetime
+from pathlib import Path
 
 import pytest
+from pipelines.sources import buildcores
+from pipelines.sources.base import SnapshotError, SnapshotTooLargeError
 from pipelines.sources.blender import BlenderOpenDataAdapter
 from pipelines.sources.buildcores import BuildCoresOpenDBAdapter
 from pipelines.sources.mlperf import MLPerfInferenceAdapter
@@ -37,7 +41,15 @@ def _retailer_rights(
     )
 
 
-def test_buildcores_cpu_is_normalised_with_stable_provenance(tmp_path) -> None:
+def _pin_buildcores_fixture(monkeypatch: pytest.MonkeyPatch, path: Path) -> str:
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    monkeypatch.setattr(buildcores, "BUILDCORES_ARCHIVE_SHA256", digest)
+    return digest
+
+
+def test_buildcores_cpu_is_normalised_with_stable_provenance(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     archive_path = tmp_path / "buildcores.zip"
     payload = {
         "opendb_id": "11111111-1111-4111-8111-111111111111",
@@ -65,6 +77,7 @@ def test_buildcores_cpu_is_normalised_with_stable_provenance(tmp_path) -> None:
     member = "buildcores-open-db-fixture/open-db/CPU/11111111-1111-4111-8111-111111111111.json"
     with zipfile.ZipFile(archive_path, "w") as archive:
         archive.writestr(member, json.dumps(payload))
+    expected_sha256 = _pin_buildcores_fixture(monkeypatch, archive_path)
 
     adapter = BuildCoresOpenDBAdapter(raw_root=tmp_path / "raw")
     snapshot = adapter.fetch(archive_path=archive_path)
@@ -80,6 +93,74 @@ def test_buildcores_cpu_is_normalised_with_stable_provenance(tmp_path) -> None:
     assert product["category_attributes"]["core_count"] == 8
     assert product["category_attributes"]["integrated_graphics"] is None
     assert product["provenance"][0]["raw_content_hash"] != snapshot.content_sha256
+    assert batch.statistics["archive_sha256"] == expected_sha256
+    assert batch.statistics["archive_member_count"] == 1
+    identity_preflight = batch.statistics["canonical_identity_preflight"]
+    assert identity_preflight["record_count"] == 1
+    assert identity_preflight["complete_identity_count"] == 1
+    assert identity_preflight["production_ready"] is True
+
+
+def test_buildcores_local_archive_requires_the_pinned_digest(tmp_path) -> None:
+    archive_path = tmp_path / "untrusted-buildcores.zip"
+    with zipfile.ZipFile(archive_path, "w") as archive:
+        archive.writestr("fixture/open-db/CPU/product.json", "{}")
+
+    adapter = BuildCoresOpenDBAdapter(raw_root=tmp_path / "raw")
+    with pytest.raises(SnapshotError, match="SHA-256 mismatch"):
+        adapter.fetch(archive_path=archive_path)
+
+
+def test_buildcores_local_archive_is_bounded_before_copy(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    archive_path = tmp_path / "oversized-buildcores.zip"
+    with zipfile.ZipFile(archive_path, "w") as archive:
+        archive.writestr("fixture/open-db/CPU/product.json", "{}")
+    _pin_buildcores_fixture(monkeypatch, archive_path)
+    monkeypatch.setattr(buildcores, "MAXIMUM_ARCHIVE_BYTES", 10)
+
+    adapter = BuildCoresOpenDBAdapter(raw_root=tmp_path / "raw")
+    with pytest.raises(SnapshotTooLargeError, match="declared"):
+        adapter.fetch(archive_path=archive_path)
+
+
+def test_buildcores_rejects_zip_bomb_member_before_reading(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    archive_path = tmp_path / "bomb-buildcores.zip"
+    member = "fixture/open-db/CPU/product.json"
+    with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr(member, "x" * 128)
+    _pin_buildcores_fixture(monkeypatch, archive_path)
+    monkeypatch.setattr(buildcores, "MAXIMUM_MEMBER_BYTES", 64)
+
+    adapter = BuildCoresOpenDBAdapter(raw_root=tmp_path / "raw")
+    snapshot = adapter.fetch(archive_path=archive_path)
+    with pytest.raises(ValueError, match="member exceeds its size limit"):
+        adapter.parse(snapshot, categories=("CPU",), per_category_limit=1)
+
+
+def test_buildcores_rejects_duplicate_archive_members(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    archive_path = tmp_path / "duplicate-buildcores.zip"
+    member = "fixture/open-db/CPU/product.json"
+    with (
+        pytest.warns(UserWarning, match="Duplicate name"),
+        zipfile.ZipFile(archive_path, "w") as archive,
+    ):
+        archive.writestr(member, "{}")
+        archive.writestr(member, "{}")
+    _pin_buildcores_fixture(monkeypatch, archive_path)
+
+    adapter = BuildCoresOpenDBAdapter(raw_root=tmp_path / "raw")
+    snapshot = adapter.fetch(archive_path=archive_path)
+    with pytest.raises(ValueError, match="unsafe or duplicate"):
+        adapter.parse(snapshot, categories=("CPU",), per_category_limit=1)
 
 
 def test_blender_parser_rejects_ambiguous_multi_device_observation(tmp_path) -> None:

@@ -201,6 +201,12 @@ def test_awin_cli_verifies_and_materialises_without_disclosing_input_paths(
     assert len(summary["policy_authority"]["policy_sha256"]) == 64
     assert len(summary["manifest"]["sha256"]) == 64
     assert Path(summary["manifest"]["artifact_path"]).is_file()
+    production_release = summary["production_release"]
+    assert len(production_release["manifest_sha256"]) == 64
+    assert len(production_release["content_sha256"]) == 64
+    assert len(production_release["source_registry_sha256"]) == 64
+    assert production_release["reused"] is False
+    assert Path(production_release["artifact_path"]).is_file()
     for input_path in (feed, policy, signature, trust_root):
         assert str(input_path) not in output
         assert input_path.name not in output
