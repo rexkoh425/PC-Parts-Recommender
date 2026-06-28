@@ -26,7 +26,7 @@ from pc_build_recommender.ranking import (
 from pc_build_recommender.retrieval import (
     FrozenCandidateQuery,
     FrozenCandidateSet,
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     RelevanceLabelSource,
 )
 
@@ -507,7 +507,7 @@ def test_human_lambdamart_verifies_exact_frozen_train_and_validation_membership(
         adjudication_complete=True,
         judgment_manifest_sha256="b" * 64,
     )
-    split = QueryGroupSplit.create(frozen_dataset, version="human-split-v1", seed=3)
+    split = FrozenQueryGroupSplit.create(frozen_dataset, version="human-split-v1", seed=3)
     by_id = {query.context.query_id: query for query in labeled_queries}
     training = [
         by_id[query_id]
@@ -550,7 +550,7 @@ def test_human_lambdamart_verifies_exact_frozen_train_and_validation_membership(
         frozen_dataset.queries,
         label_source=RelevanceLabelSource.SILVER,
     )
-    silver_split = QueryGroupSplit.create(
+    silver_split = FrozenQueryGroupSplit.create(
         silver_dataset,
         version="silver-split-v1",
         seed=3,

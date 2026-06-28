@@ -34,7 +34,7 @@ from pc_build_recommender.ranking import (
 )
 from pc_build_recommender.retrieval import (
     FrozenCandidateSet,
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     HumanJudgmentSet,
     load_human_judgment_set,
 )
@@ -363,7 +363,7 @@ def _verify_annotation_release(
     dict[str, Any],
     HumanJudgmentSet,
     FrozenCandidateSet,
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     str,
 ]:
     root = release_dir.resolve(strict=True)
@@ -427,7 +427,7 @@ def _verify_annotation_release(
         raise RankingSnapshotMaterializationError(
             "qrels are not adjudicated, non-synthetic human evidence"
         )
-    split = QueryGroupSplit.load(root / "query-split.json")
+    split = FrozenQueryGroupSplit.load(root / "query-split.json")
     split.validate_dataset(qrels)
     expected_groups = {query.query_id: query.query_group_id for query in qrels.queries}
     if dict(split.query_group_ids) != expected_groups:
@@ -822,7 +822,7 @@ def verify_labeled_ranking_snapshot(
         raise RankingSnapshotMaterializationError(
             "labeled snapshot qrels binding mismatch"
         )
-    split = QueryGroupSplit.load(query_split_path)
+    split = FrozenQueryGroupSplit.load(query_split_path)
     split_manifest = _object(
         manifest.get("query_split"),
         name="labeled snapshot query split",

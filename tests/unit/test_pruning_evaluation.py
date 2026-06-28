@@ -15,7 +15,7 @@ from pc_build_recommender.retrieval import (
     FrozenCandidateQuery,
     FrozenCandidateSet,
     FrozenPruningStage,
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     PruningClaimPolicy,
     PruningEvaluationProvenance,
     PruningEvaluationReport,
@@ -137,7 +137,7 @@ def _report(
     *,
     population: CandidatePopulationDeclaration | None = None,
 ) -> PruningEvaluationReport:
-    split = QueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
+    split = FrozenQueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
     return evaluate_candidate_pruning(
         dataset,
         _stages(dataset),
@@ -232,7 +232,7 @@ def test_claim_decision_rejects_a_report_mutated_after_hashing() -> None:
 
 def test_claim_uses_terminal_compatibility_stage_not_later_rank_truncation() -> None:
     dataset = _dataset()
-    split = QueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
+    split = FrozenQueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
     stages = (
         *_stages(dataset),
         FrozenPruningStage.create(
@@ -303,7 +303,7 @@ def test_claim_rejects_pruning_from_a_prefix_retrieval_stage() -> None:
             removal_reasons=no_removals,
         ),
     )
-    split = QueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
+    split = FrozenQueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
     report = evaluate_candidate_pruning(
         dataset,
         stages,
@@ -332,7 +332,7 @@ def test_claim_rejects_pruning_from_a_prefix_retrieval_stage() -> None:
 
 def test_claim_rejects_underpowered_confidence_protocol() -> None:
     dataset = _dataset()
-    split = QueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
+    split = FrozenQueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
     report = evaluate_candidate_pruning(
         dataset,
         _stages(dataset),
@@ -370,7 +370,7 @@ def test_claim_rejects_compatibility_stage_version_mismatch() -> None:
         version="compat-wrong",
         removal_reasons=stages[1].removal_reasons,
     )
-    split = QueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
+    split = FrozenQueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
     report = evaluate_candidate_pruning(
         dataset,
         stages,
@@ -528,7 +528,7 @@ def test_incomplete_qrels_are_diagnostic_even_if_declared_human() -> None:
 
 def test_stages_must_be_exact_monotonic_subsets() -> None:
     dataset = _dataset()
-    split = QueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
+    split = FrozenQueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
     first = FrozenPruningStage.create(
         "first",
         {query.query_id: ("p-0",) for query in dataset.queries},
@@ -584,7 +584,7 @@ def test_mutated_frozen_qrels_and_stage_snapshots_are_rejected(tmp_path: Path) -
     cast(dict[str, tuple[str, ...]], stages[0].retained_candidate_ids)["q-0"] = ("p-9",)
     with pytest.raises(ValueError, match="changed after it was frozen"):
         write_frozen_pruning_trace(stages, tmp_path / "mutated-trace.json")
-    split = QueryGroupSplit.create(clean_dataset, version="pruning-split-v1", seed=13)
+    split = FrozenQueryGroupSplit.create(clean_dataset, version="pruning-split-v1", seed=13)
     with pytest.raises(ValueError, match="changed after it was frozen"):
         evaluate_candidate_pruning(
             clean_dataset,
@@ -599,7 +599,7 @@ def test_mutated_frozen_qrels_and_stage_snapshots_are_rejected(tmp_path: Path) -
 
 def test_mutated_frozen_query_split_is_rejected() -> None:
     dataset = _dataset()
-    split = QueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
+    split = FrozenQueryGroupSplit.create(dataset, version="pruning-split-v1", seed=13)
     first_query = dataset.queries[0].query_id
     assignments = cast(dict[str, str], split.assignments)
     assignments[first_query] = "test" if assignments[first_query] != "test" else "validation"

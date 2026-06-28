@@ -20,7 +20,7 @@ from pc_build_recommender.retrieval import (
     ArtifactBoundRankingEvidence,
     FrozenCandidateQuery,
     FrozenCandidateSet,
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     RelevanceLabelSource,
     compare_ranked_models,
     load_diagnostic_ranking_artifact,
@@ -66,7 +66,7 @@ def _rankings(dataset: FrozenCandidateSet) -> dict[str, dict[str, list[str]]]:
 
 def _bound_ranker_evidence(
     dataset: FrozenCandidateSet,
-    split: QueryGroupSplit,
+    split: FrozenQueryGroupSplit,
     metadata: RankerMetadata,
     identity: RankerArtifactIdentity,
 ) -> ArtifactBoundRankingEvidence:
@@ -111,13 +111,13 @@ def _verified_ranker(
 
 def test_frozen_query_group_split_keeps_paraphrases_together(tmp_path: Path) -> None:
     dataset = _human_dataset()
-    split = QueryGroupSplit.create(dataset, version="split-v1", seed=11)
+    split = FrozenQueryGroupSplit.create(dataset, version="split-v1", seed=11)
 
     for group_number in range(3):
         assert split.assignments[f"q-{group_number}-0"] == split.assignments[f"q-{group_number}-1"]
 
     output = split.save(tmp_path / "split.json")
-    assert QueryGroupSplit.load(output) == split
+    assert FrozenQueryGroupSplit.load(output) == split
     assert split.subset(dataset, "test").eligible_for_promotion
 
 
@@ -125,7 +125,7 @@ def test_paired_report_is_reproducible_and_can_pass_reduced_test_gate(
     tmp_path: Path,
 ) -> None:
     dataset = _human_dataset()
-    split = QueryGroupSplit.create(dataset, version="split-v1", seed=11)
+    split = FrozenQueryGroupSplit.create(dataset, version="split-v1", seed=11)
     metadata = RankerMetadata(
         ranker_version="ltr-human-v1",
         ranking_basis="lightgbm_lambdamart",
@@ -191,7 +191,7 @@ def test_paired_report_is_reproducible_and_can_pass_reduced_test_gate(
 )
 def test_promotion_rejects_same_version_swapped_ranker_artifact(digest_field: str) -> None:
     dataset = _human_dataset()
-    split = QueryGroupSplit.create(dataset, version="swap-split-v1", seed=11)
+    split = FrozenQueryGroupSplit.create(dataset, version="swap-split-v1", seed=11)
     metadata = RankerMetadata(
         ranker_version="ltr-same-version-v1",
         ranking_basis="lightgbm_lambdamart",
@@ -250,7 +250,7 @@ def test_promotion_rejects_same_version_swapped_ranker_artifact(digest_field: st
 
 def test_promotion_rejects_unbound_challenger_rankings() -> None:
     dataset = _human_dataset()
-    split = QueryGroupSplit.create(dataset, version="unbound-split-v1", seed=11)
+    split = FrozenQueryGroupSplit.create(dataset, version="unbound-split-v1", seed=11)
     metadata = RankerMetadata(
         ranker_version="ltr-unbound-v1",
         ranking_basis="lightgbm_lambdamart",
@@ -295,7 +295,7 @@ def test_promotion_rejects_unbound_challenger_rankings() -> None:
 
 def test_silver_labels_are_non_promotable_even_with_strong_diagnostic_scores() -> None:
     dataset = _human_dataset(source=RelevanceLabelSource.SILVER)
-    split = QueryGroupSplit.create(dataset, version="silver-split-v1", seed=11)
+    split = FrozenQueryGroupSplit.create(dataset, version="silver-split-v1", seed=11)
     report = compare_ranked_models(
         dataset,
         _rankings(dataset),
@@ -323,7 +323,7 @@ def test_ranker_promotion_policy_rejects_non_finite_thresholds(value: float) -> 
 
 def test_ranker_promotion_rejects_non_finite_report_metrics() -> None:
     dataset = _human_dataset()
-    split = QueryGroupSplit.create(dataset, version="non-finite-split-v1", seed=11)
+    split = FrozenQueryGroupSplit.create(dataset, version="non-finite-split-v1", seed=11)
     report = compare_ranked_models(
         dataset,
         _rankings(dataset),

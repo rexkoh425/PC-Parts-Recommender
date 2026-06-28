@@ -33,7 +33,7 @@ from pc_build_recommender.ranking import (
 )
 from pc_build_recommender.retrieval import (
     FrozenCandidateSet,
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     HumanJudgmentSet,
     RelevanceLabelSource,
     load_human_judgment_set,
@@ -88,7 +88,7 @@ class VerifiedRankingEvidence:
     human_judgments_file_sha256: str | None = None
     frozen_query_split_path: Path | None = None
     frozen_query_split_file_sha256: str | None = None
-    frozen_query_split: QueryGroupSplit | None = None
+    frozen_query_split: FrozenQueryGroupSplit | None = None
     dataset_manifest_path: Path | None = None
     dataset_manifest_file_sha256: str | None = None
     dataset_manifest_sha256: str | None = None
@@ -232,7 +232,7 @@ def _load_verified_human_evidence(
             f"{candidate_set_version!r} != {qrels.version!r}"
         )
 
-    frozen_query_split = QueryGroupSplit.load(frozen_query_split_path)
+    frozen_query_split = FrozenQueryGroupSplit.load(frozen_query_split_path)
     frozen_query_split.validate_dataset(qrels)
     expected_query_groups = {query.query_id: query.query_group_id for query in qrels.queries}
     if any(group_id is None for group_id in expected_query_groups.values()):
@@ -290,7 +290,7 @@ def _split_queries(
 
 def _split_queries_from_frozen(
     queries: Sequence[LabeledRankingQuery],
-    frozen_query_split: QueryGroupSplit,
+    frozen_query_split: FrozenQueryGroupSplit,
 ) -> dict[str, tuple[LabeledRankingQuery, ...]]:
     required_names = {"train", "validation", "test"}
     if set(frozen_query_split.weights) != required_names:

@@ -13,7 +13,7 @@ from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.ranking import LambdaMARTRanker, load_ranker_promotion_decision
 from pc_build_recommender.retrieval import (
     FrozenCandidateSet,
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     HumanJudgmentSet,
     LabelingQuery,
     ReviewerJudgment,
@@ -171,7 +171,7 @@ def _write_dataset_manifest(
     }
     human = load_human_judgment_set(human_path)
     qrels = FrozenCandidateSet.load(qrels_path)
-    split = QueryGroupSplit.load(split_path)
+    split = FrozenQueryGroupSplit.load(split_path)
     manifest: dict[str, object] = {
         "schema_version": (
             "pc-build-recommender.ranking-labeled-snapshot-manifest.v1"
@@ -226,7 +226,7 @@ def _write_dataset_manifest(
 
 def _write_lineage(
     tmp_path: Path,
-) -> tuple[HumanJudgmentSet, Path, Path, Path, QueryGroupSplit]:
+) -> tuple[HumanJudgmentSet, Path, Path, Path, FrozenQueryGroupSplit]:
     judgments = _human_judgments()
     adjudicated = judgments.adjudicate()
     human_path = tmp_path / "human-judgments.json"
@@ -234,7 +234,7 @@ def _write_lineage(
     split_path = tmp_path / "query-split.json"
     write_human_judgment_set(judgments, human_path)
     adjudicated.frozen_candidates.save(qrels_path)
-    split = QueryGroupSplit.create(
+    split = FrozenQueryGroupSplit.create(
         adjudicated.frozen_candidates,
         version="human-ranking-split-v1",
         weights={"train": 0.6, "validation": 0.2, "test": 0.2},
@@ -545,7 +545,7 @@ def test_human_ranking_cli_rejects_rechecksummed_split_group_drift(
     changed_groups["q0"] = "different-intent"
     content = split.content_payload()
     content["query_group_ids"] = dict(sorted(changed_groups.items()))
-    changed_split = QueryGroupSplit(
+    changed_split = FrozenQueryGroupSplit(
         version=split.version,
         dataset_checksum=split.dataset_checksum,
         dataset_evidence_checksum=split.dataset_evidence_checksum,

@@ -10,7 +10,7 @@ from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.retrieval import (
     ArtifactBoundRankingEvidence,
     FrozenCandidateSet,
-    QueryGroupSplit,
+    FrozenQueryGroupSplit,
     evaluate_ranked_candidates,
 )
 
@@ -45,7 +45,7 @@ def generate_artifact_bound_rankings(
     model_name: str,
     contexts: Mapping[str, RankingContext],
     candidates: Mapping[str, Sequence[RankingCandidate]],
-    query_split: QueryGroupSplit | None = None,
+    query_split: FrozenQueryGroupSplit | None = None,
     split_name: str | None = None,
 ) -> ArtifactBoundRankerOutput:
     """Score a frozen snapshot with exact verified artifact bytes and bind every input/output."""

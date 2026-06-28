@@ -65,7 +65,7 @@ def _atomic_json(path: Path, payload: object) -> Path:
 
 
 @dataclass(frozen=True, slots=True)
-class QueryGroupSplit:
+class FrozenQueryGroupSplit:
     """Checksummed split assignments for query-intent leakage groups."""
 
     version: str
@@ -141,7 +141,7 @@ class QueryGroupSplit:
         query_group_ids: Mapping[str, str] | None = None,
         weights: Mapping[str, float] | None = None,
         seed: int = 20260722,
-    ) -> QueryGroupSplit:
+    ) -> FrozenQueryGroupSplit:
         if query_group_ids is None:
             inferred = {query.query_id: query.query_group_id for query in dataset.queries}
             if any(group_id is None for group_id in inferred.values()):
@@ -231,7 +231,7 @@ class QueryGroupSplit:
         return _atomic_json(Path(path), self.to_dict())
 
     @classmethod
-    def load(cls, path: str | Path) -> QueryGroupSplit:
+    def load(cls, path: str | Path) -> FrozenQueryGroupSplit:
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
         if not isinstance(payload, Mapping):
             raise TypeError("query split root must be an object")
@@ -670,7 +670,7 @@ def compare_ranked_models(
     artifact_bound_rankings: Mapping[str, ArtifactBoundRankingEvidence] | None = None,
     baseline_model: str = "bm25",
     reference_models: Sequence[str] | None = None,
-    query_split: QueryGroupSplit | None = None,
+    query_split: FrozenQueryGroupSplit | None = None,
     split_name: str | None = None,
     recall_ks: Sequence[int] = (20, 50),
     confidence_level: float = 0.95,
