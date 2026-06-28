@@ -12,7 +12,7 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
-from pipelines.sources.base import ParseResult
+from pipelines.sources.base import ParsedBatch
 
 DATA_QUALITY_SCHEMA_VERSION = "pc-build-recommender.data-quality.v1"
 _SNAPSHOT_SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
@@ -358,7 +358,7 @@ def quality_regression_checks(
 
 
 def evaluate_batch_quality(
-    batch: ParseResult,
+    batch: ParsedBatch,
     *,
     maximum_rejection_rate: float = 0.20,
     baseline: QualityBaseline | None = None,
@@ -535,7 +535,7 @@ def evaluate_batch_quality(
 
 
 def evaluate_batch_quality_against_previous(
-    batch: ParseResult,
+    batch: ParsedBatch,
     *,
     processed_root: str | Path,
     variant: str | None,

@@ -9,7 +9,7 @@ from pipelines.checks.quality import (
     write_quality_report,
 )
 from pipelines.parsing.writer import write_parsed_batch
-from pipelines.sources.base import ParseResult
+from pipelines.sources.base import ParsedBatch
 
 
 def _product_records(*, count: int, category: str = "cpu") -> list[dict[str, object]]:
@@ -38,7 +38,7 @@ def _persist_passing_baseline(
     snapshot: str = "a" * 64,
     variant: str | None = None,
 ) -> None:
-    batch = ParseResult(
+    batch = ParsedBatch(
         source_name="fixture_quality",
         snapshot_sha256=snapshot,
         records=_product_records(count=10),
@@ -60,7 +60,7 @@ def _persist_passing_baseline(
 
 def test_accepted_count_regression_is_a_promotion_blocker(tmp_path: Path) -> None:
     _persist_passing_baseline(tmp_path)
-    current = ParseResult(
+    current = ParsedBatch(
         source_name="fixture_quality",
         snapshot_sha256="b" * 64,
         records=_product_records(count=6),
@@ -82,7 +82,7 @@ def test_accepted_count_regression_is_a_promotion_blocker(tmp_path: Path) -> Non
 
 def test_category_regression_is_detected_even_when_total_count_is_stable(tmp_path: Path) -> None:
     _persist_passing_baseline(tmp_path)
-    current = ParseResult(
+    current = ParsedBatch(
         source_name="fixture_quality",
         snapshot_sha256="c" * 64,
         records=[
@@ -107,7 +107,7 @@ def test_category_regression_is_detected_even_when_total_count_is_stable(tmp_pat
 
 def test_baselines_are_variant_specific_and_require_a_passing_prior_report(tmp_path: Path) -> None:
     _persist_passing_baseline(tmp_path, variant="portfolio")
-    current = ParseResult(
+    current = ParsedBatch(
         source_name="fixture_quality",
         snapshot_sha256="d" * 64,
         records=_product_records(count=1),

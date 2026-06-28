@@ -10,7 +10,7 @@ from typing import Any
 from pipelines.assets.operation_observation import instrument_pipeline_operation
 from pipelines.checks.quality import evaluate_batch_quality_against_previous, write_quality_report
 from pipelines.parsing.writer import write_parsed_batch
-from pipelines.sources.base import ParseResult
+from pipelines.sources.base import ParsedBatch
 from pipelines.sources.blender import BlenderOpenDataAdapter
 from pipelines.sources.buildcores import BuildCoresOpenDBAdapter
 from pipelines.sources.mlperf import MLPerfInferenceAdapter
@@ -21,7 +21,7 @@ from pipelines.sources.retailer_csv import (
 
 
 def persist_checked_batch(
-    batch: ParseResult,
+    batch: ParsedBatch,
     *,
     processed_root: str | Path,
     variant: str | None = None,

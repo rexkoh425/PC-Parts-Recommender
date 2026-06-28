@@ -15,7 +15,7 @@ from pc_build_recommender.domain.enums import WorkloadLabel
 from pc_build_recommender.domain.models import BenchmarkResult
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
-    ParseResult,
+    ParsedBatch,
     RawSnapshot,
     fetch_http_snapshot,
     rejected_record,
@@ -75,7 +75,7 @@ class BlenderOpenDataAdapter:
         maximum_recorded_rejections: int = 1_000,
         selection: BlenderSelection = "head",
         sample_seed: str = "buildsignal-blender-v1",
-    ) -> ParseResult:
+    ) -> ParsedBatch:
         if max_observations <= 0:
             raise ValueError("max_observations must be positive")
         if max_submissions_scan is not None and max_submissions_scan <= 0:
@@ -89,7 +89,7 @@ class BlenderOpenDataAdapter:
         if not sample_seed.strip():
             raise ValueError("sample_seed must not be blank")
 
-        batch = ParseResult(
+        batch = ParsedBatch(
             source_name=snapshot.source_name,
             snapshot_sha256=snapshot.content_sha256,
         )
@@ -277,7 +277,7 @@ class BlenderOpenDataAdapter:
 
     @staticmethod
     def _record_rejection(
-        batch: ParseResult,
+        batch: ParsedBatch,
         counts_by_scope: dict[BlenderRejectionScope, dict[str, int]],
         maximum_recorded: int,
         record_id: str,

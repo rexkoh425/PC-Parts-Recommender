@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 import pytest
-from pipelines.sources.base import ParseResult, RawSnapshot, SnapshotError, sha256_bytes
+from pipelines.sources.base import ParsedBatch, RawSnapshot, SnapshotError, sha256_bytes
 from pipelines.sources.pci_ids import (
     PCI_IDS_GZIP_URL,
     PCI_IDS_LICENSE,
@@ -127,7 +127,7 @@ def test_pci_ids_gzip_and_plain_snapshots_have_equivalent_records(tmp_path: Path
         max_records=20,
     )
 
-    def semantic_rows(batch: ParseResult) -> list[tuple[str, object]]:
+    def semantic_rows(batch: ParsedBatch) -> list[tuple[str, object]]:
         return [(str(record["source_record_id"]), record["data"]) for record in batch.records]
 
     assert semantic_rows(plain) == semantic_rows(compressed)

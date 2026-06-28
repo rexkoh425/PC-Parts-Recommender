@@ -103,7 +103,7 @@ class RawSnapshot:
 
 
 @dataclass(slots=True)
-class ParseResult:
+class ParsedBatch:
     """Accepted records and auditable rejections from a parser run."""
 
     source_name: str

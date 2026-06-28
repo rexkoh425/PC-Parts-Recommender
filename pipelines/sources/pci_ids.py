@@ -18,7 +18,7 @@ from typing import Any, Literal, Protocol
 
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION
 from pipelines.sources.base import (
-    ParseResult,
+    ParsedBatch,
     RawSnapshot,
     SnapshotError,
     fetch_http_snapshot,
@@ -515,7 +515,7 @@ class PCIIDRepositoryAdapter:
         maximum_line_bytes: int = DEFAULT_MAXIMUM_LINE_BYTES,
         maximum_lines_scanned: int = DEFAULT_MAXIMUM_LINES_SCANNED,
         maximum_recorded_rejections: int = DEFAULT_MAXIMUM_RECORDED_REJECTIONS,
-    ) -> ParseResult:
+    ) -> ParsedBatch:
         if snapshot.source_name != PCI_IDS_SOURCE_NAME:
             raise ValueError(f"unexpected PCI IDs source: {snapshot.source_name}")
         if max_records <= 0:
@@ -529,7 +529,7 @@ class PCIIDRepositoryAdapter:
         if maximum_recorded_rejections <= 0:
             raise ValueError("maximum_recorded_rejections must be positive")
 
-        batch = ParseResult(
+        batch = ParsedBatch(
             source_name=snapshot.source_name,
             snapshot_sha256=snapshot.content_sha256,
         )

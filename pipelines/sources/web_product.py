@@ -35,7 +35,7 @@ import httpx
 from pc_build_recommender.domain.enums import ComponentKind, ListingCondition, StockState
 from pc_build_recommender.domain.models import PriceSample, RetailerOffering
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
-from pipelines.sources.base import ParseResult, RawSnapshot, rejected_record, sha256_bytes
+from pipelines.sources.base import ParsedBatch, RawSnapshot, rejected_record, sha256_bytes
 from pipelines.sources.rights import DataUse, DataUseRights
 
 WEB_PRODUCT_PARSER_VERSION = "schemaorg-product-offer-v3"
@@ -695,7 +695,7 @@ class CrawledPage:
 
 @dataclass(frozen=True, slots=True)
 class WebCrawlResult:
-    batch: ParseResult
+    batch: ParsedBatch
     pages: tuple[CrawledPage, ...]
     retrieval_started_at: datetime
     retrieval_completed_at: datetime
@@ -1520,8 +1520,8 @@ class WebProductCrawlerAdapter:
         robots_hashes: Mapping[str, str],
         terms_page: CrawledPage,
         terms_post_page: CrawledPage,
-    ) -> ParseResult:
-        batch = ParseResult(source_name=self.policy.source_name, snapshot_sha256=run_sha256)
+    ) -> ParsedBatch:
+        batch = ParsedBatch(source_name=self.policy.source_name, snapshot_sha256=run_sha256)
         seen_listing_ids: set[str] = set()
         jsonld_blocks = 0
         product_nodes = 0

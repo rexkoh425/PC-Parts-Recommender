@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from pipelines.sources.base import ParseResult, sha256_file
+from pipelines.sources.base import ParsedBatch, sha256_file
 
 PROCESSED_MANIFEST_SCHEMA_VERSION = "pc-build-recommender.processed-batch.v1"
 
@@ -117,7 +117,7 @@ def _write_optional_parquet(path: Path, records: list[dict[str, Any]]) -> Path |
 
 
 def write_parsed_batch(
-    batch: ParseResult,
+    batch: ParsedBatch,
     *,
     processed_root: str | Path,
     prefer_parquet: bool = True,

@@ -15,7 +15,7 @@ from pc_build_recommender.domain.enums import ListingCondition, StockState
 from pc_build_recommender.domain.models import PriceSample, RetailerOffering
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
-    ParseResult,
+    ParsedBatch,
     RawSnapshot,
     rejected_record,
     sha256_bytes,
@@ -106,8 +106,8 @@ class ConsentedRetailerCSVAdapter:
             media_type="text/csv",
         )
 
-    def parse(self, snapshot: RawSnapshot) -> ParseResult:
-        batch = ParseResult(
+    def parse(self, snapshot: RawSnapshot) -> ParsedBatch:
+        batch = ParsedBatch(
             source_name=snapshot.source_name,
             snapshot_sha256=snapshot.content_sha256,
         )
