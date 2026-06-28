@@ -257,9 +257,19 @@ class BuildComponent(ApiModel):
     selection_reasons: list[str] = Field(default_factory=list)
     performance_signals: list[PerformanceSignal] = Field(default_factory=list)
     alternatives: list[ReplacementCandidate] = Field(default_factory=list)
+    impression_token: str | None = Field(
+        default=None,
+        max_length=4096,
+        description="Opaque server-issued identity for this displayed recommendation.",
+    )
 
 
 class BuildSummary(ApiModel):
+    request_id: str = Field(
+        min_length=1,
+        max_length=80,
+        description="Server request identity that produced this exact build result.",
+    )
     build_id: str
     profile: BuildProfile
     total_price_sgd: float = Field(ge=0)
@@ -282,6 +292,11 @@ class BuildSummary(ApiModel):
     solver_version: str
     solver_status: SolverStatus
     solver_ran: bool
+    impression_token: str | None = Field(
+        default=None,
+        max_length=4096,
+        description="Opaque server-issued identity for this ranked build result.",
+    )
 
     @model_validator(mode="after")
     def ensure_safe_complete_build(self) -> BuildSummary:
@@ -470,6 +485,8 @@ class GenerateBuildsResponse(ApiModel):
             raise ValueError("an infeasible solver outcome cannot publish builds")
         if not self.solver_ran and self.solver_profile_statuses:
             raise ValueError("profile solver outcomes require solver_ran=true")
+        if any(build.request_id != self.request_id for build in self.builds):
+            raise ValueError("every build must preserve its generating request identity")
         return self
 
 
@@ -500,6 +517,7 @@ def product_search_identity(
     *,
     data_version: str,
     retrieval_model: str,
+    rule_version: str,
 ) -> tuple[str, dict[str, Any]]:
     """Return a stable query ID and its versioned durable analytics payload.
 
@@ -518,6 +536,7 @@ def product_search_identity(
         "in_stock_only": request.in_stock_only,
         "data_version": data_version,
         "retrieval_model": retrieval_model,
+        "rule_version": rule_version,
     }
     canonical = json.dumps(
         {"domain": _PRODUCT_SEARCH_QUERY_DOMAIN, **constraints},
@@ -636,6 +655,11 @@ class ProductSearchItem(ApiModel):
     lowest_price_sgd: float | None = Field(default=None, ge=0)
     stock_status: str | None = None
     compatibility_status: CompatibilityStatus | None = None
+    impression_token: str | None = Field(
+        default=None,
+        max_length=4096,
+        description="Opaque server-issued identity for this ranked product result.",
+    )
 
 
 class ProductFacetCount(ApiModel):
@@ -847,6 +871,17 @@ class ReplacementResponse(ApiModel):
     solver_profile_statuses: list[SolverProfileOutcome] = Field(default_factory=list)
     solver_validator_rejections: int = Field(default=0, ge=0)
 
+    @model_validator(mode="after")
+    def versions_match_build(self) -> ReplacementResponse:
+        if (
+            self.build.data_version != self.data_version
+            or self.build.ranking_model != self.ranking_model
+            or self.build.rule_version != self.rule_version
+            or self.build.solver_version != self.solver_version
+        ):
+            raise ValueError("replacement metadata must match its returned build")
+        return self
+
 
 class CompatibilityComponent(ApiModel):
     product_id: str | None = None
@@ -904,10 +939,21 @@ class InteractionEvent(ApiModel):
         json_schema_extra={"deprecated": True},
     )
     metadata: dict[str, Any] = Field(default_factory=dict)
+    impression_token: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=4096,
+        description="Opaque identity returned with the ranked result being acted on.",
+    )
 
     @model_validator(mode="after")
     def ranked_event_identifies_a_result(self) -> InteractionEvent:
-        if self.rank_position is not None and self.product_id is None and self.build_id is None:
+        if (
+            self.rank_position is not None
+            and self.product_id is None
+            and self.build_id is None
+            and self.impression_token is None
+        ):
             raise ValueError("ranked events must reference a product or build")
         return self
 
@@ -918,6 +964,34 @@ class InteractionAccepted(ApiModel):
     status: Literal["accepted"] = "accepted"
     data_version: str
     rule_version: str
+    trust_level: Literal["verified_impression", "legacy_untrusted"]
+    replayed: bool = False
+
+
+class CanonicalInteractionEvent(InteractionEvent):
+    """Internal event after server-side impression and idempotency canonicalisation."""
+
+    impression_token: None = None
+    impression_id: str | None = Field(default=None, max_length=80)
+    trust_level: Literal["verified_impression", "legacy_untrusted"]
+    idempotency_key_sha256: str | None = Field(
+        default=None, min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$"
+    )
+    idempotency_payload_sha256: str | None = Field(
+        default=None, min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$"
+    )
+
+    @model_validator(mode="after")
+    def trusted_events_have_proof(self) -> CanonicalInteractionEvent:
+        if self.trust_level == "verified_impression" and (
+            self.impression_id is None
+            or self.idempotency_key_sha256 is None
+            or self.idempotency_payload_sha256 is None
+        ):
+            raise ValueError("verified interactions require impression and idempotency proof")
+        if self.trust_level == "legacy_untrusted" and self.impression_id is not None:
+            raise ValueError("legacy interactions cannot carry a verified impression identity")
+        return self
 
 
 class CatalogueReadinessSummary(ApiModel):
@@ -949,9 +1023,13 @@ class CatalogueReadinessSummary(ApiModel):
 class FreshnessResponse(ApiModel):
     data_version: str
     status: Literal["fresh", "stale", "degraded"]
-    last_catalog_update: datetime
-    prices_updated_at: datetime
-    stale_after_hours: int
+    catalogue_status: Literal["fresh", "stale", "degraded"]
+    price_status: Literal["fresh", "stale", "degraded"]
+    last_catalog_update: datetime | None
+    prices_updated_at: datetime | None
+    stale_after_hours: int = Field(ge=1)
+    catalogue_stale_after_hours: int = Field(ge=1)
+    price_stale_after_hours: int = Field(ge=1)
     source_count: int
     product_count: int
     listing_count: int
@@ -959,8 +1037,33 @@ class FreshnessResponse(ApiModel):
     release_artifact_verification: Literal[
         "verified", "development_unverified", "not_verified"
     ]
+    source_authority_expires_at: datetime | None = None
     readiness_blockers: list[str] = Field(default_factory=list)
     catalogue_readiness: CatalogueReadinessSummary | None = None
+
+    @model_validator(mode="after")
+    def freshness_state_is_internally_consistent(self) -> FreshnessResponse:
+        dimensions = {self.catalogue_status, self.price_status}
+        expected_status: Literal["fresh", "stale", "degraded"]
+        if "degraded" in dimensions:
+            expected_status = "degraded"
+        elif "stale" in dimensions:
+            expected_status = "stale"
+        else:
+            expected_status = "fresh"
+        if self.status != expected_status:
+            raise ValueError(
+                "aggregate freshness status must match catalogue_status and price_status"
+            )
+        if self.catalogue_status != "degraded" and self.last_catalog_update is None:
+            raise ValueError("verified catalogue freshness requires a catalogue watermark")
+        if self.price_status != "degraded" and self.prices_updated_at is None:
+            raise ValueError("verified price freshness requires a price watermark")
+        if self.production_ready and self.status != "fresh":
+            raise ValueError("production_ready requires fresh catalogue and price evidence")
+        if self.production_ready and self.release_artifact_verification != "verified":
+            raise ValueError("production_ready requires a verified immutable serving release")
+        return self
 
 
 class HealthResponse(ApiModel):
