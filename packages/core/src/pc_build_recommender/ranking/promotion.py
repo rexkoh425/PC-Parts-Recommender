@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from pc_build_recommender.evaluation.manifest import json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.retrieval.benchmark import RankingComparisonReport
 
 from .models import ProductRanker
@@ -202,7 +202,7 @@ class RankerPromotionDecision:
             raise TypeError("passed must be a boolean")
         if self.decision_sha256:
             _require_sha256(self.decision_sha256, "decision_sha256")
-            if json_sha256(self.content_payload()) != self.decision_sha256:
+            if sha256_json(self.content_payload()) != self.decision_sha256:
                 raise ValueError("promotion decision hash does not match its contents")
         _require_sha256(self.comparison_report_sha256, "comparison_report_sha256")
         if not self.challenger_model:
@@ -352,7 +352,7 @@ def evaluate_ranker_promotion(
 
     selected_policy = policy or RankerPromotionPolicy()
     try:
-        expected_report_sha256 = json_sha256(report.content_payload())
+        expected_report_sha256 = sha256_json(report.content_payload())
     except ValueError as error:
         raise ValueError("ranking comparison report contains non-finite evidence") from error
     if report.report_sha256 != expected_report_sha256:
@@ -546,7 +546,7 @@ def evaluate_ranker_promotion(
         ranker_model_sha256=ranker_model_sha256,
         ranker_metadata_sha256=ranker_metadata_sha256,
         ranker_manifest_sha256=ranker_manifest_sha256,
-        decision_sha256=json_sha256(provisional.content_payload()),
+        decision_sha256=sha256_json(provisional.content_payload()),
     )
 
 

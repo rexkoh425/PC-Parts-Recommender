@@ -28,7 +28,7 @@ def canonical_json_bytes(value: object) -> bytes:
     ).encode("utf-8")
 
 
-def json_sha256(value: object) -> str:
+def sha256_json(value: object) -> str:
     return hashlib.sha256(canonical_json_bytes(value)).hexdigest()
 
 
@@ -145,7 +145,7 @@ def build_dataset_manifest(
         "synthetic_data": data_use.to_dict(),
         "metadata": dict(metadata or {}),
     }
-    content_sha256 = json_sha256(payload)
+    content_sha256 = sha256_json(payload)
     return DatasetManifest(
         schema_version=MANIFEST_SCHEMA_VERSION,
         dataset_name=dataset_name,
@@ -188,7 +188,7 @@ def _write_json_atomic(path: Path, payload: object) -> Path:
 def write_dataset_manifest(manifest: DatasetManifest, path: str | Path) -> Path:
     """Write a deterministic manifest without silently changing its hash."""
 
-    if json_sha256(manifest.content_payload()) != manifest.content_sha256:
+    if sha256_json(manifest.content_payload()) != manifest.content_sha256:
         raise ValueError("manifest content hash does not match its payload")
     return _write_json_atomic(Path(path), manifest.to_dict())
 
@@ -241,7 +241,7 @@ def load_dataset_manifest(path: str | Path) -> DatasetManifest:
 def verify_dataset_manifest(manifest: DatasetManifest, *, root: str | Path) -> bool:
     """Verify both the manifest payload and every referenced file."""
 
-    if json_sha256(manifest.content_payload()) != manifest.content_sha256:
+    if sha256_json(manifest.content_payload()) != manifest.content_sha256:
         return False
     dataset_root = Path(root).resolve()
     for expected in manifest.files:

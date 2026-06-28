@@ -24,7 +24,7 @@ from pc_build_recommender.entity_resolution import (
     EntityResolutionRuntime,
     load_entity_resolution_release,
 )
-from pc_build_recommender.evaluation.manifest import sha256_file, json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_file, sha256_json
 from pc_build_recommender.performance_models import (
     PerformanceModelArtifact,
     load_performance_artifact,
@@ -298,7 +298,7 @@ def _read_manifest(path: Path, *, expected_content_sha256: str) -> Mapping[str, 
     stored_hash = _sha256(manifest["content_sha256"], field="manifest.content_sha256")
     unhashed = dict(manifest)
     unhashed.pop("content_sha256")
-    if json_sha256(unhashed) != stored_hash:
+    if sha256_json(unhashed) != stored_hash:
         raise ServingConfigurationError("serving manifest content hash verification failed")
     expected_hash = _sha256(
         expected_content_sha256,

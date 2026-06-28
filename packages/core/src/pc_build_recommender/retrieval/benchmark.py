@@ -11,7 +11,7 @@ from pathlib import Path
 from statistics import fmean
 from typing import Any
 
-from pc_build_recommender.evaluation.manifest import json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.evaluation.metrics import bootstrap_confidence_interval
 from pc_build_recommender.evaluation.splits import deterministic_group_split
 
@@ -110,7 +110,7 @@ class QueryGroupSplit:
                 raise ValueError(
                     f"query group {group_id!r} leaks across {previous!r} and {split_name!r}"
                 )
-        if json_sha256(self.content_payload()) != self.checksum:
+        if sha256_json(self.content_payload()) != self.checksum:
             raise ValueError("frozen query-group split checksum does not match its contents")
 
     def content_payload(self) -> dict[str, object]:
@@ -191,7 +191,7 @@ class QueryGroupSplit:
             assignments=assignments,
             weights=split_weights,
             seed=seed,
-            checksum=json_sha256(payload),
+            checksum=sha256_json(payload),
         )
 
     def validate_dataset(self, dataset: FrozenCandidateSet) -> None:
@@ -309,7 +309,7 @@ class ArtifactBoundRankingEvidence:
         if type(self.row_count) is not int or self.row_count < self.query_count:
             raise ValueError("bound ranking row_count must cover every query")
         metadata = dict(self.ranker_metadata_payload)
-        if json_sha256(metadata) != self.metadata_payload_sha256:
+        if sha256_json(metadata) != self.metadata_payload_sha256:
             raise ValueError("bound ranking metadata payload hash does not match")
         if metadata.get("ranker_version") != self.ranker_version:
             raise ValueError("bound ranking version does not match metadata")
@@ -319,7 +319,7 @@ class ArtifactBoundRankingEvidence:
             raise ValueError("bound ranking feature version does not match metadata")
         if tuple(metadata.get("feature_names", ())) != self.feature_names:
             raise ValueError("bound ranking feature order does not match metadata")
-        if self.evidence_sha256 and json_sha256(self.content_payload()) != self.evidence_sha256:
+        if self.evidence_sha256 and sha256_json(self.content_payload()) != self.evidence_sha256:
             raise ValueError("bound ranking evidence hash does not match its contents")
 
     def content_payload(self) -> dict[str, object]:
@@ -380,7 +380,7 @@ class ArtifactBoundRankingEvidence:
             "metadata_sha256": metadata_sha256,
             "manifest_sha256": manifest_sha256,
             "ranker_metadata_payload": metadata,
-            "metadata_payload_sha256": json_sha256(metadata),
+            "metadata_payload_sha256": sha256_json(metadata),
             "feature_version": feature_version,
             "feature_names": tuple(feature_names),
             "candidate_snapshot_sha256": candidate_snapshot_sha256,
@@ -393,7 +393,7 @@ class ArtifactBoundRankingEvidence:
             "row_count": row_count,
         }
         provisional = cls(evidence_sha256="", **fields)
-        return cls(evidence_sha256=json_sha256(provisional.content_payload()), **fields)
+        return cls(evidence_sha256=sha256_json(provisional.content_payload()), **fields)
 
 
 @dataclass(frozen=True, slots=True)
@@ -509,7 +509,7 @@ class RankingComparisonReport:
                 raise ValueError("artifact-bound ranking split does not match report")
             if evidence.query_count != self.query_count:
                 raise ValueError("artifact-bound ranking query count does not match report")
-        if self.report_sha256 and json_sha256(self.content_payload()) != self.report_sha256:
+        if self.report_sha256 and sha256_json(self.content_payload()) != self.report_sha256:
             raise ValueError("ranking comparison report hash does not match its contents")
 
 
@@ -540,7 +540,7 @@ def load_diagnostic_ranking_artifact(path: str | Path) -> DiagnosticRankingArtif
     stored_hash = payload.get("artifact_sha256")
     unhashed = dict(payload)
     unhashed.pop("artifact_sha256", None)
-    if stored_hash != json_sha256(unhashed):
+    if stored_hash != sha256_json(unhashed):
         raise ValueError("diagnostic ranking artifact hash verification failed")
     if payload.get("schema_version") != SILVER_DIAGNOSTIC_SCHEMA_VERSION:
         raise ValueError("unsupported diagnostic ranking artifact schema")
@@ -713,7 +713,7 @@ def compare_ranked_models(
             selected,
             model_name=model_name,
         )
-        ranking_hashes[model_name] = json_sha256(complete)
+        ranking_hashes[model_name] = sha256_json(complete)
         evaluations[model_name] = evaluate_ranked_candidates(
             evaluation_dataset,
             complete,
@@ -805,7 +805,7 @@ def compare_ranked_models(
     }
     provisional = RankingComparisonReport(report_sha256="", **report_fields)
     # Build the hash from the semantic payload without accepting the provisional hash.
-    report_hash = json_sha256(provisional.content_payload())
+    report_hash = sha256_json(provisional.content_payload())
     return RankingComparisonReport(report_sha256=report_hash, **report_fields)
 
 
@@ -823,6 +823,6 @@ def load_ranking_comparison_report(path: str | Path) -> dict[str, Any]:
     stored_hash = payload.get("report_sha256")
     unhashed = dict(payload)
     unhashed.pop("report_sha256", None)
-    if stored_hash != json_sha256(unhashed):
+    if stored_hash != sha256_json(unhashed):
         raise ValueError("ranking comparison report hash verification failed")
     return payload

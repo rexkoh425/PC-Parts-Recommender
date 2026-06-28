@@ -9,7 +9,7 @@ from training._common import sha256_file
 from training.evaluate_ranking import main as evaluation_main
 from training.train_ranking import main as ranking_main
 
-from pc_build_recommender.evaluation.manifest import json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.ranking import LambdaMARTRanker, load_ranker_promotion_decision
 from pc_build_recommender.retrieval import (
     FrozenCandidateSet,
@@ -86,7 +86,7 @@ def _feature_rows(query_count: int = 12) -> list[dict[str, object]]:
                     "relevance_grade": 4,
                 },
             ],
-            "candidate_ids_sha256": json_sha256(
+            "candidate_ids_sha256": sha256_json(
                 [f"q{index}-weak", f"q{index}-strong"]
             ),
             "feature_matrix_sha256": "f" * 64,
@@ -125,9 +125,9 @@ def _write_dataset_manifest(
             prelabel_candidates.append(candidate)
             product_ids.append(candidate["product_id"])
         prelabel_row = {**row, "candidates": prelabel_candidates}
-        row_hashes[row["query_id"]] = json_sha256(prelabel_row)
-        candidate_hashes[row["query_id"]] = json_sha256(product_ids)
-    snapshot_sha256 = json_sha256({"query_row_sha256": row_hashes})
+        row_hashes[row["query_id"]] = sha256_json(prelabel_row)
+        candidate_hashes[row["query_id"]] = sha256_json(product_ids)
+    snapshot_sha256 = sha256_json({"query_row_sha256": row_hashes})
     evidence_path = input_path.parent / "evidence-snapshots.json"
     evidence_path.write_text(
         json.dumps(
@@ -186,7 +186,7 @@ def _write_dataset_manifest(
         },
         "annotation_release": {
             "manifest_file_sha256": "e" * 64,
-            "release_sha256": json_sha256(release_files),
+            "release_sha256": sha256_json(release_files),
             "files": release_files,
         },
         "human_judgments": {
@@ -215,7 +215,7 @@ def _write_dataset_manifest(
             }
         },
     }
-    manifest["manifest_sha256"] = json_sha256(manifest)
+    manifest["manifest_sha256"] = sha256_json(manifest)
     manifest_path = input_path.parent / "dataset-manifest.json"
     manifest_path.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
@@ -494,7 +494,7 @@ def test_human_ranking_cli_rejects_post_label_feature_rewrite_even_if_rehashed(
         "size_bytes": input_path.stat().st_size,
     }
     manifest.pop("manifest_sha256")
-    manifest["manifest_sha256"] = json_sha256(manifest)
+    manifest["manifest_sha256"] = sha256_json(manifest)
     manifest_path.write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
@@ -557,7 +557,7 @@ def test_human_ranking_cli_rejects_rechecksummed_split_group_drift(
         assignments=split.assignments,
         weights=split.weights,
         seed=split.seed,
-        checksum=json_sha256(content),
+        checksum=sha256_json(content),
     )
     changed_split.save(split_path)
     input_path = tmp_path / "ranking.jsonl"

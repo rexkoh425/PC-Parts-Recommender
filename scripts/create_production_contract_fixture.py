@@ -6,7 +6,7 @@ import argparse
 import json
 from pathlib import Path
 
-from pc_build_recommender.evaluation.manifest import sha256_file, json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_file, sha256_json
 from pc_build_recommender.retrieval import inspect_encoder_bundle
 from scripts.validate_production_env import _parse_env, validate
 
@@ -138,7 +138,7 @@ def create_production_contract_fixture(
         "ranker_promotion": {},
         "performance": [],
     }
-    serving_manifest["content_sha256"] = json_sha256(serving_manifest)
+    serving_manifest["content_sha256"] = sha256_json(serving_manifest)
     (serving_release / "serving-manifest.json").write_text(
         json.dumps(serving_manifest),
         encoding="utf-8",

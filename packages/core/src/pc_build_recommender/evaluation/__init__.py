@@ -21,7 +21,7 @@ from .manifest import (
     canonical_json_bytes,
     load_dataset_manifest,
     sha256_file,
-    json_sha256,
+    sha256_json,
     verify_dataset_manifest,
     write_dataset_manifest,
 )
@@ -65,7 +65,7 @@ __all__ = [
     "load_dataset_manifest",
     "load_evaluation_artifact",
     "sha256_file",
-    "json_sha256",
+    "sha256_json",
     "split_indices",
     "verify_dataset_manifest",
     "verify_evaluation_artifact",

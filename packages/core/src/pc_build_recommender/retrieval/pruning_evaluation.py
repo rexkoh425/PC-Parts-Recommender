@@ -23,7 +23,7 @@ from statistics import fmean
 from typing import Any
 
 from pc_build_recommender.evaluation.contracts import MetricEstimate
-from pc_build_recommender.evaluation.manifest import json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.evaluation.metrics import bootstrap_confidence_interval
 
 from .benchmark import QueryGroupSplit
@@ -165,7 +165,7 @@ class FrozenPruningStage:
             normalised_reasons[query_id] = dict(sorted(query_reasons.items()))
         object.__setattr__(self, "removal_reasons", normalised_reasons)
         _require_sha256(self.checksum, "pruning stage checksum")
-        if json_sha256(self.content_payload()) != self.checksum:
+        if sha256_json(self.content_payload()) != self.checksum:
             raise ValueError("frozen pruning stage checksum does not match its contents")
 
     def content_payload(self) -> dict[str, object]:
@@ -248,7 +248,7 @@ class FrozenPruningStage:
             version=version,
             retained_candidate_ids=normalised,
             removal_reasons=normalised_reasons,
-            checksum=json_sha256(payload),
+            checksum=sha256_json(payload),
         )
 
 
@@ -308,7 +308,7 @@ class CandidatePopulationDeclaration:
         if self.catalog_membership_sha256 is not None:
             _require_sha256(self.catalog_membership_sha256, "catalog membership hash")
         _require_sha256(self.checksum, "population declaration checksum")
-        if json_sha256(self.content_payload()) != self.checksum:
+        if sha256_json(self.content_payload()) != self.checksum:
             raise ValueError("population declaration checksum does not match its contents")
 
     @property
@@ -379,7 +379,7 @@ class CandidatePopulationDeclaration:
                 raise ValueError(
                     "frozen candidates do not exactly match catalog-eligible query membership"
                 )
-            membership_hash = json_sha256(supplied_membership)
+            membership_hash = sha256_json(supplied_membership)
             membership_verified = True
         elif catalog_candidate_ids_by_query is not None:
             raise ValueError("retrieval-pool scope cannot accept full-corpus membership evidence")
@@ -411,7 +411,7 @@ class CandidatePopulationDeclaration:
             catalog_membership_sha256=membership_hash,
             catalog_membership_verified=membership_verified,
             candidate_counts_by_query=counts,
-            checksum=json_sha256(payload),
+            checksum=sha256_json(payload),
         )
 
     def validate_dataset(self, dataset: FrozenCandidateSet) -> None:
@@ -423,7 +423,7 @@ class CandidatePopulationDeclaration:
         if dict(self.candidate_counts_by_query) != expected:
             raise ValueError("population counts do not match the frozen candidate set")
         if self.catalog_membership_verified:
-            expected_membership_hash = json_sha256(
+            expected_membership_hash = sha256_json(
                 {query.query_id: sorted(query.candidate_ids) for query in dataset.queries}
             )
             if self.catalog_membership_sha256 != expected_membership_hash:
@@ -460,10 +460,10 @@ class PruningEvaluationProvenance:
         _require_sha256(self.filter_configuration_sha256, "filter configuration hash")
         metadata = dict(self.metadata)
         # Canonical serialisation both validates the values and freezes their hash.
-        json_sha256(metadata)
+        sha256_json(metadata)
         object.__setattr__(self, "metadata", metadata)
         _require_sha256(self.checksum, "provenance checksum")
-        if json_sha256(self.content_payload()) != self.checksum:
+        if sha256_json(self.content_payload()) != self.checksum:
             raise ValueError("pruning provenance checksum does not match its contents")
 
     def content_payload(self) -> dict[str, object]:
@@ -520,7 +520,7 @@ class PruningEvaluationProvenance:
             catalog_manifest_sha256=catalog_manifest_sha256,
             filter_configuration_sha256=filter_configuration_sha256,
             metadata=values,
-            checksum=json_sha256(payload),
+            checksum=sha256_json(payload),
         )
 
 
@@ -629,7 +629,7 @@ class PruningEvaluationReport:
         return self.stages[-1]
 
     def require_promotable(self) -> None:
-        if json_sha256(self.content_payload()) != self.report_sha256:
+        if sha256_json(self.content_payload()) != self.report_sha256:
             raise PruningPromotionError("pruning report changed after hashing")
         if not self.eligible_for_promotion:
             reasons = "; ".join(self.promotion_block_reasons)
@@ -712,7 +712,7 @@ class PruningEvaluationReport:
         _require_sha256(self.pruning_trace_sha256, "pruning trace hash")
         if self.report_sha256:
             _require_sha256(self.report_sha256, "pruning report hash")
-        if self.report_sha256 and json_sha256(self.content_payload()) != self.report_sha256:
+        if self.report_sha256 and sha256_json(self.content_payload()) != self.report_sha256:
             raise ValueError("pruning report hash does not match its contents")
 
 
@@ -832,7 +832,7 @@ class PruningClaimDecision:
             raise ValueError("a failed pruning claim decision must explain why")
         if self.decision_sha256:
             _require_sha256(self.decision_sha256, "pruning claim decision hash")
-        if self.decision_sha256 and json_sha256(self.content_payload()) != self.decision_sha256:
+        if self.decision_sha256 and sha256_json(self.content_payload()) != self.decision_sha256:
             raise ValueError("pruning claim decision hash does not match its contents")
 
 
@@ -1069,7 +1069,7 @@ def _validate_stages(
     expected_query_ids = {query.query_id for query in dataset.queries}
     previous = {query.query_id: set(query.candidate_ids) for query in dataset.queries}
     for stage in stages:
-        if json_sha256(stage.content_payload()) != stage.checksum:
+        if sha256_json(stage.content_payload()) != stage.checksum:
             raise ValueError(f"pruning stage {stage.name!r} changed after it was frozen")
         if set(stage.retained_candidate_ids) != expected_query_ids:
             raise ValueError(f"pruning stage {stage.name!r} must cover exactly the frozen queries")
@@ -1107,7 +1107,7 @@ def _selected_queries(
         )
     if split_name is None:
         raise ValueError("split_name is required with a frozen query-group split")
-    if json_sha256(query_split.content_payload()) != query_split.checksum:
+    if sha256_json(query_split.content_payload()) != query_split.checksum:
         raise ValueError("frozen query-group split changed after hashing")
     query_split.validate_dataset(dataset)
     queries = query_split.queries_for(dataset, split_name)
@@ -1154,9 +1154,9 @@ def evaluate_candidate_pruning(
         raise ValueError("frozen candidate or relevance content changed after hashing")
     if refrozen_dataset.evidence_checksum != dataset.evidence_checksum:
         raise ValueError("frozen relevance evidence changed after hashing")
-    if json_sha256(population.content_payload()) != population.checksum:
+    if sha256_json(population.content_payload()) != population.checksum:
         raise ValueError("population declaration changed after hashing")
-    if json_sha256(provenance.content_payload()) != provenance.checksum:
+    if sha256_json(provenance.content_payload()) != provenance.checksum:
         raise ValueError("pruning provenance changed after hashing")
     population.validate_dataset(dataset)
     if provenance.catalog_manifest_sha256 != population.catalog_manifest_sha256:
@@ -1234,7 +1234,7 @@ def evaluate_candidate_pruning(
             "candidate population is a retrieval pool, not the full eligible corpus"
         )
     eligible = not block_reasons
-    trace_hash = json_sha256(
+    trace_hash = sha256_json(
         {
             "schema_version": PRUNING_TRACE_SCHEMA_VERSION,
             "stages": [stage.to_dict() for stage in stages],
@@ -1267,7 +1267,7 @@ def evaluate_candidate_pruning(
         "bootstrap_seed": seed,
     }
     provisional = PruningEvaluationReport(report_sha256="", **report_fields)
-    report_hash = json_sha256(provisional.content_payload())
+    report_hash = sha256_json(provisional.content_payload())
     return PruningEvaluationReport(report_sha256=report_hash, **report_fields)
 
 
@@ -1278,7 +1278,7 @@ def evaluate_pruning_claim(
 ) -> PruningClaimDecision:
     """Apply scope, sample-size, point-estimate, and uncertainty gates."""
 
-    if json_sha256(report.content_payload()) != report.report_sha256:
+    if sha256_json(report.content_payload()) != report.report_sha256:
         raise ValueError("pruning report changed after hashing")
     _validate_loaded_pruning_report(report.to_dict())
     selected_policy = policy or PruningClaimPolicy()
@@ -1406,7 +1406,7 @@ def evaluate_pruning_claim(
         failures=unique_failures,
         measured_values=measured,
         policy=selected_policy,
-        decision_sha256=json_sha256(provisional.content_payload()),
+        decision_sha256=sha256_json(provisional.content_payload()),
     )
 
 
@@ -1416,7 +1416,7 @@ def write_pruning_evaluation_report(
 ) -> Path:
     """Atomically write a report after re-verifying its semantic hash."""
 
-    if json_sha256(report.content_payload()) != report.report_sha256:
+    if sha256_json(report.content_payload()) != report.report_sha256:
         raise ValueError("pruning report hash does not match its contents")
     _validate_loaded_pruning_report(report.to_dict())
     return _atomic_json(Path(path), report.to_dict())
@@ -1431,7 +1431,7 @@ def write_frozen_pruning_trace(
     if not stages:
         raise ValueError("at least one pruning stage is required")
     for stage in stages:
-        if json_sha256(stage.content_payload()) != stage.checksum:
+        if sha256_json(stage.content_payload()) != stage.checksum:
             raise ValueError(f"pruning stage {stage.name!r} changed after it was frozen")
     content: dict[str, object] = {
         "schema_version": PRUNING_TRACE_SCHEMA_VERSION,
@@ -1439,7 +1439,7 @@ def write_frozen_pruning_trace(
     }
     return _atomic_json(
         Path(path),
-        {**content, "trace_sha256": json_sha256(content)},
+        {**content, "trace_sha256": sha256_json(content)},
     )
 
 
@@ -1458,7 +1458,7 @@ def load_frozen_pruning_trace(path: str | Path) -> tuple[FrozenPruningStage, ...
         "schema_version": PRUNING_TRACE_SCHEMA_VERSION,
         "stages": raw_stages,
     }
-    if payload.get("trace_sha256") != json_sha256(content):
+    if payload.get("trace_sha256") != sha256_json(content):
         raise ValueError("frozen pruning trace hash verification failed")
     stages: list[FrozenPruningStage] = []
     for raw_stage in raw_stages:
@@ -1525,7 +1525,7 @@ def load_pruning_evaluation_report(path: str | Path) -> dict[str, Any]:
     stored_hash = payload.get("report_sha256")
     unhashed = dict(payload)
     unhashed.pop("report_sha256", None)
-    if stored_hash != json_sha256(unhashed):
+    if stored_hash != sha256_json(unhashed):
         raise ValueError("pruning evaluation report hash verification failed")
     _validate_loaded_pruning_report(payload)
     return payload
@@ -1646,7 +1646,7 @@ def _validate_loaded_pruning_report(payload: Mapping[str, Any]) -> None:
             raise TypeError(f"{field_name} checksum must be a string")
         unhashed = dict(nested)
         unhashed.pop("checksum", None)
-        if checksum != json_sha256(unhashed):
+        if checksum != sha256_json(unhashed):
             raise ValueError(f"{field_name} nested hash verification failed")
 
     population = _require_dict(payload.get("population"), "population")

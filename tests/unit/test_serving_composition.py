@@ -12,7 +12,7 @@ from pc_build_recommender.application import (
     ServingConfigurationError,
 )
 from pc_build_recommender.application.serving import _load_passing_ranker_decision
-from pc_build_recommender.evaluation.manifest import json_sha256
+from pc_build_recommender.evaluation.manifest import sha256_json
 from pc_build_recommender.ranking import RankerPromotionDecision, RankerPromotionPolicy
 
 
@@ -86,7 +86,7 @@ def test_ranker_promotion_decision_is_hash_verified(tmp_path: Path) -> None:
     )
     decision = replace(
         provisional,
-        decision_sha256=json_sha256(provisional.content_payload()),
+        decision_sha256=sha256_json(provisional.content_payload()),
     )
     payload = decision.to_dict()
     path = tmp_path / "decision.json"
