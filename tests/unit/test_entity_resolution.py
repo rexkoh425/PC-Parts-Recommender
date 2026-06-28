@@ -12,7 +12,7 @@ from pc_build_recommender.entity_resolution import (
     ListingRecord,
     MatchOutcome,
     MatchThresholds,
-    LabelledPair,
+    PairExample,
     PairFeatureExtractor,
     PlattCalibrator,
     evaluate_binary_predictions,
@@ -25,7 +25,7 @@ from pc_build_recommender.entity_resolution import (
 )
 
 
-def _memory_pair(*, listing_capacity: int = 32, product_capacity: int = 32) -> LabelledPair:
+def _memory_pair(*, listing_capacity: int = 32, product_capacity: int = 32) -> PairExample:
     product = CanonicalProductRecord(
         product_id=f"product-{product_capacity}",
         category="memory",
@@ -47,7 +47,7 @@ def _memory_pair(*, listing_capacity: int = 32, product_capacity: int = 32) -> L
         current_price_sgd=155.0,
         embedding=(1.0, 0.0),
     )
-    return LabelledPair(
+    return PairExample(
         pair_id=f"pair-{listing_capacity}-{product_capacity}",
         listing=listing,
         product=product,
@@ -73,7 +73,7 @@ def test_numeric_fact_extraction_uses_canonical_units() -> None:
 def test_pair_records_round_trip_nested_and_flat() -> None:
     pair = _memory_pair()
     nested = pair_example_from_dict(json.loads(json.dumps(pair.to_dict())))
-    flat = LabelledPair.from_flat_dict(pair.to_flat_dict())
+    flat = PairExample.from_flat_dict(pair.to_flat_dict())
 
     assert nested.to_dict() == pair.to_dict()
     assert flat.to_dict() == pair.to_dict()

@@ -25,7 +25,7 @@ from typing import Any
 from pc_build_recommender.entity_resolution import (
     CanonicalProductRecord,
     ListingRecord,
-    LabelledPair,
+    PairExample,
 )
 from pipelines.sources.base import (
     RawSnapshot,
@@ -407,7 +407,7 @@ def adapt_pair(
     *,
     dataset: EntityMatchingSourceDataset,
     assigned_split: str,
-) -> LabelledPair:
+) -> PairExample:
     """Adapt one deposited label to the project's typed pair contract."""
 
     left = dataset.left[pair.left_id]
@@ -434,7 +434,7 @@ def adapt_pair(
         price_sgd=None,
         is_synthetic=False,
     )
-    return LabelledPair(
+    return PairExample(
         pair_id=f"zenodo-dn7-{assigned_split}-{pair.source_pair_id}",
         listing=listing,
         product=product,
@@ -487,7 +487,7 @@ def materialize_transfer_pairs(
     processed_root: str | Path,
     seed: int = 20260722,
 ) -> Path:
-    """Write deterministic, record-disjoint LabelledPair JSONL files and a manifest."""
+    """Write deterministic, record-disjoint PairExample JSONL files and a manifest."""
 
     split = record_disjoint_split(dataset, seed=seed)
     destination = Path(processed_root) / "zenodo_er_dn7" / snapshot.content_sha256
