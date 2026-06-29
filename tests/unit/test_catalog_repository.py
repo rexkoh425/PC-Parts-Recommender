@@ -22,7 +22,7 @@ from pc_build_recommender.domain import (
     ComponentKind,
     GPUAttributes,
     PriceSample,
-    RetailerOffering,
+    RetailerListing,
     SourceProvenance,
     SourceType,
     StockState,
@@ -67,9 +67,9 @@ def _gpu() -> MasterProduct:
     )
 
 
-def _listing() -> RetailerOffering:
+def _listing() -> RetailerListing:
     observed = datetime(2026, 7, 22, tzinfo=UTC)
-    return RetailerOffering(
+    return RetailerListing(
         listing_id="listing_gpu_1",
         product_id="prod_gpu_1",
         retailer="Example Retailer",

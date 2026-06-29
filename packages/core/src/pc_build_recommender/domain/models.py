@@ -120,7 +120,7 @@ class MasterProduct(DomainModel):
         return self
 
 
-class RetailerOffering(DomainModel):
+class RetailerListing(DomainModel):
     listing_id: str = Field(default_factory=lambda: new_id("listing"), min_length=1)
     product_id: str = Field(min_length=1)
     retailer: str = Field(min_length=1)
@@ -141,7 +141,7 @@ class RetailerOffering(DomainModel):
         return self.base_price + self.shipping_price
 
     @model_validator(mode="after")
-    def seen_times_are_ordered(self) -> RetailerOffering:
+    def seen_times_are_ordered(self) -> RetailerListing:
         if self.last_seen_at < self.first_seen_at:
             raise ValueError("last_seen_at cannot be earlier than first_seen_at")
         return self
@@ -524,7 +524,7 @@ class InteractionRecord(DomainModel):
 
 # Compact aliases for API and optimiser integrations.
 Product = MasterProduct
-Listing = RetailerOffering
+Listing = RetailerListing
 BuildRequest = BuildRequestSpec
 BuildResponse = BuildGenerationResponse
 BuildComponent = BuildComponentSelection

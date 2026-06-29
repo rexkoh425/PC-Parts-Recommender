@@ -15,7 +15,7 @@ from pc_build_recommender.domain import (
     BenchmarkResult,
     MasterProduct,
     PriceSample,
-    RetailerOffering,
+    RetailerListing,
     SourceProvenance,
 )
 
@@ -155,7 +155,7 @@ def load_seed_data(session: Session, data: dict[str, Any]) -> SeedLoadResult:
     for item in sorted(products, key=lambda value: value["product_id"]):
         repository.upsert_product(MasterProduct.model_validate(item))
     for item in sorted(listings, key=lambda value: value["listing_id"]):
-        repository.upsert_listing(RetailerOffering.model_validate(item))
+        repository.upsert_listing(RetailerListing.model_validate(item))
     for item in sorted(prices, key=lambda value: value["snapshot_id"]):
         repository.upsert_price_snapshot(PriceSample.model_validate(item))
     for item in sorted(benchmarks, key=lambda value: value["benchmark_id"]):

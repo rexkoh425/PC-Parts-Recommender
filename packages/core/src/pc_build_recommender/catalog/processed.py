@@ -29,7 +29,7 @@ from pc_build_recommender.domain import (
     ComponentKind,
     PriceSample,
     ProductStatus,
-    RetailerOffering,
+    RetailerListing,
     ReviewNote,
     SourceProvenance,
     StockState,
@@ -747,7 +747,7 @@ class ProcessedCatalogStats:
 @dataclass(frozen=True, slots=True)
 class ProcessedCatalogData:
     products: tuple[MasterProduct, ...]
-    listings: tuple[RetailerOffering, ...]
+    listings: tuple[RetailerListing, ...]
     price_snapshots: tuple[PriceSample, ...]
     stats: ProcessedCatalogStats
     review_evidence: tuple[ReviewNote, ...] = ()
@@ -790,7 +790,7 @@ class ProcessedCatalogData:
 
 def _listing_source_provenance(
     envelope: Mapping[str, Any],
-    listing: RetailerOffering,
+    listing: RetailerListing,
 ) -> SourceProvenance:
     raw = envelope.get("provenance")
     if not isinstance(raw, Mapping):
@@ -943,7 +943,7 @@ def load_processed_catalog(
     seen_reviewed: set[str] = set()
     seen_listing_ids: set[str] = set()
     seen_snapshot_ids: set[str] = set()
-    listings: list[RetailerOffering] = []
+    listings: list[RetailerListing] = []
     snapshots: list[PriceSample] = []
     listing_provenance: list[SourceProvenance] = []
     decisions: list[MappingDecision] = []
@@ -970,7 +970,7 @@ def load_processed_catalog(
         _validate_offer_governance(envelope, metadata)
         readiness_accumulator.observe_offer_rights(envelope.get("data_use_rights"))
         offer_count += 1
-        source_listing = RetailerOffering.model_validate(raw_listing)
+        source_listing = RetailerListing.model_validate(raw_listing)
         snapshot = PriceSample.model_validate(raw_snapshot)
         if source_listing.listing_id in seen_listing_ids:
             raise ValueError(f"duplicate retailer listing ID: {source_listing.listing_id}")
@@ -1211,7 +1211,7 @@ class InMemoryCatalogReader:
     ) -> None:
         self.data = data
         self._products = {item.product_id: item for item in data.products}
-        listings: dict[str, list[RetailerOffering]] = defaultdict(list)
+        listings: dict[str, list[RetailerListing]] = defaultdict(list)
         for listing in data.listings:
             listings[listing.product_id].append(listing)
         self._listings = {
@@ -1263,7 +1263,7 @@ class InMemoryCatalogReader:
         retailer: str | None = None,
         stock_status: StockState | None = None,
         limit: int = 100,
-    ) -> list[RetailerOffering]:
+    ) -> list[RetailerListing]:
         if not 1 <= limit <= 1000:
             raise ValueError("limit must be between 1 and 1000")
         items = (

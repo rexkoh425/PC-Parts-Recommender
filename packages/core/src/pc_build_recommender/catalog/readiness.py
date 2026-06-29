@@ -16,7 +16,7 @@ from pc_build_recommender.data_rights import (
 from pc_build_recommender.domain import (
     MasterProduct,
     ComponentKind,
-    RetailerOffering,
+    RetailerListing,
     SourceProvenance,
     StockState,
 )
@@ -499,7 +499,7 @@ class CatalogReadinessAccumulator:
 
     def observe_listing(
         self,
-        listing: RetailerOffering,
+        listing: RetailerListing,
         *,
         category: ComponentKind,
         provenance: SourceProvenance | None,

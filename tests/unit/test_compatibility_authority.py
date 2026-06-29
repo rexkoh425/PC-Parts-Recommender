@@ -22,7 +22,7 @@ from pc_build_recommender.domain import (
     ComponentKind,
     GPUAttributes,
     ProductStatus,
-    RetailerOffering,
+    RetailerListing,
     ReviewNote,
     SourceProvenance,
     SourceType,
@@ -67,7 +67,7 @@ class CatalogReaderFixture:
         retailer: str | None = None,
         stock_status: StockState | None = None,
         limit: int = 100,
-    ) -> list[RetailerOffering]:
+    ) -> list[RetailerListing]:
         return []
 
     def list_benchmarks(

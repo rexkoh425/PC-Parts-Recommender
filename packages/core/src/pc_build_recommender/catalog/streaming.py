@@ -15,7 +15,7 @@ from pc_build_recommender.domain import (
     MasterProduct,
     ComponentKind,
     PriceSample,
-    RetailerOffering,
+    RetailerListing,
     ReviewNote,
     StockState,
 )
@@ -394,7 +394,7 @@ def stream_processed_catalog(
         readiness_accumulator.observe_offer_rights(envelope.get("data_use_rights"))
 
         offer_count += 1
-        source_listing = RetailerOffering.model_validate(raw_listing)
+        source_listing = RetailerListing.model_validate(raw_listing)
         snapshot = PriceSample.model_validate(raw_snapshot)
         if source_listing.listing_id in seen_listing_ids:
             raise ValueError(f"duplicate retailer listing ID: {source_listing.listing_id}")
@@ -480,7 +480,7 @@ def stream_processed_catalog(
             if match.matched_product_id is not None:
                 selected = products_by_id[match.matched_product_id]
 
-        listing: RetailerOffering | None = None
+        listing: RetailerListing | None = None
         if selected is not None and method is not None:
             listing = source_listing.model_copy(update={"product_id": selected.product_id})
             matched_listing_ids.add(listing.listing_id)
@@ -629,7 +629,7 @@ def validate_review_target(
             raise ValueError("retailer record requires listing and normalisation metadata")
         if str(raw_listing.get("listing_id", "")).strip() != clean_listing_id:
             continue
-        listing = RetailerOffering.model_validate(raw_listing)
+        listing = RetailerListing.model_validate(raw_listing)
         _listing_source_provenance(envelope, listing)
         category = _category(metadata.get("category"))
         if selected is not None:

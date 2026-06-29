@@ -33,7 +33,7 @@ import httpcore
 import httpx
 
 from pc_build_recommender.domain.enums import ComponentKind, ListingCondition, StockState
-from pc_build_recommender.domain.models import PriceSample, RetailerOffering
+from pc_build_recommender.domain.models import PriceSample, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import ParsedBatch, RawSnapshot, rejected_record, sha256_bytes
 from pipelines.sources.rights import DataUse, DataUseRights
@@ -1813,7 +1813,7 @@ class WebProductCrawlerAdapter:
             "listing", self.policy.retailer, source_listing_id, length=32
         )
         observed_at = page.snapshot.retrieved_at
-        listing = RetailerOffering(
+        listing = RetailerListing(
             listing_id=listing_id,
             product_id=product_id,
             retailer=self.policy.retailer,

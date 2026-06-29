@@ -23,7 +23,7 @@ from pc_build_recommender.domain import (
     ComponentKind,
     ListingCondition,
     ProductStatus,
-    RetailerOffering,
+    RetailerListing,
     ReviewNote,
     SourceType,
     StockState,
@@ -107,7 +107,7 @@ class CatalogReader(Protocol):
         retailer: str | None = None,
         stock_status: StockState | None = None,
         limit: int = 100,
-    ) -> list[RetailerOffering]: ...
+    ) -> list[RetailerListing]: ...
 
     def list_benchmarks(
         self, product_id: str, *, workload: str | None = None
@@ -132,7 +132,7 @@ def _all_products(repository: CatalogReader) -> list[MasterProduct]:
     return products
 
 
-def _preferred_listing(listings: Sequence[RetailerOffering]) -> RetailerOffering | None:
+def _preferred_listing(listings: Sequence[RetailerListing]) -> RetailerListing | None:
     # The product scope is new components.  A used/open-box/refurbished offer
     # must never become an acquisition candidate merely because it is cheap.
     new_listings = [item for item in listings if item.condition == ListingCondition.NEW]
@@ -338,7 +338,7 @@ def _document(item: CatalogItem) -> ProductDocument:
 
 def _content_version(
     products: Sequence[MasterProduct],
-    listings_by_product: Mapping[str, Sequence[RetailerOffering]],
+    listings_by_product: Mapping[str, Sequence[RetailerListing]],
     benchmarks_by_product: Mapping[str, Sequence[BenchmarkResult]],
     reviews_by_product: Mapping[str, Sequence[ReviewNote]],
 ) -> str:
@@ -406,7 +406,7 @@ class ApplicationCatalog:
         if len(ids) != len(set(ids)):
             raise CatalogIntegrityError("canonical catalogue contains duplicate product IDs")
 
-        listings_by_product: dict[str, list[RetailerOffering]] = {}
+        listings_by_product: dict[str, list[RetailerListing]] = {}
         benchmarks_by_product: dict[str, list[BenchmarkResult]] = {}
         reviews_by_product: dict[str, list[ReviewNote]] = {}
         for product in products:

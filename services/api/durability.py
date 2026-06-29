@@ -39,7 +39,7 @@ from pc_build_recommender.domain import (
     BuildRecommendation,
     MasterProduct,
     InteractionRecord,
-    RetailerOffering,
+    RetailerListing,
     SearchQuery,
 )
 from pc_build_recommender.retrieval.embedding_index import (
@@ -139,8 +139,8 @@ def _canonical_product_from_record(record: CanonicalProductRecord) -> MasterProd
     )
 
 
-def _retailer_listing_from_record(record: RetailerListingRecord) -> RetailerOffering:
-    return RetailerOffering.model_validate(
+def _retailer_listing_from_record(record: RetailerListingRecord) -> RetailerListing:
+    return RetailerListing.model_validate(
         {
             "listing_id": record.listing_id,
             "product_id": record.product_id,
@@ -164,7 +164,7 @@ def _canonical_product_row_sha256(product: MasterProduct) -> str:
     return _sha256_json(product.model_dump(mode="json", exclude={"provenance"}))
 
 
-def _retailer_listing_row_sha256(listing: RetailerOffering) -> str:
+def _retailer_listing_row_sha256(listing: RetailerListing) -> str:
     return _sha256_json(listing.model_dump(mode="json"))
 
 
@@ -265,7 +265,7 @@ class SqlAlchemyDurableStore:
         product_ids: Iterable[str],
         listing_ids: Iterable[str],
         canonical_products: Iterable[MasterProduct] | None = None,
-        retailer_listings: Iterable[RetailerOffering] | None = None,
+        retailer_listings: Iterable[RetailerListing] | None = None,
     ) -> None:
         """Ensure durable catalogue rows match the catalogue loaded for serving.
 

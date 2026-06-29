@@ -14,7 +14,7 @@ import pdfplumber
 from pdfplumber.pdf import PDF
 
 from pc_build_recommender.domain.enums import ListingCondition, StockState
-from pc_build_recommender.domain.models import PriceSample, RetailerOffering
+from pc_build_recommender.domain.models import PriceSample, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
     ParsedBatch,
@@ -540,7 +540,7 @@ class DynacoreControlledPDFAdapter:
         listing_id = stable_identifier("listing_dynacore", source_record_id, length=32)
         product_id = stable_identifier("unmatched_product", "dynacore", title, category)
         amount = Decimal(price).quantize(Decimal("0.01"))
-        listing = RetailerOffering(
+        listing = RetailerListing(
             listing_id=listing_id,
             product_id=product_id,
             retailer="Dynacore",

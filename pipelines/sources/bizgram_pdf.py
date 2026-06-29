@@ -19,7 +19,7 @@ from typing import Any
 from pypdf import PdfReader
 
 from pc_build_recommender.domain.enums import ListingCondition, StockState
-from pc_build_recommender.domain.models import PriceSample, RetailerOffering
+from pc_build_recommender.domain.models import PriceSample, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
     ParsedBatch,
@@ -414,7 +414,7 @@ class BizgramControlledPDFAdapter:
     ) -> dict[str, Any]:
         listing_id = stable_identifier("listing_bizgram", source_record_id, length=32)
         product_id = stable_identifier("unmatched_product", "bizgram", title, category)
-        listing = RetailerOffering(
+        listing = RetailerListing(
             listing_id=listing_id,
             product_id=product_id,
             retailer="Bizgram",

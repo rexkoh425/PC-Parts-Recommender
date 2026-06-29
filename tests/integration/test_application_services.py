@@ -59,7 +59,7 @@ from pc_build_recommender.domain import (
     PowerSupplyAttributes,
     PowerSupplyFormFactor,
     ProductStatus,
-    RetailerOffering,
+    RetailerListing,
     SourceProvenance,
     SourceType,
     StockState,
@@ -351,7 +351,7 @@ def _seed_repository(session: Session) -> CatalogRepository:
             product = _product(category, index, _attributes(category, index))
             repository.upsert_product(product)
             repository.upsert_listing(
-                RetailerOffering(
+                RetailerListing(
                     listing_id=f"listing_{product.product_id}",
                     product_id=product.product_id,
                     retailer="Test retailer",
@@ -404,7 +404,7 @@ def _seed_repository(session: Session) -> CatalogRepository:
     )
     repository.upsert_product(bad_case)
     repository.upsert_listing(
-        RetailerOffering(
+        RetailerListing(
             listing_id="listing_case_incompatible",
             product_id=bad_case.product_id,
             retailer="Test retailer",
@@ -427,7 +427,7 @@ def _seed_repository(session: Session) -> CatalogRepository:
     )
     repository.upsert_product(used_gpu)
     repository.upsert_listing(
-        RetailerOffering(
+        RetailerListing(
             listing_id="listing_gpu_used_only",
             product_id=used_gpu.product_id,
             retailer="Test retailer",

@@ -31,7 +31,7 @@ from pc_build_recommender.domain import (
     GPUAttributes,
     ListingCondition,
     PriceSample,
-    RetailerOffering,
+    RetailerListing,
     ReviewNote,
     SourceProvenance,
     SourceType,
@@ -101,7 +101,7 @@ def _service(
         for index in range(product_count)
     )
     listings = tuple(
-        RetailerOffering(
+        RetailerListing(
             listing_id=("listing_real_gpu" if index == 0 else f"listing_real_gpu_{index + 1}"),
             product_id=product.product_id,
             retailer="Controlled Retailer",

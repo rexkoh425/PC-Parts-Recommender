@@ -22,7 +22,7 @@ from pc_build_recommender.domain import (
     MasterProduct,
     CompatVerdict,
     DomainModel,
-    RetailerOffering,
+    RetailerListing,
     ReviewNote,
 )
 from pc_build_recommender.optimizer import OptimizationStatus
@@ -81,7 +81,7 @@ class CatalogItem:
     """One canonical product and the evidence used during online serving."""
 
     product: MasterProduct
-    listing: RetailerOffering | None
+    listing: RetailerListing | None
     compatibility_record: Mapping[str, Any]
     workload_scores: Mapping[str, float] = field(default_factory=dict)
     workload_benchmarks: Mapping[str, tuple[BenchmarkResult, ...]] = field(default_factory=dict)
@@ -137,7 +137,7 @@ class SearchProductResult:
     """Transparent hybrid-search result returned by :class:`SearchProductsService`."""
 
     product: MasterProduct
-    listing: RetailerOffering | None
+    listing: RetailerListing | None
     rank: int
     rrf_score: float
     bm25_score: float
