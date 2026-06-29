@@ -32,6 +32,7 @@ from services.api.models import (
     BuildShareCreated,
     BuildShareRevoked,
     BuildSummary,
+    CanonicalInteractionEvent,
     CatalogueCoverage,
     CompatibilityCheck,
     CompatibilityCheckRequest,
@@ -45,7 +46,6 @@ from services.api.models import (
     InfeasibilityExplanation,
     InfeasibilityReason,
     InteractionAccepted,
-    InteractionEvent,
     InvalidProductSearchCursor,
     PerformanceSignal,
     PriceObservation,
@@ -112,7 +112,9 @@ class RecommendationApplication(Protocol):
         self, request: CompatibilityCheckRequest
     ) -> CompatibilityCheckResponse: ...
 
-    async def record_interaction(self, event: InteractionEvent) -> InteractionAccepted: ...
+    async def record_interaction(
+        self, event: CanonicalInteractionEvent
+    ) -> InteractionAccepted: ...
 
     async def freshness(self) -> FreshnessResponse: ...
 
@@ -135,6 +137,42 @@ class ProductRecord:
     power_w: int
     attributes: Mapping[str, Any]
     source_url: str = "https://example.invalid/controlled-demo-catalog"
+
+
+def interaction_event_id(event: CanonicalInteractionEvent) -> str:
+    """Return a stable retry identity without retaining the caller's raw key."""
+
+    if event.idempotency_key_sha256 is None:
+        return f"evt_{uuid4().hex}"
+    canonical = (
+        f"pcbr-interaction-event-v1\x00{event.session_id}\x00"
+        f"{event.idempotency_key_sha256}"
+    )
+    digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return f"evt_{digest}"
+
+
+def same_canonical_interaction(
+    left: CanonicalInteractionEvent, right: CanonicalInteractionEvent
+) -> bool:
+    return left.model_dump(mode="json") == right.model_dump(mode="json")
+
+
+def same_impression_interaction(
+    left: CanonicalInteractionEvent, right: CanonicalInteractionEvent
+) -> bool:
+    """Compare one displayed-result action independently of retry-key choice."""
+
+    if (
+        left.impression_id is None
+        or left.impression_id != right.impression_id
+        or left.event_type != right.event_type
+    ):
+        return False
+    excluded = {"idempotency_key_sha256", "idempotency_payload_sha256"}
+    return left.model_dump(mode="json", exclude=excluded) == right.model_dump(
+        mode="json", exclude=excluded
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -640,7 +678,7 @@ class InMemoryRecommendationService:
         self._builds: dict[str, BuildSummary] = {}
         self._build_request_ids: dict[str, str] = {}
         self._build_shares: dict[str, _InMemoryBuildShare] = {}
-        self._interactions: list[tuple[str, InteractionEvent, datetime]] = []
+        self._interactions: list[tuple[str, CanonicalInteractionEvent, datetime]] = []
         self._lock = asyncio.Lock()
 
     async def ready(self) -> bool:
@@ -659,12 +697,27 @@ class InMemoryRecommendationService:
 
     async def freshness(self) -> FreshnessResponse:
         age_hours = (datetime.now(UTC) - self.catalog_updated_at).total_seconds() / 3600
+        catalogue_status: Literal["fresh", "stale"] = (
+            "fresh"
+            if age_hours <= self.settings.catalogue_stale_after_hours
+            else "stale"
+        )
+        price_status: Literal["fresh", "stale"] = (
+            "fresh" if age_hours <= self.settings.price_stale_after_hours else "stale"
+        )
+        status: Literal["fresh", "stale"] = (
+            "fresh" if catalogue_status == price_status == "fresh" else "stale"
+        )
         return FreshnessResponse(
             data_version=self.settings.data_version,
-            status="fresh" if age_hours <= self.settings.stale_after_hours else "stale",
+            status=status,
+            catalogue_status=catalogue_status,
+            price_status=price_status,
             last_catalog_update=self.catalog_updated_at,
             prices_updated_at=self.catalog_updated_at,
-            stale_after_hours=self.settings.stale_after_hours,
+            stale_after_hours=self.settings.price_stale_after_hours,
+            catalogue_stale_after_hours=self.settings.catalogue_stale_after_hours,
+            price_stale_after_hours=self.settings.price_stale_after_hours,
             source_count=1,
             product_count=len(self.products),
             listing_count=len(self.products),
@@ -749,6 +802,7 @@ class InMemoryRecommendationService:
                     template=template,
                     selected=selected,
                     request=request,
+                    request_id=request_id,
                     generated_at=generated_at,
                     total_cents=total_cents,
                     already_owned=set(existing_by_category),
@@ -996,6 +1050,7 @@ class InMemoryRecommendationService:
         template: Template,
         selected: Mapping[ComponentCategory, ProductRecord],
         request: GenerateBuildsRequest,
+        request_id: str,
         generated_at: datetime,
         total_cents: int,
         already_owned: set[ComponentCategory],
@@ -1053,6 +1108,7 @@ class InMemoryRecommendationService:
             workload_scores[workload.name.value] = round(min(score, 100), 2)
         warnings = [check for check in checks if check.status is CompatibilityStatus.WARNING]
         return BuildSummary(
+            request_id=request_id,
             build_id=f"build_{uuid4().hex}",
             profile=template.profile,
             total_price_sgd=round(total_cents / 100, 2),
@@ -1501,6 +1557,7 @@ class InMemoryRecommendationService:
             request,
             data_version=self.settings.data_version,
             retrieval_model="deterministic-token-baseline-v1",
+            rule_version=self.settings.compatibility_rule_version,
         )
         return ProductSearchResponse(
             query_id=query_id,
@@ -1713,18 +1770,58 @@ class InMemoryRecommendationService:
             data_version=self.settings.data_version,
         )
 
-    async def record_interaction(self, event: InteractionEvent) -> InteractionAccepted:
-        event_id = f"evt_{uuid4().hex}"
+    async def record_interaction(
+        self, event: CanonicalInteractionEvent
+    ) -> InteractionAccepted:
+        event_id = interaction_event_id(event)
         accepted_at = datetime.now(UTC)
-        canonical_event = event.model_copy(
-            update={"rule_version": event.rule_version or self.settings.compatibility_rule_version},
-            deep=True,
-        )
         async with self._lock:
-            self._interactions.append((event_id, canonical_event, accepted_at))
+            existing = next(
+                (
+                    item
+                    for item in self._interactions
+                    if item[0] == event_id
+                    or (
+                        event.idempotency_key_sha256 is not None
+                        and item[1].session_id == event.session_id
+                        and item[1].idempotency_key_sha256
+                        == event.idempotency_key_sha256
+                    )
+                    or (
+                        event.impression_id is not None
+                        and item[1].impression_id == event.impression_id
+                        and item[1].event_type == event.event_type
+                    )
+                ),
+                None,
+            )
+            if existing is not None:
+                _, existing_event, existing_at = existing
+                if not (
+                    same_canonical_interaction(existing_event, event)
+                    or same_impression_interaction(existing_event, event)
+                ):
+                    raise ApiError(
+                        status_code=409,
+                        code="interaction_idempotency_conflict",
+                        message="Idempotency-Key was already used for another interaction.",
+                    )
+                return InteractionAccepted(
+                    event_id=event_id,
+                    accepted_at=existing_at,
+                    data_version=existing_event.data_version or self.settings.data_version,
+                    rule_version=(
+                        existing_event.rule_version
+                        or self.settings.compatibility_rule_version
+                    ),
+                    trust_level=existing_event.trust_level,
+                    replayed=True,
+                )
+            self._interactions.append((event_id, event, accepted_at))
         return InteractionAccepted(
             event_id=event_id,
             accepted_at=accepted_at,
-            data_version=self.settings.data_version,
-            rule_version=canonical_event.rule_version or self.settings.compatibility_rule_version,
+            data_version=event.data_version or self.settings.data_version,
+            rule_version=event.rule_version or self.settings.compatibility_rule_version,
+            trust_level=event.trust_level,
         )
