@@ -138,7 +138,7 @@ from services.api.serving_release import (
     load_production_serving_release,
     production_catalog_policy_from_entity_resolution,
 )
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 
 _MAX_PRICE_OBSERVATIONS_RETURNED = 365
 _REVIEW_POSITIVE_SENTIMENT_THRESHOLD = 0.25
@@ -367,7 +367,7 @@ class CoreRecommendationService(RecommendationApplication):
 
     def __init__(
         self,
-        settings: ApiRuntimeSettings,
+        settings: ApiSettings,
         services: ApplicationServices,
         reader: InMemoryCatalogReader,
         processed_data: ProcessedCatalogData,
@@ -1723,7 +1723,7 @@ class CoreRecommendationService(RecommendationApplication):
 
 
 def create_processed_catalog_service(
-    settings: ApiRuntimeSettings,
+    settings: ApiSettings,
     *,
     performance_artifacts: Sequence[PerformanceModelArtifact] | None = None,
     promoted_serving_models: ActiveServingModels | None = None,

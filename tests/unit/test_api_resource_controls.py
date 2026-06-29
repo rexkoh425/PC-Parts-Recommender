@@ -17,7 +17,7 @@ from services.api.middleware import (
     RequestBodyLimitMiddleware,
 )
 from services.api.service import InMemoryRecommendationService
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 
@@ -181,7 +181,7 @@ async def test_generation_admission_distinguishes_full_queue_from_timeout() -> N
 
 
 def test_create_app_rejects_oversized_body_before_endpoint() -> None:
-    settings = ApiRuntimeSettings(
+    settings = ApiSettings(
         environment="test",
         max_request_body_bytes=1024,
         cors_origins=["https://web.example.test"],
@@ -213,7 +213,7 @@ def test_create_app_rejects_oversized_body_before_endpoint() -> None:
 
 
 def test_openapi_documents_resource_control_responses() -> None:
-    with TestClient(create_app(ApiRuntimeSettings(environment="test"))) as client:
+    with TestClient(create_app(ApiSettings(environment="test"))) as client:
         schema = client.get("/openapi.json").json()
 
     generation_responses = schema["paths"]["/v1/builds/generate"]["post"]["responses"]
@@ -253,11 +253,11 @@ def test_non_development_http_exposure_settings_fail_closed(
     message: str,
 ) -> None:
     with pytest.raises(ValidationError, match=message):
-        ApiRuntimeSettings(**settings)
+        ApiSettings(**settings)
 
 
 def test_development_http_exposure_defaults_remain_available() -> None:
-    settings = ApiRuntimeSettings(
+    settings = ApiSettings(
         environment="development",
         docs_enabled=True,
         cors_origins=["*"],
@@ -270,7 +270,7 @@ def test_development_http_exposure_defaults_remain_available() -> None:
 
 
 def test_create_app_rechecks_mutated_http_exposure_settings() -> None:
-    settings = ApiRuntimeSettings(
+    settings = ApiSettings(
         environment="development",
         docs_enabled=True,
         cors_origins=["*"],
@@ -296,4 +296,4 @@ def test_create_app_rechecks_mutated_http_exposure_settings() -> None:
 )
 def test_resource_control_settings_reject_unsafe_values(field: str, value: int) -> None:
     with pytest.raises(ValidationError):
-        ApiRuntimeSettings(**{field: value})
+        ApiSettings(**{field: value})

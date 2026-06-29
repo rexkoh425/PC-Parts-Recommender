@@ -16,7 +16,7 @@ from services.api.models import (
     ComponentKind as ApiComponentCategory,
 )
 from services.api.models import ReplacementRequest
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -1118,7 +1118,7 @@ def test_populated_replacement_survives_restart_with_original_ownership_and_time
         )
         adapter = object.__new__(CoreRecommendationService)
         adapter.services = restarted_services
-        adapter.settings = ApiRuntimeSettings(environment="test")
+        adapter.settings = ApiSettings(environment="test")
         adapter._durable_store = restarted_store
         adapter._mutation_lock = asyncio.Lock()
         adapter._interactions = []

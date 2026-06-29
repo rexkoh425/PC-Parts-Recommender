@@ -10,14 +10,14 @@ from fastapi.testclient import TestClient
 from services.api.core_service import _domain_request
 from services.api.main import create_app
 from services.api.models import GenerateBuildsRequest
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 
 from pc_build_recommender.domain import BuildPreset as DomainBuildProfile
 
 
 @pytest.fixture
 def client() -> Iterator[TestClient]:
-    settings = ApiRuntimeSettings(
+    settings = ApiSettings(
         environment="test",
         data_version="test-data-v1",
         ranking_model_version="deterministic-test-baseline-v1",
@@ -299,7 +299,7 @@ def test_public_build_share_is_allow_listed_and_revocable(
 def test_admin_operations_is_token_protected_and_returns_only_aggregate_evidence(
     client: TestClient,
 ) -> None:
-    disabled_settings = ApiRuntimeSettings(environment="test")
+    disabled_settings = ApiSettings(environment="test")
     with TestClient(create_app(disabled_settings)) as disabled_client:
         disabled = disabled_client.get("/v1/admin/operations")
     assert disabled.status_code == 404

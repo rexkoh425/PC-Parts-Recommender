@@ -9,19 +9,19 @@ from fastapi import Depends, Request
 
 from services.api.errors import ApiError
 from services.api.service import RecommendationApplication
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 
 
 def get_application(request: Request) -> RecommendationApplication:
     return cast(RecommendationApplication, request.app.state.application_service)
 
 
-def get_settings(request: Request) -> ApiRuntimeSettings:
-    return cast(ApiRuntimeSettings, request.app.state.settings)
+def get_settings(request: Request) -> ApiSettings:
+    return cast(ApiSettings, request.app.state.settings)
 
 
 ApplicationDependency = Annotated[RecommendationApplication, Depends(get_application)]
-SettingsDependency = Annotated[ApiRuntimeSettings, Depends(get_settings)]
+SettingsDependency = Annotated[ApiSettings, Depends(get_settings)]
 
 
 def require_admin(request: Request, settings: SettingsDependency) -> None:

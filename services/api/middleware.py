@@ -16,7 +16,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from services.api.errors import error_payload
 from services.api.metrics import REQUEST_METRICS
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 
 _ROUTE_TEMPLATE_HINT_STATE_KEY = "_pcbr_route_template"
 
@@ -321,7 +321,7 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(payload, default=str, separators=(",", ":"))
 
 
-def configure_logging(settings: ApiRuntimeSettings) -> None:
+def configure_logging(settings: ApiSettings) -> None:
     logger = logging.getLogger("pc_build_recommender.api")
     logger.setLevel(settings.log_level.upper())
     if not logger.handlers:
@@ -334,7 +334,7 @@ def configure_logging(settings: ApiRuntimeSettings) -> None:
 class RequestContextMiddleware:
     """Attach a request ID and immutable runtime versions to every HTTP response."""
 
-    def __init__(self, app: ASGIApp, settings: ApiRuntimeSettings) -> None:
+    def __init__(self, app: ASGIApp, settings: ApiSettings) -> None:
         self.app = app
         self.settings = settings
         self.logger = logging.getLogger("pc_build_recommender.api.requests")

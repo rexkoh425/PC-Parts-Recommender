@@ -15,7 +15,7 @@ from services.api.core_service import CoreRecommendationService, _public_catalog
 from services.api.durability import SqlAlchemyDurableStore
 from services.api.main import create_app
 from services.api.service import InMemoryRecommendationService
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 from sqlalchemy import select
 
 from pc_build_recommender.application import (
@@ -78,7 +78,7 @@ def _optimizer_response(
 
 def _core_with_response(
     response: ApplicationBuildGenerationResponse,
-) -> tuple[CoreRecommendationService, ApiRuntimeSettings]:
+) -> tuple[CoreRecommendationService, ApiSettings]:
     versions = ApplicationVersions(
         data_version=response.data_version,
         ranking_model=response.ranking_model,
@@ -96,7 +96,7 @@ def _core_with_response(
     fake_services = SimpleNamespace(generate_builds=Generator(), versions=versions)
     service = object.__new__(CoreRecommendationService)
     service.services = cast(ApplicationServices, fake_services)
-    service.settings = ApiRuntimeSettings(
+    service.settings = ApiSettings(
         environment="test",
         data_version=response.data_version,
         ranking_model_version=response.ranking_model,
@@ -149,7 +149,7 @@ def test_processed_admin_operations_reports_aggregate_queue_freshness_and_missin
 ) -> None:
     now = datetime.now(UTC)
     service = object.__new__(CoreRecommendationService)
-    settings = ApiRuntimeSettings(
+    settings = ApiSettings(
         environment="test",
         admin_token="test-admin-token-0123456789abcdef",
         stale_after_hours=24,
@@ -224,19 +224,19 @@ def test_admin_token_file_is_loaded_and_rejects_ambiguous_or_short_configuration
     token_file = tmp_path / "admin-token.txt"
     token_file.write_text("test-admin-token-0123456789abcdef", encoding="utf-8")
 
-    settings = ApiRuntimeSettings(environment="test", admin_token_file=token_file)
+    settings = ApiSettings(environment="test", admin_token_file=token_file)
 
     assert settings.admin_token is not None
     assert settings.admin_token.get_secret_value() == "test-admin-token-0123456789abcdef"
     with pytest.raises(ValueError, match="only one of admin_token or admin_token_file"):
-        ApiRuntimeSettings(
+        ApiSettings(
             environment="test",
             admin_token="test-admin-token-0123456789abcdef",
             admin_token_file=token_file,
         )
     token_file.write_text("too-short", encoding="utf-8")
     with pytest.raises(ValueError, match="at least 24"):
-        ApiRuntimeSettings(environment="test", admin_token_file=token_file)
+        ApiSettings(environment="test", admin_token_file=token_file)
 
 
 @pytest.mark.integration
@@ -386,7 +386,7 @@ def test_processed_freshness_exposes_measured_readiness_and_unique_sources() -> 
 @pytest.mark.integration
 def test_startup_and_metrics_scrape_refresh_freshness_without_public_freshness_call() -> None:
     class CountingFreshnessService(InMemoryRecommendationService):
-        def __init__(self, settings: ApiRuntimeSettings) -> None:
+        def __init__(self, settings: ApiSettings) -> None:
             super().__init__(settings)
             self.freshness_calls = 0
 
@@ -394,7 +394,7 @@ def test_startup_and_metrics_scrape_refresh_freshness_without_public_freshness_c
             self.freshness_calls += 1
             return await super().freshness()
 
-    settings = ApiRuntimeSettings(environment="test")
+    settings = ApiSettings(environment="test")
     service = CountingFreshnessService(settings)
     with TestClient(create_app(settings=settings, service=service)) as client:
         assert service.freshness_calls == 1
@@ -408,7 +408,7 @@ def test_startup_and_metrics_scrape_refresh_freshness_without_public_freshness_c
 
 @pytest.mark.integration
 def test_openapi_documents_structured_errors_for_evidence_and_compatibility() -> None:
-    settings = ApiRuntimeSettings(environment="test")
+    settings = ApiSettings(environment="test")
     with TestClient(create_app(settings)) as client:
         schema = client.get("/openapi.json").json()
 
@@ -434,7 +434,7 @@ def test_invalid_service_response_is_withheld_by_typed_contract() -> None:
         async def freshness(self) -> Any:
             return {"status": "fresh"}
 
-    settings = ApiRuntimeSettings(environment="test")
+    settings = ApiSettings(environment="test")
     service = InvalidFreshnessService(settings)
     with TestClient(
         create_app(settings=settings, service=service), raise_server_exceptions=False
@@ -447,7 +447,7 @@ def test_invalid_service_response_is_withheld_by_typed_contract() -> None:
 
 
 def test_default_api_rule_version_is_compat_v2() -> None:
-    assert ApiRuntimeSettings().compatibility_rule_version == "compat_v2"
+    assert ApiSettings().compatibility_rule_version == "compat_v2"
 
 
 @pytest.mark.integration
@@ -555,7 +555,7 @@ def test_durable_build_share_is_hashed_revocable_and_survives_restart(tmp_path: 
 
 def test_production_processed_catalog_rejects_in_memory_storage(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="cannot use in-memory storage"):
-        ApiRuntimeSettings(
+        ApiSettings(
             environment="production",
             service_mode="processed_catalog",
             storage_backend="memory",
@@ -566,7 +566,7 @@ def test_production_processed_catalog_rejects_in_memory_storage(tmp_path: Path) 
 
 def test_production_processed_catalog_requires_serving_manifest(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="requires serving_manifest_path"):
-        ApiRuntimeSettings(
+        ApiSettings(
             environment="production",
             service_mode="processed_catalog",
             storage_backend="database",
@@ -580,7 +580,7 @@ def test_production_processed_catalog_requires_pinned_semantic_encoder_bundle(
     tmp_path: Path,
 ) -> None:
     with pytest.raises(ValueError, match="requires semantic_encoder_bundle_path"):
-        ApiRuntimeSettings(
+        ApiSettings(
             environment="production",
             service_mode="processed_catalog",
             storage_backend="database",
@@ -596,7 +596,7 @@ def test_production_processed_catalog_requires_pinned_review_evidence(
     tmp_path: Path,
 ) -> None:
     with pytest.raises(ValueError, match="requires a pinned review_evidence_path"):
-        ApiRuntimeSettings(
+        ApiSettings(
             environment="production",
             service_mode="processed_catalog",
             storage_backend="database",
@@ -612,7 +612,7 @@ def test_production_processed_catalog_requires_pinned_review_evidence(
 
 def test_semantic_encoder_bundle_path_and_hash_must_be_paired(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="must be configured together"):
-        ApiRuntimeSettings(
+        ApiSettings(
             environment="test",
             service_mode="processed_catalog",
             buildcores_catalog_path=tmp_path / "catalog.jsonl",
@@ -622,7 +622,7 @@ def test_semantic_encoder_bundle_path_and_hash_must_be_paired(tmp_path: Path) ->
 
 
 def test_development_auto_storage_remains_in_memory_with_database_url(tmp_path: Path) -> None:
-    settings = ApiRuntimeSettings(
+    settings = ApiSettings(
         environment="development",
         service_mode="processed_catalog",
         storage_backend="auto",
@@ -644,7 +644,7 @@ def test_governed_offer_setting_accepts_legacy_env_with_canonical_precedence(
     monkeypatch.setenv("PCBR_API_GOVERNED_OFFERS_PATH", str(canonical))
     monkeypatch.setenv("PCBR_API_DYNACORE_OFFERS_PATH", str(legacy))
 
-    settings = ApiRuntimeSettings(_env_file=None)
+    settings = ApiSettings(_env_file=None)
 
     assert settings.governed_offers_path == canonical
     assert settings.dynacore_offers_path == canonical
@@ -653,6 +653,6 @@ def test_governed_offer_setting_accepts_legacy_env_with_canonical_precedence(
 def test_governed_offer_setting_accepts_legacy_constructor_alias(tmp_path: Path) -> None:
     legacy = tmp_path / "legacy-offers.jsonl"
 
-    settings = ApiRuntimeSettings(_env_file=None, dynacore_offers_path=legacy)
+    settings = ApiSettings(_env_file=None, dynacore_offers_path=legacy)
 
     assert settings.governed_offers_path == legacy

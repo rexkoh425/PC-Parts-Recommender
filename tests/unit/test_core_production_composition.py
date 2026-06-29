@@ -7,7 +7,7 @@ from typing import Any
 import pytest
 from services.api import core_service
 from services.api.durability import SqlAlchemyDurableStore
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 
 from pc_build_recommender.application import ServingConfigurationError
 
@@ -39,8 +39,8 @@ class _DurableStore:
         )
 
 
-def _settings(tmp_path: Path) -> ApiRuntimeSettings:
-    return ApiRuntimeSettings(
+def _settings(tmp_path: Path) -> ApiSettings:
+    return ApiSettings(
         environment="production",
         docs_enabled=False,
         cors_origins=["https://pcbr.example.test"],

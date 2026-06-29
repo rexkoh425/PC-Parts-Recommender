@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 from services.api import core_service
-from services.api.settings import ApiRuntimeSettings
+from services.api.settings import ApiSettings
 
 from pc_build_recommender.application import ApplicationCatalog
 from pc_build_recommender.compatibility import (
@@ -197,7 +197,7 @@ def test_processed_catalog_composition_enforces_authoritative_policy(
     )
     monkeypatch.setattr(core_service, "load_processed_catalog", lambda *args, **kwargs: processed)
     monkeypatch.setattr(core_service, "InMemoryCatalogReader", lambda data: reader)
-    settings = ApiRuntimeSettings(
+    settings = ApiSettings(
         environment="test",
         service_mode="processed_catalog",
         buildcores_catalog_path=Path("community-products.jsonl"),
