@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Response, status
+from fastapi import APIRouter, Request, Response, status
 
-from services.api.dependencies import ApplicationDependency
+from services.api.dependencies import (
+    ApplicationDependency,
+    ImpressionSignerDependency,
+    SettingsDependency,
+)
+from services.api.impressions import ImpressionSigner, prepare_impression_response
 from services.api.metrics import DOMAIN_METRICS
 from services.api.models import (
     BuildShareCreated,
@@ -19,8 +24,8 @@ from services.api.models import (
 )
 from services.api.routers.openapi import (
     CONFLICT_ERROR,
-    GENERATION_RATE_LIMIT_ERROR,
     NOT_FOUND_ERROR,
+    OPTIMIZER_RATE_LIMIT_ERROR,
     PAYLOAD_TOO_LARGE_ERROR,
     SERVICE_ERROR,
     VALIDATION_ERROR,
@@ -28,6 +33,98 @@ from services.api.routers.openapi import (
 from services.api.routers.response_contracts import validate_service_response
 
 router = APIRouter(prefix="/v1", tags=["builds"])
+
+
+def _with_build_impressions(
+    response: GenerateBuildsResponse,
+    *,
+    signer: ImpressionSigner,
+    actor_id: str,
+) -> GenerateBuildsResponse:
+    builds: list[BuildSummary] = []
+    for rank_position, build in enumerate(response.builds, start=1):
+        components = [
+            component.model_copy(
+                update={
+                    "impression_token": signer.issue(
+                        actor_id=actor_id,
+                        query_id=response.request_id,
+                        kind="build_component_result",
+                        rank_position=rank_position,
+                        build_id=build.build_id,
+                        product_id=component.product_id,
+                        model_version=response.ranking_model,
+                        data_version=response.data_version,
+                        rule_version=response.rule_version,
+                    )
+                },
+                deep=True,
+            )
+            for component in build.components
+        ]
+        builds.append(
+            build.model_copy(
+                update={
+                    "components": components,
+                    "impression_token": signer.issue(
+                        actor_id=actor_id,
+                        query_id=response.request_id,
+                        kind="build_result",
+                        rank_position=rank_position,
+                        build_id=build.build_id,
+                        model_version=response.ranking_model,
+                        data_version=response.data_version,
+                        rule_version=response.rule_version,
+                    ),
+                },
+                deep=True,
+            )
+        )
+    return response.model_copy(update={"builds": builds}, deep=True)
+
+
+def _with_build_summary_impressions(
+    build: BuildSummary,
+    *,
+    signer: ImpressionSigner,
+    actor_id: str,
+    rank_position: int = 1,
+) -> BuildSummary:
+    components = [
+        component.model_copy(
+            update={
+                "impression_token": signer.issue(
+                    actor_id=actor_id,
+                    query_id=build.request_id,
+                    kind="build_component_result",
+                    rank_position=rank_position,
+                    build_id=build.build_id,
+                    product_id=component.product_id,
+                    model_version=build.ranking_model,
+                    data_version=build.data_version,
+                    rule_version=build.rule_version,
+                )
+            },
+            deep=True,
+        )
+        for component in build.components
+    ]
+    return build.model_copy(
+        update={
+            "components": components,
+            "impression_token": signer.issue(
+                actor_id=actor_id,
+                query_id=build.request_id,
+                kind="build_result",
+                rank_position=rank_position,
+                build_id=build.build_id,
+                model_version=build.ranking_model,
+                data_version=build.data_version,
+                rule_version=build.rule_version,
+            ),
+        },
+        deep=True,
+    )
 
 
 def _record_build_generation(response: GenerateBuildsResponse) -> None:
@@ -62,16 +159,28 @@ def _record_build_generation(response: GenerateBuildsResponse) -> None:
         **VALIDATION_ERROR,
         **CONFLICT_ERROR,
         **PAYLOAD_TOO_LARGE_ERROR,
-        **GENERATION_RATE_LIMIT_ERROR,
+        **OPTIMIZER_RATE_LIMIT_ERROR,
         **SERVICE_ERROR,
     },
 )
 async def generate_builds(
-    request: GenerateBuildsRequest, application: ApplicationDependency
+    request: GenerateBuildsRequest,
+    http_request: Request,
+    http_response: Response,
+    application: ApplicationDependency,
+    signer: ImpressionSignerDependency,
+    settings: SettingsDependency,
 ) -> GenerateBuildsResponse:
     response = validate_service_response(
         await application.generate_builds(request), GenerateBuildsResponse
     )
+    actor_id = prepare_impression_response(
+        http_request,
+        http_response,
+        signer=signer,
+        secure_cookie=not settings.is_development_environment,
+    )
+    response = _with_build_impressions(response, signer=signer, actor_id=actor_id)
     _record_build_generation(response)
     return response
 
@@ -82,9 +191,21 @@ async def generate_builds(
     responses={**NOT_FOUND_ERROR, **SERVICE_ERROR},
 )
 async def get_request_builds(
-    request_id: str, application: ApplicationDependency
+    request_id: str,
+    http_request: Request,
+    http_response: Response,
+    application: ApplicationDependency,
+    signer: ImpressionSignerDependency,
+    settings: SettingsDependency,
 ) -> GenerateBuildsResponse:
-    return await application.get_request_builds(request_id)
+    response = await application.get_request_builds(request_id)
+    actor_id = prepare_impression_response(
+        http_request,
+        http_response,
+        signer=signer,
+        secure_cookie=not settings.is_development_environment,
+    )
+    return _with_build_impressions(response, signer=signer, actor_id=actor_id)
 
 
 @router.get(
@@ -92,8 +213,22 @@ async def get_request_builds(
     response_model=BuildSummary,
     responses={**NOT_FOUND_ERROR, **SERVICE_ERROR},
 )
-async def get_build(build_id: str, application: ApplicationDependency) -> BuildSummary:
-    return await application.get_build(build_id)
+async def get_build(
+    build_id: str,
+    http_request: Request,
+    http_response: Response,
+    application: ApplicationDependency,
+    signer: ImpressionSignerDependency,
+    settings: SettingsDependency,
+) -> BuildSummary:
+    build = await application.get_build(build_id)
+    actor_id = prepare_impression_response(
+        http_request,
+        http_response,
+        signer=signer,
+        secure_cookie=not settings.is_development_environment,
+    )
+    return _with_build_summary_impressions(build, signer=signer, actor_id=actor_id)
 
 
 @router.post(
@@ -142,13 +277,18 @@ async def revoke_build_share(
         **VALIDATION_ERROR,
         **CONFLICT_ERROR,
         **PAYLOAD_TOO_LARGE_ERROR,
+        **OPTIMIZER_RATE_LIMIT_ERROR,
         **SERVICE_ERROR,
     },
 )
 async def replace_component(
     build_id: str,
     request: ReplacementRequest,
+    http_request: Request,
+    http_response: Response,
     application: ApplicationDependency,
+    signer: ImpressionSignerDependency,
+    settings: SettingsDependency,
 ) -> ReplacementResponse:
     response = validate_service_response(
         await application.replace_component(build_id, request), ReplacementResponse
@@ -164,4 +304,19 @@ async def replace_component(
             for signal in component.performance_signals
         )
     )
-    return response
+    actor_id = prepare_impression_response(
+        http_request,
+        http_response,
+        signer=signer,
+        secure_cookie=not settings.is_development_environment,
+    )
+    return response.model_copy(
+        update={
+            "build": _with_build_summary_impressions(
+                response.build,
+                signer=signer,
+                actor_id=actor_id,
+            )
+        },
+        deep=True,
+    )

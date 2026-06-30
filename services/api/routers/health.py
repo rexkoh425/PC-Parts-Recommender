@@ -22,6 +22,12 @@ router = APIRouter(tags=["system"])
 def _record_freshness_response(response: FreshnessResponse) -> None:
     DOMAIN_METRICS.record_freshness(
         status=response.status,
+        catalogue_status=response.catalogue_status,
+        price_status=response.price_status,
+        last_catalog_update=response.last_catalog_update,
+        prices_updated_at=response.prices_updated_at,
+        catalogue_stale_after_hours=response.catalogue_stale_after_hours,
+        price_stale_after_hours=response.price_stale_after_hours,
         production_ready=response.production_ready,
         product_count=response.product_count,
         listing_count=response.listing_count,
@@ -37,10 +43,10 @@ async def refresh_freshness_metrics(
 
     try:
         response = validate_service_response(await application.freshness(), FreshnessResponse)
+        _record_freshness_response(response)
     except Exception:
         DOMAIN_METRICS.record_freshness_probe_failure()
         return None
-    _record_freshness_response(response)
     return response
 
 

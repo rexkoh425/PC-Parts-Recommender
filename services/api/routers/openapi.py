@@ -15,23 +15,30 @@ NOT_FOUND_ERROR: dict[int | str, dict[str, Any]] = {
 CONFLICT_ERROR: dict[int | str, dict[str, Any]] = {
     409: {"model": ErrorResponse, "description": "The requested change conflicts with hard rules."}
 }
+UNAUTHORIZED_ERROR: dict[int | str, dict[str, Any]] = {
+    401: {
+        "model": ErrorResponse,
+        "description": "The supplied server-issued capability is invalid or expired.",
+    }
+}
 PAYLOAD_TOO_LARGE_ERROR: dict[int | str, dict[str, Any]] = {
     413: {
         "model": ErrorResponse,
         "description": "The request body exceeds the configured API byte limit.",
     }
 }
-GENERATION_RATE_LIMIT_ERROR: dict[int | str, dict[str, Any]] = {
+OPTIMIZER_RATE_LIMIT_ERROR: dict[int | str, dict[str, Any]] = {
     429: {
         "model": ErrorResponse,
-        "description": "The bounded build-generation wait queue is full; retry later.",
+        "description": "The shared bounded optimizer wait queue is full; retry later.",
     }
 }
+GENERATION_RATE_LIMIT_ERROR = OPTIMIZER_RATE_LIMIT_ERROR
 SERVICE_ERROR: dict[int | str, dict[str, Any]] = {
     503: {
         "model": ErrorResponse,
         "description": (
-            "Required catalogue data, build-generation capacity, or a conclusive optimizer "
+            "Required catalogue data, optimizer admission capacity, or a conclusive optimizer "
             "result is unavailable."
         ),
     }
