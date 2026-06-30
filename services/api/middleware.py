@@ -6,31 +6,44 @@ import asyncio
 import json
 import logging
 import math
+import re
 import time
+from dataclasses import dataclass
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, Literal
 from uuid import uuid4
 
 from starlette.responses import JSONResponse
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from services.api.errors import error_payload
-from services.api.metrics import REQUEST_METRICS
+from services.api.metrics import REQUEST_METRICS, RequestMetrics
 from services.api.settings import ApiSettings
 
 _ROUTE_TEMPLATE_HINT_STATE_KEY = "_pcbr_route_template"
 
 
-class BuildGenerationQueueFullError(RuntimeError):
-    """Raised when a generation request cannot enter the bounded wait queue."""
+OptimizerOperation = Literal["generate", "replace"]
+
+_OPTIMIZER_OPERATION_ORDER: tuple[OptimizerOperation, ...] = ("generate", "replace")
+_OPTIMIZER_OPERATIONS = frozenset(_OPTIMIZER_OPERATION_ORDER)
 
 
-class BuildGenerationQueueTimeoutError(RuntimeError):
-    """Raised when a queued generation request does not obtain capacity in time."""
+class OptimizerQueueFullError(RuntimeError):
+    """Raised when an optimizer request cannot enter the bounded wait queue."""
 
 
-class BuildGenerationAdmissionController:
-    """Bound concurrent build generation and the number of callers waiting for it."""
+class OptimizerQueueTimeoutError(RuntimeError):
+    """Raised when a queued optimizer request does not obtain capacity in time."""
+
+
+class OptimizerAdmissionController:
+    """Bound optimizer execution and waiting callers across every optimizer route.
+
+    Build generation and component replacement share one capacity pool because both can
+    invoke CP-SAT.  A shared controller prevents one route from bypassing the process-level
+    concurrency and queue limits applied to the other.
+    """
 
     def __init__(
         self,
@@ -38,42 +51,121 @@ class BuildGenerationAdmissionController:
         max_concurrency: int,
         max_queue_size: int,
         queue_timeout_seconds: float,
+        metrics: RequestMetrics | None = None,
     ) -> None:
         self.max_concurrency = max_concurrency
         self.max_queue_size = max_queue_size
         self.queue_timeout_seconds = queue_timeout_seconds
+        self.metrics = metrics
         self._condition = asyncio.Condition()
         self._active = 0
         self._queued = 0
+        self._active_by_operation: dict[OptimizerOperation, int] = {
+            "generate": 0,
+            "replace": 0,
+        }
+        self._queued_by_operation: dict[OptimizerOperation, int] = {
+            "generate": 0,
+            "replace": 0,
+        }
 
-    async def acquire(self) -> None:
+    @staticmethod
+    def _operation(value: str) -> OptimizerOperation:
+        if value not in _OPTIMIZER_OPERATIONS:
+            raise ValueError(f"unsupported optimizer admission operation: {value!r}")
+        return value
+
+    def _record_transition(
+        self,
+        *,
+        operation: OptimizerOperation,
+        active_delta: int = 0,
+        queued_delta: int = 0,
+        outcome: str | None = None,
+        wait_seconds: float | None = None,
+    ) -> None:
+        if self.metrics is None:
+            return
+        self.metrics.record_optimizer_admission_transition(
+            operation=operation,
+            active_delta=active_delta,
+            queued_delta=queued_delta,
+            outcome=outcome,
+            wait_seconds=wait_seconds,
+        )
+
+    async def acquire(self, operation: str = "generate") -> None:
         """Reserve one execution slot or raise a bounded-admission error."""
 
+        admitted_operation = self._operation(operation)
+        started = time.perf_counter()
         async with self._condition:
             if self._active < self.max_concurrency:
                 self._active += 1
+                self._active_by_operation[admitted_operation] += 1
+                self._record_transition(
+                    operation=admitted_operation,
+                    active_delta=1,
+                    outcome="admitted",
+                    wait_seconds=time.perf_counter() - started,
+                )
                 return
             if self._queued >= self.max_queue_size:
-                raise BuildGenerationQueueFullError
+                self._record_transition(
+                    operation=admitted_operation,
+                    outcome="queue_full",
+                    wait_seconds=time.perf_counter() - started,
+                )
+                raise OptimizerQueueFullError
 
             self._queued += 1
+            self._queued_by_operation[admitted_operation] += 1
+            self._record_transition(operation=admitted_operation, queued_delta=1)
+            outcome: str | None = None
+            active_delta = 0
             try:
                 async with asyncio.timeout(self.queue_timeout_seconds):
                     while self._active >= self.max_concurrency:
                         await self._condition.wait()
                     self._active += 1
+                    self._active_by_operation[admitted_operation] += 1
+                    active_delta = 1
+                    outcome = "admitted"
             except TimeoutError as error:
-                raise BuildGenerationQueueTimeoutError from error
+                outcome = "queue_timeout"
+                raise OptimizerQueueTimeoutError from error
+            except asyncio.CancelledError:
+                outcome = "cancelled"
+                raise
             finally:
                 self._queued -= 1
+                self._queued_by_operation[admitted_operation] -= 1
+                self._record_transition(
+                    operation=admitted_operation,
+                    active_delta=active_delta,
+                    queued_delta=-1,
+                    outcome=outcome,
+                    wait_seconds=(
+                        time.perf_counter() - started if outcome is not None else None
+                    ),
+                )
+                if active_delta == 0 and self._active < self.max_concurrency and self._queued > 0:
+                    # A timeout/cancellation can race with a release that notified this waiter.
+                    # Pass the now-free slot to another waiter instead of leaving it stranded.
+                    self._condition.notify(1)
 
-    async def release(self) -> None:
+    async def release(self, operation: str = "generate") -> None:
         """Release one execution slot and wake one queued caller."""
 
+        admitted_operation = self._operation(operation)
         async with self._condition:
-            if self._active <= 0:
-                raise RuntimeError("build-generation admission slot released without acquire")
+            if self._active_by_operation[admitted_operation] <= 0:
+                raise RuntimeError(
+                    f"optimizer {admitted_operation} admission slot released without acquire"
+                )
             self._active -= 1
+            self._active_by_operation[admitted_operation] -= 1
+            self._record_transition(operation=admitted_operation, active_delta=-1)
             self._condition.notify(1)
 
     async def snapshot(self) -> tuple[int, int]:
@@ -81,6 +173,25 @@ class BuildGenerationAdmissionController:
 
         async with self._condition:
             return self._active, self._queued
+
+    async def operation_snapshot(self) -> dict[str, tuple[int, int]]:
+        """Return bounded per-operation active and queued counts for verification."""
+
+        async with self._condition:
+            return {
+                operation: (
+                    self._active_by_operation[operation],
+                    self._queued_by_operation[operation],
+                )
+                for operation in _OPTIMIZER_OPERATION_ORDER
+            }
+
+
+# Compatibility aliases keep existing imports working while the implementation and new
+# application wiring use optimizer-wide terminology.
+BuildGenerationQueueFullError = OptimizerQueueFullError
+BuildGenerationQueueTimeoutError = OptimizerQueueTimeoutError
+BuildGenerationAdmissionController = OptimizerAdmissionController
 
 
 def _scope_request_id(scope: Scope) -> str | None:
@@ -121,46 +232,84 @@ async def _send_resource_error(
     await response(scope, receive, send)
 
 
-class BuildGenerationAdmissionMiddleware:
-    """Apply bounded admission only to the expensive build-generation endpoint.
+@dataclass(frozen=True, slots=True)
+class _OptimizerRoute:
+    operation: OptimizerOperation
+    route_template: str
+    display_name: str
+    error_prefix: str
 
-    A request that arrives after the wait queue is full receives ``429`` immediately. A
-    request that entered the queue but could not obtain execution capacity before the queue
-    deadline receives ``503``. Both responses are retryable and include ``Retry-After``.
+
+_GENERATION_ROUTE = _OptimizerRoute(
+    operation="generate",
+    route_template="/v1/builds/generate",
+    display_name="Build-generation",
+    error_prefix="build_generation",
+)
+_REPLACEMENT_ROUTE = _OptimizerRoute(
+    operation="replace",
+    route_template="/v1/builds/{build_id}/replace",
+    display_name="Component-replacement",
+    error_prefix="component_replacement",
+)
+_REPLACEMENT_PATH = re.compile(r"^/v1/builds/[^/]+/replace$")
+
+
+def _optimizer_route(scope: Scope) -> _OptimizerRoute | None:
+    if scope.get("method") != "POST":
+        return None
+    path = scope.get("path")
+    if path == _GENERATION_ROUTE.route_template:
+        return _GENERATION_ROUTE
+    if isinstance(path, str) and _REPLACEMENT_PATH.fullmatch(path) is not None:
+        return _REPLACEMENT_ROUTE
+    return None
+
+
+class OptimizerAdmissionMiddleware:
+    """Apply shared bounded admission to every HTTP route that can invoke CP-SAT.
+
+    A request that arrives after the shared wait queue is full receives ``429`` immediately.
+    A queued request that cannot obtain execution capacity before the deadline receives
+    ``503``. Both responses are retryable and include ``Retry-After``.
     """
 
-    _PATH = "/v1/builds/generate"
+    _PATH = _GENERATION_ROUTE.route_template
 
     def __init__(
         self,
         app: ASGIApp,
-        controller: BuildGenerationAdmissionController,
+        controller: OptimizerAdmissionController,
     ) -> None:
         self.app = app
         self.controller = controller
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        if (
-            scope["type"] != "http"
-            or scope.get("method") != "POST"
-            or scope.get("path") != self._PATH
-        ):
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+        route = _optimizer_route(scope)
+        if route is None:
             await self.app(scope, receive, send)
             return
 
         retry_after = str(max(1, math.ceil(self.controller.queue_timeout_seconds)))
-        _set_route_template_hint(scope, self._PATH)
+        _set_route_template_hint(scope, route.route_template)
         try:
-            await self.controller.acquire()
-        except BuildGenerationQueueFullError:
+            await self.controller.acquire(route.operation)
+        except OptimizerQueueFullError:
             await _send_resource_error(
                 scope=scope,
                 receive=receive,
                 send=send,
                 status_code=429,
-                code="build_generation_queue_full",
-                message="Build-generation capacity is full; retry after the current queue drains.",
+                code=f"{route.error_prefix}_queue_full",
+                message=(
+                    f"{route.display_name} capacity is full; retry after the shared optimizer "
+                    "queue drains."
+                ),
                 details={
+                    "operation": route.operation,
                     "max_concurrency": self.controller.max_concurrency,
                     "max_queue_size": self.controller.max_queue_size,
                     "retryable": True,
@@ -168,17 +317,19 @@ class BuildGenerationAdmissionMiddleware:
                 headers={"Retry-After": retry_after},
             )
             return
-        except BuildGenerationQueueTimeoutError:
+        except OptimizerQueueTimeoutError:
             await _send_resource_error(
                 scope=scope,
                 receive=receive,
                 send=send,
                 status_code=503,
-                code="build_generation_queue_timeout",
+                code=f"{route.error_prefix}_queue_timeout",
                 message=(
-                    "Build-generation capacity did not become available before the queue deadline."
+                    f"{route.display_name} capacity did not become available before the shared "
+                    "optimizer queue deadline."
                 ),
                 details={
+                    "operation": route.operation,
                     "queue_timeout_seconds": self.controller.queue_timeout_seconds,
                     "retryable": True,
                 },
@@ -189,7 +340,10 @@ class BuildGenerationAdmissionMiddleware:
         try:
             await self.app(scope, receive, send)
         finally:
-            await self.controller.release()
+            await self.controller.release(route.operation)
+
+
+BuildGenerationAdmissionMiddleware = OptimizerAdmissionMiddleware
 
 
 class _RequestBodyTooLargeError(RuntimeError):
@@ -197,7 +351,12 @@ class _RequestBodyTooLargeError(RuntimeError):
 
 
 class RequestBodyLimitMiddleware:
-    """Reject declared or streamed HTTP request bodies above a fixed byte limit."""
+    """Reject request bodies above a fixed limit before scarce optimizer admission.
+
+    Optimizer routes are fully buffered up to the configured bound and then replayed to the
+    inner application.  This keeps slow uploads and oversized streamed bodies from holding a
+    CP-SAT execution slot while preserving streaming enforcement on all other routes.
+    """
 
     _STATIC_BODY_ROUTES = frozenset(
         {
@@ -234,7 +393,10 @@ class RequestBodyLimitMiddleware:
             return
 
         path = scope.get("path")
-        if path in self._STATIC_BODY_ROUTES:
+        optimizer_route = _optimizer_route(scope)
+        if optimizer_route is not None:
+            _set_route_template_hint(scope, optimizer_route.route_template)
+        elif path in self._STATIC_BODY_ROUTES:
             _set_route_template_hint(scope, str(path))
 
         try:
@@ -253,6 +415,10 @@ class RequestBodyLimitMiddleware:
 
         if declared_length is not None and declared_length > self.max_body_bytes:
             await self._reject(scope=scope, receive=receive, send=send)
+            return
+
+        if optimizer_route is not None:
+            await self._buffer_optimizer_body(scope=scope, receive=receive, send=send)
             return
 
         observed_bytes = 0
@@ -279,6 +445,44 @@ class RequestBodyLimitMiddleware:
             if response_started:
                 raise
             await self._reject(scope=scope, receive=receive, send=send)
+
+    async def _buffer_optimizer_body(
+        self,
+        *,
+        scope: Scope,
+        receive: Receive,
+        send: Send,
+    ) -> None:
+        """Read a complete bounded optimizer body before entering admission middleware."""
+
+        buffered: list[Message] = []
+        observed_bytes = 0
+        while True:
+            message = await receive()
+            if message["type"] == "http.disconnect":
+                # The caller is gone; do not consume optimizer capacity for abandoned work.
+                return
+            buffered.append(message)
+            if message["type"] != "http.request":
+                continue
+            observed_bytes += len(message.get("body", b""))
+            if observed_bytes > self.max_body_bytes:
+                await self._reject(scope=scope, receive=receive, send=send)
+                return
+            if not message.get("more_body", False):
+                break
+
+        cursor = 0
+
+        async def replay_receive() -> Message:
+            nonlocal cursor
+            if cursor < len(buffered):
+                message = buffered[cursor]
+                cursor += 1
+                return message
+            return {"type": "http.request", "body": b"", "more_body": False}
+
+        await self.app(scope, replay_receive, send)
 
     async def _reject(self, *, scope: Scope, receive: Receive, send: Send) -> None:
         await _send_resource_error(

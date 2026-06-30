@@ -60,6 +60,16 @@ _REQUIRED_TABLES = frozenset(
         "interaction_events",
     }
 )
+_REQUIRED_COLUMNS = {
+    "interaction_events": frozenset(
+        {
+            "impression_id",
+            "trust_level",
+            "idempotency_key_sha256",
+            "idempotency_payload_sha256",
+        }
+    )
+}
 
 
 class DurableStorageError(ApplicationError):
@@ -79,6 +89,14 @@ class StoredBuildShare:
 @dataclass(frozen=True, slots=True)
 class CreatedBuildShare(StoredBuildShare):
     revocation_token: str
+
+
+@dataclass(frozen=True, slots=True)
+class InteractionWriteResult:
+    """Outcome of an idempotent interaction write."""
+
+    event: InteractionEvent
+    replayed: bool
 
 
 def _is_unique_violation(error: IntegrityError) -> bool:
@@ -137,6 +155,88 @@ def _canonical_product_from_record(record: CanonicalProductRecord) -> CanonicalP
             "updated_at": _as_utc(record.updated_at),
         }
     )
+
+
+def _interaction_from_record(record: InteractionEventRecord) -> InteractionEvent:
+    return InteractionEvent.model_validate(
+        {
+            "event_id": record.event_id,
+            "session_id": record.session_id,
+            "user_id": record.user_id,
+            "query_id": record.query_id,
+            "product_id": record.product_id,
+            "build_id": record.build_id,
+            "event_type": record.event_type,
+            "rank_position": record.rank_position,
+            "model_version": record.model_version,
+            "data_version": record.data_version,
+            "rule_version": record.rule_version,
+            "metadata": record.event_metadata or {},
+            "impression_id": record.impression_id,
+            "trust_level": record.trust_level,
+            "idempotency_key_sha256": record.idempotency_key_sha256,
+            "idempotency_payload_sha256": record.idempotency_payload_sha256,
+            "created_at": _as_utc(record.created_at),
+        }
+    )
+
+
+def _idempotent_replay(
+    existing: InteractionEventRecord, proposed: InteractionEvent
+) -> InteractionWriteResult:
+    if (
+        proposed.idempotency_key_sha256 is None
+        or existing.session_id != proposed.session_id
+        or existing.idempotency_key_sha256 != proposed.idempotency_key_sha256
+        or existing.idempotency_payload_sha256 != proposed.idempotency_payload_sha256
+    ):
+        raise RequestConflictError(
+            "Idempotency-Key was already used for a different interaction"
+        )
+    return InteractionWriteResult(event=_interaction_from_record(existing), replayed=True)
+
+
+def _impression_semantic_replay(
+    existing: InteractionEventRecord, proposed: InteractionEvent
+) -> InteractionWriteResult:
+    stored = _interaction_from_record(existing)
+    if (
+        proposed.impression_id is None
+        or stored.impression_id != proposed.impression_id
+        or stored.event_type != proposed.event_type
+    ):
+        raise RequestConflictError("interaction already exists")
+    excluded = {
+        "created_at",
+        "event_id",
+        "idempotency_key_sha256",
+        "idempotency_payload_sha256",
+    }
+    if stored.model_dump(mode="json", exclude=excluded) != proposed.model_dump(
+        mode="json", exclude=excluded
+    ):
+        raise RequestConflictError(
+            "Impression was already used for a different interaction payload"
+        )
+    return InteractionWriteResult(event=stored, replayed=True)
+
+
+def _resolve_existing_interaction(
+    existing: InteractionEventRecord, proposed: InteractionEvent
+) -> InteractionWriteResult:
+    if (
+        proposed.idempotency_key_sha256 is not None
+        and existing.session_id == proposed.session_id
+        and existing.idempotency_key_sha256 == proposed.idempotency_key_sha256
+    ):
+        return _idempotent_replay(existing, proposed)
+    if (
+        proposed.impression_id is not None
+        and existing.impression_id == proposed.impression_id
+        and existing.event_type == proposed.event_type.value
+    ):
+        return _impression_semantic_replay(existing, proposed)
+    raise RequestConflictError("interaction already exists")
 
 
 def _retailer_listing_from_record(record: RetailerListingRecord) -> RetailerListing:
@@ -201,13 +301,31 @@ class SqlAlchemyDurableStore:
         try:
             with self.engine.connect() as connection:
                 connection.execute(text("SELECT 1"))
-            available = set(inspect(self.engine).get_table_names())
+            inspector = inspect(self.engine)
+            available = set(inspector.get_table_names())
         except SQLAlchemyError as error:
             raise DurableStorageError("durable database is unavailable") from error
         missing = sorted(_REQUIRED_TABLES - available)
         if missing:
             raise DurableStorageError(
                 "durable database is missing required migrated tables: " + ", ".join(missing)
+            )
+        missing_columns = {
+            table: sorted(required - {str(item["name"]) for item in inspector.get_columns(table)})
+            for table, required in _REQUIRED_COLUMNS.items()
+            if table in available
+        }
+        missing_columns = {
+            table: columns for table, columns in missing_columns.items() if columns
+        }
+        if missing_columns:
+            detail = "; ".join(
+                f"{table}: {', '.join(columns)}"
+                for table, columns in sorted(missing_columns.items())
+            )
+            raise DurableStorageError(
+                "durable database is missing required migrated columns (revision "
+                f"20260815_0008): {detail}"
             )
 
     def verify_no_unexpected_catalog_ids(
@@ -855,13 +973,29 @@ class SqlAlchemyDurableStore:
         except SQLAlchemyError as error:
             raise DurableStorageError("failed to revoke public build share") from error
 
-    def add_interaction(self, event: InteractionEvent) -> InteractionEvent:
-        """Commit an event before the API acknowledges it."""
+    def put_interaction(self, event: InteractionEvent) -> InteractionWriteResult:
+        """Commit once, replay exactly, and reject conflicting idempotency-key reuse."""
 
         try:
             with session_scope(self.session_factory) as session:
-                if session.get(InteractionEventRecord, event.event_id) is not None:
-                    raise RequestConflictError(f"interaction already exists: {event.event_id}")
+                existing = session.get(InteractionEventRecord, event.event_id)
+                if existing is None and event.idempotency_key_sha256 is not None:
+                    existing = session.scalar(
+                        select(InteractionEventRecord).where(
+                            InteractionEventRecord.session_id == event.session_id,
+                            InteractionEventRecord.idempotency_key_sha256
+                            == event.idempotency_key_sha256,
+                        )
+                    )
+                if existing is None and event.impression_id is not None:
+                    existing = session.scalar(
+                        select(InteractionEventRecord).where(
+                            InteractionEventRecord.impression_id == event.impression_id,
+                            InteractionEventRecord.event_type == event.event_type.value,
+                        )
+                    )
+                if existing is not None:
+                    return _resolve_existing_interaction(existing, event)
                 query = (
                     session.get(SearchQueryRecord, event.query_id)
                     if event.query_id is not None
@@ -898,10 +1032,43 @@ class SqlAlchemyDurableStore:
             raise
         except IntegrityError as error:
             if _is_unique_violation(error):
+                try:
+                    with self.session_factory() as session:
+                        existing = session.scalar(
+                            select(InteractionEventRecord).where(
+                                InteractionEventRecord.session_id == event.session_id,
+                                InteractionEventRecord.idempotency_key_sha256
+                                == event.idempotency_key_sha256,
+                            )
+                        )
+                        if existing is not None:
+                            return _resolve_existing_interaction(existing, event)
+                        if event.impression_id is not None:
+                            existing = session.scalar(
+                                select(InteractionEventRecord).where(
+                                    InteractionEventRecord.impression_id
+                                    == event.impression_id,
+                                    InteractionEventRecord.event_type
+                                    == event.event_type.value,
+                                )
+                            )
+                            if existing is not None:
+                                return _resolve_existing_interaction(existing, event)
+                except RequestConflictError:
+                    raise
+                except SQLAlchemyError as reread_error:
+                    raise DurableStorageError(
+                        "failed to resolve a concurrent interaction retry"
+                    ) from reread_error
                 raise RequestConflictError("interaction already exists") from error
             raise DurableStorageError(
                 "interaction violated durable database integrity"
             ) from error
         except SQLAlchemyError as error:
             raise DurableStorageError("failed to persist interaction event") from error
-        return event
+        return InteractionWriteResult(event=event, replayed=False)
+
+    def add_interaction(self, event: InteractionEvent) -> InteractionEvent:
+        """Backward-compatible wrapper returning the stored canonical event."""
+
+        return self.put_interaction(event).event

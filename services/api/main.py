@@ -10,9 +10,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from services.api.core_service import create_processed_catalog_service
 from services.api.errors import install_exception_handlers
+from services.api.impressions import ImpressionSigner
+from services.api.metrics import REQUEST_METRICS
 from services.api.middleware import (
-    BuildGenerationAdmissionController,
-    BuildGenerationAdmissionMiddleware,
+    OptimizerAdmissionController,
+    OptimizerAdmissionMiddleware,
     RequestBodyLimitMiddleware,
     RequestContextMiddleware,
     configure_logging,
@@ -40,10 +42,11 @@ def create_app(
             "local",
             "test",
             "testing",
-        }:
+        } and runtime_settings.service_mode != "public_demo":
             raise RuntimeError(
                 "The controlled demo service is development-only; configure "
-                "PCBR_API_SERVICE_MODE=processed_catalog for a non-development runtime."
+                "PCBR_API_SERVICE_MODE=public_demo for a labelled public demonstration or "
+                "PCBR_API_SERVICE_MODE=processed_catalog for a production catalogue release."
             )
         application_service = InMemoryRecommendationService(runtime_settings)
     configure_logging(runtime_settings)
@@ -66,18 +69,23 @@ def create_app(
     )
     app.state.settings = runtime_settings
     app.state.application_service = application_service
-    build_generation_admission = BuildGenerationAdmissionController(
+    app.state.impression_signer = ImpressionSigner.from_settings(runtime_settings)
+    optimizer_admission = OptimizerAdmissionController(
         max_concurrency=runtime_settings.build_generation_max_concurrency,
         max_queue_size=runtime_settings.build_generation_max_queue_size,
         queue_timeout_seconds=runtime_settings.build_generation_queue_timeout_seconds,
+        metrics=REQUEST_METRICS,
     )
-    app.state.build_generation_admission = build_generation_admission
+    app.state.optimizer_admission = optimizer_admission
+    # Preserve the established state name for operators and tests migrating to the
+    # optimizer-wide contract.
+    app.state.build_generation_admission = optimizer_admission
 
     # Middleware executes in reverse registration order. Request context remains outermost,
     # CORS wraps middleware-generated errors, and resource controls run before request parsing.
     app.add_middleware(
-        BuildGenerationAdmissionMiddleware,
-        controller=build_generation_admission,
+        OptimizerAdmissionMiddleware,
+        controller=optimizer_admission,
     )
     app.add_middleware(
         RequestBodyLimitMiddleware,
@@ -93,6 +101,7 @@ def create_app(
             "Accept",
             runtime_settings.request_id_header,
             "X-PCBR-Admin-Token",
+            "Idempotency-Key",
         ],
         expose_headers=[
             runtime_settings.request_id_header,
