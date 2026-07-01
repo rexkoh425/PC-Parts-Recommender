@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 import pytest
 from pydantic import ValidationError
 from services.api.metrics import DomainMetrics
-from services.api.models import PerformanceSignal
+from services.api.models import FreshnessResponse, PerformanceSignal
 
 
 @pytest.mark.parametrize(
@@ -91,6 +93,12 @@ def test_domain_metrics_render_recommendation_outcomes_without_dynamic_labels() 
     metrics.record_interaction(event_type="build_saved")
     metrics.record_freshness(
         status="stale",
+        catalogue_status="stale",
+        price_status="degraded",
+        last_catalog_update=datetime(2026, 8, 14, tzinfo=UTC),
+        prices_updated_at=None,
+        catalogue_stale_after_hours=168,
+        price_stale_after_hours=24,
         production_ready=False,
         product_count=3000,
         listing_count=0,
@@ -161,6 +169,13 @@ def test_domain_metrics_render_recommendation_outcomes_without_dynamic_labels() 
     assert 'pcbr_catalogue_freshness_status{status="fresh"} 0' in rendered
     assert "pcbr_catalogue_production_ready 0" in rendered
     assert "pcbr_catalogue_freshness_probe_success 1" in rendered
+    assert 'pcbr_data_timestamp_available{kind="catalogue"} 1' in rendered
+    assert 'pcbr_data_timestamp_available{kind="prices"} 0' in rendered
+    assert 'pcbr_data_last_update_timestamp_seconds{kind="prices"} 0.000000' in rendered
+    assert 'pcbr_data_stale{kind="catalogue"} 1' in rendered
+    assert 'pcbr_data_stale{kind="prices"} 1' in rendered
+    assert 'pcbr_data_stale_after_seconds{kind="catalogue"} 604800' in rendered
+    assert 'pcbr_data_stale_after_seconds{kind="prices"} 86400' in rendered
     assert "pcbr_catalogue_products 3000" in rendered
     assert "pcbr_catalogue_listings 0" in rendered
     assert "pcbr_catalogue_release_blockers 3" in rendered
@@ -184,6 +199,12 @@ def test_domain_metrics_freshness_probe_failure_fails_closed_and_preserves_count
     metrics = DomainMetrics()
     metrics.record_freshness(
         status="fresh",
+        catalogue_status="fresh",
+        price_status="fresh",
+        last_catalog_update=datetime(2026, 8, 15, tzinfo=UTC),
+        prices_updated_at=datetime(2026, 8, 15, tzinfo=UTC),
+        catalogue_stale_after_hours=168,
+        price_stale_after_hours=24,
         production_ready=True,
         product_count=3000,
         listing_count=10000,
@@ -197,9 +218,41 @@ def test_domain_metrics_freshness_probe_failure_fails_closed_and_preserves_count
     assert 'pcbr_catalogue_freshness_status{status="degraded"} 1' in rendered
     assert "pcbr_catalogue_production_ready 0" in rendered
     assert "pcbr_catalogue_freshness_probe_success 0" in rendered
+    assert 'pcbr_data_stale{kind="catalogue"} 1' in rendered
+    assert 'pcbr_data_stale{kind="prices"} 1' in rendered
+    assert 'pcbr_data_timestamp_available{kind="catalogue"} 1' in rendered
+    assert 'pcbr_data_timestamp_available{kind="prices"} 1' in rendered
     assert "pcbr_catalogue_products 3000" in rendered
     assert "pcbr_catalogue_listings 10000" in rendered
     assert "pcbr_catalogue_release_blockers 1" in rendered
+
+
+def test_freshness_response_rejects_an_inconsistent_aggregate_or_production_claim() -> None:
+    payload = {
+        "data_version": "catalog-v1",
+        "status": "fresh",
+        "catalogue_status": "fresh",
+        "price_status": "stale",
+        "last_catalog_update": datetime(2026, 8, 15, tzinfo=UTC),
+        "prices_updated_at": datetime(2026, 8, 14, tzinfo=UTC),
+        "stale_after_hours": 24,
+        "catalogue_stale_after_hours": 168,
+        "price_stale_after_hours": 24,
+        "source_count": 2,
+        "product_count": 3000,
+        "listing_count": 10000,
+        "production_ready": False,
+        "release_artifact_verification": "verified",
+        "readiness_blockers": ["Price data is stale."],
+    }
+
+    with pytest.raises(ValidationError, match="aggregate freshness status"):
+        FreshnessResponse.model_validate(payload)
+
+    payload["status"] = "stale"
+    payload["production_ready"] = True
+    with pytest.raises(ValidationError, match="production_ready requires fresh"):
+        FreshnessResponse.model_validate(payload)
 
 
 def test_domain_metrics_require_complete_operational_evidence_and_clear_stale_gauges() -> None:
@@ -281,6 +334,12 @@ def test_domain_metrics_require_complete_operational_evidence_and_clear_stale_ga
             "record_freshness",
             {
                 "status": "unbounded",
+                "catalogue_status": "fresh",
+                "price_status": "fresh",
+                "last_catalog_update": None,
+                "prices_updated_at": None,
+                "catalogue_stale_after_hours": 168,
+                "price_stale_after_hours": 24,
                 "production_ready": False,
                 "product_count": 0,
                 "listing_count": 0,
@@ -293,6 +352,48 @@ def test_domain_metrics_require_complete_operational_evidence_and_clear_stale_ga
             "record_freshness",
             {
                 "status": "fresh",
+                "catalogue_status": "unbounded",
+                "price_status": "fresh",
+                "last_catalog_update": None,
+                "prices_updated_at": None,
+                "catalogue_stale_after_hours": 168,
+                "price_stale_after_hours": 24,
+                "production_ready": False,
+                "product_count": 0,
+                "listing_count": 0,
+                "release_blocker_count": 0,
+                "release_artifact_verification": "verified",
+            },
+            "catalogue freshness status",
+        ),
+        (
+            "record_freshness",
+            {
+                "status": "fresh",
+                "catalogue_status": "fresh",
+                "price_status": "fresh",
+                "last_catalog_update": datetime(2026, 8, 15),
+                "prices_updated_at": None,
+                "catalogue_stale_after_hours": 168,
+                "price_stale_after_hours": 24,
+                "production_ready": False,
+                "product_count": 0,
+                "listing_count": 0,
+                "release_blocker_count": 0,
+                "release_artifact_verification": "verified",
+            },
+            "catalogue freshness timestamp must be timezone-aware",
+        ),
+        (
+            "record_freshness",
+            {
+                "status": "fresh",
+                "catalogue_status": "fresh",
+                "price_status": "fresh",
+                "last_catalog_update": None,
+                "prices_updated_at": None,
+                "catalogue_stale_after_hours": 168,
+                "price_stale_after_hours": 24,
                 "production_ready": False,
                 "product_count": 0,
                 "listing_count": 0,

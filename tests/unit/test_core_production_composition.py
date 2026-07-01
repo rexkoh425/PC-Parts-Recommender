@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -40,6 +41,11 @@ class _DurableStore:
 
 
 def _settings(tmp_path: Path) -> ApiSettings:
+    signing_key_file = tmp_path / "impression-signing-key.txt"
+    signing_key_file.write_text(
+        "production-impression-signing-key-0123456789abcdef",
+        encoding="utf-8",
+    )
     return ApiSettings(
         environment="production",
         docs_enabled=False,
@@ -53,10 +59,13 @@ def _settings(tmp_path: Path) -> ApiSettings:
         review_evidence_path=tmp_path / "review-evidence.jsonl",
         serving_manifest_path=tmp_path / "serving-manifest.json",
         serving_manifest_sha256="a" * 64,
+        source_registry_path=tmp_path / "source-registry.yaml",
+        source_trust_root_sha256="b" * 64,
         semantic_encoder_bundle_path=tmp_path / "encoders" / ("c" * 64),
         semantic_encoder_bundle_sha256="c" * 64,
         data_version="catalog-v1",
         ranking_model_version="ltr-v4",
+        impression_signing_key_file=signing_key_file,
     )
 
 
@@ -104,6 +113,7 @@ def test_exact_production_composition_loads_only_the_validated_serving_release(
     er_production_policy = object()
     er_evaluation_path = tmp_path / "entity-resolution-evaluation.json"
     er_binding_sha256 = "b" * 64
+    source_authority_expires_at = datetime(2099, 1, 1, tzinfo=UTC)
     er_release = SimpleNamespace(
         runtime=er_runtime,
         policy=er_policy,
@@ -118,6 +128,9 @@ def test_exact_production_composition_loads_only_the_validated_serving_release(
         catalog_release=SimpleNamespace(
             entity_resolution=er_release,
             entity_resolution_evaluation_path=er_evaluation_path,
+            source_release=SimpleNamespace(
+                authority_expires_at=source_authority_expires_at,
+            ),
         ),
     )
     load_arguments: dict[str, object] = {}
@@ -162,6 +175,7 @@ def test_exact_production_composition_loads_only_the_validated_serving_release(
         data.listings,
     )
     assert service._release_artifact_verification == "verified"
+    assert service._source_authority_expires_at == source_authority_expires_at
     assert load_arguments == {
         "path": settings.serving_manifest_path,
         "catalog_path": settings.buildcores_catalog_path,
@@ -172,6 +186,8 @@ def test_exact_production_composition_loads_only_the_validated_serving_release(
         "expected_catalog_data_version": "catalog-v1",
         "expected_ranker_version": "ltr-v4",
         "expected_manifest_sha256": "a" * 64,
+        "current_source_registry_path": settings.source_registry_path,
+        "expected_source_trust_root_sha256": "b" * 64,
         "expected_encoder_bundle_path": settings.semantic_encoder_bundle_path,
         "expected_encoder_bundle_sha256": "c" * 64,
     }
