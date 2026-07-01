@@ -21,7 +21,7 @@ from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
-from sqlalchemy import Engine, delete, func, select, text
+from sqlalchemy import Connection, Engine, delete, func, select, text
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -174,6 +174,41 @@ def _pgvector_version_tuple(version: str) -> tuple[int, int, int]:
         raise RuntimeError(f"cannot parse PostgreSQL vector extension version: {version!r}")
     major, minor, patch = (int(part) for part in match.groups())
     return major, minor, patch
+
+
+def _provenance_mismatch_details(
+    live: Mapping[str, tuple[str, str]],
+    expected: Mapping[str, tuple[str, str]],
+) -> str | None:
+    """Describe a release provenance mismatch without mutating any live rows."""
+
+    missing = sorted(set(expected) - set(live))
+    unexpected = sorted(set(live) - set(expected))
+    changed = sorted(
+        provenance_id
+        for provenance_id in set(live) & set(expected)
+        if live[provenance_id] != expected[provenance_id]
+    )
+    if not missing and not unexpected and not changed:
+        return None
+
+    details: list[str] = []
+    if missing:
+        details.append(
+            f"{len(missing)} missing release provenance IDs, including "
+            + ", ".join(missing[:3])
+        )
+    if unexpected:
+        details.append(
+            f"{len(unexpected)} unexpected stale provenance IDs, including "
+            + ", ".join(unexpected[:3])
+        )
+    if changed:
+        details.append(
+            f"{len(changed)} provenance owner/source mismatches, including "
+            + ", ".join(changed[:3])
+        )
+    return "; ".join(details)
 
 
 def _require_mapping(value: Any, path: str) -> Mapping[str, Any]:
@@ -518,7 +553,7 @@ def validate_embedding_artifact(
 class PostgresVectorCatalogRepository:
     """PostgreSQL-only writer for a validated canonical catalog and pgvector index."""
 
-    def __init__(self, engine: Engine) -> None:
+    def __init__(self, engine: Engine | Connection) -> None:
         if engine.dialect.name != "postgresql":
             raise ValueError("PostgresVectorCatalogRepository requires PostgreSQL")
         self.engine = engine
@@ -743,9 +778,16 @@ class PostgresVectorCatalogRepository:
                     provenance_id: (product_id, source_name)
                     for provenance_id, product_id, source_name in live_provenance_rows
                 }
-                if live_provenance != expected_provenance:
+                provenance_mismatch = _provenance_mismatch_details(
+                    live_provenance,
+                    expected_provenance,
+                )
+                if provenance_mismatch is not None:
                     raise RuntimeError(
-                        "database provenance IDs/owners do not match imported catalog"
+                        "database provenance does not match the pinned release; this importer "
+                        "will not delete rows automatically and requires explicit audited "
+                        "stale-row reconciliation: "
+                        + provenance_mismatch
                     )
             provenance_count = len(expected_provenance)
 

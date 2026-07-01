@@ -28,6 +28,7 @@ from pc_build_recommender.retrieval.postgres import (
     PostgresVectorCatalogRepository,
     _batched,
     _pgvector_version_tuple,
+    _provenance_mismatch_details,
     bm25_index_from_embedding_artifact,
     validate_embedding_artifact,
 )
@@ -222,6 +223,24 @@ def test_pgvector_version_parser_supports_filtered_hnsw_requirement() -> None:
     assert _pgvector_version_tuple("0.8.5") == (0, 8, 5)
     with pytest.raises(RuntimeError, match="cannot parse"):
         _pgvector_version_tuple("development")
+
+
+def test_stale_vector_provenance_reports_an_auditable_non_destructive_blocker() -> None:
+    details = _provenance_mismatch_details(
+        {
+            "changed": ("product-old", "fixture"),
+            "stale": ("product-stale", "fixture"),
+        },
+        {
+            "changed": ("product-current", "fixture"),
+            "missing": ("product-current", "fixture"),
+        },
+    )
+
+    assert details is not None
+    assert "1 missing release provenance IDs, including missing" in details
+    assert "1 unexpected stale provenance IDs, including stale" in details
+    assert "1 provenance owner/source mismatches, including changed" in details
 
 
 def test_embedding_release_identity_is_rollback_safe() -> None:
