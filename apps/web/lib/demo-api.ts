@@ -920,9 +920,13 @@ export function getDemoFreshness(): FreshnessSummary {
   return {
     data_version: DEMO_DATA_VERSION,
     status: "degraded",
+    catalogue_status: "degraded",
+    price_status: "degraded",
     last_catalog_update: "2026-07-22T00:00:00.000Z",
     prices_updated_at: "2026-07-22T00:00:00.000Z",
     stale_after_hours: 24,
+    catalogue_stale_after_hours: 168,
+    price_stale_after_hours: 24,
     source_count: 1,
     product_count: products.length,
     listing_count: products.length,
@@ -942,5 +946,7 @@ export function acceptDemoInteraction(event: InteractionEvent): InteractionAccep
     status: "accepted",
     data_version: DEMO_DATA_VERSION,
     rule_version: DEMO_RULE_VERSION,
+    trust_level: "legacy_untrusted",
+    replayed: false,
   };
 }

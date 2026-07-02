@@ -135,6 +135,7 @@ export interface BuildComponent {
   selection_reasons?: string[];
   performance_signals?: PerformanceSignal[];
   alternatives?: ReplacementCandidate[];
+  impression_token?: string | null;
 }
 
 export interface BuildSummary {
@@ -160,6 +161,7 @@ export interface BuildSummary {
   rule_version: string;
   solver_version: string;
   solver_status: string;
+  impression_token?: string | null;
 }
 
 /** Allow-listed snapshot returned from a durable public build-share endpoint. */
@@ -198,6 +200,11 @@ export interface BuildShareCreated {
   revocation_token: string;
   created_at: string;
   expires_at: string;
+}
+
+export interface BuildShareRevoked {
+  share_id: string;
+  revoked_at: string;
 }
 
 export interface PublicBuildShare {
@@ -246,6 +253,7 @@ export interface ProductSearchItem {
   lowest_price_sgd?: number | null;
   stock_status?: string | null;
   compatibility_status?: CompatibilityStatus | null;
+  impression_token?: string | null;
 }
 
 export interface ProductSearchRequest {
@@ -431,9 +439,13 @@ export interface ReplacementResponse {
 export interface FreshnessSummary {
   data_version: string;
   status: "fresh" | "stale" | "degraded";
-  last_catalog_update: string;
-  prices_updated_at: string;
+  catalogue_status: "fresh" | "stale" | "degraded";
+  price_status: "fresh" | "stale" | "degraded";
+  last_catalog_update: string | null;
+  prices_updated_at: string | null;
   stale_after_hours: number;
+  catalogue_stale_after_hours: number;
+  price_stale_after_hours: number;
   source_count: number;
   product_count: number;
   listing_count: number;
@@ -551,6 +563,7 @@ export interface InteractionEvent {
   data_version?: string;
   rule_version?: string;
   metadata?: Record<string, unknown>;
+  impression_token?: string;
 }
 
 export interface InteractionAccepted {
@@ -559,6 +572,8 @@ export interface InteractionAccepted {
   status: "accepted";
   data_version: string;
   rule_version: string;
+  trust_level: "verified_impression" | "legacy_untrusted";
+  replayed: boolean;
 }
 
 export interface ApiErrorDetails {

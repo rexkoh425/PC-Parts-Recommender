@@ -13,6 +13,17 @@ export function parseApiRequestTimeout(value: string | undefined): number {
   );
 }
 
+/**
+ * An empty base URL deliberately targets the current origin.  This is used by
+ * the single-domain Vercel Services deployment, where the FastAPI service is
+ * routed alongside the Next.js application at `/v1/*`.
+ */
+export function resolveApiBaseUrl(value: string | undefined): string {
+  const configured = value?.trim();
+  if (configured === "/") return "";
+  return (configured || "http://localhost:8000").replace(/\/$/, "");
+}
+
 export const dataMode =
   process.env.NEXT_PUBLIC_DATA_MODE ??
   (configuredApiUrl ? "api" : process.env.NODE_ENV === "production" ? "demo" : "api");
@@ -31,7 +42,7 @@ export function runtimeCapabilitiesForDataMode(mode: string): RuntimeCapabilitie
 
 export const runtimeCapabilities = runtimeCapabilitiesForDataMode(dataMode);
 
-export const apiBaseUrl = (configuredApiUrl || "http://localhost:8000").replace(/\/$/, "");
+export const apiBaseUrl = resolveApiBaseUrl(configuredApiUrl);
 
 export const apiRequestTimeoutMs = parseApiRequestTimeout(
   process.env.NEXT_PUBLIC_API_TIMEOUT_MS,

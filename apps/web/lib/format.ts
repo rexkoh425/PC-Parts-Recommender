@@ -1,4 +1,9 @@
-import type { BuildProfile, ComponentCategory, WorkloadName } from "./types";
+import type {
+  BuildProfile,
+  ComponentCategory,
+  FreshnessSummary,
+  WorkloadName,
+} from "./types";
 
 const sgdFormatter = new Intl.NumberFormat("en-SG", {
   style: "currency",
@@ -54,7 +59,7 @@ export function humanizeToken(value: string): string {
     .replace(/\b\w/g, (character) => character.toUpperCase());
 }
 
-export function formatFreshness(value?: string): string {
+export function formatFreshness(value?: string | null): string {
   if (!value) return "Freshness unavailable";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Freshness unavailable";
@@ -64,4 +69,19 @@ export function formatFreshness(value?: string): string {
   if (elapsed < 3_600_000) return `Updated ${Math.max(1, Math.floor(elapsed / 60_000))}m ago`;
   if (elapsed < 86_400_000) return `Updated ${Math.floor(elapsed / 3_600_000)}h ago`;
   return `Updated ${Math.floor(elapsed / 86_400_000)}d ago`;
+}
+
+export function formatFreshnessSummary(freshness: FreshnessSummary | null): string {
+  if (!freshness) return "Checking market data";
+  if (freshness.price_status === "stale") {
+    return `Prices stale · ${formatFreshness(freshness.prices_updated_at)}`;
+  }
+  if (freshness.price_status === "degraded") return "Price freshness unavailable";
+  if (freshness.catalogue_status === "stale") {
+    return `Catalogue stale · ${formatFreshness(freshness.last_catalog_update)}`;
+  }
+  if (freshness.catalogue_status === "degraded") {
+    return "Catalogue freshness unavailable";
+  }
+  return formatFreshness(freshness.prices_updated_at ?? freshness.last_catalog_update);
 }
