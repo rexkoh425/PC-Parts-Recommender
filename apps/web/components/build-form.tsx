@@ -115,10 +115,6 @@ export function BuildForm() {
       void trackInteraction({
         event_type: "search_submitted",
         session_id: getSessionId(),
-        query_id: response.request_id,
-        model_version: response.ranking_model,
-        data_version: response.data_version,
-        rule_version: response.rule_version,
       });
       router.push(`/recommendations/${encodeURIComponent(response.request_id)}`);
     } catch (error) {

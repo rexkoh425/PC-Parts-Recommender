@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { categoryLabels, formatFreshness, formatScore, formatSgd, humanizeToken, profileLabels } from "@/lib/format";
-import type { BuildSummary, ComponentCategory } from "@/lib/types";
+import { categoryLabels, formatFreshness, formatScore, formatSgd, humanizeToken, profileLabels } from "../lib/format";
+import type { BuildSummary, ComponentCategory } from "../lib/types";
 import { ScoreMeter } from "./score-meter";
 import { StatusPill } from "./status-pill";
 
@@ -26,6 +26,10 @@ export function BuildCard({
   const explanationText = typeof explanation === "string" ? explanation : explanation?.text;
   const keyCategories: ComponentCategory[] = ["cpu", "gpu", "memory", "storage"];
   const scoreEntries = Object.entries(build.workload_scores ?? {}).slice(0, 2);
+  const objectiveScores = [
+    ["Value", build.value_score],
+    ["Upgradeability", build.upgradeability_score],
+  ].filter((entry): entry is [string, number] => typeof entry[1] === "number");
 
   return (
     <article
@@ -52,6 +56,24 @@ export function BuildCard({
             ? `${formatSgd(budgetSgd - build.total_price_sgd)} budget headroom`
             : `${formatSgd(build.total_price_sgd - budgetSgd)} above budget`}
         </p>
+      )}
+
+      {objectiveScores.length > 0 && (
+        <dl
+          className="build-card__objective-scores"
+          aria-label="Build objective scores"
+          data-testid="build-decision-scores"
+        >
+          {objectiveScores.map(([label, score]) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd aria-label={`${label} score ${formatScore(score)} out of 100`}>
+                {formatScore(score)}
+                <small>/100</small>
+              </dd>
+            </div>
+          ))}
+        </dl>
       )}
 
       <ul className="component-preview">
@@ -88,13 +110,18 @@ export function BuildCard({
       </div>
 
       <div className="build-card__actions">
-        <Link className="button button--primary" href={`/builds/${encodeURIComponent(build.build_id)}`}>
+        <Link
+          className="button button--primary"
+          href={`/builds/${encodeURIComponent(build.build_id)}`}
+          aria-label={`View ${profileLabels[build.profile]} build`}
+        >
           View build
         </Link>
         <button
           className="button button--secondary button--icon"
           type="button"
           aria-pressed={saved}
+          aria-label={`${saved ? "Remove" : "Save"} ${profileLabels[build.profile]} build${saved ? " from saved builds" : ""}`}
           onClick={() => onToggleSaved(build)}
         >
           <span aria-hidden="true">{saved ? "◆" : "◇"}</span>
