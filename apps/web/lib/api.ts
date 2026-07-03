@@ -196,4 +196,159 @@ function cacheResponse(response: GenerateBuildsResponse): void {
   }
 }
 
+function readCachedRequest(requestId: string): GenerateBuildsResponse | undefined {
+  if (typeof window === "undefined") return undefined;
+  const value = window.sessionStorage.getItem(`${requestCachePrefix}${requestId}`);
+  if (!value) return undefined;
+  try {
+    return JSON.parse(value) as GenerateBuildsResponse;
+  } catch {
+    return undefined;
+  }
+}
+
+export function readCachedBuild(buildId: string): BuildResult | undefined {
+  if (typeof window === "undefined") return undefined;
+  const value = window.sessionStorage.getItem(`${buildCachePrefix}${buildId}`);
+  if (!value) return undefined;
+  try {
+    return JSON.parse(value) as BuildResult;
+  } catch {
+    return undefined;
+  }
+}
+
+export async function generateBuilds(
+  request: BuildRequest,
+  options: ApiRequestOptions = {},
+): Promise<GenerateBuildsResponse> {
+  const response = USING_DEMO_DATA
+    ? generateDemoBuilds(request)
+    : await apiRequest<GenerateBuildsResponse>(
+        "/v1/builds/generate",
+        {
+          method: "POST",
+          body: JSON.stringify(request),
+        },
+        options,
+      );
+  const enriched = { ...response, request: response.request ?? request };
+  cacheResponse(enriched);
+  return enriched;
+}
+
+export async function getRequestBuilds(
+  requestId: string,
+  options: ApiRequestOptions = {},
+): Promise<GenerateBuildsResponse> {
+  if (USING_DEMO_DATA) {
+    const cached = readCachedRequest(requestId);
+    if (cached) return cached;
+    throw new ApiError("This demo recommendation is not available in this browser session.", 404);
+  }
+  try {
+    const response = await apiRequest<GenerateBuildsResponse>(
+      `/v1/requests/${encodeURIComponent(requestId)}/builds`,
+      undefined,
+      options,
+    );
+    cacheResponse(response);
+    return response;
+  } catch (error) {
+    if (options.signal?.aborted) throw error;
+    const cached = readCachedRequest(requestId);
+    if (cached) return cached;
+    throw error;
+  }
+}
+
+export async function getBuild(
+  buildId: string,
+  options: ApiRequestOptions = {},
+): Promise<BuildResult> {
+  if (USING_DEMO_DATA) {
+    const cached = readCachedBuild(buildId);
+    if (cached) return cached;
+    throw new ApiError("This demo build is not available in this browser session.", 404);
+  }
+  try {
+    const response = await apiRequest<BuildResult | { build: BuildResult }>(
+      `/v1/builds/${encodeURIComponent(buildId)}`,
+      undefined,
+      options,
+    );
+    const build = "build" in response ? response.build : response;
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem(`${buildCachePrefix}${build.build_id}`, JSON.stringify(build));
+    }
+    return build;
+  } catch (error) {
+    if (options.signal?.aborted) throw error;
+    const cached = readCachedBuild(buildId);
+    if (cached) return cached;
+    throw error;
+  }
+}
+
+export function createBuildShare(
+  buildId: string,
+  options: ApiRequestOptions = {},
+): Promise<BuildShareCreated> {
+  if (USING_DEMO_DATA) {
+    return Promise.reject(
+      new ApiError("Durable build sharing is not available in the public demo.", 503),
+    );
+  }
+  return apiRequest<BuildShareCreated>(
+    `/v1/builds/${encodeURIComponent(buildId)}/shares`,
+    { method: "POST" },
+    options,
+  );
+}
+
+export function getBuildShare(
+  shareId: string,
+  options: ApiRequestOptions = {},
+): Promise<PublicBuildShare> {
+  if (USING_DEMO_DATA) {
+    return Promise.reject(
+      new ApiError("Durable build sharing is not available in the public demo.", 503),
+    );
+  }
+  return apiRequest<PublicBuildShare>(
+    `/v1/build-shares/${encodeURIComponent(shareId)}`,
+    undefined,
+    options,
+  );
+}
+
+export async function searchProducts(
+  request: ProductSearchRequest,
+  options: ApiRequestOptions = {},
+): Promise<ProductSearchResponse> {
+  if (USING_DEMO_DATA) return searchDemoProducts(request);
+  return apiRequest<ProductSearchResponse>(
+    "/v1/products/search",
+    {
+      method: "POST",
+      body: JSON.stringify(request),
+    },
+    options,
+  );
+}
+
+export function getProduct(
+  productId: string,
+  options: ApiRequestOptions = {},
+): Promise<ProductDetail> {
+  // Defer controlled-demo lookup so an invalid shared product ID rejects the
+  // promise just like an API 404 instead of escaping synchronously in React.
+  if (USING_DEMO_DATA) return Promise.resolve().then(() => getDemoProduct(productId));
+  return apiRequest<ProductDetail>(
+    `/v1/products/${encodeURIComponent(productId)}`,
+    undefined,
+    options,
+  );
+}
+
 // TODO: rest of this module still to come.
