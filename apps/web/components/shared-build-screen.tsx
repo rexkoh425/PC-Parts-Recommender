@@ -12,11 +12,12 @@ export function SharedBuildScreen() {
   const searchParams = useSearchParams();
   const localSnapshot = useMemo(() => decodeSharedBuild(searchParams.get("build")), [searchParams]);
   const shareId = searchParams.get("share");
+  const shareIdIsValid = Boolean(shareId && /^[A-Za-z0-9_-]{1,80}$/.test(shareId));
   const [serverSnapshot, setServerSnapshot] = useState<SharedBuildSnapshot | null>(null);
   const [serverError, setServerError] = useState("");
 
   useEffect(() => {
-    if (!shareId || !/^[A-Za-z0-9_-]{1,80}$/.test(shareId)) return;
+    if (!shareIdIsValid || !shareId) return;
     let active = true;
     const controller = new AbortController();
     getBuildShare(shareId, { signal: controller.signal })
@@ -32,14 +33,18 @@ export function SharedBuildScreen() {
       active = false;
       controller.abort();
     };
-  }, [shareId]);
+  }, [shareId, shareIdIsValid]);
 
   const snapshot = shareId ? serverSnapshot : localSnapshot;
+  const verifiedServerRecord = Boolean(shareId && serverSnapshot);
+  const effectiveServerError = shareId && !shareIdIsValid
+    ? "The public share identifier is malformed."
+    : serverError;
 
-  if (shareId && !serverSnapshot && !serverError) {
+  if (shareIdIsValid && !serverSnapshot && !serverError) {
     return (
       <main className="shell state-page shared-page" aria-busy="true">
-        <p>Loading shared build snapshotâ€¦</p>
+        <p>Loading shared build snapshot…</p>
       </main>
     );
   }
@@ -51,7 +56,7 @@ export function SharedBuildScreen() {
           <span className="state-card__icon" aria-hidden="true">?</span>
           <p className="eyebrow">Shared snapshot unavailable</p>
           <h1>This build link is invalid or incomplete.</h1>
-          <p>{serverError || "Shared links contain a bounded build snapshot. They do not expose a saved account, retailer checkout, or current market data."}</p>
+          <p>{effectiveServerError || "Shared links contain a bounded build snapshot. They do not expose a saved account, retailer checkout, or current market data."}</p>
           <Link className="button button--primary" href="/">
             Generate a build
           </Link>
@@ -70,14 +75,18 @@ export function SharedBuildScreen() {
 
       <header className="detail-header">
         <div>
-          <p className="eyebrow">Shared build snapshot</p>
+          <p className="eyebrow">{verifiedServerRecord ? "Server-recorded build snapshot" : "Unsigned browser snapshot"}</p>
           <h1>{profileLabels[snapshot.profile]}</h1>
           <p className="lede">
-            This is a portable snapshot of a compatible recommendation at generation time. Re-run
-            the build before buying to check the current catalogue, stock, and prices.
+            {verifiedServerRecord
+              ? "This is a server-recorded recommendation snapshot from generation time. Re-run the build before buying to check the current catalogue, stock, and prices."
+              : "This link contains editable browser-provided data. Its prices, scores, and claimed compatibility are unverified; generate a new build before relying on it."}
           </p>
         </div>
-        <StatusPill status={snapshot.compatibility_status} />
+        <StatusPill
+          status={verifiedServerRecord ? snapshot.compatibility_status : "unknown"}
+          label={verifiedServerRecord ? undefined : "Unverified snapshot"}
+        />
       </header>
 
       <div className="detail-layout">
@@ -153,7 +162,10 @@ export function SharedBuildScreen() {
             {typeof snapshot.upgradeability_score === "number" && <div><dt>Upgradeability</dt><dd>{formatScore(snapshot.upgradeability_score)}</dd></div>}
             {typeof snapshot.estimated_peak_power_w === "number" && <div><dt>Estimated peak</dt><dd>{Math.round(snapshot.estimated_peak_power_w)} W</dd></div>}
           </dl>
-          <StatusPill status={snapshot.compatibility_status} />
+          <StatusPill
+            status={verifiedServerRecord ? snapshot.compatibility_status : "unknown"}
+            label={verifiedServerRecord ? undefined : "Compatibility claim unverified"}
+          />
           <Link className="button button--primary button--large" href="/">Re-run with current data</Link>
           <div className="summary-provenance">
             <div><span>Generated</span><strong>{formatFreshness(snapshot.generated_at).replace("Updated ", "")}</strong></div>

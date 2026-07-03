@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { searchProducts, USING_DEMO_DATA } from "@/lib/api";
+import {
+  productImpressionContext,
+  rememberProductImpression,
+  searchProducts,
+  USING_DEMO_DATA,
+} from "@/lib/api";
 import {
   formatEvidenceTimestamp,
   observedStockLabel,
@@ -66,8 +71,23 @@ function CatalogueSkeleton() {
   );
 }
 
-function ProductResultCard({ product }: { product: ProductSearchItem }) {
+function ProductResultCard({
+  product,
+  queryId,
+  rankPosition,
+}: {
+  product: ProductSearchItem;
+  queryId: string;
+  rankPosition: number;
+}) {
   const priceKnown = typeof product.lowest_price_sgd === "number";
+  const impressionContext = productImpressionContext({
+    surface: "catalogue_result",
+    sourceId: queryId,
+    productId: product.product_id,
+    rankPosition,
+  });
+  const productHref = `/products/${encodeURIComponent(product.product_id)}?impression=${encodeURIComponent(impressionContext)}`;
   return (
     <article className="catalogue-card">
       <div className="catalogue-card__topline">
@@ -103,7 +123,9 @@ function ProductResultCard({ product }: { product: ProductSearchItem }) {
       </p>
       <Link
         className="button button--secondary"
-        href={`/products/${encodeURIComponent(product.product_id)}`}
+        href={productHref}
+        aria-label={`Inspect evidence for ${product.canonical_name}`}
+        onClick={() => rememberProductImpression(product, impressionContext)}
       >
         Inspect evidence
         <span aria-hidden="true">→</span>
@@ -111,6 +133,7 @@ function ProductResultCard({ product }: { product: ProductSearchItem }) {
       <Link
         className="catalogue-card__compare"
         href={`/compare?products=${encodeURIComponent(product.product_id)}`}
+        aria-label={`Compare ${product.canonical_name}`}
       >
         Compare this product
       </Link>
@@ -485,8 +508,13 @@ export function CatalogueScreen({
 
           {response.products.length ? (
             <section className="catalogue-grid" aria-label="Catalogue search results">
-              {response.products.map((product) => (
-                <ProductResultCard key={product.product_id} product={product} />
+              {response.products.map((product, index) => (
+                <ProductResultCard
+                  key={product.product_id}
+                  product={product}
+                  queryId={response.query_id}
+                  rankPosition={index + 1}
+                />
               ))}
             </section>
           ) : (
