@@ -12,12 +12,13 @@
     "start": "next start",
     "dev:sites": "vinext dev",
     "build:sites": "vinext build",
-    "start:sites": "vinext start",
+    "start:sites": "node build/start-sites.mjs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:sites:smoke": "playwright test --config playwright.sites.config.ts"
   },
   "dependencies": {
     "next": "16.2.11",
