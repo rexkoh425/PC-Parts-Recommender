@@ -6,6 +6,7 @@ const commonComponents = [
     product_id: "cpu_1",
     canonical_name: "AMD Ryzen 7 9700X",
     retailer: "Local Parts SG",
+    listing_url: "https://example.com/cpu-offer",
     price_sgd: 489,
     selection_reasons: ["Strong compilation and gaming balance."],
     performance_signals: [
@@ -282,13 +283,23 @@ test("generates, inspects, and saves a compatible recommendation", async ({ page
   await page.getByRole("link", { name: "View build" }).first().click();
 
   await expect(page).toHaveURL(/\/builds\/build_1$/);
+  await expect(page.getByTestId("budget-breakdown")).toBeVisible();
   await expect(page.getByTestId("component-row")).toHaveCount(8);
+  await expect(page.getByRole("link", { name: /View price history evidence for/ })).toHaveCount(8);
+  await expect(page.getByRole("link", { name: /View review evidence for/ })).toHaveCount(8);
+  await expect(
+    page.getByRole("link", { name: "Open recorded retailer price for AMD Ryzen 7 9700X" }),
+  ).toHaveAttribute("href", "https://example.com/cpu-offer");
   await expect(page.getByText("Observed", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/Predicted · high/).first()).toBeVisible();
 
   await page.getByRole("link", { name: "Saved builds" }).click();
-  await expect(page.getByRole("heading", { name: "Saved builds" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Saved builds", exact: true })).toBeVisible();
   await expect(page.getByText("Best overall", { exact: true })).toBeVisible();
+  await page.getByTestId("saved-build-select").check();
+  await expect(page.getByRole("button", { name: "Re-run with current prices" })).toBeEnabled();
+  await page.getByRole("button", { name: "Re-run with current prices" }).click();
+  await expect(page).toHaveURL(/\/recommendations\/req_test$/);
 });
 
 test("keeps the evidence destination available in the mobile header", async ({ page }) => {
@@ -296,8 +307,8 @@ test("keeps the evidence destination available in the mobile header", async ({ p
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/builds/build_1");
 
-  await expect(page.getByRole("link", { name: "Evidence" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Compare" })).toBeHidden();
+  await expect(page.getByRole("link", { name: "Evidence", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Compare", exact: true })).toBeHidden();
 });
 
 test("shares a safe generation-time snapshot without retailer or ownership data", async ({ page }) => {
