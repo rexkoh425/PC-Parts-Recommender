@@ -1,6 +1,16 @@
 groups:
   - name: pcbr-core-availability
     rules:
+      - alert: PcbrApiMetricsTargetDown
+        expr: >-
+          up{job="pcbr-api"} != 1 or absent(up{job="pcbr-api"})
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PCBR API metrics target is unavailable"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
       - alert: PcbrCoreEndpointDown
         expr: probe_success{job="core-http-probes",criticality="core"} == 0
         for: 2m
@@ -79,7 +89,7 @@ groups:
     rules:
       - alert: PcbrCatalogueDataStale
         expr: >-
-          max(pcbr_catalogue_freshness_status{status=~"stale|degraded"}) == 1
+          max(pcbr_data_stale{kind=~"catalogue|prices"}) == 1
         for: 5m
         labels:
           severity: critical
@@ -87,13 +97,42 @@ groups:
           summary: "PCBR catalogue or price data is stale or cannot be verified"
           runbook: "docs/deployment-runbook.md#incident-response"
 
+      - alert: PcbrFreshnessTimestampUnavailable
+        expr: >-
+          min(pcbr_data_timestamp_available{kind=~"catalogue|prices"}) == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PCBR catalogue or price freshness timestamp is unavailable"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
       - alert: PcbrCatalogueFreshnessProbeFailed
-        expr: pcbr_catalogue_freshness_probe_success == 0
+        expr: >-
+          pcbr_catalogue_freshness_probe_success == 0
+          or absent(pcbr_catalogue_freshness_probe_success)
         for: 5m
         labels:
           severity: critical
         annotations:
           summary: "PCBR internal catalogue freshness probe is failing"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrFreshnessMetricSeriesMissing
+        expr: >-
+          (up{job="pcbr-api"} == 1
+          unless on(job, instance) pcbr_data_stale{kind="catalogue"})
+          or (up{job="pcbr-api"} == 1
+          unless on(job, instance) pcbr_data_stale{kind="prices"})
+          or (up{job="pcbr-api"} == 1
+          unless on(job, instance) pcbr_data_timestamp_available{kind="catalogue"})
+          or (up{job="pcbr-api"} == 1
+          unless on(job, instance) pcbr_data_timestamp_available{kind="prices"})
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PCBR bounded catalogue freshness metric series are incomplete"
           runbook: "docs/deployment-runbook.md#incident-response"
 
       - alert: PcbrMappingEvidenceUnavailable
