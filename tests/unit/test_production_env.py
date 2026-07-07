@@ -44,6 +44,8 @@ def test_contract_fixture_refuses_to_overwrite_existing_root(tmp_path: Path) -> 
         ("PCBR_API_BUILD_GENERATION_MAX_CONCURRENCY", "17", "between 1 and 16"),
         ("PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE", "-1", "between 0 and 256"),
         ("PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE", "257", "between 0 and 256"),
+        ("PCBR_API_IMPRESSION_TTL_MINUTES", "0", "between 1 and 1440"),
+        ("PCBR_API_IMPRESSION_TTL_MINUTES", "1441", "between 1 and 1440"),
         (
             "PCBR_API_PIPELINE_OPERATIONS_WINDOW_HOURS",
             "0",
@@ -146,6 +148,22 @@ def test_cleartext_database_url_and_wildcard_cors_are_rejected(tmp_path: Path) -
     assert any("CORS" in error for error in result["errors"])
 
 
+def test_cleartext_impression_signing_key_is_rejected(tmp_path: Path) -> None:
+    env_file = _write_valid_environment(tmp_path)
+    env_file.write_text(
+        env_file.read_text(encoding="utf-8")
+        + "PCBR_API_IMPRESSION_SIGNING_KEY=must-not-live-in-an-env-file-0123456789\n",
+        encoding="utf-8",
+    )
+
+    result = validate(env_file)
+
+    assert result["status"] == "invalid"
+    assert any(
+        "PCBR_API_IMPRESSION_SIGNING_KEY must not be stored" in error for error in result["errors"]
+    )
+
+
 def test_readiness_artifact_version_mismatch_is_rejected(tmp_path: Path) -> None:
     env_file = _write_valid_environment(tmp_path)
     values, parse_errors = _parse_env(env_file)
@@ -205,6 +223,47 @@ def test_review_evidence_tampering_is_rejected_by_preflight(tmp_path: Path) -> N
 
     assert result["status"] == "invalid"
     assert any("review evidence SHA-256" in error for error in result["errors"])
+
+
+def test_authorized_source_artifact_tampering_is_rejected_by_preflight(
+    tmp_path: Path,
+) -> None:
+    env_file = _write_valid_environment(tmp_path)
+    values, parse_errors = _parse_env(env_file)
+    assert not parse_errors
+    manifest_path = Path(values["PCBR_SERVING_RELEASE_DIR"]) / "serving-manifest.json"
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    raw_snapshot_path = manifest_path.parent / payload["source_release"]["raw_snapshot"]["path"]
+    raw_snapshot_path.write_bytes(raw_snapshot_path.read_bytes() + b"tampered")
+
+    result = validate(env_file)
+
+    assert result["status"] == "invalid"
+    assert any(
+        "authorized source raw snapshot size does not match" in error
+        for error in result["errors"]
+    )
+
+
+def test_current_source_registry_drift_is_rejected_independently_of_release_bundle(
+    tmp_path: Path,
+) -> None:
+    env_file = _write_valid_environment(tmp_path)
+    values, parse_errors = _parse_env(env_file)
+    assert not parse_errors
+    registry_path = Path(values["PCBR_SOURCE_REGISTRY_FILE"])
+    registry_path.write_text(
+        registry_path.read_text(encoding="utf-8") + "# revoked source\n",
+        encoding="utf-8",
+    )
+
+    result = validate(env_file)
+
+    assert result["status"] == "invalid"
+    assert any(
+        "current source registry size does not match PCBR_SOURCE_REGISTRY_FILE" in error
+        for error in result["errors"]
+    )
 
 
 def test_non_ready_release_artifact_is_rejected(tmp_path: Path) -> None:

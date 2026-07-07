@@ -22,6 +22,7 @@ from pc_build_recommender.application import (
     ApplicationBuildGenerationResponse,
     ApplicationServices,
     ApplicationVersions,
+    RequestConflictError,
 )
 from pc_build_recommender.catalog import (
     BuildShareRecord,
@@ -36,6 +37,7 @@ from pc_build_recommender.catalog import (
 from pc_build_recommender.domain import (
     BuildGenerationRequest,
     BuildProfile,
+    InteractionTrustLevel,
     InteractionType,
     WorkloadName,
     WorkloadPreference,
@@ -306,7 +308,13 @@ def test_processed_readiness_requires_all_component_categories() -> None:
 def test_stale_catalogue_and_prices_fail_closed_for_readiness_and_production_use() -> None:
     response = _optimizer_response(OptimizationStatus.INFEASIBLE, ran=False)
     service, settings = _core_with_response(response)
-    stale_timestamp = datetime.now(UTC) - timedelta(hours=settings.stale_after_hours + 1)
+    stale_timestamp = datetime.now(UTC) - timedelta(
+        hours=max(
+            settings.catalogue_stale_after_hours,
+            settings.price_stale_after_hours,
+        )
+        + 1
+    )
     service.processed_data = cast(
         Any,
         SimpleNamespace(
@@ -339,13 +347,303 @@ def test_stale_catalogue_and_prices_fail_closed_for_readiness_and_production_use
     assert readiness.json()["checks"]["production_catalog_policy"] == "not_ready"
     assert freshness.status_code == 200
     assert freshness.json()["status"] == "stale"
+    assert freshness.json()["catalogue_status"] == "stale"
+    assert freshness.json()["price_status"] == "stale"
     assert freshness.json()["production_ready"] is False
+    assert datetime.fromisoformat(freshness.json()["last_catalog_update"]) == stale_timestamp
+    assert datetime.fromisoformat(freshness.json()["prices_updated_at"]) == stale_timestamp
     assert freshness.json()["readiness_blockers"] == [
         f"Catalogue data is stale: last_catalog_update exceeds "
-        f"stale_after_hours={settings.stale_after_hours}.",
+        f"stale_after_hours={settings.catalogue_stale_after_hours}.",
         f"Price data is stale: prices_updated_at exceeds "
-        f"stale_after_hours={settings.stale_after_hours}.",
+        f"stale_after_hours={settings.price_stale_after_hours}.",
     ]
+
+
+@pytest.mark.integration
+def test_source_authority_expiry_flips_production_readiness_without_restart() -> None:
+    response = _optimizer_response(OptimizationStatus.INFEASIBLE, ran=False)
+    service, _ = _core_with_response(response)
+    service.settings = service.settings.model_copy(
+        update={"environment": "production", "service_mode": "processed_catalog"}
+    )
+    now = datetime.now(UTC)
+    service.processed_data = cast(
+        Any,
+        SimpleNamespace(
+            products=tuple(
+                SimpleNamespace(category=category, updated_at=now, provenance=())
+                for category in DomainCategory
+            ),
+            price_snapshots=(
+                SimpleNamespace(listing_id="listing-current", observed_at=now),
+            ),
+            listings=(),
+            listing_provenance=(),
+            readiness=SimpleNamespace(blockers=lambda: ()),
+            stats=SimpleNamespace(
+                product_count=len(DomainCategory),
+                matched_listing_count=1,
+                has_complete_priced_coverage=True,
+                has_complete_in_stock_coverage=True,
+            ),
+        ),
+    )
+    service._release_artifact_verification = "verified"
+    service._source_authority_expires_at = now + timedelta(minutes=5)
+
+    active_readiness = asyncio.run(service.readiness_checks())
+    active_freshness = asyncio.run(service.freshness())
+
+    assert active_readiness["source_authority"] == "ready"
+    assert active_freshness.production_ready is True
+    assert active_freshness.source_authority_expires_at is not None
+
+    service._source_authority_expires_at = now - timedelta(microseconds=1)
+
+    expired_readiness = asyncio.run(service.readiness_checks())
+    expired_freshness = asyncio.run(service.freshness())
+
+    assert expired_readiness["source_authority"] == "not_ready"
+    assert expired_freshness.production_ready is False
+    assert expired_freshness.readiness_blockers == [
+        "Signed retailer-source authority is expired or its earliest expiry is unavailable."
+    ]
+
+    service._source_authority_expires_at = datetime.now()
+
+    assert asyncio.run(service.readiness_checks())["source_authority"] == "not_ready"
+    assert asyncio.run(service.freshness()).source_authority_expires_at is None
+
+
+@pytest.mark.integration
+def test_one_fresh_row_cannot_mask_stale_catalogue_or_listing_price_evidence() -> None:
+    response = _optimizer_response(OptimizationStatus.INFEASIBLE, ran=False)
+    service, settings = _core_with_response(response)
+    fresh_timestamp = datetime.now(UTC)
+    stale_timestamp = fresh_timestamp - timedelta(
+        hours=max(
+            settings.catalogue_stale_after_hours,
+            settings.price_stale_after_hours,
+        )
+        + 1
+    )
+    service.processed_data = cast(
+        Any,
+        SimpleNamespace(
+            products=(
+                *(
+                    SimpleNamespace(
+                        category=category,
+                        updated_at=fresh_timestamp,
+                        provenance=(),
+                    )
+                    for category in DomainCategory
+                ),
+                SimpleNamespace(
+                    category=DomainCategory.CPU,
+                    updated_at=stale_timestamp,
+                    provenance=(),
+                ),
+            ),
+            price_snapshots=(
+                SimpleNamespace(listing_id="listing-fresh", observed_at=fresh_timestamp),
+                SimpleNamespace(listing_id="listing-stale", observed_at=stale_timestamp),
+            ),
+            listings=(),
+            listing_provenance=(),
+            readiness=SimpleNamespace(blockers=lambda: ()),
+            stats=SimpleNamespace(
+                product_count=len(DomainCategory) + 1,
+                matched_listing_count=2,
+                has_complete_priced_coverage=True,
+                has_complete_in_stock_coverage=True,
+            ),
+        ),
+    )
+
+    with TestClient(create_app(settings=settings, service=service)) as client:
+        readiness = client.get("/health/ready")
+        freshness = client.get("/v1/system/freshness")
+
+    assert readiness.status_code == 503
+    assert freshness.status_code == 200
+    assert freshness.json()["status"] == "stale"
+    assert freshness.json()["catalogue_status"] == "stale"
+    assert freshness.json()["price_status"] == "stale"
+    assert freshness.json()["production_ready"] is False
+    assert datetime.fromisoformat(freshness.json()["last_catalog_update"]) == stale_timestamp
+    assert datetime.fromisoformat(freshness.json()["prices_updated_at"]) == stale_timestamp
+
+
+@pytest.mark.integration
+def test_catalogue_and_price_freshness_use_independent_cadences() -> None:
+    response = _optimizer_response(OptimizationStatus.INFEASIBLE, ran=False)
+    service, settings = _core_with_response(response)
+    assert settings.catalogue_stale_after_hours == 24 * 7
+    assert settings.price_stale_after_hours == 24
+    observed_at = datetime.now(UTC) - timedelta(hours=48)
+    service.processed_data = cast(
+        Any,
+        SimpleNamespace(
+            products=tuple(
+                SimpleNamespace(category=category, updated_at=observed_at, provenance=())
+                for category in DomainCategory
+            ),
+            price_snapshots=(
+                SimpleNamespace(listing_id="listing-48-hours-old", observed_at=observed_at),
+            ),
+            listings=(),
+            listing_provenance=(),
+            readiness=SimpleNamespace(blockers=lambda: ()),
+            stats=SimpleNamespace(
+                product_count=len(DomainCategory),
+                matched_listing_count=1,
+                has_complete_priced_coverage=True,
+                has_complete_in_stock_coverage=True,
+            ),
+        ),
+    )
+
+    with TestClient(create_app(settings=settings, service=service)) as client:
+        freshness = client.get("/v1/system/freshness")
+
+    assert freshness.status_code == 200
+    assert freshness.json()["status"] == "stale"
+    assert freshness.json()["catalogue_status"] == "fresh"
+    assert freshness.json()["price_status"] == "stale"
+    assert freshness.json()["catalogue_stale_after_hours"] == 168
+    assert freshness.json()["price_stale_after_hours"] == 24
+    assert freshness.json()["production_ready"] is False
+    assert freshness.json()["readiness_blockers"] == [
+        "Price data is stale: prices_updated_at exceeds stale_after_hours=24."
+    ]
+
+
+@pytest.mark.integration
+def test_missing_price_freshness_is_explicit_and_fails_closed() -> None:
+    response = _optimizer_response(OptimizationStatus.INFEASIBLE, ran=False)
+    service, settings = _core_with_response(response)
+    observed_at = datetime.now(UTC)
+    service.processed_data = cast(
+        Any,
+        SimpleNamespace(
+            products=tuple(
+                SimpleNamespace(category=category, updated_at=observed_at, provenance=())
+                for category in DomainCategory
+            ),
+            price_snapshots=(),
+            listings=(),
+            listing_provenance=(),
+            readiness=SimpleNamespace(blockers=lambda: ()),
+            stats=SimpleNamespace(
+                product_count=len(DomainCategory),
+                matched_listing_count=0,
+                has_complete_priced_coverage=True,
+                has_complete_in_stock_coverage=True,
+            ),
+        ),
+    )
+
+    with TestClient(create_app(settings=settings, service=service)) as client:
+        readiness = client.get("/health/ready")
+        freshness = client.get("/v1/system/freshness")
+
+    assert readiness.status_code == 503
+    assert freshness.status_code == 200
+    assert freshness.json()["status"] == "degraded"
+    assert freshness.json()["catalogue_status"] == "fresh"
+    assert freshness.json()["price_status"] == "degraded"
+    assert freshness.json()["prices_updated_at"] is None
+    assert freshness.json()["production_ready"] is False
+    assert freshness.json()["readiness_blockers"] == [
+        "Price freshness cannot be verified because no price snapshots are loaded."
+    ]
+
+
+@pytest.mark.integration
+def test_future_freshness_timestamps_fail_closed_as_degraded() -> None:
+    response = _optimizer_response(OptimizationStatus.INFEASIBLE, ran=False)
+    service, settings = _core_with_response(response)
+    future_timestamp = datetime.now(UTC) + timedelta(hours=1)
+    service.processed_data = cast(
+        Any,
+        SimpleNamespace(
+            products=tuple(
+                SimpleNamespace(category=category, updated_at=future_timestamp, provenance=())
+                for category in DomainCategory
+            ),
+            price_snapshots=(
+                SimpleNamespace(listing_id="listing-future", observed_at=future_timestamp),
+            ),
+            listings=(),
+            listing_provenance=(),
+            readiness=SimpleNamespace(blockers=lambda: ()),
+            stats=SimpleNamespace(
+                product_count=len(DomainCategory),
+                matched_listing_count=1,
+                has_complete_priced_coverage=True,
+                has_complete_in_stock_coverage=True,
+            ),
+        ),
+    )
+
+    with TestClient(create_app(settings=settings, service=service)) as client:
+        readiness = client.get("/health/ready")
+        freshness = client.get("/v1/system/freshness")
+
+    assert readiness.status_code == 503
+    assert freshness.status_code == 200
+    assert freshness.json()["status"] == "degraded"
+    assert freshness.json()["catalogue_status"] == "degraded"
+    assert freshness.json()["price_status"] == "degraded"
+    assert freshness.json()["production_ready"] is False
+    assert freshness.json()["readiness_blockers"] == [
+        "Catalogue freshness cannot be verified because 8 timestamp value(s) are in the future.",
+        "Price freshness cannot be verified because 1 timestamp value(s) are in the future.",
+    ]
+
+
+@pytest.mark.integration
+def test_unverifiable_catalogue_timestamps_return_degraded_instead_of_raising() -> None:
+    response = _optimizer_response(OptimizationStatus.INFEASIBLE, ran=False)
+    service, settings = _core_with_response(response)
+    observed_at = datetime.now(UTC)
+    service.processed_data = cast(
+        Any,
+        SimpleNamespace(
+            products=tuple(
+                SimpleNamespace(
+                    category=category,
+                    updated_at=observed_at.replace(tzinfo=None),
+                    provenance=(),
+                )
+                for category in DomainCategory
+            ),
+            price_snapshots=(
+                SimpleNamespace(listing_id="listing-current", observed_at=observed_at),
+            ),
+            listings=(),
+            listing_provenance=(),
+            readiness=SimpleNamespace(blockers=lambda: ()),
+            stats=SimpleNamespace(
+                product_count=len(DomainCategory),
+                matched_listing_count=1,
+                has_complete_priced_coverage=True,
+                has_complete_in_stock_coverage=True,
+            ),
+        ),
+    )
+
+    with TestClient(create_app(settings=settings, service=service)) as client:
+        freshness = client.get("/v1/system/freshness")
+
+    assert freshness.status_code == 200
+    assert freshness.json()["status"] == "degraded"
+    assert freshness.json()["catalogue_status"] == "degraded"
+    assert freshness.json()["price_status"] == "fresh"
+    assert freshness.json()["last_catalog_update"] is None
+    assert freshness.json()["production_ready"] is False
 
 
 @pytest.mark.integration
@@ -404,6 +702,56 @@ def test_startup_and_metrics_scrape_refresh_freshness_without_public_freshness_c
     assert service.freshness_calls == 2
     assert 'pcbr_catalogue_freshness_status{status="fresh"} 1' in metrics.text
     assert "pcbr_catalogue_freshness_probe_success 1" in metrics.text
+    assert 'pcbr_data_timestamp_available{kind="catalogue"} 1' in metrics.text
+    assert 'pcbr_data_timestamp_available{kind="prices"} 1' in metrics.text
+    assert 'pcbr_data_stale{kind="catalogue"} 0' in metrics.text
+    assert 'pcbr_data_stale{kind="prices"} 0' in metrics.text
+
+
+@pytest.mark.integration
+def test_metrics_scrape_records_missing_price_timestamp_without_a_public_freshness_call() -> None:
+    class MissingPriceFreshnessService(InMemoryRecommendationService):
+        async def freshness(self) -> Any:
+            response = await super().freshness()
+            return response.model_copy(
+                update={
+                    "status": "degraded",
+                    "price_status": "degraded",
+                    "prices_updated_at": None,
+                    "production_ready": False,
+                    "readiness_blockers": ["Price freshness evidence is unavailable."],
+                }
+            )
+
+    settings = ApiSettings(environment="test")
+    service = MissingPriceFreshnessService(settings)
+    with TestClient(create_app(settings=settings, service=service)) as client:
+        metrics = client.get("/metrics")
+
+    assert metrics.status_code == 200
+    assert 'pcbr_data_timestamp_available{kind="catalogue"} 1' in metrics.text
+    assert 'pcbr_data_timestamp_available{kind="prices"} 0' in metrics.text
+    assert 'pcbr_data_stale{kind="catalogue"} 0' in metrics.text
+    assert 'pcbr_data_stale{kind="prices"} 1' in metrics.text
+
+
+@pytest.mark.integration
+def test_metrics_scrape_fails_closed_when_internal_freshness_probe_fails() -> None:
+    class FailingFreshnessService(InMemoryRecommendationService):
+        async def freshness(self) -> Any:
+            raise RuntimeError("freshness backend unavailable")
+
+    settings = ApiSettings(environment="test")
+    service = FailingFreshnessService(settings)
+    with TestClient(create_app(settings=settings, service=service)) as client:
+        metrics = client.get("/metrics")
+
+    assert metrics.status_code == 200
+    assert 'pcbr_catalogue_freshness_status{status="degraded"} 1' in metrics.text
+    assert "pcbr_catalogue_production_ready 0" in metrics.text
+    assert "pcbr_catalogue_freshness_probe_success 0" in metrics.text
+    assert 'pcbr_data_stale{kind="catalogue"} 1' in metrics.text
+    assert 'pcbr_data_stale{kind="prices"} 1' in metrics.text
 
 
 @pytest.mark.integration
@@ -485,6 +833,43 @@ def test_sqlalchemy_store_survives_restart_and_commits_interaction(tmp_path: Pat
     assert stored.stored_at.tzinfo is not None
     assert persisted_event.event_id in event_ids
     restarted_engine.dispose()
+
+
+@pytest.mark.integration
+def test_sqlalchemy_interaction_write_is_idempotent_and_rejects_key_reuse(
+    tmp_path: Path,
+) -> None:
+    database_url = f"sqlite:///{(tmp_path / 'durable-interaction.db').as_posix()}"
+    engine = create_db_engine(database_url)
+    init_database(engine)
+    store = SqlAlchemyDurableStore(engine)
+    event = DomainInteractionEvent(
+        event_id="evt_idempotent_contract",
+        session_id="session-idempotent",
+        event_type=InteractionType.FEEDBACK_SUBMITTED,
+        impression_id="imp_verified_contract",
+        trust_level=InteractionTrustLevel.VERIFIED_IMPRESSION,
+        idempotency_key_sha256="a" * 64,
+        idempotency_payload_sha256="b" * 64,
+    )
+
+    first = store.put_interaction(event)
+    replay = store.put_interaction(event)
+    conflicting = event.model_copy(update={"idempotency_payload_sha256": "c" * 64})
+
+    assert first.replayed is False
+    assert replay.replayed is True
+    assert replay.event == first.event
+    with pytest.raises(RequestConflictError, match="Idempotency-Key"):
+        store.put_interaction(conflicting)
+    with create_session_factory(engine)() as session:
+        records = list(session.scalars(select(InteractionEventRecord)))
+    assert len(records) == 1
+    assert records[0].trust_level == "verified_impression"
+    assert records[0].impression_id == "imp_verified_contract"
+    assert records[0].idempotency_key_sha256 == "a" * 64
+    assert records[0].idempotency_payload_sha256 == "b" * 64
+    engine.dispose()
 
 
 @pytest.mark.integration
@@ -618,6 +1003,43 @@ def test_semantic_encoder_bundle_path_and_hash_must_be_paired(tmp_path: Path) ->
             buildcores_catalog_path=tmp_path / "catalog.jsonl",
             governed_offers_path=tmp_path / "offers.jsonl",
             semantic_encoder_bundle_path=tmp_path / "encoder",
+        )
+
+
+def test_production_processed_catalog_requires_independent_source_authority_pins(
+    tmp_path: Path,
+) -> None:
+    signing_key = tmp_path / "impression-signing-key.txt"
+    signing_key.write_text("source-authority-test-key-0123456789abcdef", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="requires source_registry_path"):
+        ApiSettings(
+            environment="production",
+            docs_enabled=False,
+            cors_origins=["https://pcbr.example.test"],
+            service_mode="processed_catalog",
+            storage_backend="database",
+            database_url="postgresql+psycopg://pcbr:secret@postgres/pcbr",
+            buildcores_catalog_path=tmp_path / "catalog.jsonl",
+            governed_offers_path=tmp_path / "offers.jsonl",
+            reviewed_mapping_path=tmp_path / "reviewed.json",
+            review_evidence_path=tmp_path / "review-evidence.jsonl",
+            serving_manifest_path=tmp_path / "serving-manifest.json",
+            serving_manifest_sha256="a" * 64,
+            semantic_encoder_bundle_path=tmp_path / "encoders" / ("b" * 64),
+            semantic_encoder_bundle_sha256="b" * 64,
+            impression_signing_key_file=signing_key,
+        )
+
+
+def test_source_authority_path_and_trust_pin_must_be_paired(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="must be configured together"):
+        ApiSettings(
+            environment="test",
+            service_mode="processed_catalog",
+            buildcores_catalog_path=tmp_path / "catalog.jsonl",
+            governed_offers_path=tmp_path / "offers.jsonl",
+            source_registry_path=tmp_path / "source-registry.yaml",
         )
 
 

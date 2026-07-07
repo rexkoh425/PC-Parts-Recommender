@@ -10,6 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 from services.api.core_service import CoreRecommendationService
 from services.api.durability import SqlAlchemyDurableStore
+from services.api.impressions import ACTOR_COOKIE_NAME
 from services.api.main import create_app
 from services.api.settings import ApiSettings
 from sqlalchemy import select
@@ -24,6 +25,8 @@ from pc_build_recommender.catalog import (
     create_db_engine,
     create_session_factory,
     init_database,
+    seed_processed_catalog,
+    session_scope,
 )
 from pc_build_recommender.domain import (
     CanonicalProduct,
@@ -38,6 +41,19 @@ from pc_build_recommender.domain import (
     StockStatus,
 )
 
+
+def _without_impression_tokens(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: _without_impression_tokens(item)
+            for key, item in value.items()
+            if key != "impression_token"
+        }
+    if isinstance(value, list):
+        return [_without_impression_tokens(item) for item in value]
+    return value
+
+
 NOW = datetime(2026, 7, 22, tzinfo=UTC)
 
 
@@ -50,6 +66,7 @@ def _service(
     snapshot_prices: tuple[Decimal, ...] | None = None,
     review_evidence: tuple[ReviewEvidence, ...] = (),
     durable_store: SqlAlchemyDurableStore | None = None,
+    impression_signing_key: str | None = None,
 ) -> CoreRecommendationService:
     if product_count < 1:
         raise ValueError("product_count must be positive")
@@ -181,7 +198,11 @@ def _service(
     reader = InMemoryCatalogReader(data)
     application = create_application_services(reader, data_version=stats.data_version)
     return CoreRecommendationService(
-        ApiSettings(), application, reader, data, durable_store=durable_store
+        ApiSettings(impression_signing_key=impression_signing_key),
+        application,
+        reader,
+        data,
+        durable_store=durable_store,
     )
 
 
@@ -452,7 +473,7 @@ def test_processed_search_has_exact_pagination_facets_coverage_and_scoped_cursor
     page_two = client.post("/v1/products/search", json=page_two_request)
     repeat = client.post("/v1/products/search", json=page_two_request)
     assert page_two.status_code == repeat.status_code == 200
-    assert page_two.json() == repeat.json()
+    assert _without_impression_tokens(page_two.json()) == _without_impression_tokens(repeat.json())
     assert page_two.json()["pagination"]["page"] == 2
     assert (
         page_two.json()["products"][0]["product_id"] != first_payload["products"][0]["product_id"]
@@ -469,11 +490,18 @@ def test_processed_search_has_exact_pagination_facets_coverage_and_scoped_cursor
 def test_product_search_query_survives_restart_and_validates_interaction_refs(
     tmp_path: Path,
 ) -> None:
+    signing_key = "restart-safe-impression-key-0123456789abcdef"
     database_url = f"sqlite:///{(tmp_path / 'search-feedback.db').as_posix()}"
     first_engine = create_db_engine(database_url)
     init_database(first_engine)
     first_store = SqlAlchemyDurableStore(first_engine)
-    first_service = _service(product_count=3, durable_store=first_store)
+    first_service = _service(
+        product_count=3,
+        durable_store=first_store,
+        impression_signing_key=signing_key,
+    )
+    with session_scope(create_session_factory(first_engine)) as session:
+        seed_processed_catalog(session, first_service.processed_data)
 
     with TestClient(create_app(settings=first_service.settings, service=first_service)) as client:
         first = client.post(
@@ -502,13 +530,30 @@ def test_product_search_query_survives_restart_and_validates_interaction_refs(
         )
         assert second.status_code == 200, second.text
         assert second.json()["query_id"] == query_id
+        impression_token = second.json()["products"][0]["impression_token"]
+        event = {
+            "event_type": "component_viewed",
+            "session_id": "session-search-restart",
+            "impression_token": impression_token,
+        }
+        headers = {"Idempotency-Key": "restart-product-view-0001"}
+        first_accept = client.post("/v1/interactions", json=event, headers=headers)
+        assert first_accept.status_code == 202, first_accept.text
+        assert first_accept.json()["trust_level"] == "verified_impression"
+        actor_cookie = client.cookies.get(ACTOR_COOKIE_NAME)
+        assert actor_cookie is not None
 
     restarted_engine = create_db_engine(database_url)
     restarted_store = SqlAlchemyDurableStore(restarted_engine)
-    restarted_service = _service(product_count=3, durable_store=restarted_store)
+    restarted_service = _service(
+        product_count=3,
+        durable_store=restarted_store,
+        impression_signing_key=signing_key,
+    )
     with TestClient(
         create_app(settings=restarted_service.settings, service=restarted_service)
     ) as client:
+        client.cookies.set(ACTOR_COOKIE_NAME, actor_cookie)
         repeated = client.post(
             "/v1/products/search",
             json={
@@ -521,16 +566,7 @@ def test_product_search_query_survives_restart_and_validates_interaction_refs(
         assert repeated.status_code == 200, repeated.text
         assert repeated.json()["query_id"] == query_id
 
-        accepted = client.post(
-            "/v1/interactions",
-            json={
-                "event_type": "search_submitted",
-                "session_id": "session-search-restart",
-                "query_id": query_id,
-                "model_version": repeated.json()["retrieval_model"],
-                "data_version": repeated.json()["data_version"],
-            },
-        )
+        accepted = client.post("/v1/interactions", json=event, headers=headers)
         unknown = client.post(
             "/v1/interactions",
             json={
@@ -540,6 +576,9 @@ def test_product_search_query_survives_restart_and_validates_interaction_refs(
             },
         )
         assert accepted.status_code == 202, accepted.text
+        assert accepted.json()["replayed"] is True
+        assert accepted.json()["event_id"] == first_accept.json()["event_id"]
+        assert accepted.json()["accepted_at"] == first_accept.json()["accepted_at"]
         assert unknown.status_code == 409, unknown.text
         assert unknown.json()["error"]["code"] == "interaction_reference_conflict"
 
@@ -551,6 +590,10 @@ def test_product_search_query_survives_restart_and_validates_interaction_refs(
     assert queries[0].query_id == query_id
     assert queries[0].structured_constraints["kind"] == "product_search"
     assert [event.query_id for event in interactions] == [query_id]
+    assert interactions[0].trust_level == "verified_impression"
+    assert interactions[0].impression_id.startswith("imp_")
+    assert interactions[0].idempotency_key_sha256 != headers["Idempotency-Key"]
+    assert interactions[0].idempotency_payload_sha256 is not None
     verification_engine.dispose()
 
 
@@ -564,3 +607,17 @@ def test_demo_bootstrap_is_rejected_outside_development() -> None:
                 cors_origins=["https://pcbr.example.test"],
             )
         )
+
+
+def test_public_demo_bootstrap_is_allowed_outside_development() -> None:
+    app = create_app(
+        ApiSettings(
+            environment="production",
+            service_mode="public_demo",
+            docs_enabled=False,
+            cors_origins=["https://pcbr.example.test"],
+            impression_signing_key="public-demo-impression-signing-key-32b",
+        )
+    )
+
+    assert app.state.application_service.settings.service_mode == "public_demo"
