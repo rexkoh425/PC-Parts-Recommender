@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-_IMPORT_COMMAND = "scripts/import_catalog_release.py"
+_IMPORT_COMMAND_PREFIX = ("python", "-m", "scripts.import_catalog_release")
 _REQUIRED_FLAGS = frozenset(
     {
         "--buildcores",
@@ -17,10 +17,14 @@ _REQUIRED_FLAGS = frozenset(
         "--review-evidence",
         "--serving-manifest",
         "--serving-manifest-sha256",
+        "--source-registry",
+        "--source-trust-root-sha256",
         "--readiness-artifact",
         "--expected-data-version",
     }
 )
+_OPTIONAL_IMPORT_FLAGS = frozenset({"--database-url", "--batch-size", "--max-line-bytes"})
+_ALLOWED_IMPORT_FLAGS = _REQUIRED_FLAGS | _OPTIONAL_IMPORT_FLAGS
 
 
 def _dependency_condition(service: dict[str, Any], dependency: str) -> str | None:
@@ -56,17 +60,21 @@ def verify_compose_contract(document: dict[str, Any]) -> list[str]:
     migrate = services.get("migrate")
     release = services.get("catalog-release")
     api = services.get("api")
+    dagster_code = services.get("dagster-code")
     if not isinstance(migrate, dict):
         errors.append("migrate service is missing")
     if not isinstance(release, dict):
         errors.append("catalog-release service is missing")
     if not isinstance(api, dict):
         errors.append("api service is missing")
+    if not isinstance(dagster_code, dict):
+        errors.append("dagster-code service is missing")
     if errors:
         return errors
 
     assert isinstance(release, dict)
     assert isinstance(api, dict)
+    assert isinstance(dagster_code, dict)
     if _dependency_condition(release, "migrate") != "service_completed_successfully":
         errors.append("catalog-release must depend on successful migrate completion")
     if _dependency_condition(api, "catalog-release") != "service_completed_successfully":
@@ -74,11 +82,23 @@ def verify_compose_contract(document: dict[str, Any]) -> list[str]:
 
     command = release.get("command")
     command_tokens = [str(token) for token in command] if isinstance(command, list) else []
-    if _IMPORT_COMMAND not in command_tokens:
-        errors.append("catalog-release must execute the pinned catalogue release importer")
+    if tuple(command_tokens[:3]) != _IMPORT_COMMAND_PREFIX:
+        errors.append(
+            "catalog-release must execute the pinned catalogue release importer as a module"
+        )
     missing_flags = sorted(_REQUIRED_FLAGS - set(command_tokens))
     if missing_flags:
         errors.append("catalog-release command is missing flags: " + ", ".join(missing_flags))
+    unknown_flags = sorted(
+        token
+        for token in set(command_tokens)
+        if token.startswith("--") and token not in _ALLOWED_IMPORT_FLAGS
+    )
+    if unknown_flags:
+        errors.append(
+            "catalog-release command contains unsupported importer flags: "
+            + ", ".join(unknown_flags)
+        )
 
     release_environment = release.get("environment")
     if (
@@ -89,6 +109,7 @@ def verify_compose_contract(document: dict[str, Any]) -> list[str]:
 
     release_targets = _volumes_by_target(release)
     api_targets = _volumes_by_target(api)
+    dagster_targets = _volumes_by_target(dagster_code)
     shared_targets = {
         "/run/pcbr-release/buildcores.jsonl": "/run/pcbr-data/buildcores.jsonl",
         "/run/pcbr-release/governed-offers.jsonl": ("/run/pcbr-data/governed-offers.jsonl"),
@@ -116,6 +137,30 @@ def verify_compose_contract(document: dict[str, Any]) -> list[str]:
         errors.append("catalog-release and API serving release sources differ")
     elif not release_serving_volume.get("read_only") or not serving_release_volume.get("read_only"):
         errors.append("catalog-release and API serving release mounts must be read-only")
+    release_registry_volume = release_targets.get("/run/pcbr-source/source-registry.yaml")
+    api_registry_volume = api_targets.get("/run/pcbr-source/source-registry.yaml")
+    if release_registry_volume is None or api_registry_volume is None:
+        errors.append("catalog-release and API require the same current source registry mount")
+    elif release_registry_volume.get("source") != api_registry_volume.get("source"):
+        errors.append("catalog-release and API current source registry sources differ")
+    elif not release_registry_volume.get("read_only") or not api_registry_volume.get("read_only"):
+        errors.append("current source registry mounts must be read-only")
+    dagster_registry_volume = dagster_targets.get("/app/config/source_registry.yaml")
+    if dagster_registry_volume is None:
+        errors.append("dagster-code requires the current source registry mount")
+    elif release_registry_volume is not None and (
+        dagster_registry_volume.get("source") != release_registry_volume.get("source")
+    ):
+        errors.append("dagster-code current source registry source differs")
+    elif not dagster_registry_volume.get("read_only"):
+        errors.append("dagster-code current source registry mount must be read-only")
+    dagster_environment = dagster_code.get("environment")
+    if (
+        not isinstance(dagster_environment, dict)
+        or dagster_environment.get("SOURCE_REGISTRY_PATH")
+        != "/app/config/source_registry.yaml"
+    ):
+        errors.append("dagster-code must read the mounted current source registry path")
 
     api_environment = api.get("environment")
     if not isinstance(api_environment, dict):
@@ -127,6 +172,7 @@ def verify_compose_contract(document: dict[str, Any]) -> list[str]:
             "PCBR_API_REVIEWED_MAPPING_PATH": "/run/pcbr-data/reviewed-mappings.json",
             "PCBR_API_REVIEW_EVIDENCE_PATH": "/run/pcbr-data/review-evidence.jsonl",
             "PCBR_API_SERVING_MANIFEST_PATH": ("/run/pcbr-serving/serving-manifest.json"),
+            "PCBR_API_SOURCE_REGISTRY_PATH": "/run/pcbr-source/source-registry.yaml",
         }
         for key, expected in expected_paths.items():
             if api_environment.get(key) != expected:
@@ -161,6 +207,27 @@ def verify_compose_contract(document: dict[str, Any]) -> list[str]:
             release_digest = command_tokens[index + 1] if index + 1 < len(command_tokens) else None
             if release_digest != manifest_sha256:
                 errors.append("catalog-release and API serving manifest digests differ")
+        trust_root_sha256 = api_environment.get("PCBR_API_SOURCE_TRUST_ROOT_SHA256")
+        if (
+            not isinstance(trust_root_sha256, str)
+            or len(trust_root_sha256) != 64
+            or any(character not in "0123456789abcdef" for character in trust_root_sha256)
+        ):
+            errors.append("api must independently pin the source trust root with a SHA-256")
+        if "--source-trust-root-sha256" in command_tokens:
+            index = command_tokens.index("--source-trust-root-sha256")
+            release_trust_pin = (
+                command_tokens[index + 1] if index + 1 < len(command_tokens) else None
+            )
+            if release_trust_pin != trust_root_sha256:
+                errors.append("catalog-release and API source trust-root pins differ")
+        if "--source-registry" in command_tokens:
+            index = command_tokens.index("--source-registry")
+            release_registry_path = (
+                command_tokens[index + 1] if index + 1 < len(command_tokens) else None
+            )
+            if release_registry_path != api_environment.get("PCBR_API_SOURCE_REGISTRY_PATH"):
+                errors.append("catalog-release and API source registry paths differ")
     return errors
 
 

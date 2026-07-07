@@ -45,11 +45,13 @@ REQUIRED_VALUES = {
     "PCBR_API_SOLVER_VERSION",
     "PCBR_API_SERVING_MANIFEST_PATH",
     "PCBR_API_SERVING_MANIFEST_SHA256",
+    "PCBR_API_SOURCE_TRUST_ROOT_SHA256",
     "PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256",
     "PCBR_API_MAX_REQUEST_BODY_BYTES",
     "PCBR_API_BUILD_GENERATION_MAX_CONCURRENCY",
     "PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE",
     "PCBR_API_BUILD_GENERATION_QUEUE_TIMEOUT_SECONDS",
+    "PCBR_API_IMPRESSION_TTL_MINUTES",
 }
 IMAGE_VALUES = {
     "PCBR_API_IMAGE",
@@ -70,6 +72,7 @@ SECRET_PATHS = {
     "PCBR_MLFLOW_PASSWORD_FILE",
     "PCBR_MONITOR_PASSWORD_FILE",
     "PCBR_API_ADMIN_TOKEN_FILE",
+    "PCBR_API_IMPRESSION_SIGNING_KEY_FILE",
 }
 FILE_PATHS = {
     "PCBR_BUILDCORES_CATALOG_FILE",
@@ -77,6 +80,7 @@ FILE_PATHS = {
     "PCBR_GOVERNED_OFFERS_FILE",
     "PCBR_REVIEWED_MAPPING_FILE",
     "PCBR_REVIEW_EVIDENCE_FILE",
+    "PCBR_SOURCE_REGISTRY_FILE",
 }
 _LEGACY_OFFERS_FILE_KEY = "PCBR_DYNACORE_OFFERS_FILE"
 _GOVERNED_OFFERS_FILE_KEY = "PCBR_GOVERNED_OFFERS_FILE"
@@ -101,17 +105,19 @@ FORBIDDEN_CLEAR_TEXT = {
     "MLFLOW_BACKEND_STORE_URI",
     "DATA_SOURCE_PASS",
     "PCBR_API_ADMIN_TOKEN",
+    "PCBR_API_IMPRESSION_SIGNING_KEY",
 }
 PLACEHOLDER_PATTERN = re.compile(r"change[_-]?me|example\.com|<[^>]+>|your[_-]", re.IGNORECASE)
 IMAGE_PATTERN = re.compile(r"^\S+@sha256:[0-9a-f]{64}$", re.IGNORECASE)
 IDENTIFIER_PATTERN = re.compile(r"^[a-z_][a-z0-9_]{0,62}$")
 UNSAFE_VERSION_PATTERN = re.compile(r"development|demo|untrained|unknown|change[_-]?me", re.I)
-_SERVING_MANIFEST_SCHEMA = "pc-build-recommender.serving-release.v3"
+_SERVING_MANIFEST_SCHEMA = "pc-build-recommender.serving-release.v4"
 _SERVING_MANIFEST_FIELDS = {
     "schema_version",
     "catalog_data_version",
     "catalog",
     "catalog_inputs",
+    "source_release",
     "embedding",
     "entity_resolution",
     "retrieval",
@@ -214,8 +220,9 @@ def _validate_paths(
             continue
         if key in SECRET_PATHS:
             secret = path.read_text(encoding="utf-8").strip()
-            if len(secret) < 24:
-                errors.append(f"{key} must contain at least 24 non-whitespace characters")
+            minimum_length = 32 if key == "PCBR_API_IMPRESSION_SIGNING_KEY_FILE" else 24
+            if len(secret.encode("utf-8")) < minimum_length:
+                errors.append(f"{key} must contain at least {minimum_length} non-whitespace bytes")
             if "\n" in secret or "\r" in secret:
                 errors.append(f"{key} must contain exactly one secret value")
             if os.name != "nt":
@@ -284,6 +291,66 @@ def _validate_pinned_file(
         return
     if sha256_file(path) != expected_sha256:
         errors.append(f"serving manifest {label} SHA-256 does not match {environment_key}")
+
+
+def _validate_release_reference(
+    root: Path,
+    reference: object,
+    *,
+    label: str,
+    errors: list[str],
+    expected_name: str | None = None,
+    content_addressed_parent: bool = False,
+) -> Path | None:
+    """Validate one content reference confined to the immutable serving release root."""
+
+    if not isinstance(reference, dict) or set(reference) != {
+        "path",
+        "size_bytes",
+        "sha256",
+    }:
+        errors.append(f"serving manifest requires an exact {label} artifact reference")
+        return None
+    relative_value = reference.get("path")
+    if not isinstance(relative_value, str) or not relative_value.strip():
+        errors.append(f"serving manifest {label} path must be a non-empty relative path")
+        return None
+    relative_path = Path(relative_value)
+    if relative_path.is_absolute() or any(part == ".." for part in relative_path.parts):
+        errors.append(f"serving manifest {label} path must be relative and confined")
+        return None
+    path = (root / relative_path).resolve()
+    try:
+        path.relative_to(root)
+    except ValueError:
+        errors.append(f"serving manifest {label} path escapes the serving release")
+        return None
+    expected_size = reference.get("size_bytes")
+    expected_sha256 = reference.get("sha256")
+    if type(expected_size) is not int or expected_size < 0:
+        errors.append(f"serving manifest {label} size_bytes must be non-negative")
+        return None
+    if not isinstance(expected_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
+        errors.append(f"serving manifest {label} sha256 must be lowercase hexadecimal")
+        return None
+    if expected_name is not None and path.name != expected_name:
+        errors.append(f"serving manifest {label} path must end with {expected_name!r}")
+        return None
+    if content_addressed_parent and path.parent.name != expected_sha256:
+        errors.append(
+            f"serving manifest {label} must use its SHA-256 as parent directory"
+        )
+        return None
+    if not path.is_file():
+        errors.append(f"serving manifest {label} does not exist: {path}")
+        return None
+    if path.stat().st_size != expected_size:
+        errors.append(f"serving manifest {label} size does not match its reference")
+        return None
+    if sha256_file(path) != expected_sha256:
+        errors.append(f"serving manifest {label} SHA-256 does not match its reference")
+        return None
+    return path
 
 
 def _validate_release_artifacts(
@@ -412,6 +479,57 @@ def _validate_serving_manifest(
             label="review evidence",
             errors=errors,
         )
+    source_release = payload.get("source_release")
+    if not isinstance(source_release, dict) or set(source_release) != {
+        "manifest",
+        "raw_snapshot",
+        "rejections",
+        "current_source_registry",
+        "expected_trust_root_sha256",
+    }:
+        errors.append("serving manifest requires an exact authorized source_release reference")
+    else:
+        release_root = manifest_path.parent.resolve()
+        _validate_release_reference(
+            release_root,
+            source_release.get("manifest"),
+            label="authorized source release manifest",
+            errors=errors,
+            expected_name="manifest.json",
+            content_addressed_parent=True,
+        )
+        _validate_release_reference(
+            release_root,
+            source_release.get("raw_snapshot"),
+            label="authorized source raw snapshot",
+            errors=errors,
+        )
+        _validate_release_reference(
+            release_root,
+            source_release.get("rejections"),
+            label="authorized source rejections",
+            errors=errors,
+        )
+        _validate_pinned_file(
+            env_file,
+            values,
+            environment_key="PCBR_SOURCE_REGISTRY_FILE",
+            reference=source_release.get("current_source_registry"),
+            label="current source registry",
+            errors=errors,
+        )
+        trust_root_sha256 = source_release.get("expected_trust_root_sha256")
+        if not isinstance(trust_root_sha256, str) or not re.fullmatch(
+            r"[0-9a-f]{64}", trust_root_sha256
+        ):
+            errors.append(
+                "serving manifest source trust-root SHA-256 must be lowercase hexadecimal"
+            )
+        elif trust_root_sha256 != values.get("PCBR_API_SOURCE_TRUST_ROOT_SHA256"):
+            errors.append(
+                "serving manifest source trust-root SHA-256 does not match "
+                "PCBR_API_SOURCE_TRUST_ROOT_SHA256"
+            )
     embedding = payload.get("embedding")
     encoder_bundle = embedding.get("encoder_bundle") if isinstance(embedding, dict) else None
     if not isinstance(encoder_bundle, dict) or set(encoder_bundle) != {
@@ -494,6 +612,7 @@ def validate(env_file: Path) -> ValidationResult:
         "PCBR_API_BUILD_GENERATION_MAX_CONCURRENCY": (1, 16),
         "PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE": (0, 256),
         "PCBR_API_PIPELINE_OPERATIONS_WINDOW_HOURS": (1, 24 * 31),
+        "PCBR_API_IMPRESSION_TTL_MINUTES": (1, 24 * 60),
     }
     for key, (minimum, maximum) in bounded_integer_values.items():
         raw_value = values.get(key)

@@ -11,6 +11,14 @@ from pc_build_recommender.retrieval import inspect_encoder_bundle
 from scripts.validate_production_env import _parse_env, validate
 
 
+def _artifact_reference(root: Path, path: Path) -> dict[str, object]:
+    return {
+        "path": path.relative_to(root).as_posix(),
+        "size_bytes": path.stat().st_size,
+        "sha256": sha256_file(path),
+    }
+
+
 def create_production_contract_fixture(
     *,
     template: Path,
@@ -49,7 +57,12 @@ def create_production_contract_fixture(
     for key in (
         key
         for key in values
-        if key.endswith("_PASSWORD_FILE") or key == "PCBR_API_ADMIN_TOKEN_FILE"
+        if key.endswith("_PASSWORD_FILE")
+        or key
+        in {
+            "PCBR_API_ADMIN_TOKEN_FILE",
+            "PCBR_API_IMPRESSION_SIGNING_KEY_FILE",
+        }
     ):
         secret = fixture_root / f"{key.casefold()}.txt"
         secret.write_text(f"contract-only-{key}-0123456789abcdef", encoding="utf-8")
@@ -96,6 +109,29 @@ def create_production_contract_fixture(
 
     serving_release = fixture_root / "serving-release"
     serving_release.mkdir()
+    source_raw = serving_release / "source-input" / "raw-snapshot.csv"
+    source_raw.parent.mkdir()
+    source_raw.write_text("contract-fixture-row\n", encoding="utf-8")
+    source_rejections = serving_release / "source-input" / "rejections.jsonl"
+    source_rejections.write_text("", encoding="utf-8")
+    source_registry = fixture_root / "current-source-registry.yaml"
+    source_registry.write_text(
+        "schema_version: pc-build-recommender.source-registry.v1\n",
+        encoding="utf-8",
+    )
+    values["PCBR_SOURCE_REGISTRY_FILE"] = str(source_registry)
+    values["PCBR_API_SOURCE_TRUST_ROOT_SHA256"] = "a" * 64
+    source_manifest_staging = serving_release / "source-releases" / "fixture" / "staging"
+    source_manifest_staging.mkdir(parents=True)
+    source_manifest_file = source_manifest_staging / "manifest.json"
+    source_manifest_file.write_text(
+        '{"fixture":"not-production-source-authority"}\n',
+        encoding="utf-8",
+    )
+    source_manifest_sha256 = sha256_file(source_manifest_file)
+    source_manifest_directory = source_manifest_staging.with_name(source_manifest_sha256)
+    source_manifest_staging.rename(source_manifest_directory)
+    source_manifest_file = source_manifest_directory / "manifest.json"
     encoder_staging = serving_release / "encoders" / "staging"
     encoder_staging.mkdir(parents=True)
     (encoder_staging / "modules.json").write_text("[]\n", encoding="utf-8")
@@ -104,7 +140,7 @@ def create_production_contract_fixture(
     encoder_staging.rename(encoder_bundle)
 
     serving_manifest: dict[str, object] = {
-        "schema_version": "pc-build-recommender.serving-release.v3",
+        "schema_version": "pc-build-recommender.serving-release.v4",
         "catalog_data_version": values["PCBR_API_DATA_VERSION"],
         "catalog": {
             "size_bytes": Path(values["PCBR_BUILDCORES_CATALOG_FILE"]).stat().st_size,
@@ -123,6 +159,16 @@ def create_production_contract_fixture(
                 "size_bytes": Path(values["PCBR_REVIEW_EVIDENCE_FILE"]).stat().st_size,
                 "sha256": sha256_file(values["PCBR_REVIEW_EVIDENCE_FILE"]),
             },
+        },
+        "source_release": {
+            "manifest": _artifact_reference(serving_release, source_manifest_file),
+            "raw_snapshot": _artifact_reference(serving_release, source_raw),
+            "rejections": _artifact_reference(serving_release, source_rejections),
+            "current_source_registry": {
+                "size_bytes": source_registry.stat().st_size,
+                "sha256": sha256_file(source_registry),
+            },
+            "expected_trust_root_sha256": "a" * 64,
         },
         "embedding": {
             "encoder_bundle": {
