@@ -21,7 +21,7 @@ Do not deploy unless all of the following are true:
    the container environment.
 4. The exact BuildCores products, governed retailer offers, reviewed mapping manifest,
    review-evidence JSONL, read-only catalogue-readiness report, local semantic-encoder bundle, and
-   version-3 serving manifest were frozen together. The manifest must bind the ER model/calibrator, serving evidence,
+   version-4 serving manifest were frozen together. The manifest must bind the ER model/calibrator, serving evidence,
    human-labelled v2 evaluation, matcher/catalogue policy, and operator-approved rights record.
    The report's data version equals `PCBR_API_DATA_VERSION`, records `production_ready=true` with
    no blockers, and every model/rule/solver version and content hash is in the release ticket.
@@ -29,6 +29,11 @@ Do not deploy unless all of the following are true:
    Review evidence must be cited and rights-checked for active Singapore display, cache, history,
    and derivation; use a pinned explicit empty JSONL when none is permitted. Research-only crawls
    and offers without the same active rights remain ineligible for this artifact.
+   Version 4 must also pin a digest-named signed source-release manifest plus its exact raw
+   snapshot, rejection stream, current-registry digest, and Ed25519 trust-root SHA-256. The
+   registry file and trust-root pin come from independent production settings and must match the
+   release declarations. The source
+   manifest's accepted records must be the same bytes as `PCBR_GOVERNED_OFFERS_FILE`.
 5. A PostgreSQL and artifact backup completed before any schema or model change, and the most
    recent restore drill is within the operator's accepted window.
 6. The current processed catalogue is capable of the intended product behavior. The repository's
@@ -49,15 +54,28 @@ PostgreSQL, Prometheus, blackbox, and utility image digests are selected and sca
   and Prometheus with OIDC/SSO, rate-limit the API, set request-size limits, and deny public access
   to `/metrics`, `/docs`, `/redoc`, and `/openapi.json`.
 - The API independently caps request bodies with `PCBR_API_MAX_REQUEST_BODY_BYTES`. Build
-  generation admits at most `PCBR_API_BUILD_GENERATION_MAX_CONCURRENCY` executions and
-  `PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE` waiters per API process. A full queue returns `429`;
-  an admitted waiter that exceeds `PCBR_API_BUILD_GENERATION_QUEUE_TIMEOUT_SECONDS` returns `503`.
+  generation and component replacement share one optimizer admission pool with at most
+  `PCBR_API_BUILD_GENERATION_MAX_CONCURRENCY` executions and
+  `PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE` waiters per API process. The setting names are
+  retained for deployment compatibility, but their scope is optimizer-wide. A full shared queue
+  returns `429`; a waiter that exceeds
+  `PCBR_API_BUILD_GENERATION_QUEUE_TIMEOUT_SECONDS` returns `503`. Both routes publish bounded
+  active, queued, outcome, and wait-duration metrics under `pcbr_optimizer_admission_*`.
 - Public build links require the migrated durable database. `POST /v1/builds/{build_id}/shares`
   stores an immutable allow-listed snapshot (not the original request, listing URLs, ownership
   state, or internal IDs). Keep the returned revocation token outside logs and analytics; it is
   shown only at creation and is required by the revoke endpoint. Set
   `PCBR_API_BUILD_SHARE_TTL_HOURS` deliberately and run the `20260723_0007` migration before
   enabling the endpoint.
+- Ranked search/build results carry encrypted, authenticated impression tokens. A trusted
+  interaction must present the matching token and an `Idempotency-Key`; the API derives
+  query/result/rank/data/model/rule attribution from the token and persists only the opaque
+  impression ID plus keyed/hash evidence. Unsigned development/legacy events are stored as
+  `legacy_untrusted` and must be excluded from LambdaMART labels. Run Alembic revision
+  `20260815_0008` before enabling feedback ingestion. Production requires a dedicated random
+  `PCBR_API_IMPRESSION_SIGNING_KEY_FILE` of at least 32 bytes; never put the key, token, or raw
+  idempotency value in logs, analytics, URLs, durable browser persistence, or a `NEXT_PUBLIC_`
+  setting.
 - The read-only operations route, `GET /v1/admin/operations`, reads its token only from the mounted
   `PCBR_API_ADMIN_TOKEN_FILE` secret and requires that value in `X-PCBR-Admin-Token`. The browser
   operations page holds the token only in page memory and is intentionally `noindex`; do not put
@@ -80,9 +98,10 @@ PostgreSQL, Prometheus, blackbox, and utility image digests are selected and sca
 
 Create directories outside the Git checkout for serving data, pipeline state, pipeline-operation
 receipts, artifacts, MLflow
-artifacts, backups, and seven secret files. Use randomly generated values of at least 24
-characters. Do not put a password on a command line or in shell history. On Windows, restrict each
-file ACL to the deployment identity and administrators; on Linux, set mode `0600`.
+artifacts, backups, and eight secret files. Use randomly generated values of at least 24
+characters, and at least 32 bytes for the impression-signing key. Do not put a password on a
+command line or in shell history. On Windows, restrict each file ACL to the deployment identity
+and administrators; on Linux, set mode `0600`.
 
 Copy `.env.production.example` to the ignored `.env.production` file and replace every
 `CHANGE_ME` value. `PCBR_SERVING_RELEASE_DIR` must contain the pinned manifest and every referenced
@@ -94,6 +113,15 @@ embedding manifest that the release will pin. The command copies a verified loca
 records its Apache-2.0 provenance, and publishes an immutable digest-named directory; it never
 downloads weights or uses a mutable model name at startup. Then run:
 
+Stage the authorized source manifest under a parent directory whose name is the manifest file's
+SHA-256. Keep the source raw snapshot and rejections within the read-only serving-release root and
+reference them by relative path, size, and digest. Mount `PCBR_SOURCE_REGISTRY_FILE` independently
+at `/run/pcbr-source/source-registry.yaml`; its bytes must match the v4 registry digest. Configure
+`PCBR_API_SOURCE_TRUST_ROOT_SHA256` from the deployment authority, not the bundled trust-root file.
+Do not copy
+or transform the accepted records: the source verifier receives the separately mounted
+`PCBR_GOVERNED_OFFERS_FILE` directly.
+
 ```powershell
 python scripts/validate_production_env.py --env-file .env.production
 docker compose --env-file .env.production -f docker-compose.production.yml `
@@ -101,11 +129,13 @@ docker compose --env-file .env.production -f docker-compose.production.yml `
   --profile operations --profile restore config --quiet
 ```
 
-The first command checks required values, secret length and presence, file/directory existence,
+The first command is a structural and digest preflight: it checks required values, secret length
+and presence, file/directory existence,
 release-artifact schemas and data-version parity, a positive readiness decision with no blockers,
 loopback bindings, HTTPS origins, restrictive CORS, immutable versions, image digests, and obvious
-clear-text credentials. The deployment job still recomputes all catalogue and rights evidence;
-preflight never substitutes for that gate. On Windows it cannot prove that an ACL is private, so
+clear-text credentials. Its generated CI fixture is deliberately unsigned and cannot start the
+runtime. The deployment job still recomputes the signed source chain plus all catalogue and rights
+evidence; preflight never substitutes for that gate. On Windows it cannot prove that an ACL is private, so
 that remains an operator check.
 
 `PCBR_GOVERNED_OFFERS_FILE` is the canonical offer-artifact setting. The deprecated
@@ -162,12 +192,15 @@ docker compose --env-file .env.production -f docker-compose.production.yml ps
 
 `migrate` and `catalog-release` use the schema-owning role; the latter does not run migrations.
 The catalogue task idempotently imports the exact mounted product, offer, reviewed-mapping, and
-review-evidence artifacts plus the manifest-bound ER release. Before database mutation it validates
+review-evidence artifacts plus the manifest-bound source and ER releases. Before database mutation
+it independently revalidates the signed source authority and exact governed-offer records, then validates
 the manifest-pinned vector matrix, ID map, catalogue-derived search documents, and embedding
 identity; recomputes production readiness and current data-use rights; and requires an exact match
-to the frozen read-only report and configured data version. It then upserts the processed rows,
-imports the pinned vectors/search-document hashes, and verifies the exact product/listing sets and
-row hashes in PostgreSQL. Any stale canonical product, listing, or vector provenance fails closed;
+to the frozen read-only report and configured data version. It then uses one outer PostgreSQL
+transaction to upsert the processed rows, restore the pinned vectors/search-document hashes, and
+verify the exact product/listing sets and row hashes before committing. A failed vector import or
+identity check rolls back the whole release transaction, and an identical retry is idempotent.
+Any stale canonical product, listing, or vector provenance fails closed;
 the release task performs no stale-row deletion. Reconciliation requires a separate audited
 operator workflow, which is not currently implemented. Any failure keeps the job unsuccessful and
 Compose cannot start the API. The API independently loads
@@ -235,6 +268,11 @@ last. Never paste a secret into a checked-in SQL file, process argument, ticket,
 Changing the bootstrap secret file alone has no effect after initialization. Changing application
 versions or catalogue paths requires rerunning `migrate` and `catalog-release` before restarting
 the API. Changing `NEXT_PUBLIC_API_URL` requires a new web image.
+
+Rotating the impression-signing key immediately invalidates outstanding impression tokens. Either
+wait one configured `PCBR_API_IMPRESSION_TTL_MINUTES` window before retiring the old API replicas,
+or accept that clients must refresh ranked results. Exact retries remain idempotent because the
+stored evidence contains no raw key or token.
 
 ## Upgrade and rollback
 

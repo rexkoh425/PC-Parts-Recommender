@@ -126,13 +126,19 @@ returns an explicit infeasibility result. Do not weaken stock or matching constr
 demo appear feasible.
 
 Non-development processed mode is a different, fail-closed contract. Import and API startup both
-load the same operator-pinned `pc-build-recommender.serving-release.v3` manifest and exact
+load the same operator-pinned `pc-build-recommender.serving-release.v4` manifest and exact
 catalogue/offers/reviewed-mappings/review-evidence bytes. The review artifact must be explicitly
 empty or contain bounded cited evidence with active Singapore display, cache, history, and
 derivation rights. That manifest must bind a promoted LightGBM entity-resolution model with fitted
 calibrator, human-labelled v2 evaluation, threshold/readiness policy, active Singapore rights
 approval, and every identity digest. Direct model/evaluation CLI arguments or legacy eligibility
 booleans cannot authorize production. No genuine promoted release is shipped.
+Version 4 additionally pins and independently verifies the signed source-batch manifest, raw
+snapshot, rejection stream, externally mounted current source registry, and separately configured
+Ed25519 trust-root digest. Verification
+uses the governed-offers path as the signed batch's accepted-record stream. Development processed
+mode does not require this source-release envelope. V4 supports one Awin batch, not an aggregate
+of multiple source batches.
 
 ## 3. Run verification
 
@@ -642,8 +648,24 @@ uv run --no-sync python -m training.train_ranking `
   --artifact-dir artifacts/models/ranking/candidate-v1
 ```
 
-After training on adjudicated human qrels, evaluate the persisted artifact rather than accepting
-caller-supplied challenger rankings:
+The trainer reports validation diagnostics only. It does not score, log, or make a promotion
+decision from the frozen test split. Before any test access, preregister exactly one model,
+evaluation policy, bootstrap configuration, and frozen cohort:
+
+```powershell
+uv run --no-sync python -m training.register_ranking_evaluation `
+  --feature-snapshot data/evaluation/ranking/human-v1/ranking.jsonl `
+  --dataset-manifest data/evaluation/ranking/human-v1/manifest.json `
+  --human-judgments data/annotations/releases/annotation-<release-sha256>/human-judgments.json `
+  --qrels data/annotations/releases/annotation-<release-sha256>/qrels.json `
+  --frozen-query-split data/annotations/releases/annotation-<release-sha256>/query-split.json `
+  --ranker-model artifacts/models/ranking/candidate-v1/ranker-artifact/ranker.txt `
+  --intent-root artifacts/evaluation/ranking/intents `
+  --ledger-dir artifacts/evaluation/ranking/test-access-ledger
+```
+
+Then evaluate the persisted artifact using only the generated content-addressed intent. The
+evaluator never accepts caller-supplied challenger rankings or policy overrides:
 
 ```powershell
 uv run --no-sync python -m training.evaluate_ranking `
@@ -653,15 +675,18 @@ uv run --no-sync python -m training.evaluate_ranking `
   --qrels data/annotations/releases/annotation-<release-sha256>/qrels.json `
   --frozen-query-split data/annotations/releases/annotation-<release-sha256>/query-split.json `
   --ranker-model artifacts/models/ranking/candidate-v1/ranker-artifact/ranker.txt `
-  --output-dir artifacts/evaluation/ranking/candidate-v1
+  --evaluation-intent artifacts/evaluation/ranking/intents/<intent-sha256>.json `
+  --ledger-dir artifacts/evaluation/ranking/test-access-ledger `
+  --output-dir artifacts/evaluation/ranking/sealed
 ```
 
-The command reloads the manifest-verified LambdaMART model, computes BM25, RRF, and challenger
-rankings over the frozen test groups, and writes a content-hashed comparison report plus a typed
-promotion decision. The evidence binds the exact model, metadata, manifest, feature matrix,
-candidate set, finite scores, and rankings. Missing human provenance or any swapped artifact fails
-closed. These example paths are future release inputs; no qualifying human-labelled ranker artifact
-is currently included.
+Registration claims the cohort for one intent. Exact retries are idempotent; any different model,
+policy, or bootstrap configuration for that cohort fails closed. The evaluator records test access
+before re-adjudicating human judgments, computes BM25, RRF, and challenger rankings, and commits a
+content-addressed no-replace bundle under `sealed/<intent-sha256>/`. The evidence binds the exact
+model, metadata, manifest, feature matrix, candidate set, finite scores, rankings, access record,
+and promotion decision. These example paths are future release inputs; no qualifying
+human-labelled ranker artifact is currently included.
 
 The training command publishes `artifact-dir/ranker-artifact/` as one immutable bundle. It seals
 and reloads model/metadata/manifest files in a hidden sibling stage, fsyncs them, and commits with a

@@ -121,6 +121,14 @@ and append-only audit events. Exactly two independent review assignments are req
 idempotency secrets are hashed, a reviewer cannot reclaim or adjudicate the same item, and database
 triggers reject updates/deletes to human decisions and the audit ledger.
 
+Alembic revision `20260815_0008` separates trusted behavioural evidence from caller assertions.
+Search/build response items receive short-lived server-encrypted impression identities bound to
+the actual query, subject, rank, and data/model/rule versions. Interaction ingestion verifies that
+identity, requires a retry key, canonicalises attribution from the claims, and persists only the
+impression ID plus keyed idempotency and payload digests. The database makes retries unique per
+session and labels unsigned legacy/development events `legacy_untrusted`; only
+`verified_impression` rows may enter behavioural ranking-label exports.
+
 Raw source responses are immutable and content-addressed. Parsed rows carry source URL, source
 type, retrieval time, raw hash, parser version, access/licence note, verification time, and
 extraction confidence. Upserts use stable source keys, MPN/GTIN evidence, and canonical IDs.
@@ -151,7 +159,7 @@ and deletion are external operator responsibilities. No real Awin feed or grant 
 
 ## Production release authority
 
-One operator-pinned `pc-build-recommender.serving-release.v3` manifest is the release root. Both the
+One operator-pinned `pc-build-recommender.serving-release.v4` manifest is the release root. Both the
 catalogue import job and API bootstrap verify the same exact catalogue, offers, reviewed mappings,
 review-evidence JSONL, and entity-resolution artifacts. ER authority is derived only after
 cross-checking a LightGBM model
@@ -159,6 +167,13 @@ and fitted calibrator, metadata, serving evidence, v2 human-labelled evaluation,
 policy, active Singapore rights approval, and all component/binding SHA-256 values. Legacy
 eligibility booleans and direct diagnostic paths cannot promote a release. Import and API consume
 the same read-only release directory and digest; no promoted ER release currently ships.
+
+The same release root pins a content-addressed signed source-release manifest, raw snapshot,
+rejections, current-registry content digest, and trust-root digest. Production separately mounts
+the current registry and configures the trust-root SHA-256; both must match the v4 declarations.
+Its independent verifier receives the exact governed offers as the accepted-record stream, so
+source authority and serving offers cannot drift independently. This source gate is mandatory
+only on production catalogue/API paths. V4 deliberately supports one Awin batch only.
 
 Review evidence is a separate bounded, cited catalog input rather than a crawler or generic text
 store. Each record names a canonical product and supported aspect, carries at most 500 characters of
