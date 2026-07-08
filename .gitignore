@@ -43,3 +43,32 @@ tmp/
 *.sqlite3
 .DS_Store
 Thumbs.db
+
+# Local data drops and scratch space. Only reviewed, content-addressed evidence
+# under artifacts/ is ever committed; anything staged locally stays out.
+scratch/
+*.tmp
+*.log
+*.csv.gz
+*.jsonl.gz
+data/**/*.npy
+data/**/*.parquet
+.ipynb_checkpoints/
+
+# Credentials and keys must never be tracked; the signed-policy workflow keeps
+# them outside the repository.
+.env.local
+.env.*.local
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+
+# Editor and local tooling state
+.idea/
+.vscode/
+*.swp
+.claude/
+.codex/
+.aider*
