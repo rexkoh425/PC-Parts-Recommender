@@ -13,9 +13,7 @@
   "scripts": {
     "dev:web": "npm --workspace apps/web run dev",
     "build:web": "npm --workspace apps/web run build",
-    "build:sites": "npm --workspace apps/web run build:sites",
     "lint:web": "npm --workspace apps/web run lint",
-    "test:e2e": "npm --workspace apps/web run test:e2e",
-    "test:sites:smoke": "npm --workspace apps/web run test:sites:smoke"
+    "test:e2e": "npm --workspace apps/web run test:e2e"
   }
 }
