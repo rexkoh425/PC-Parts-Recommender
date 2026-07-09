@@ -35,7 +35,7 @@ WIKIDATA_ENTITY_URL = "https://www.wikidata.org/entity/{entity_id}"
 WIKIDATA_LICENSE_URL = "https://www.wikidata.org/wiki/Wikidata:Licensing"
 WIKIDATA_USER_AGENT = (
     "BuildSignalPCRecommender/0.1 "
-    "(https://buildsignal-pc-recommender.tendra425.chatgpt.site; "
+    "(https://github.com/rexkoh425/PC-Parts-Recommender; "
     "Wikidata CC0 catalogue enrichment)"
 )
 WIKIDATA_LICENSE_NOTE = (
