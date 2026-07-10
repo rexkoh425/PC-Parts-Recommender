@@ -1,0 +1,363 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import {
+  getProduct,
+  getProductBenchmarks,
+  getProductPrices,
+  getProductReviews,
+  getSessionId,
+  trackInteraction,
+  USING_DEMO_DATA,
+} from "@/lib/api";
+import {
+  confidencePresentation,
+  formatAttributeValue,
+  formatEvidenceTimestamp,
+  humanizeAttributeKey,
+  observedStockLabel,
+  priceObservationPresentation,
+  stockTone,
+} from "@/lib/catalogue";
+import { categoryLabels, formatSgd } from "@/lib/format";
+import type {
+  ProductBenchmarksResponse,
+  ProductDetail,
+  ProductPricesResponse,
+  ProductReviewsResponse,
+} from "@/lib/types";
+import { PriceIntelligencePanel } from "./price-intelligence-panel";
+
+interface ProductEvidenceState {
+  product: ProductDetail;
+  prices?: ProductPricesResponse;
+  pricesError?: string;
+  benchmarks?: ProductBenchmarksResponse;
+  benchmarksError?: string;
+  reviews?: ProductReviewsResponse;
+  reviewsError?: string;
+}
+
+function reasonFor(result: PromiseSettledResult<unknown>): string | undefined {
+  if (result.status === "fulfilled") return undefined;
+  return result.reason instanceof Error ? result.reason.message : "This evidence is unavailable.";
+}
+
+function EvidencePanelError({ title, message }: { title: string; message?: string }) {
+  return (
+    <div className="evidence-panel-error" role="status">
+      <span aria-hidden="true">!</span>
+      <div><strong>{title}</strong><p>{message ?? "This evidence is unavailable."}</p></div>
+    </div>
+  );
+}
+
+export function ProductDetailScreen({ productId }: { productId: string }) {
+  const [state, setState] = useState<ProductEvidenceState | null>(null);
+  const [error, setError] = useState("");
+  const [retryKey, setRetryKey] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    const controller = new AbortController();
+    const requestOptions = { signal: controller.signal };
+    Promise.allSettled([
+      getProduct(productId, requestOptions),
+      getProductPrices(productId, requestOptions),
+      getProductBenchmarks(productId, requestOptions),
+      getProductReviews(productId, requestOptions),
+    ]).then(([productResult, pricesResult, benchmarksResult, reviewsResult]) => {
+      if (!active) return;
+      if (productResult.status === "rejected") {
+        setError(
+          productResult.reason instanceof Error
+            ? productResult.reason.message
+            : "The product could not be loaded.",
+        );
+        return;
+      }
+      const next: ProductEvidenceState = {
+        product: productResult.value,
+        prices: pricesResult.status === "fulfilled" ? pricesResult.value : undefined,
+        pricesError: reasonFor(pricesResult),
+        benchmarks:
+          benchmarksResult.status === "fulfilled" ? benchmarksResult.value : undefined,
+        benchmarksError: reasonFor(benchmarksResult),
+        reviews: reviewsResult.status === "fulfilled" ? reviewsResult.value : undefined,
+        reviewsError: reasonFor(reviewsResult),
+      };
+      setState(next);
+      void trackInteraction({
+        event_type: "component_viewed",
+        session_id: getSessionId(),
+        product_id: productResult.value.product_id,
+        data_version: productResult.value.data_version,
+        metadata: { category: productResult.value.category, surface: "catalogue_detail" },
+      });
+    });
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, [productId, retryKey]);
+
+  const dataVersions = useMemo(() => {
+    if (!state) return [];
+    return [...new Set([
+      state.product.data_version,
+      state.prices?.data_version,
+      state.benchmarks?.data_version,
+      state.reviews?.data_version,
+    ].filter((value): value is string => Boolean(value)))];
+  }, [state]);
+
+  if (error) {
+    return (
+      <main className="shell state-page">
+        <div className="state-card" role="alert">
+          <span className="state-card__icon" aria-hidden="true">?</span>
+          <p className="eyebrow">Product evidence unavailable</p>
+          <h1>We could not load this catalogue product.</h1>
+          <p>{error}</p>
+          <div className="button-row">
+            <button
+              className="button button--primary"
+              type="button"
+              onClick={() => {
+                setError("");
+                setState(null);
+                setRetryKey((key) => key + 1);
+              }}
+            >Try again</button>
+            <Link className="button button--secondary" href="/catalogue">Back to catalogue</Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (!state) {
+    return (
+      <main className="shell product-page" aria-busy="true">
+        <div className="skeleton skeleton--eyebrow" />
+        <div className="skeleton skeleton--title" />
+        <div className="product-layout">
+          <div className="skeleton-card skeleton-card--tall" />
+          <div className="skeleton-card" />
+        </div>
+        <p className="sr-only" role="status">Loading product evidence.</p>
+      </main>
+    );
+  }
+
+  const { product, prices, benchmarks, reviews } = state;
+  const confidence = confidencePresentation(product.source_confidence);
+  const currentPrice = prices?.current_lowest_price_sgd ?? product.lowest_price_sgd;
+  const attributes = Object.entries(product.attributes).sort(([left], [right]) =>
+    left.localeCompare(right),
+  );
+
+  return (
+    <main className="shell product-page">
+      <nav className="breadcrumbs" aria-label="Breadcrumb">
+        <Link href="/catalogue">Catalogue</Link>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{product.canonical_name}</span>
+      </nav>
+
+      <header className="product-header">
+        <div className="product-header__identity">
+          <div className="product-header__topline">
+            <span className={`category-chip category-chip--${product.category}`}>
+              {categoryLabels[product.category]}
+            </span>
+            <span className={`observed-stock observed-stock--${stockTone(product.stock_status)}`}>
+              <span aria-hidden="true" />
+              {observedStockLabel(product.stock_status)}
+            </span>
+          </div>
+          <p className="eyebrow">{product.brand ?? "Brand not reported"}</p>
+          <h1>{product.canonical_name}</h1>
+          <p className="lede">
+            Canonical specifications and separately labelled market, benchmark, and review evidence.
+          </p>
+          <Link className="product-header__compare" href={`/compare?products=${encodeURIComponent(product.product_id)}`}>
+            Compare with similar {categoryLabels[product.category].toLowerCase()}s
+            <span aria-hidden="true">â†’</span>
+          </Link>
+        </div>
+        <div className="product-price-block">
+          <small>{USING_DEMO_DATA ? "Illustrative demo price" : "Lowest observed listing"}</small>
+          <strong>
+            {typeof currentPrice === "number" ? formatSgd(currentPrice) : "Price unavailable"}
+          </strong>
+          <span>
+            {USING_DEMO_DATA
+              ? "Illustrative demo price; no live retailer stock is connected."
+              : "Verify price and availability with the retailer before purchase."}
+          </span>
+        </div>
+      </header>
+
+      {dataVersions.length > 1 && (
+        <div className="notice-banner" role="status">
+          <span aria-hidden="true">i</span>
+          <p><strong>Evidence snapshots differ.</strong> Panels show their own data version so changes are not hidden.</p>
+        </div>
+      )}
+
+      <div className="product-layout">
+        <div className="product-main">
+          <section className="detail-section product-section" aria-labelledby="specification-heading">
+            <div className="section-heading">
+              <div><p className="eyebrow">Manufacturer and source fields</p><h2 id="specification-heading">Specifications</h2></div>
+              <p>Updated {formatEvidenceTimestamp(product.updated_at)}</p>
+            </div>
+            {attributes.length ? (
+              <dl className="specification-grid">
+                {attributes.map(([key, value]) => (
+                  <div key={key}><dt>{humanizeAttributeKey(key)}</dt><dd>{formatAttributeValue(value)}</dd></div>
+                ))}
+              </dl>
+            ) : (
+              <div className="empty-evidence"><strong>No structured specifications are available.</strong><p>Missing attributes are not inferred from the product name.</p></div>
+            )}
+          </section>
+
+          <section className="detail-section product-section" aria-labelledby="prices-heading">
+            <div className="section-heading">
+              <div><p className="eyebrow">{USING_DEMO_DATA ? "Controlled demo price record" : "Retailer observations"}</p><h2 id="prices-heading">Price and availability evidence</h2></div>
+              <p>{prices ? `Data ${prices.data_version}` : "Evidence endpoint unavailable"}</p>
+            </div>
+            {prices?.price_intelligence && (
+              <PriceIntelligencePanel intelligence={prices.price_intelligence} />
+            )}
+            {state.pricesError ? <EvidencePanelError title="Price evidence could not be loaded" message={state.pricesError} /> : prices?.observations.length ? (
+              <div className="observation-list">
+                {prices.observations.slice(0, 12).map((observation) => {
+                  const delivered = observation.base_price_sgd + observation.shipping_price_sgd;
+                  const offer = priceObservationPresentation(observation);
+                  return (
+                    <article key={`${observation.listing_id}-${observation.observed_at}`}>
+                      <div><strong>{observation.retailer}</strong><span>{offer.conditionLabel}</span></div>
+                      <div><strong>{formatSgd(delivered)}</strong><small>{observation.shipping_price_sgd ? `${formatSgd(observation.shipping_price_sgd)} shipping included` : "No shipping charge recorded"}</small></div>
+                      <div><span>{observedStockLabel(observation.stock_status)}</span><small>{offer.eligibilityLabel}</small></div>
+                      <div><span>{formatEvidenceTimestamp(observation.observed_at)}</span>{observation.listing_url && <a href={observation.listing_url} target="_blank" rel="noreferrer">Open retailer ↗</a>}</div>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="empty-evidence"><strong>No price observations are available.</strong><p>This product is not assigned a zero price and cannot be treated as free.</p></div>
+            )}
+          </section>
+
+          <section className="detail-section product-section" aria-labelledby="benchmarks-heading">
+            <div className="section-heading">
+              <div><p className="eyebrow">Observed versus modelled</p><h2 id="benchmarks-heading">Benchmark evidence</h2></div>
+              <p>{benchmarks ? `Performance model ${benchmarks.performance_model_version}` : "Model version unavailable"}</p>
+            </div>
+            {state.benchmarksError ? <EvidencePanelError title="Benchmark evidence could not be loaded" message={state.benchmarksError} /> : benchmarks?.benchmarks.length ? (
+              <div className="benchmark-grid">
+                {benchmarks.benchmarks.map((benchmark, index) => (
+                  <article key={`${benchmark.benchmark_name}-${benchmark.workload}-${index}`}>
+                    <div className="benchmark-card__topline"><span className={`evidence-badge evidence-badge--${benchmark.basis}`}>{benchmark.basis === "observed" ? "Observed" : "Predicted"}</span><small>{humanizeAttributeKey(benchmark.workload)}</small></div>
+                    <h3>{benchmark.benchmark_name}</h3>
+                    <strong className="benchmark-card__score">{benchmark.score.toLocaleString("en-SG")} <small>{benchmark.unit}</small></strong>
+                    <dl><div><dt>Direction</dt><dd>{benchmark.higher_is_better ? "Higher is better" : "Lower is better"}</dd></div>{benchmark.model_version && <div><dt>Model</dt><dd>{benchmark.model_version}</dd></div>}</dl>
+                    <footer><span>{formatEvidenceTimestamp(benchmark.observed_at)}</span>{benchmark.source_url && <a href={benchmark.source_url} target="_blank" rel="noreferrer">Source ↗</a>}</footer>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-evidence"><strong>No comparable benchmark observations are available.</strong><p>The interface does not turn missing performance evidence into a precise score.</p></div>
+            )}
+          </section>
+
+          <section className="detail-section product-section" aria-labelledby="reviews-heading">
+            <div className="section-heading">
+              <div><p className="eyebrow">Permitted cited sources</p><h2 id="reviews-heading">Review evidence</h2></div>
+              <p>{reviews ? `Data ${reviews.data_version}` : "Evidence endpoint unavailable"}</p>
+            </div>
+            {state.reviewsError ? <EvidencePanelError title="Review evidence could not be loaded" message={state.reviewsError} /> : reviews?.evidence.length ? (
+              <div className="review-evidence-list">
+                {reviews.evidence.map((evidence, index) => {
+                  const evidenceConfidence = confidencePresentation(evidence.confidence);
+                  return (
+                    <article key={`${evidence.aspect}-${index}`}>
+                      <div><span className={`sentiment-chip sentiment-chip--${evidence.sentiment}`}>{evidence.sentiment}</span><strong>{humanizeAttributeKey(evidence.aspect)}</strong></div>
+                      <p>{evidence.evidence_text}</p>
+                      <footer><span>{evidenceConfidence.label}</span><span>{formatEvidenceTimestamp(evidence.published_at)}</span>{evidence.source_url && <a href={evidence.source_url} target="_blank" rel="noreferrer">Evidence source ↗</a>}</footer>
+                    </article>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="empty-evidence"><strong>No permitted review evidence is stored.</strong><p>We do not generate a sentiment summary without cited evidence.</p></div>
+            )}
+          </section>
+        </div>
+
+        <aside className="product-evidence-rail" aria-label="Product evidence summary">
+          <div className="evidence-rail-card">
+            <p className="profile-kicker">Source confidence</p>
+            <strong>{confidence.label}</strong>
+            <div className="confidence-track" role="meter" aria-label="Source confidence" aria-valuemin={0} aria-valuemax={100} aria-valuenow={confidence.percent} aria-valuetext={confidence.label}>
+              <span className={`confidence-track--${confidence.tone}`} style={{ width: `${confidence.percent ?? 0}%` }} />
+            </div>
+            <p>Confidence reflects extraction and source support, not product quality.</p>
+          </div>
+
+          <div className="evidence-rail-card evidence-rail-card--versions">
+            <p className="profile-kicker">Evidence versions</p>
+            <dl>
+              <div><dt>Product data</dt><dd>{product.data_version}</dd></div>
+              <div><dt>Prices</dt><dd>{prices?.data_version ?? "Unavailable"}</dd></div>
+              <div><dt>Performance</dt><dd>{benchmarks?.performance_model_version ?? "Unavailable"}</dd></div>
+              <div><dt>Reviews</dt><dd>{reviews?.data_version ?? "Unavailable"}</dd></div>
+            </dl>
+          </div>
+
+          {(product.source_attributions?.length ?? 0) > 0 && (
+            <section className="evidence-rail-card evidence-rail-card--attribution" aria-labelledby="source-attribution-heading">
+              <p className="profile-kicker">Source and licence</p>
+              <h2 id="source-attribution-heading">Attribution</h2>
+              <ul>
+                {product.source_attributions?.map((attribution) => (
+                  <li key={`${attribution.source_name}-${attribution.source_url}`}>
+                    <a href={attribution.source_url} target="_blank" rel="noreferrer">
+                      {attribution.source_name}
+                    </a>
+                    <p>{attribution.attribution_notice ?? attribution.licence_or_access_note}</p>
+                    {attribution.licence_url && (
+                      <a
+                        className="source-attribution__licence"
+                        href={attribution.licence_url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View licence
+                      </a>
+                    )}
+                    <small>Retrieved {formatEvidenceTimestamp(attribution.retrieved_at)}</small>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          <div className="compatibility-context-card">
+            <span aria-hidden="true">◇</span>
+            <p className="profile-kicker">Compatibility is contextual</p>
+            <h2>No standalone pass is assigned.</h2>
+            <p>A socket, connector, dimension, or interface only becomes compatible relative to the other selected parts. Build generation runs the full versioned rule set.</p>
+            <Link className="button button--primary" href="/">Use in a complete build</Link>
+          </div>
+
+          {product.source_url && <a className="source-record-link" href={product.source_url} target="_blank" rel="noreferrer">Open primary product source ↗</a>}
+        </aside>
+      </div>
+    </main>
+  );
+}
