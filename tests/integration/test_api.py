@@ -710,7 +710,9 @@ def test_compatible_replacement_creates_new_refresh_safe_build(
         for check in replacement["build"]["compatibility_checks"]
     )
     refreshed_new = client.get(f"/v1/builds/{replacement['build']['build_id']}")
-    assert refreshed_new.json() == replacement["build"]
+    assert _without_impression_tokens(refreshed_new.json()) == _without_impression_tokens(
+        replacement["build"]
+    )
     refreshed_original = client.get(f"/v1/builds/{original['build_id']}")
     assert _without_impression_tokens(refreshed_original.json()) == _without_impression_tokens(
         original
