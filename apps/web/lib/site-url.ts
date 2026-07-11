@@ -1,6 +1,10 @@
-// No deployment is pinned here. Set NEXT_PUBLIC_SITE_URL for a real origin;
-// without it both environments fall back to the local development server.
-const productionSiteUrl = "http://localhost:3000";
+// No deployment host is pinned in source. Vercel exposes the project's own
+// production domain, and NEXT_PUBLIC_SITE_URL overrides it for a custom domain.
+// The production fallback stays https so metadata origins can never downgrade.
+const vercelProductionHost = process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL;
+const productionSiteUrl = vercelProductionHost
+  ? `https://${vercelProductionHost}`
+  : "https://localhost";
 const localSiteUrl = "http://localhost:3000";
 
 export function resolveSiteUrl(

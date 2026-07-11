@@ -15,8 +15,8 @@ need to be changed to include an extra deployment-only prefix. The web build mus
 
 ## Create the Vercel project
 
-1. Push this repository to GitHub, GitLab, or Bitbucket. Vercel Git deployments require a remote;
-   this checkout does not currently have one configured.
+1. The repository is published at `github.com/rexkoh425/PC-Parts-Recommender`, which is the remote
+   Vercel imports from.
 2. In Vercel, import the repository and set its **Framework Preset** to **Services**. Services is
    currently a Vercel beta capability; request access if it is not available in the selector.
 3. Keep the project root at the repository root so Vercel can read `vercel.json` and both service
@@ -37,6 +37,7 @@ release and does not make price, stock, ranking-quality, or production-compatibi
 | --- | --- |
 | `NEXT_PUBLIC_API_URL` | `/` |
 | `NEXT_PUBLIC_DATA_MODE` | `api` |
+| `NEXT_PUBLIC_SITE_URL` | the deployment's own HTTPS origin, e.g. `https://YOUR_DOMAIN` |
 | `PCBR_API_ENVIRONMENT` | `production` |
 | `PCBR_API_SERVICE_MODE` | `public_demo` |
 | `PCBR_API_DOCS_ENABLED` | `false` |
