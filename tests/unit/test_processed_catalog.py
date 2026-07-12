@@ -240,7 +240,7 @@ def _er_evaluation(
     path.write_text(
         json.dumps(
             {
-                "schema_version": "pc-build-recommender.er-production-evaluation.v3",
+                "schema_version": "pc-build-recommender.er-production-evaluation.v4",
                 "evaluation_id": "er-eval-fixture-v1",
                 "dataset_version": "human-labels-fixture-v1",
                 "model_version": "er-model-fixture-v1",
@@ -280,6 +280,30 @@ def _er_evaluation(
                 "ambiguity_case_count": 0,
                 "ambiguity_deferred_count": 0,
                 "ambiguity_false_auto_match_count": 0,
+                # v4 binds the canonical catalogue release and reports the
+                # model-only route separately from exact-identifier anchors.
+                "canonical_catalogue_version": "canonical-fixture-v1",
+                "canonical_catalogue_sha256": "1" * 64,
+                "canonical_catalogue_file_sha256": "2" * 64,
+                # Every listing here resolves in-catalogue, so the blocking and
+                # winner denominators stay equal to in_catalogue_listing_count, and
+                # anchor + model automatic matches sum to precision_denominator.
+                "canonical_catalogue_product_count": 900,
+                "in_catalogue_listing_count": 1000,
+                "unmatched_listing_count": 0,
+                "anchor_auto_match_count": 700,
+                "model_route_listing_count": 300,
+                "model_in_catalogue_listing_count": 300,
+                "model_unmatched_listing_count": 0,
+                "model_hard_negative_pair_count": 400,
+                "model_hard_negative_listing_count": 250,
+                "model_auto_match_correct": 300,
+                "model_auto_match_count": 300,
+                "model_auto_match_precision": 1.0,
+                "model_auto_match_precision_ci_lower": 0.99,
+                "model_auto_match_precision_ci_upper": 1.0,
+                "model_auto_match_recall": 1.0,
+                "model_auto_match_f1": 1.0,
             }
         ),
         encoding="utf-8",
