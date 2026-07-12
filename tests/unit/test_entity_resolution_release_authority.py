@@ -10,6 +10,9 @@ from typing import Any
 import pytest
 
 from pc_build_recommender.catalog import CatalogEntityMatcher, EntityResolutionEvaluation
+from pc_build_recommender.catalog.entity_resolution_evaluation import (
+    evaluate_listing_matcher,
+)
 from pc_build_recommender.entity_resolution import (
     ER_CANONICAL_CATALOGUE_SCHEMA_VERSION,
     ER_CATALOG_MATCHER_DECISION_VERSION,
@@ -33,8 +36,10 @@ from pc_build_recommender.entity_resolution import (
     canonical_catalogue_sha256,
     entity_resolution_file_sha256,
     entity_resolution_release_sha256,
+    load_entity_resolution_policy,
     load_entity_resolution_release,
     load_entity_resolution_runtime,
+    load_frozen_listing_label_set,
     seal_entity_resolution_policy,
     seal_entity_resolution_rights_approval,
     synthetic_pairs,
@@ -124,7 +129,6 @@ def _create_listing_evidence(root: Path) -> tuple[str, str, str]:
         },
     )
     listing_groups: list[dict[str, Any]] = []
-    decision_rows: list[dict[str, Any]] = []
     for listing_index, listing_id in enumerate(_LISTING_IDS):
         gold_product_id = f"gpu-{listing_index % 25:02d}"
         pair_labels = []
@@ -173,22 +177,6 @@ def _create_listing_evidence(root: Path) -> tuple[str, str, str]:
                 "pair_labels": pair_labels,
             }
         )
-        decision_rows.append(
-            {
-                "listing_id": listing_id,
-                "gold_product_id": gold_product_id,
-                "blocked_candidate_product_ids": [gold_product_id],
-                "blocking_hit": True,
-                "winner_product_id": gold_product_id,
-                "winner_correct": True,
-                "would_auto_match_if_authorized": True,
-                "outcome": "auto_matched",
-                "ambiguity_margin_case": False,
-                "matcher_evidence": {
-                    "decision_version": ER_CATALOG_MATCHER_DECISION_VERSION,
-                },
-            }
-        )
     content: dict[str, Any] = {
         "schema_version": ER_LISTING_LABEL_SET_SCHEMA_VERSION,
         "dataset_version": "human-sg-pc-er-v1",
@@ -218,20 +206,11 @@ def _create_listing_evidence(root: Path) -> tuple[str, str, str]:
     dataset_sha256 = sha256_json(content)
     labels_path = root / "labels.json"
     _write_json(labels_path, {**content, "dataset_sha256": dataset_sha256})
-    decisions_path = root / "decisions.jsonl"
-    decisions_path.write_text(
-        "".join(json.dumps(row, sort_keys=True) + "\n" for row in decision_rows),
-        encoding="utf-8",
-    )
-    return (
-        dataset_sha256,
-        entity_resolution_file_sha256(labels_path),
-        entity_resolution_file_sha256(decisions_path),
-    )
+    return dataset_sha256, entity_resolution_file_sha256(labels_path)
 
 
 def _create_release(root: Path) -> tuple[Path, Path, Path, Path]:
-    label_dataset_sha, label_file_sha, decision_rows_sha = _create_listing_evidence(root)
+    label_dataset_sha, label_file_sha = _create_listing_evidence(root)
     model_dir = root / "model"
     resolver = LightGBMEntityResolver(device="cpu", random_state=17)
     resolver.fit(synthetic_pairs(seed=17, product_count=12), calibrate=True)
@@ -256,6 +235,28 @@ def _create_release(root: Path) -> tuple[Path, Path, Path, Path]:
 
     release_sha = entity_resolution_release_sha256(model_dir)
     model_version = f"er-lightgbm-{release_sha[:16]}"
+
+    # Production authority is derived from a deterministic replay of the pinned
+    # matcher, so the fixture records what that replay actually produces instead
+    # of hand-maintaining a parallel copy that silently drifts from the schema.
+    policy_path = root / "policy.json"
+    policy = _policy_payload()
+    _write_json(policy_path, policy)
+    replay = evaluate_listing_matcher(
+        load_frozen_listing_label_set(root / "labels.json"),
+        load_entity_resolution_runtime(model_dir, allow_unpromoted_human_diagnostic=True),
+        load_entity_resolution_policy(policy_path),
+    )
+    decisions_path = root / "decisions.jsonl"
+    decisions_path.write_text(
+        "".join(
+            json.dumps(row, sort_keys=True, allow_nan=False) + "\n"
+            for row in replay.decision_rows
+        ),
+        encoding="utf-8",
+    )
+    decision_rows_sha = entity_resolution_file_sha256(decisions_path)
+
     evaluation_path = root / "evaluation.json"
     _write_json(
         evaluation_path,
@@ -266,19 +267,19 @@ def _create_release(root: Path) -> tuple[Path, Path, Path, Path]:
             "model_version": model_version,
             "label_source": "human_reviewed",
             "synthetic": False,
-            "precision": 1.0,
-            "labelled_pair_count": 2500,
+            "precision": replay.auto_match_precision,
+            "labelled_pair_count": replay.labelled_pair_count,
             "evaluated_at": "2026-07-21T12:00:00+00:00",
             "artifact_sha256": release_sha,
             "review_queue_sha256": _REVIEW_SHA,
             "frozen_test_groups_sha256": _TEST_GROUP_SHA,
             "auto_match_threshold": 0.98,
-            "precision_numerator": 100,
-            "precision_denominator": 100,
-            "precision_ci_lower": 0.99,
-            "precision_ci_upper": 1.0,
-            "recall": 0.95,
-            "f1": 0.97,
+            "precision_numerator": replay.auto_match_correct,
+            "precision_denominator": replay.auto_match_count,
+            "precision_ci_lower": replay.auto_match_precision_ci_lower,
+            "precision_ci_upper": replay.auto_match_precision_ci_upper,
+            "recall": replay.auto_match_recall,
+            "f1": replay.auto_match_f1,
             # Legacy flags are intentionally false: policy + rights derive authority.
             "reportable": False,
             "deployment_eligible": False,
@@ -290,45 +291,38 @@ def _create_release(root: Path) -> tuple[Path, Path, Path, Path]:
             "max_candidates": 50,
             "minimum_text_score": 0.12,
             "minimum_auto_margin": 0.02,
-            "listing_count": 100,
-            "independent_reviewer_count": 2,
-            "candidate_blocking_hits": 100,
-            "candidate_blocking_denominator": 100,
-            "candidate_blocking_recall": 1.0,
-            "winner_selection_correct": 100,
-            "winner_selection_denominator": 100,
-            "winner_selection_accuracy": 1.0,
-            "ambiguity_case_count": 0,
-            "ambiguity_deferred_count": 0,
-            "ambiguity_false_auto_match_count": 0,
-            "canonical_catalogue_version": "pc-er-canonical-fixture-v1",
-            "canonical_catalogue_sha256": json.loads(
-                (root / "labels.json").read_text(encoding="utf-8")
-            )["canonical_catalogue_sha256"],
-            "canonical_catalogue_file_sha256": entity_resolution_file_sha256(
-                root / "canonical-catalogue.json"
-            ),
-            "canonical_catalogue_product_count": 25,
-            "in_catalogue_listing_count": 100,
-            "unmatched_listing_count": 0,
-            "anchor_auto_match_count": 100,
-            "model_route_listing_count": 0,
-            "model_in_catalogue_listing_count": 0,
-            "model_unmatched_listing_count": 0,
-            "model_hard_negative_pair_count": 0,
-            "model_hard_negative_listing_count": 0,
-            "model_auto_match_correct": 0,
-            "model_auto_match_count": 0,
-            "model_auto_match_precision": 0.0,
-            "model_auto_match_precision_ci_lower": 0.0,
-            "model_auto_match_precision_ci_upper": 0.0,
-            "model_auto_match_recall": 0.0,
-            "model_auto_match_f1": 0.0,
+            "listing_count": replay.listing_count,
+            "independent_reviewer_count": replay.independent_reviewer_count,
+            "candidate_blocking_hits": replay.candidate_blocking_hits,
+            "candidate_blocking_denominator": replay.candidate_blocking_denominator,
+            "candidate_blocking_recall": replay.candidate_blocking_recall,
+            "winner_selection_correct": replay.winner_selection_correct,
+            "winner_selection_denominator": replay.winner_selection_denominator,
+            "winner_selection_accuracy": replay.winner_selection_accuracy,
+            "ambiguity_case_count": replay.ambiguity_case_count,
+            "ambiguity_deferred_count": replay.ambiguity_deferred_count,
+            "ambiguity_false_auto_match_count": replay.ambiguity_false_auto_match_count,
+            "canonical_catalogue_version": replay.canonical_catalogue_version,
+            "canonical_catalogue_sha256": replay.canonical_catalogue_sha256,
+            "canonical_catalogue_file_sha256": replay.canonical_catalogue_file_sha256,
+            "canonical_catalogue_product_count": replay.canonical_catalogue_product_count,
+            "in_catalogue_listing_count": replay.in_catalogue_listing_count,
+            "unmatched_listing_count": replay.unmatched_listing_count,
+            "anchor_auto_match_count": replay.anchor_auto_match_count,
+            "model_route_listing_count": replay.model_route_listing_count,
+            "model_in_catalogue_listing_count": replay.model_in_catalogue_listing_count,
+            "model_unmatched_listing_count": replay.model_unmatched_listing_count,
+            "model_hard_negative_pair_count": replay.model_hard_negative_pair_count,
+            "model_hard_negative_listing_count": replay.model_hard_negative_listing_count,
+            "model_auto_match_correct": replay.model_auto_match_correct,
+            "model_auto_match_count": replay.model_auto_match_count,
+            "model_auto_match_precision": replay.model_auto_match_precision,
+            "model_auto_match_precision_ci_lower": replay.model_auto_match_precision_ci_lower,
+            "model_auto_match_precision_ci_upper": replay.model_auto_match_precision_ci_upper,
+            "model_auto_match_recall": replay.model_auto_match_recall,
+            "model_auto_match_f1": replay.model_auto_match_f1,
         },
     )
-    policy_path = root / "policy.json"
-    policy = _policy_payload()
-    _write_json(policy_path, policy)
     rights_path = root / "rights.json"
     rights = seal_entity_resolution_rights_approval(
         {
@@ -574,7 +568,12 @@ def test_listing_decisions_are_recomputed_not_only_hashed(
     rights = seal_entity_resolution_rights_approval(rights)
     _write_json(rights_path, rights)
 
-    with pytest.raises(EntityResolutionArtifactError, match="winner_correct is inconsistent"):
+    # Re-hashing the tampered file is not enough: authority comes from replaying the
+    # pinned matcher, so a row that the replay would never produce is rejected even
+    # though every recorded digest agrees with the bytes on disk.
+    with pytest.raises(
+        EntityResolutionArtifactError, match="does not match pinned matcher/model replay"
+    ):
         load_entity_resolution_release(model, evaluation_path, policy, rights_path, as_of=_AS_OF)
 
 
@@ -606,6 +605,27 @@ def test_legacy_v2_pairwise_evaluation_cannot_authorize_listing_matcher(
         "ambiguity_case_count",
         "ambiguity_deferred_count",
         "ambiguity_false_auto_match_count",
+        # v4 additions: a legacy v2 payload carries none of the listing-matcher or
+        # canonical-catalogue evidence either.
+        "canonical_catalogue_version",
+        "canonical_catalogue_sha256",
+        "canonical_catalogue_file_sha256",
+        "canonical_catalogue_product_count",
+        "in_catalogue_listing_count",
+        "unmatched_listing_count",
+        "anchor_auto_match_count",
+        "model_route_listing_count",
+        "model_in_catalogue_listing_count",
+        "model_unmatched_listing_count",
+        "model_hard_negative_pair_count",
+        "model_hard_negative_listing_count",
+        "model_auto_match_correct",
+        "model_auto_match_count",
+        "model_auto_match_precision",
+        "model_auto_match_precision_ci_lower",
+        "model_auto_match_precision_ci_upper",
+        "model_auto_match_recall",
+        "model_auto_match_f1",
     ):
         evaluation.pop(field)
     _write_json(evaluation_path, evaluation)
