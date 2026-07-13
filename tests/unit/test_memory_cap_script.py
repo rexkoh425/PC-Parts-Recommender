@@ -1,15 +1,23 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 
-pytestmark = pytest.mark.skipif(
-    sys.platform != "win32", reason="PowerShell memory guard is Windows-only"
-)
+# The guard is a PowerShell 7 script; Windows PowerShell 5.1 is not a substitute,
+# so skip rather than fail where pwsh is not installed.
+pytestmark = [
+    pytest.mark.skipif(
+        sys.platform != "win32", reason="PowerShell memory guard is Windows-only"
+    ),
+    pytest.mark.skipif(
+        shutil.which("pwsh") is None, reason="PowerShell 7 (pwsh) is not installed"
+    ),
+]
 
 
 SCRIPT = Path(__file__).resolve().parents[2] / "scripts" / "check-memory-cap.ps1"
