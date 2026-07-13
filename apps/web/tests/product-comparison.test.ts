@@ -14,7 +14,7 @@ function product(productId: string, category: ProductDetail["category"], attribu
     category,
     canonical_name: productId,
     attributes,
-    updated_at: "2027-07-23T00:00:00Z",
+    updated_at: "2026-07-23T00:00:00Z",
     data_version: "test",
   };
 }
