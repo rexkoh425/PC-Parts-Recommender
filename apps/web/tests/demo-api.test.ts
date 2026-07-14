@@ -93,6 +93,5 @@ describe("public demo engine", () => {
     const response = checkDemoCompatibility({ components: [] });
     expect(response.status).toBe("unknown");
     expect(response.is_feasible).toBe(false);
-    console.log('DEBUG', arguments);
   });
 });
