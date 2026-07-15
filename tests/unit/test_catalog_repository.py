@@ -25,7 +25,7 @@ from pc_build_recommender.domain import (
     RetailerListing,
     SourceProvenance,
     SourceType,
-    StockState,
+    StockStatus,
     WorkloadLabel,
 )
 
@@ -77,7 +77,7 @@ def _listing() -> RetailerListing:
         title="ExampleGPU 16 GB inference graphics card",
         base_price=Decimal("899"),
         shipping_price=Decimal("8"),
-        stock_status=StockState.IN_STOCK,
+        stock_status=StockStatus.IN_STOCK,
         listing_url="https://retailer.invalid/sku-1",
         first_seen_at=observed,
         last_seen_at=observed,
@@ -116,7 +116,7 @@ def test_price_snapshots_are_idempotent_per_listing_and_time(session: Session) -
             listing_id="listing_gpu_1",
             observed_at=observed,
             base_price=899,
-            stock_status=StockState.IN_STOCK,
+            stock_status=StockStatus.IN_STOCK,
         )
     )
     repository.upsert_price_snapshot(
@@ -125,7 +125,7 @@ def test_price_snapshots_are_idempotent_per_listing_and_time(session: Session) -
             listing_id="listing_gpu_1",
             observed_at=observed,
             base_price=879,
-            stock_status=StockState.IN_STOCK,
+            stock_status=StockStatus.IN_STOCK,
         )
     )
 

@@ -26,7 +26,7 @@ class ProductStatus(StrEnum):
     UNKNOWN = "unknown"
 
 
-class StockState(StrEnum):
+class StockStatus(StrEnum):
     IN_STOCK = "in_stock"
     OUT_OF_STOCK = "out_of_stock"
     BACKORDER = "backorder"

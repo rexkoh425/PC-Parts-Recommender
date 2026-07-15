@@ -17,7 +17,7 @@ from pc_build_recommender.domain import (
     PriceSample,
     RetailerListing,
     ReviewNote,
-    StockState,
+    StockStatus,
 )
 from pc_build_recommender.entity_resolution import (
     CanonicalProductRecord,
@@ -486,7 +486,7 @@ def stream_processed_catalog(
             matched_listing_ids.add(listing.listing_id)
             provenance = provenance.model_copy(update={"listing_id": listing.listing_id})
             matched_by_category[selected.category.value] += 1
-            if listing.stock_status is StockState.IN_STOCK:
+            if listing.stock_status is StockStatus.IN_STOCK:
                 in_stock_by_category[selected.category.value] += 1
             readiness_accumulator.observe_listing(
                 listing,

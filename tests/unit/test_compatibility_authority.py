@@ -26,7 +26,7 @@ from pc_build_recommender.domain import (
     ReviewNote,
     SourceProvenance,
     SourceType,
-    StockState,
+    StockStatus,
 )
 
 NOW = datetime(2026, 7, 22, tzinfo=UTC)
@@ -65,7 +65,7 @@ class CatalogReaderFixture:
         *,
         product_id: str | None = None,
         retailer: str | None = None,
-        stock_status: StockState | None = None,
+        stock_status: StockStatus | None = None,
         limit: int = 100,
     ) -> list[RetailerListing]:
         return []

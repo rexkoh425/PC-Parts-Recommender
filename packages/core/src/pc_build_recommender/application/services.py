@@ -20,7 +20,7 @@ from pc_build_recommender.domain import (
     ComponentKind,
     ExistingComponent,
     RetailerListing,
-    StockState,
+    StockStatus,
     new_id,
 )
 from pc_build_recommender.optimizer import (
@@ -410,7 +410,7 @@ class GenerateBuildsService:
                     update={
                         "base_price": Decimal("0"),
                         "shipping_price": Decimal("0"),
-                        "stock_status": StockState.IN_STOCK,
+                        "stock_status": StockStatus.IN_STOCK,
                     }
                 )
             listings.append(listing)

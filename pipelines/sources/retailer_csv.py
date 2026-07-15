@@ -11,7 +11,7 @@ from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
-from pc_build_recommender.domain.enums import ListingCondition, StockState
+from pc_build_recommender.domain.enums import ListingCondition, StockStatus
 from pc_build_recommender.domain.models import PriceSample, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
@@ -276,20 +276,20 @@ class ConsentedRetailerCSVAdapter:
         return amount
 
     @staticmethod
-    def _stock_status(value: object) -> StockState:
+    def _stock_status(value: object) -> StockStatus:
         text = re.sub(r"[^a-z]", "_", str(value).strip().lower()).strip("_")
         mappings = {
-            "in_stock": StockState.IN_STOCK,
-            "instock": StockState.IN_STOCK,
-            "available": StockState.IN_STOCK,
-            "out_of_stock": StockState.OUT_OF_STOCK,
-            "outofstock": StockState.OUT_OF_STOCK,
-            "sold_out": StockState.OUT_OF_STOCK,
-            "backorder": StockState.BACKORDER,
-            "back_order": StockState.BACKORDER,
-            "preorder": StockState.PREORDER,
-            "pre_order": StockState.PREORDER,
-            "unknown": StockState.UNKNOWN,
+            "in_stock": StockStatus.IN_STOCK,
+            "instock": StockStatus.IN_STOCK,
+            "available": StockStatus.IN_STOCK,
+            "out_of_stock": StockStatus.OUT_OF_STOCK,
+            "outofstock": StockStatus.OUT_OF_STOCK,
+            "sold_out": StockStatus.OUT_OF_STOCK,
+            "backorder": StockStatus.BACKORDER,
+            "back_order": StockStatus.BACKORDER,
+            "preorder": StockStatus.PREORDER,
+            "pre_order": StockStatus.PREORDER,
+            "unknown": StockStatus.UNKNOWN,
         }
         if text not in mappings:
             raise ValueError(f"unrecognised stock_status: {value!r}")

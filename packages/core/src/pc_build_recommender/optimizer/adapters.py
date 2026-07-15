@@ -18,7 +18,7 @@ from pc_build_recommender.domain import (
     CompatVerdict,
     ComponentKind,
     RetailerListing,
-    StockState,
+    StockStatus,
 )
 
 from .models import (
@@ -103,7 +103,7 @@ def candidate_from_domain(
             total_price = listing.base_price + getattr(listing, "shipping_price", 0)
         price_cents = money_to_cents(total_price)
         listing_id = str(listing.listing_id)
-        in_stock = _value(getattr(listing, "stock_status", None)) == StockState.IN_STOCK.value
+        in_stock = _value(getattr(listing, "stock_status", None)) == StockStatus.IN_STOCK.value
 
     power_draw: int | None = None
     psu_wattage: int | None = None
@@ -221,7 +221,7 @@ def problem_from_domain(
         offers = listings_by_product.get(product_id, [])
         offers.sort(
             key=lambda offer: (
-                _value(getattr(offer, "stock_status", None)) != StockState.IN_STOCK.value,
+                _value(getattr(offer, "stock_status", None)) != StockStatus.IN_STOCK.value,
                 money_to_cents(offer.total_price),
                 str(offer.listing_id),
             )

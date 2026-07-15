@@ -26,7 +26,7 @@ from pc_build_recommender.domain import (
     RetailerListing,
     ReviewNote,
     SourceType,
-    StockState,
+    StockStatus,
 )
 from pc_build_recommender.retrieval import ProductDocument
 
@@ -105,7 +105,7 @@ class CatalogReader(Protocol):
         *,
         product_id: str | None = None,
         retailer: str | None = None,
-        stock_status: StockState | None = None,
+        stock_status: StockStatus | None = None,
         limit: int = 100,
     ) -> list[RetailerListing]: ...
 
@@ -136,7 +136,7 @@ def _preferred_listing(listings: Sequence[RetailerListing]) -> RetailerListing |
     # The product scope is new components.  A used/open-box/refurbished offer
     # must never become an acquisition candidate merely because it is cheap.
     new_listings = [item for item in listings if item.condition == ListingCondition.NEW]
-    in_stock = [item for item in new_listings if item.stock_status == StockState.IN_STOCK]
+    in_stock = [item for item in new_listings if item.stock_status == StockStatus.IN_STOCK]
     return min(in_stock, key=lambda item: (item.total_price, item.listing_id), default=None)
 
 
@@ -432,7 +432,7 @@ class ApplicationCatalog:
                 product_benchmarks[benchmark.workload.value] += (benchmark,)
             signals: dict[str, float] = {
                 "availability_score": float(
-                    listing is not None and listing.stock_status == StockState.IN_STOCK
+                    listing is not None and listing.stock_status == StockStatus.IN_STOCK
                 ),
                 "freshness_score": 1.0,
             }

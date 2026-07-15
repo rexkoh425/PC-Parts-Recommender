@@ -32,7 +32,7 @@ from pc_build_recommender.catalog import (
     validate_production_readiness,
     validate_review_target,
 )
-from pc_build_recommender.domain import ComponentKind, StockState
+from pc_build_recommender.domain import ComponentKind, StockStatus
 
 NOW = datetime.now(UTC).replace(microsecond=0).isoformat()
 
@@ -280,7 +280,7 @@ def test_exact_mpn_brand_mapping_preserves_unknown_stock(tmp_path: Path) -> None
     assert data.stats.known_in_stock_listing_count == 0
     assert not data.stats.has_complete_priced_coverage
     assert data.listings[0].product_id == "prod_asus_5060ti"
-    assert data.listings[0].stock_status is StockState.UNKNOWN
+    assert data.listings[0].stock_status is StockStatus.UNKNOWN
     assert data.match_method_by_listing[data.listings[0].listing_id] == "exact_mpn_brand"
 
     reader = InMemoryCatalogReader(data)

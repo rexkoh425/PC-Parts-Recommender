@@ -29,7 +29,7 @@ from pc_build_recommender.domain import (
     MotherboardAttributes,
     PowerSupplyAttributes,
     RetailerListing,
-    StockState,
+    StockStatus,
     StorageAttributes,
     WorkloadLabel,
     WorkloadPreference,
@@ -407,7 +407,7 @@ def _listing(product_id: str, price: Decimal = Decimal("100")) -> RetailerListin
         title=product_id,
         condition=ListingCondition.NEW,
         base_price=price,
-        stock_status=StockState.IN_STOCK,
+        stock_status=StockStatus.IN_STOCK,
         listing_url=f"https://example.test/{product_id}",
     )
 
