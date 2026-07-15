@@ -64,7 +64,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Scan filesystem, secrets, dependencies, and infrastructure configuration
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
@@ -132,7 +132,7 @@ jobs:
           cache-from: type=gha,scope=security-${{ matrix.name }}
           cache-to: type=gha,mode=max,scope=security-${{ matrix.name }}
       - name: Scan runtime image
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: pcbr/${{ matrix.name }}:security-scan
           severity: HIGH,CRITICAL
