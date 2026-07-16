@@ -6,6 +6,7 @@ from pathlib import Path
 import httpx
 import pytest
 from pipelines.sources.wikidata import (
+    WIKIDATA_API_URL,
     WIKIDATA_LICENSE_URL,
     WIKIDATA_PARSER_VERSION,
     WIKIDATA_USER_AGENT,
@@ -13,6 +14,7 @@ from pipelines.sources.wikidata import (
     WikidataCandidate,
     WikidataEnrichmentAdapter,
     WikidataResponseTooLargeError,
+    extract_chip_designation,
     load_wikidata_candidates,
 )
 
@@ -704,3 +706,109 @@ def test_wikidata_local_fixture_is_quarantined_from_training_and_redistribution(
     assert record["redistribution_eligible"] is False
     assert record["rights_metadata"]["rights_basis"] == "unverified_local_fixture"
     assert record["provenance"]["source_type"] == "controlled_fixture"
+
+
+def _chip_raw_payload(*, candidate_name: str, entity: dict) -> dict:
+    """Raw snapshot in which identity cannot match but a chip relation can."""
+
+    return {
+        "schema_version": "pc-build-recommender.wikidata-raw.v2",
+        "acquisition_mode": "official_api",
+        "api_url": WIKIDATA_API_URL,
+        "licence": "CC0-1.0",
+        "licence_url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+        "language": "en",
+        "candidates": [
+            {
+                "candidate_id": "prod-board-1",
+                "canonical_name": candidate_name,
+                "category": "gpu",
+                "brand": "MSI",
+                "manufacturer_part_number": None,
+                "gtin": None,
+            }
+        ],
+        "search_responses": [{"candidate_id": "prod-board-1", "payload": {"search": []}}],
+        "chip_search_responses": [
+            {
+                "candidate_id": "prod-board-1",
+                "chip_designation": "GeForce RTX 4070",
+                "payload": {"search": [{"id": "Q117705531"}]},
+            }
+        ],
+        "entity_responses": [
+            {"ids": ["Q117705531"], "payload": {"entities": {"Q117705531": entity}}}
+        ],
+    }
+
+
+def _rtx_4070_entity(*, instance_of: str = "Q122760264", manufacturer: str = "Q182477") -> dict:
+    return {
+        "type": "item",
+        "id": "Q117705531",
+        "labels": {"en": {"language": "en", "value": "GeForce RTX 4070"}},
+        "aliases": {},
+        "claims": {
+            "P31": [_entity_claim(instance_of)],
+            "P176": [_entity_claim(manufacturer)],
+        },
+    }
+
+
+def _parse_chip(tmp_path, payload):
+    adapter = WikidataEnrichmentAdapter(raw_root=tmp_path / "raw")
+    fixture_path = tmp_path / "wikidata-chip.json"
+    fixture_path.write_text(json.dumps(payload), encoding="utf-8")
+    return adapter.parse(adapter.fetch(response_path=fixture_path), max_records=1)
+
+
+def test_chip_relation_never_asserts_product_identity(tmp_path) -> None:
+    batch = _parse_chip(
+        tmp_path,
+        _chip_raw_payload(
+            candidate_name="MSI GeForce RTX 4070 VENTUS 2X WHITE 12G OC GDDR6X",
+            entity=_rtx_4070_entity(),
+        ),
+    )
+
+    assert batch.accepted_count == 1
+    record = batch.records[0]
+    assert record["record_type"] == "catalogue_chip_relation"
+    # The board is not the chip: identity must never be populated from this relation.
+    assert "wikidata_entity_id" not in record["data"]
+    assert record["data"]["based_on_chip_entity_id"] == "Q117705531"
+    assert record["data"]["chip_designation"] == "GeForce RTX 4070"
+    assert record["data"]["relation"] == "based_on_chip"
+    assert record["normalisation_metadata"]["asserts_product_identity"] is False
+    assert record["rights_metadata"]["use_scope"] == "chip_relation_features_only"
+    assert record["training_eligible"] is False
+
+
+def test_chip_relation_rejects_an_unreviewed_class_or_vendor(tmp_path) -> None:
+    cases = {
+        "unreviewed-class": _rtx_4070_entity(instance_of="Q11235244"),
+        "unreviewed-vendor": _rtx_4070_entity(manufacturer="Q18092"),
+    }
+    for name, entity in cases.items():
+        case_dir = tmp_path / name
+        case_dir.mkdir()
+        batch = _parse_chip(
+            case_dir,
+            _chip_raw_payload(
+                candidate_name="MSI GeForce RTX 4070 VENTUS 2X WHITE 12G OC",
+                entity=entity,
+            ),
+        )
+        assert batch.accepted_count == 0
+        assert batch.rejected[0]["reason"] == "no_exact_wikidata_identity_match"
+
+
+def test_chip_designation_requires_exact_suffix_and_single_model() -> None:
+    assert extract_chip_designation("Gigabyte GeForce RTX 4070 Ti SUPER OC 16G") == (
+        "GeForce RTX 4070 Ti SUPER"
+    )
+    assert extract_chip_designation("EVGA GeForce RTX 2070 SUPER 8 GB") == "GeForce RTX 2070 SUPER"
+    assert extract_chip_designation("Asus STRIX GeForce RTX 2070 8GB") == "GeForce RTX 2070"
+    # A title naming two models cannot be attributed to either.
+    assert extract_chip_designation("Bundle: GeForce RTX 4070 and GeForce RTX 4080") is None
+    assert extract_chip_designation("Corsair Vengeance 32GB DDR5-6000") is None

@@ -76,6 +76,108 @@ _REVIEWED_MANUFACTURER_ENTITY_IDS: dict[str, frozenset[str]] = {
 }
 
 
+# A retail board is not the chip it carries. `based_on_chip` is therefore a distinct
+# relation, never product identity: an AIB SKU such as "MSI GeForce RTX 4070 VENTUS 2X"
+# is manufactured by MSI while the graphics-card model entity is manufactured by Nvidia,
+# so the reviewed identity context deliberately refuses it. Evidence links:
+# Q122760264 "graphics card model", Q182477 Nvidia, Q128896 AMD, Q248 Intel.
+CHIP_RELATION_RECORD_TYPE = "catalogue_chip_relation"
+CHIP_RELATION_NAME = "based_on_chip"
+CHIP_RELATION_MATCH_METHOD = "chip_designation"
+_REVIEWED_CHIP_INSTANCE_IDS: frozenset[str] = frozenset({"Q122760264"})
+_REVIEWED_CHIP_VENDOR_ENTITY_IDS: frozenset[str] = frozenset(
+    {"Q182477", "Q128896", "Q248"}
+)
+
+# Suffixes change the part. "RTX 4070" and "RTX 4070 Ti" are different graphics-card
+# models, so a designation is only usable when its suffix is captured verbatim.
+_CHIP_DESIGNATION_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(
+        r"\bgeforce\s+(?P<series>rtx|gtx|gt)\s*(?P<number>\d{3,4})"
+        r"(?P<suffix>(?:\s+(?:ti|super))*)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\bradeon\s+(?P<series>rx)\s*(?P<number>\d{3,4})"
+        r"(?P<suffix>(?:\s+(?:xtx|xt|gre))*)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\barc\s+(?P<series>a|b)\s*(?P<number>\d{3,4})(?P<suffix>)\b",
+        re.IGNORECASE,
+    ),
+)
+_CHIP_FAMILY_BY_SERIES: dict[str, str] = {
+    "rtx": "GeForce",
+    "gtx": "GeForce",
+    "gt": "GeForce",
+    "rx": "Radeon",
+    "a": "Arc",
+    "b": "Arc",
+}
+_CHIP_SUFFIX_CASING: dict[str, str] = {
+    "ti": "Ti",
+    "super": "SUPER",
+    "xt": "XT",
+    "xtx": "XTX",
+    "gre": "GRE",
+}
+
+
+def extract_chip_designation(canonical_name: str) -> str | None:
+    """Return the single unambiguous graphics-card model named by a retail title.
+
+    Returns ``None`` when no reviewed family is present or when the title names more
+    than one distinct designation, because a board that mentions two models cannot be
+    attributed to either without review.
+    """
+
+    found: list[str] = []
+    for pattern in _CHIP_DESIGNATION_PATTERNS:
+        for match in pattern.finditer(canonical_name):
+            series = match.group("series").casefold()
+            family = _CHIP_FAMILY_BY_SERIES[series]
+            suffixes = [
+                _CHIP_SUFFIX_CASING[token.casefold()]
+                for token in match.group("suffix").split()
+                if token.casefold() in _CHIP_SUFFIX_CASING
+            ]
+            if family == "Arc":
+                designation = f"Arc {series.upper()}{match.group('number')}"
+            else:
+                designation = f"{family} {series.upper()} {match.group('number')}"
+            if suffixes:
+                designation = f"{designation} {' '.join(suffixes)}"
+            if designation not in found:
+                found.append(designation)
+    if len(found) != 1:
+        return None
+    return found[0]
+
+
+def _match_chip_entity(
+    designation: str,
+    entity: Mapping[str, Any],
+    *,
+    language: str,
+) -> bool:
+    """Accept only a reviewed graphics-card model whose label is exactly the designation."""
+
+    if entity.get("type") != "item":
+        return False
+    instance_ids = set(_entity_claim_values(entity, "P31"))
+    if instance_ids.isdisjoint(_REVIEWED_CHIP_INSTANCE_IDS):
+        return False
+    vendor_ids = set(_entity_claim_values(entity, "P176"))
+    if vendor_ids.isdisjoint(_REVIEWED_CHIP_VENDOR_ENTITY_IDS):
+        return False
+    wanted = _normalise_text(designation)
+    names = _language_values(entity.get("labels"), language) + _language_values(
+        entity.get("aliases"), language
+    )
+    return any(_normalise_text(name) == wanted for name in names)
+
+
 class WikidataAPIError(RuntimeError):
     """Raised when the official Wikidata API cannot provide a valid bounded response."""
 
@@ -343,6 +445,7 @@ class WikidataEnrichmentAdapter:
                 transport=self.transport,
                 follow_redirects=False,
             ) as client:
+                chip_search_responses: list[dict[str, Any]] = []
                 for candidate in candidates:
                     payload = self._request_json(
                         client,
@@ -360,6 +463,46 @@ class WikidataEnrichmentAdapter:
                     )
                     search_responses.append(
                         {"candidate_id": candidate.candidate_id, "payload": payload}
+                    )
+                    for result in _sequence(payload.get("search")):
+                        if not isinstance(result, Mapping):
+                            continue
+                        entity_id = _optional_text(result.get("id"))
+                        if (
+                            entity_id is not None
+                            and _ENTITY_ID_PATTERN.fullmatch(entity_id)
+                            and entity_id not in seen_entity_ids
+                        ):
+                            seen_entity_ids.add(entity_id)
+                            entity_ids.append(entity_id)
+
+                # A second, narrower search for the graphics-card model named by the
+                # title. This never replaces identity: it only offers the chip entity
+                # that the retail board is built on.
+                for candidate in candidates:
+                    designation = extract_chip_designation(candidate.canonical_name)
+                    if designation is None:
+                        continue
+                    payload = self._request_json(
+                        client,
+                        params={
+                            "action": "wbsearchentities",
+                            "format": "json",
+                            "formatversion": "2",
+                            "language": language,
+                            "uselang": language,
+                            "type": "item",
+                            "limit": str(search_limit),
+                            "search": designation,
+                        },
+                        remaining_bytes=remaining_bytes,
+                    )
+                    chip_search_responses.append(
+                        {
+                            "candidate_id": candidate.candidate_id,
+                            "chip_designation": designation,
+                            "payload": payload,
+                        }
                     )
                     for result in _sequence(payload.get("search")):
                         if not isinstance(result, Mapping):
@@ -404,6 +547,7 @@ class WikidataEnrichmentAdapter:
             "language": language,
             "candidates": [asdict(candidate) for candidate in candidates],
             "search_responses": search_responses,
+            "chip_search_responses": chip_search_responses,
             "entity_responses": entity_responses,
         }
         self.raw_root.mkdir(parents=True, exist_ok=True)
@@ -579,6 +723,9 @@ class WikidataEnrichmentAdapter:
 
         candidates = self._parse_candidates(payload.get("candidates"), max_records=max_records)
         search_ids_by_candidate = self._parse_search_results(payload.get("search_responses"))
+        chip_ids_by_candidate = self._parse_search_results(
+            payload.get("chip_search_responses") or []
+        )
         entities = self._parse_entities(payload.get("entity_responses"))
         batch = ParsedBatch(
             source_name=snapshot.source_name,
@@ -597,6 +744,20 @@ class WikidataEnrichmentAdapter:
                     rank, method = match
                     ranked.append((rank, entity_id, method, entity))
             if not ranked:
+                chip_record = self._chip_relation_record(
+                    candidate=candidate,
+                    chip_entity_ids=chip_ids_by_candidate.get(candidate.candidate_id, []),
+                    entities=entities,
+                    language=language,
+                    snapshot=snapshot,
+                    is_official=is_official,
+                )
+                if chip_record is not None:
+                    batch.records.append(chip_record)
+                    match_methods[CHIP_RELATION_MATCH_METHOD] = (
+                        match_methods.get(CHIP_RELATION_MATCH_METHOD, 0) + 1
+                    )
+                    continue
                 batch.rejected.append(
                     rejected_record(
                         candidate.candidate_id,
@@ -712,6 +873,108 @@ class WikidataEnrichmentAdapter:
                     raise ValueError(f"duplicate Wikidata entity response: {entity_id_text}")
                 entities[entity_id_text] = dict(raw_entity)
         return entities
+
+    def _chip_relation_record(
+        self,
+        *,
+        candidate: WikidataCandidate,
+        chip_entity_ids: Sequence[str],
+        entities: Mapping[str, dict[str, Any]],
+        language: str,
+        snapshot: RawSnapshot,
+        is_official: bool,
+    ) -> dict[str, Any] | None:
+        """Emit the board-to-chip relation, which is never a claim of product identity.
+
+        The record deliberately carries no ``wikidata_entity_id``: a consumer reading
+        catalogue identity must never receive a graphics-card model in that field.
+        """
+
+        designation = extract_chip_designation(candidate.canonical_name)
+        if designation is None:
+            return None
+        matches = [
+            entity_id
+            for entity_id in chip_entity_ids
+            if (entity := entities.get(entity_id)) is not None
+            and _match_chip_entity(designation, entity, language=language)
+        ]
+        if len(matches) != 1:
+            return None
+        entity_id = matches[0]
+        entity = entities[entity_id]
+        labels = _language_values(entity.get("labels"), language)
+        raw_entity_bytes = json.dumps(
+            entity,
+            allow_nan=False,
+            ensure_ascii=False,
+            separators=(",", ":"),
+            sort_keys=True,
+        ).encode("utf-8")
+        return {
+            "schema_version": NORMALISED_RECORD_SCHEMA_VERSION,
+            "record_type": CHIP_RELATION_RECORD_TYPE,
+            "source_record_id": f"{candidate.candidate_id}:{CHIP_RELATION_NAME}:{entity_id}",
+            "archive_snapshot_sha256": snapshot.content_sha256,
+            "raw_record_sha256": sha256_bytes(raw_entity_bytes),
+            "training_eligible": False,
+            "training_scope": "quarantined_until_downstream_consumer_validation",
+            "published_claims_eligible": False,
+            "redistribution_eligible": is_official,
+            "development_only": True,
+            "rights_metadata": {
+                "rights_basis": "open_licence" if is_official else "unverified_local_fixture",
+                "licence": "CC0-1.0" if is_official else "unverified-fixture-claim",
+                "may_display": is_official,
+                "may_cache": is_official,
+                "may_redistribute": is_official,
+                "may_derive": is_official,
+                "may_embed": is_official,
+                "may_train": is_official,
+                "use_scope": "chip_relation_features_only",
+            },
+            "provenance": {
+                "source_name": snapshot.source_name,
+                "source_url": (
+                    WIKIDATA_ENTITY_URL.format(entity_id=entity_id)
+                    if is_official
+                    else snapshot.source_url
+                ),
+                "source_type": "official_api" if is_official else "controlled_fixture",
+                "retrieved_at": snapshot.retrieved_at.isoformat(),
+                "raw_content_hash": sha256_bytes(raw_entity_bytes),
+                "parser_version": WIKIDATA_PARSER_VERSION,
+                "licence": "CC0-1.0" if is_official else "unverified-fixture-claim",
+                "licence_url": WIKIDATA_LICENSE_URL if is_official else None,
+                "licence_or_access_note": snapshot.licence_or_access_note,
+                "extraction_confidence": 0.85,
+            },
+            "normalisation_metadata": {
+                "match_method": CHIP_RELATION_MATCH_METHOD,
+                "match_confidence": 0.85,
+                "language": language,
+                "contains_retailer_prices": False,
+                "applies_to_product_id": candidate.candidate_id,
+                "relation": CHIP_RELATION_NAME,
+                "asserts_product_identity": False,
+                "standalone_enrichment_only": True,
+                "downstream_consumer_validation_required": True,
+                "downstream_consumer_validation_status": "pending",
+            },
+            "data": {
+                "product_id": candidate.candidate_id,
+                "category": candidate.category,
+                "canonical_name": candidate.canonical_name,
+                "relation": CHIP_RELATION_NAME,
+                "chip_designation": designation,
+                "based_on_chip_entity_id": entity_id,
+                "based_on_chip_label": labels[0] if labels else designation,
+                "based_on_chip_entity_url": WIKIDATA_ENTITY_URL.format(entity_id=entity_id),
+                "chip_vendor_entity_ids": _entity_claim_values(entity, "P176"),
+                "chip_instance_of_entity_ids": _entity_claim_values(entity, "P31"),
+                "chip_release_date": _release_date(entity),
+            },
+        }
 
     @staticmethod
     def _normalise_entity(
