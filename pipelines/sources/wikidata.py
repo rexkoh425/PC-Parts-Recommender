@@ -479,32 +479,39 @@ class WikidataEnrichmentAdapter:
                 # A second, narrower search for the graphics-card model named by the
                 # title. This never replaces identity: it only offers the chip entity
                 # that the retail board is built on.
+                # Retail boards repeat the same model many times over, so each distinct
+                # designation is searched once and the response reused. The raw snapshot
+                # still records one entry per candidate.
+                chip_payload_by_designation: dict[str, dict[str, Any]] = {}
                 for candidate in candidates:
                     designation = extract_chip_designation(candidate.canonical_name)
                     if designation is None:
                         continue
-                    payload = self._request_json(
-                        client,
-                        params={
-                            "action": "wbsearchentities",
-                            "format": "json",
-                            "formatversion": "2",
-                            "language": language,
-                            "uselang": language,
-                            "type": "item",
-                            "limit": str(search_limit),
-                            "search": designation,
-                        },
-                        remaining_bytes=remaining_bytes,
-                    )
+                    chip_payload = chip_payload_by_designation.get(designation)
+                    if chip_payload is None:
+                        chip_payload = self._request_json(
+                            client,
+                            params={
+                                "action": "wbsearchentities",
+                                "format": "json",
+                                "formatversion": "2",
+                                "language": language,
+                                "uselang": language,
+                                "type": "item",
+                                "limit": str(search_limit),
+                                "search": designation,
+                            },
+                            remaining_bytes=remaining_bytes,
+                        )
+                        chip_payload_by_designation[designation] = chip_payload
                     chip_search_responses.append(
                         {
                             "candidate_id": candidate.candidate_id,
                             "chip_designation": designation,
-                            "payload": payload,
+                            "payload": chip_payload,
                         }
                     )
-                    for result in _sequence(payload.get("search")):
+                    for result in _sequence(chip_payload.get("search")):
                         if not isinstance(result, Mapping):
                             continue
                         entity_id = _optional_text(result.get("id"))
