@@ -1,5 +1,4 @@
 import { access, cp, mkdir, rm } from "node:fs/promises";
-import { access, cp, mkdir, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import type { Plugin } from "vite";
 
