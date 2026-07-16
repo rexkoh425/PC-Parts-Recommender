@@ -135,7 +135,7 @@ class CompatVerdict(StrEnum):
     UNKNOWN = "unknown"
 
 
-class BuildPreset(StrEnum):
+class BuildProfile(StrEnum):
     BEST_OVERALL = "best_overall"
     BEST_VALUE = "best_value"
     HIGHEST_PERFORMANCE = "highest_performance"

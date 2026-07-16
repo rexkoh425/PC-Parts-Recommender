@@ -25,7 +25,7 @@ from .components import (
 )
 from .enums import (
     BenchmarkValueKind,
-    BuildPreset,
+    BuildProfile,
     CaseSize,
     CompatVerdict,
     ComponentKind,
@@ -364,11 +364,11 @@ class BuildRequestSpec(DomainModel):
     preferences: BuildPreferences = Field(default_factory=BuildPreferences)
     performance_target: str | None = Field(default=None, min_length=1, max_length=200)
     raw_query: str | None = None
-    requested_profiles: list[BuildPreset] = Field(
+    requested_profiles: list[BuildProfile] = Field(
         default_factory=lambda: [
-            BuildPreset.BEST_OVERALL,
-            BuildPreset.BEST_VALUE,
-            BuildPreset.HIGHEST_PERFORMANCE,
+            BuildProfile.BEST_OVERALL,
+            BuildProfile.BEST_VALUE,
+            BuildProfile.HIGHEST_PERFORMANCE,
         ]
     )
 
@@ -434,7 +434,7 @@ class ComponentAlternative(DomainModel):
 
 class BuildRecommendation(DomainModel):
     build_id: str = Field(default_factory=lambda: new_id("build"), min_length=1)
-    profile: BuildPreset
+    profile: BuildProfile
     total_price_sgd: Money
     overall_score: Score
     components: list[BuildComponentSelection]

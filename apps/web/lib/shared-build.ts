@@ -1,6 +1,6 @@
 import {
   componentCategories,
-  type BuildPreset,
+  type BuildProfile,
   type BuildResult,
   type ComponentKind,
   type PublicBuildSnapshot,
@@ -11,7 +11,7 @@ const maximumTokenLength = 12_000;
 const maximumTextLength = 360;
 const maximumSharedExplanations = 4;
 const maximumSharedWarnings = 4;
-const profileValues = new Set<BuildPreset>([
+const profileValues = new Set<BuildProfile>([
   "best_overall",
   "best_value",
   "highest_performance",
@@ -40,7 +40,7 @@ export interface SharedBuildComponent {
 export interface SharedBuildSnapshot {
   version: typeof sharedBuildVersion;
   generated_at: string;
-  profile: BuildPreset;
+  profile: BuildProfile;
   total_price_sgd: number;
   overall_score: number;
   value_score?: number;
@@ -232,7 +232,7 @@ export function decodeSharedBuild(token: string | null | undefined): SharedBuild
     if (!isRecord(value) || value.version !== sharedBuildVersion || typeof value.profile !== "string") {
       return undefined;
     }
-    if (!profileValues.has(value.profile as BuildPreset) || !["pass", "warning"].includes(String(value.compatibility_status))) {
+    if (!profileValues.has(value.profile as BuildProfile) || !["pass", "warning"].includes(String(value.compatibility_status))) {
       return undefined;
     }
     const generatedAt = boundedText(value.generated_at, 64);
@@ -267,7 +267,7 @@ export function decodeSharedBuild(token: string | null | undefined): SharedBuild
     return {
       version: sharedBuildVersion,
       generated_at: generatedAt,
-      profile: value.profile as BuildPreset,
+      profile: value.profile as BuildProfile,
       total_price_sgd: totalPrice,
       overall_score: overallScore,
       ...(optionalScore("value_score") !== undefined ? { value_score: optionalScore("value_score") } : {}),

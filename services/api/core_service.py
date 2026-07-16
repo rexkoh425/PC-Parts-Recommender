@@ -38,7 +38,7 @@ from pc_build_recommender.domain import (
     BuildPreferences as DomainPreferences,
 )
 from pc_build_recommender.domain import (
-    BuildPreset as DomainProfile,
+    BuildProfile as DomainProfile,
 )
 from pc_build_recommender.domain import (
     BuildRecommendation as DomainBuild,
@@ -80,7 +80,7 @@ from services.api.models import (
     BenchmarkObservation,
     BuildComponent,
     BuildGenerationStatus,
-    BuildPreset,
+    BuildProfile,
     BuildShareCreated,
     BuildShareRevoked,
     BuildResult,
@@ -238,7 +238,7 @@ def _optimizer_version(
 def _domain_request(request: GenerateBuildsRequest) -> DomainBuildRequest:
     minimum_vram = request.requirements.minimum_gpu_vram_gb
     profiles = request.requested_profiles or [
-        BuildPreset(profile.value) for profile in _PROFILE_ORDER[: request.max_builds]
+        BuildProfile(profile.value) for profile in _PROFILE_ORDER[: request.max_builds]
     ]
     return DomainBuildRequest(
         budget_sgd=Decimal(str(request.budget_sgd)),
@@ -950,7 +950,7 @@ class CoreRecommendationService(RecommendationApplication):
             solver_ran=response.optimizer_ran,
             solver_profile_statuses=[
                 SolverProfileOutcome(
-                    profile=BuildPreset(item.profile.value),
+                    profile=BuildProfile(item.profile.value),
                     status=SolverStatus(item.status.value.upper()),
                     wall_time_seconds=item.wall_time_seconds,
                     objective_value=item.objective_value,
@@ -1499,7 +1499,7 @@ class CoreRecommendationService(RecommendationApplication):
             solver_ran=response.optimizer_ran,
             solver_profile_statuses=[
                 SolverProfileOutcome(
-                    profile=BuildPreset(item.profile.value),
+                    profile=BuildProfile(item.profile.value),
                     status=SolverStatus(item.status.value.upper()),
                     wall_time_seconds=item.wall_time_seconds,
                     objective_value=item.objective_value,
@@ -1648,7 +1648,7 @@ class CoreRecommendationService(RecommendationApplication):
         ]
         return BuildResult(
             build_id=build.build_id,
-            profile=BuildPreset(build.profile.value),
+            profile=BuildProfile(build.profile.value),
             total_price_sgd=float(build.total_price_sgd),
             overall_score=build.overall_score,
             estimated_peak_power_w=build.estimated_power_watts,

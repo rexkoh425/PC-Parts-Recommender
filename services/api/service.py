@@ -28,7 +28,7 @@ from services.api.models import (
     BenchmarkObservation,
     BuildComponent,
     BuildGenerationStatus,
-    BuildPreset,
+    BuildProfile,
     BuildShareCreated,
     BuildShareRevoked,
     BuildResult,
@@ -139,7 +139,7 @@ class ProductRecord:
 
 @dataclass(frozen=True, slots=True)
 class Template:
-    profile: BuildPreset
+    profile: BuildProfile
     product_ids: tuple[str, ...]
     overall_score: float
     value_score: float
@@ -531,7 +531,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
 def demo_templates() -> tuple[Template, ...]:
     return (
         Template(
-            BuildPreset.BEST_OVERALL,
+            BuildProfile.BEST_OVERALL,
             (
                 "cpu-amd-7700",
                 "gpu-rtx-5060ti-16",
@@ -548,7 +548,7 @@ def demo_templates() -> tuple[Template, ...]:
             84,
         ),
         Template(
-            BuildPreset.BEST_VALUE,
+            BuildProfile.BEST_VALUE,
             (
                 "cpu-amd-7600",
                 "gpu-rtx-5060ti-16",
@@ -565,7 +565,7 @@ def demo_templates() -> tuple[Template, ...]:
             91,
         ),
         Template(
-            BuildPreset.HIGHEST_PERFORMANCE,
+            BuildProfile.HIGHEST_PERFORMANCE,
             (
                 "cpu-amd-7700",
                 "gpu-rtx-4070tis-16",
@@ -582,7 +582,7 @@ def demo_templates() -> tuple[Template, ...]:
             80,
         ),
         Template(
-            BuildPreset.MOST_UPGRADEABLE,
+            BuildProfile.MOST_UPGRADEABLE,
             (
                 "cpu-amd-7600",
                 "gpu-rx-7800xt-16",
@@ -599,7 +599,7 @@ def demo_templates() -> tuple[Template, ...]:
             78,
         ),
         Template(
-            BuildPreset.LOWEST_POWER,
+            BuildProfile.LOWEST_POWER,
             (
                 "cpu-amd-7600",
                 "gpu-rtx-5060ti-16",

@@ -21,7 +21,7 @@ export type WorkloadLabel =
 
 export type CompatVerdict = "pass" | "warning" | "unknown" | "fail";
 
-export type BuildPreset =
+export type BuildProfile =
   | "best_overall"
   | "best_value"
   | "highest_performance"
@@ -59,7 +59,7 @@ export interface BuildRequest {
     excluded_brands: string[];
   };
   max_builds?: number;
-  requested_profiles?: BuildPreset[];
+  requested_profiles?: BuildProfile[];
 }
 
 export interface SourceReference {
@@ -140,7 +140,7 @@ export interface BuildComponent {
 export interface BuildResult {
   build_id: string;
   request_id?: string;
-  profile: BuildPreset;
+  profile: BuildProfile;
   total_price_sgd: number;
   overall_score: number;
   value_score?: number;
@@ -173,7 +173,7 @@ export interface PublicBuildComponent {
 }
 
 export interface PublicBuildSnapshot {
-  profile: BuildPreset;
+  profile: BuildProfile;
   total_price_sgd: number;
   overall_score: number;
   value_score?: number | null;

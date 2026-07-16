@@ -15,7 +15,7 @@ from .components import (
 )
 from .enums import (
     BenchmarkValueKind,
-    BuildPreset,
+    BuildProfile,
     CaseSize,
     CompatVerdict,
     ComponentKind,
@@ -73,7 +73,7 @@ __all__ = [
     "BuildRequestSpec",
     "BuildGenerationResponse",
     "BuildPreferences",
-    "BuildPreset",
+    "BuildProfile",
     "BuildRecommendation",
     "BuildRequest",
     "BuildRequirements",

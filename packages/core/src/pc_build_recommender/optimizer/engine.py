@@ -8,7 +8,7 @@ from typing import Any
 
 from ortools.sat.python import cp_model
 
-from pc_build_recommender.domain import BuildPreset, CompatVerdict, ComponentKind
+from pc_build_recommender.domain import BuildProfile, CompatVerdict, ComponentKind
 
 from .models import (
     REQUIRED_CATEGORIES,
@@ -65,7 +65,7 @@ def _solution_from_selected(
     problem: OptimizationProblem,
     selected: Mapping[ComponentKind, OptimizationCandidate],
     *,
-    profile: BuildPreset,
+    profile: BuildProfile,
     objective_value: int,
     solver_status: OptimizationStatus,
     compatibility_report: object | None = None,
@@ -215,7 +215,7 @@ class _CpModelState:
             ]
             self.model.add(sum(prior_vars) <= len(prior_vars) - self.problem.diversity_distance)
 
-    def set_objective(self, profile: BuildPreset) -> None:
+    def set_objective(self, profile: BuildProfile) -> None:
         terms: list[Any] = [
             candidate_objective_coefficient(self.problem, candidate, profile)
             * self.variables[candidate.product_id]

@@ -35,7 +35,7 @@ from pc_build_recommender.catalog import (
 )
 from pc_build_recommender.domain import (
     BuildRequestSpec,
-    BuildPreset,
+    BuildProfile,
     InteractionType,
     WorkloadLabel,
     WorkloadPreference,
@@ -460,7 +460,7 @@ def test_sqlalchemy_store_survives_restart_and_commits_interaction(tmp_path: Pat
     request = BuildRequestSpec(
         budget_sgd=Decimal("2500.00"),
         workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)],
-        requested_profiles=[BuildPreset.BEST_OVERALL],
+        requested_profiles=[BuildProfile.BEST_OVERALL],
     )
     response = _optimizer_response(OptimizationStatus.INFEASIBLE, ran=False)
 

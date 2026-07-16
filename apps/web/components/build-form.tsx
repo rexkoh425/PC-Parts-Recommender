@@ -12,11 +12,11 @@ import {
   type BuildFormValues,
 } from "@/lib/build-request";
 import { formatSgd, profileLabels, workloadLabels } from "@/lib/format";
-import type { BuildPreset, ExistingProductInput, WorkloadLabel } from "@/lib/types";
+import type { BuildProfile, ExistingProductInput, WorkloadLabel } from "@/lib/types";
 import { ExistingProductPicker } from "./existing-product-picker";
 
 const workloadOptions = Object.entries(workloadLabels) as Array<[WorkloadLabel, string]>;
-const profileOptions = Object.entries(profileLabels) as Array<[BuildPreset, string]>;
+const profileOptions = Object.entries(profileLabels) as Array<[BuildProfile, string]>;
 
 function initialBuildFormValues(): BuildFormValues {
   if (typeof window === "undefined") return defaultBuildFormValues;
@@ -84,7 +84,7 @@ export function BuildForm() {
     setServerError("");
   }
 
-  function setProfileSelected(profile: BuildPreset, selected: boolean) {
+  function setProfileSelected(profile: BuildProfile, selected: boolean) {
     setValues((current) => {
       const requestedProfiles = selected
         ? current.requested_profiles.includes(profile) ||

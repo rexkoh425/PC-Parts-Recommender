@@ -47,7 +47,7 @@ class WorkloadLabel(StrEnum):
     CONTENT_CREATION = "content_creation"
 
 
-class BuildPreset(StrEnum):
+class BuildProfile(StrEnum):
     BEST_OVERALL = "best_overall"
     BEST_VALUE = "best_value"
     HIGHEST_PERFORMANCE = "highest_performance"
@@ -132,7 +132,7 @@ class GenerateBuildsRequest(ApiModel):
     preferences: BuildPreferences = Field(default_factory=BuildPreferences)
     performance_target: str | None = Field(default=None, min_length=1, max_length=200)
     max_builds: int = Field(default=5, ge=1, le=5)
-    requested_profiles: list[BuildPreset] | None = Field(default=None, min_length=1, max_length=5)
+    requested_profiles: list[BuildProfile] | None = Field(default=None, min_length=1, max_length=5)
 
     @model_validator(mode="after")
     def validate_request(self) -> GenerateBuildsRequest:
@@ -261,7 +261,7 @@ class BuildComponent(ApiModel):
 
 class BuildResult(ApiModel):
     build_id: str
-    profile: BuildPreset
+    profile: BuildProfile
     total_price_sgd: float = Field(ge=0)
     overall_score: float = Field(ge=0, le=100)
     value_score: float | None = Field(default=None, ge=0, le=100)
@@ -314,7 +314,7 @@ class PublicBuildComponent(ApiModel):
 class PublicBuildSnapshot(ApiModel):
     """Immutable allow-listed build data that is safe to render from a public link."""
 
-    profile: BuildPreset
+    profile: BuildProfile
     total_price_sgd: float = Field(ge=0)
     overall_score: float = Field(ge=0, le=100)
     value_score: float | None = Field(default=None, ge=0, le=100)
@@ -435,7 +435,7 @@ class InfeasibilityExplanation(ApiModel):
 
 
 class SolverProfileOutcome(ApiModel):
-    profile: BuildPreset
+    profile: BuildProfile
     status: SolverStatus
     wall_time_seconds: float = Field(ge=0)
     objective_value: int | None = None

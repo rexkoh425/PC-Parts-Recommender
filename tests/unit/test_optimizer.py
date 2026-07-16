@@ -15,7 +15,7 @@ from pc_build_recommender.compatibility import (
 from pc_build_recommender.domain import (
     BuildRequestSpec,
     BuildPreferences,
-    BuildPreset,
+    BuildProfile,
     BuildRequirements,
     MasterProduct,
     CaseAttributes,
@@ -151,7 +151,7 @@ def problem(
     values: dict[str, object] = {
         "candidates": candidates,
         "budget_cents": 200_000,
-        "profiles": (BuildPreset.BEST_OVERALL,),
+        "profiles": (BuildProfile.BEST_OVERALL,),
         "minimum_gpu_vram_gb": 16,
         "minimum_memory_gb": 32,
         "minimum_storage_gb": 2_000,
@@ -286,12 +286,12 @@ def test_profile_objectives_choose_performance_and_power_differently() -> None:
 
     performance = (
         BuildOptimizer()
-        .optimize(problem(catalogue, profiles=(BuildPreset.HIGHEST_PERFORMANCE,)))
+        .optimize(problem(catalogue, profiles=(BuildProfile.HIGHEST_PERFORMANCE,)))
         .solutions[0]
     )
     low_power = (
         BuildOptimizer()
-        .optimize(problem(catalogue, profiles=(BuildPreset.LOWEST_POWER,)))
+        .optimize(problem(catalogue, profiles=(BuildProfile.LOWEST_POWER,)))
         .solutions[0]
     )
 
@@ -303,7 +303,7 @@ def test_profile_objectives_choose_performance_and_power_differently() -> None:
 def test_diverse_solutions_differ_by_at_least_two_unlocked_components() -> None:
     request = problem(
         complete_catalogue(alternatives=True),
-        profiles=(BuildPreset.BEST_OVERALL, BuildPreset.BEST_VALUE, BuildPreset.LOWEST_POWER),
+        profiles=(BuildProfile.BEST_OVERALL, BuildProfile.BEST_VALUE, BuildProfile.LOWEST_POWER),
     )
 
     result = BuildOptimizer().optimize(request)
@@ -451,7 +451,7 @@ def test_domain_adapter_uses_cheapest_listing_and_owned_lock_costs_zero() -> Non
             wifi_required=True,
         ),
         preferences=BuildPreferences(),
-        requested_profiles=[BuildPreset.BEST_OVERALL],
+        requested_profiles=[BuildProfile.BEST_OVERALL],
     )
 
     engine = PassingCompatibilityEngine()

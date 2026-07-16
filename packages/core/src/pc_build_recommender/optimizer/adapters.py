@@ -11,7 +11,7 @@ from typing import Any
 from pc_build_recommender.domain import (
     BuildComponentSelection,
     BuildRequestSpec,
-    BuildPreset,
+    BuildProfile,
     BuildRecommendation,
     MasterProduct,
     CompatibilityCheck,
@@ -247,7 +247,7 @@ def problem_from_domain(
     values: dict[str, Any] = {
         "candidates": tuple(candidates),
         "budget_cents": money_to_cents(request.budget_sgd),
-        "profiles": tuple(BuildPreset(profile) for profile in request.requested_profiles),
+        "profiles": tuple(BuildProfile(profile) for profile in request.requested_profiles),
         "locked_product_ids": locked_ids,
         "minimum_gpu_vram_gb": getattr(requirements, "minimum_gpu_vram_gb", None),
         "minimum_memory_gb": getattr(requirements, "minimum_memory_gb", None),

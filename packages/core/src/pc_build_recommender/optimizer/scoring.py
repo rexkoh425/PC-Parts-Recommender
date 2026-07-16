@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from pc_build_recommender.domain import BuildPreset, CompatVerdict
+from pc_build_recommender.domain import BuildProfile, CompatVerdict
 
 from .models import (
     PROFILE_WEIGHTS,
@@ -17,11 +17,11 @@ from .models import (
 def candidate_objective_coefficient(
     problem: OptimizationProblem,
     candidate: OptimizationCandidate,
-    profile: BuildPreset,
+    profile: BuildProfile,
 ) -> int:
     """Return the integer CP-SAT coefficient for one selected candidate."""
 
-    weights = PROFILE_WEIGHTS[BuildPreset(profile)]
+    weights = PROFILE_WEIGHTS[BuildProfile(profile)]
     scores = candidate.scores
     weighted_score = (
         weights.performance * scores.performance
@@ -66,7 +66,7 @@ def pair_penalty(pair: PairwiseCompatibility) -> int:
 def selected_objective_value(
     problem: OptimizationProblem,
     selected: Iterable[OptimizationCandidate],
-    profile: BuildPreset,
+    profile: BuildProfile,
 ) -> int:
     chosen = tuple(selected)
     product_ids = {candidate.product_id for candidate in chosen}
