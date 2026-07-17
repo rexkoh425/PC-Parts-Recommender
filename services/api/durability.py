@@ -35,7 +35,7 @@ from pc_build_recommender.catalog import (
     session_scope,
 )
 from pc_build_recommender.domain import (
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildRecommendation,
     CanonicalProduct,
     InteractionRecord,
@@ -524,7 +524,7 @@ class SqlAlchemyDurableStore:
 
     @staticmethod
     def _envelope(
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         response: ApplicationBuildGenerationResponse,
         no_cost_product_ids: frozenset[str],
         owned_product_ids: frozenset[str],
@@ -551,7 +551,7 @@ class SqlAlchemyDurableStore:
                 f"unsupported durable result envelope for request {record.query_id}"
             )
         try:
-            request = BuildRequestSpec.model_validate(raw["request"])
+            request = BuildGenerationRequest.model_validate(raw["request"])
             response = ApplicationBuildGenerationResponse.model_validate(raw["response"])
             no_cost_product_ids = frozenset(str(value) for value in raw["no_cost_product_ids"])
             owned_product_ids = (
@@ -597,7 +597,7 @@ class SqlAlchemyDurableStore:
 
     def save(
         self,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         response: ApplicationBuildGenerationResponse,
         *,
         no_cost_product_ids: frozenset[str] | None = None,
@@ -716,7 +716,7 @@ class SqlAlchemyDurableStore:
         stored = self.get_generation(request_id)
         return None if stored is None else stored.response
 
-    def get_request(self, request_id: str) -> BuildRequestSpec | None:
+    def get_request(self, request_id: str) -> BuildGenerationRequest | None:
         stored = self.get_generation(request_id)
         return None if stored is None else stored.request
 

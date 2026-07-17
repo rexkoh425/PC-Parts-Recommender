@@ -13,7 +13,7 @@ from pc_build_recommender.compatibility import (
     CompatVerdict as EngineCompatibilityStatus,
 )
 from pc_build_recommender.domain import (
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildRecommendation,
     CompatVerdict,
     ComponentAlternative,
@@ -232,7 +232,7 @@ class GenerateBuildsService:
 
     def generate(
         self,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         *,
         request_id: str | None = None,
         included_existing_product_ids: frozenset[str] = frozenset(),
@@ -265,7 +265,7 @@ class GenerateBuildsService:
 
     def _generate(
         self,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         *,
         request_id: str | None,
         no_cost_product_ids: frozenset[str],
@@ -392,7 +392,7 @@ class GenerateBuildsService:
 
     def _problem(
         self,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         prepared: PreparedCandidates,
         *,
         no_cost_product_ids: frozenset[str],
@@ -477,7 +477,7 @@ class GenerateBuildsService:
     @staticmethod
     def _optimizer_scores(
         candidate: RankedCatalogItem,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
     ) -> CandidateScores:
         workload_values = [
             (
@@ -517,7 +517,7 @@ class GenerateBuildsService:
     def _complete_report(
         self,
         solution: OptimizationSolution,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
     ) -> CompatibilityReport:
         records = {
             category.value: self.catalog.require(candidate.product_id).compatibility_record
@@ -536,7 +536,7 @@ class GenerateBuildsService:
     def _is_diverse(
         solution: OptimizationSolution,
         accepted: Sequence[BuildRecommendation],
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
     ) -> bool:
         if not accepted:
             return True
@@ -559,7 +559,7 @@ class GenerateBuildsService:
         self,
         build: BuildRecommendation,
         solution: OptimizationSolution,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
         prepared: PreparedCandidates,
         *,
         no_cost_product_ids: frozenset[str],
@@ -626,7 +626,7 @@ class GenerateBuildsService:
     def _weighted_workload_delta(
         candidate: RankedCatalogItem,
         selected: RankedCatalogItem,
-        request: BuildRequestSpec,
+        request: BuildGenerationRequest,
     ) -> float | None:
         paired = [
             (
@@ -674,7 +674,7 @@ class GenerateBuildsService:
         )
 
     @staticmethod
-    def _general_relaxations(request: BuildRequestSpec) -> list[str]:
+    def _general_relaxations(request: BuildGenerationRequest) -> list[str]:
         suggestions = ["Suggested relaxation: increase the acquisition budget."]
         if request.requirements.minimum_gpu_vram_gb is not None:
             suggestions.append("Suggested relaxation: lower the minimum GPU VRAM requirement.")

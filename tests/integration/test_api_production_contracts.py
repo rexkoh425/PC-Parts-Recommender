@@ -34,7 +34,7 @@ from pc_build_recommender.catalog import (
     init_database,
 )
 from pc_build_recommender.domain import (
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildProfile,
     InteractionType,
     WorkloadLabel,
@@ -457,7 +457,7 @@ def test_sqlalchemy_store_survives_restart_and_commits_interaction(tmp_path: Pat
     first_engine = create_db_engine(database_url)
     init_database(first_engine)
     first_store = SqlAlchemyDurableStore(first_engine)
-    request = BuildRequestSpec(
+    request = BuildGenerationRequest(
         budget_sgd=Decimal("2500.00"),
         workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)],
         requested_profiles=[BuildProfile.BEST_OVERALL],

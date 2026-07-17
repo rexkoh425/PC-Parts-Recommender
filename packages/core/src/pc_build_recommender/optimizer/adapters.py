@@ -10,7 +10,7 @@ from typing import Any
 
 from pc_build_recommender.domain import (
     BuildComponentSelection,
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildProfile,
     BuildRecommendation,
     CanonicalProduct,
@@ -194,7 +194,7 @@ def _compatibility_validator(engine: object) -> IndependentValidator:
 
 
 def problem_from_domain(
-    request: BuildRequestSpec,
+    request: BuildGenerationRequest,
     products: Iterable[CanonicalProduct],
     listings: Iterable[RetailerListing],
     *,

@@ -13,7 +13,7 @@ from pc_build_recommender.compatibility import (
     CompatVerdict as EngineCompatibilityStatus,
 )
 from pc_build_recommender.domain import (
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildPreferences,
     BuildProfile,
     BuildRequirements,
@@ -439,7 +439,7 @@ def test_domain_adapter_uses_cheapest_listing_and_owned_lock_costs_zero() -> Non
     listings = [_listing(product.product_id) for product in products]
     listings.append(_listing("gpu", Decimal("90")))
     listings[-1] = listings[-1].model_copy(update={"listing_id": "listing-gpu-cheap"})
-    request = BuildRequestSpec(
+    request = BuildGenerationRequest(
         budget_sgd=Decimal("700"),
         workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1)],
         existing_products=[ExistingComponent(category=ComponentKind.GPU, product_id="gpu")],

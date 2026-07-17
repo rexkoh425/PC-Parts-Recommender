@@ -36,7 +36,7 @@ from pc_build_recommender.catalog import (
 )
 from pc_build_recommender.domain import (
     BenchmarkResult,
-    BuildRequestSpec,
+    BuildGenerationRequest,
     BuildProfile,
     BuildRequirements,
     CanonicalProduct,
@@ -472,8 +472,8 @@ def _request(
     existing_products: list[ExistingComponent] | None = None,
     minimum_gpu_vram_gb: int = 16,
     profiles: list[BuildProfile] | None = None,
-) -> BuildRequestSpec:
-    return BuildRequestSpec(
+) -> BuildGenerationRequest:
+    return BuildGenerationRequest(
         budget_sgd=Decimal("2500"),
         workloads=[
             WorkloadPreference(name=WorkloadLabel.GAMING_1440P, weight=0.6),
