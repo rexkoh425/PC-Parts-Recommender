@@ -19,7 +19,7 @@ from pc_build_recommender.compatibility import (
 )
 from pc_build_recommender.domain import (
     BenchmarkResult,
-    MasterProduct,
+    CanonicalProduct,
     ComponentKind,
     ListingCondition,
     ProductStatus,
@@ -96,9 +96,9 @@ class CatalogReader(Protocol):
         status: ProductStatus | None = ProductStatus.ACTIVE,
         offset: int = 0,
         limit: int = 100,
-    ) -> list[MasterProduct]: ...
+    ) -> list[CanonicalProduct]: ...
 
-    def get_product(self, product_id: str) -> MasterProduct | None: ...
+    def get_product(self, product_id: str) -> CanonicalProduct | None: ...
 
     def list_listings(
         self,
@@ -116,8 +116,8 @@ class CatalogReader(Protocol):
     def list_review_evidence(self, product_id: str) -> list[ReviewNote]: ...
 
 
-def _all_products(repository: CatalogReader) -> list[MasterProduct]:
-    products: list[MasterProduct] = []
+def _all_products(repository: CatalogReader) -> list[CanonicalProduct]:
+    products: list[CanonicalProduct] = []
     offset = 0
     while True:
         page = repository.list_products(
@@ -140,7 +140,7 @@ def _preferred_listing(listings: Sequence[RetailerListing]) -> RetailerListing |
     return min(in_stock, key=lambda item: (item.total_price, item.listing_id), default=None)
 
 
-def _benchmark_signature(product: MasterProduct, benchmark: BenchmarkResult) -> tuple[str, ...]:
+def _benchmark_signature(product: CanonicalProduct, benchmark: BenchmarkResult) -> tuple[str, ...]:
     return (
         product.category.value,
         benchmark.workload.value,
@@ -155,7 +155,7 @@ def _benchmark_signature(product: MasterProduct, benchmark: BenchmarkResult) -> 
 
 
 def _normalised_workload_scores(
-    products: Sequence[MasterProduct],
+    products: Sequence[CanonicalProduct],
     benchmarks_by_product: Mapping[str, Sequence[BenchmarkResult]],
 ) -> dict[str, dict[str, float]]:
     """Normalise only within comparable benchmark configurations.
@@ -200,7 +200,7 @@ def _normalised_workload_scores(
 
 
 def _compatibility_authority(
-    product: MasterProduct,
+    product: CanonicalProduct,
     attributes: Mapping[str, Any],
     *,
     evidence_policy: CompatibilityEvidencePolicy,
@@ -269,7 +269,7 @@ def _compatibility_authority(
 
 
 def _compatibility_record(
-    product: MasterProduct,
+    product: CanonicalProduct,
     *,
     evidence_policy: CompatibilityEvidencePolicy,
 ) -> dict[str, Any]:
@@ -337,7 +337,7 @@ def _document(item: CatalogItem) -> ProductDocument:
 
 
 def _content_version(
-    products: Sequence[MasterProduct],
+    products: Sequence[CanonicalProduct],
     listings_by_product: Mapping[str, Sequence[RetailerListing]],
     benchmarks_by_product: Mapping[str, Sequence[BenchmarkResult]],
     reviews_by_product: Mapping[str, Sequence[ReviewNote]],

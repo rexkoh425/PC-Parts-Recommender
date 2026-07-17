@@ -7,7 +7,7 @@ from decimal import Decimal
 from math import isfinite
 from types import MappingProxyType
 
-from pc_build_recommender.domain import MasterProduct, WorkloadLabel, WorkloadPerformanceSignal
+from pc_build_recommender.domain import CanonicalProduct, WorkloadLabel, WorkloadPerformanceSignal
 from pc_build_recommender.performance_models import (
     ARTIFACT_SCHEMA_VERSION,
     PerformanceModelArtifact,
@@ -98,7 +98,7 @@ class ArtifactPerformanceProvider:
 
     def estimate(
         self,
-        product: MasterProduct,
+        product: CanonicalProduct,
         workload: str,
     ) -> WorkloadPerformanceSignal | None:
         """Estimate one exact route; absence means the route is unsupported."""
@@ -126,7 +126,7 @@ class ArtifactPerformanceProvider:
         )
 
     @staticmethod
-    def _raw_features(product: MasterProduct) -> dict[str, object]:
+    def _raw_features(product: CanonicalProduct) -> dict[str, object]:
         return {
             **product.common_attributes.model_dump(mode="python"),
             **product.category_attributes.model_dump(mode="python"),
@@ -135,7 +135,7 @@ class ArtifactPerformanceProvider:
     @classmethod
     def _features_for(
         cls,
-        product: MasterProduct,
+        product: CanonicalProduct,
         artifact: PerformanceModelArtifact,
     ) -> dict[str, float | int | None]:
         raw = cls._raw_features(product)

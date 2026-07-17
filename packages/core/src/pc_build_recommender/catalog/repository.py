@@ -14,7 +14,7 @@ from pc_build_recommender.domain import (
     BenchmarkResult,
     BuildComponentSelection,
     BuildRecommendation,
-    MasterProduct,
+    CanonicalProduct,
     CompatibilityRule,
     ComponentKind,
     InteractionRecord,
@@ -69,7 +69,7 @@ class CatalogRepository:
         self.session = session
 
     @staticmethod
-    def _product_values(product: MasterProduct) -> dict[str, Any]:
+    def _product_values(product: CanonicalProduct) -> dict[str, Any]:
         return {
             "category": product.category.value,
             "brand": product.brand,
@@ -121,8 +121,8 @@ class CatalogRepository:
         )
 
     @classmethod
-    def _to_product(cls, record: CanonicalProductRecord) -> MasterProduct:
-        return MasterProduct.model_validate(
+    def _to_product(cls, record: CanonicalProductRecord) -> CanonicalProduct:
+        return CanonicalProduct.model_validate(
             {
                 "product_id": record.product_id,
                 "category": record.category,
@@ -142,7 +142,7 @@ class CatalogRepository:
             }
         )
 
-    def add_product(self, product: MasterProduct) -> MasterProduct:
+    def add_product(self, product: CanonicalProduct) -> CanonicalProduct:
         if self.session.get(CanonicalProductRecord, product.product_id) is not None:
             raise ValueError(f"product already exists: {product.product_id}")
         record = CanonicalProductRecord(
@@ -158,7 +158,7 @@ class CatalogRepository:
         self.session.flush()
         return self._to_product(record)
 
-    def upsert_product(self, product: MasterProduct) -> MasterProduct:
+    def upsert_product(self, product: CanonicalProduct) -> CanonicalProduct:
         record = self.session.get(CanonicalProductRecord, product.product_id)
         if record is None:
             return self.add_product(product)
@@ -171,11 +171,11 @@ class CatalogRepository:
         self.session.flush()
         return self._to_product(record)
 
-    def get_product(self, product_id: str) -> MasterProduct | None:
+    def get_product(self, product_id: str) -> CanonicalProduct | None:
         record = self.session.get(CanonicalProductRecord, product_id)
         return None if record is None else self._to_product(record)
 
-    def require_product(self, product_id: str) -> MasterProduct:
+    def require_product(self, product_id: str) -> CanonicalProduct:
         product = self.get_product(product_id)
         if product is None:
             raise KeyError(f"product not found: {product_id}")
@@ -213,7 +213,7 @@ class CatalogRepository:
         status: ProductStatus | None = ProductStatus.ACTIVE,
         offset: int = 0,
         limit: int = 100,
-    ) -> list[MasterProduct]:
+    ) -> list[CanonicalProduct]:
         if offset < 0 or not 1 <= limit <= 1000:
             raise ValueError("offset must be nonnegative and limit must be between 1 and 1000")
         statement = self._apply_product_filters(
@@ -235,7 +235,7 @@ class CatalogRepository:
         max_total_price: Decimal | None = None,
         offset: int = 0,
         limit: int = 50,
-    ) -> list[MasterProduct]:
+    ) -> list[CanonicalProduct]:
         """Deterministic lexical catalog search used before the BM25 index is built."""
 
         if offset < 0 or not 1 <= limit <= 1000:

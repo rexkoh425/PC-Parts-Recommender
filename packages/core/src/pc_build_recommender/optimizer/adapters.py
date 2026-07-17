@@ -13,7 +13,7 @@ from pc_build_recommender.domain import (
     BuildRequestSpec,
     BuildProfile,
     BuildRecommendation,
-    MasterProduct,
+    CanonicalProduct,
     CompatibilityCheck,
     CompatVerdict,
     ComponentKind,
@@ -83,7 +83,7 @@ def coerce_scores(value: CandidateScores | Mapping[str, float] | object | None) 
 
 
 def candidate_from_domain(
-    product: MasterProduct,
+    product: CanonicalProduct,
     listing: RetailerListing | None,
     *,
     scores: CandidateScores | Mapping[str, float] | object | None = None,
@@ -195,7 +195,7 @@ def _compatibility_validator(engine: object) -> IndependentValidator:
 
 def problem_from_domain(
     request: BuildRequestSpec,
-    products: Iterable[MasterProduct],
+    products: Iterable[CanonicalProduct],
     listings: Iterable[RetailerListing],
     *,
     scores_by_product: Mapping[str, CandidateScores | Mapping[str, float] | object] | None = None,

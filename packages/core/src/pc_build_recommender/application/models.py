@@ -19,7 +19,7 @@ from pc_build_recommender.domain import (
     BenchmarkResult,
     BuildGenerationResponse,
     BuildProfile,
-    MasterProduct,
+    CanonicalProduct,
     CompatVerdict,
     DomainModel,
     RetailerListing,
@@ -80,7 +80,7 @@ class ApplicationBuildGenerationResponse(BuildGenerationResponse):
 class CatalogItem:
     """One canonical product and the evidence used during online serving."""
 
-    product: MasterProduct
+    product: CanonicalProduct
     listing: RetailerListing | None
     compatibility_record: Mapping[str, Any]
     workload_scores: Mapping[str, float] = field(default_factory=dict)
@@ -136,7 +136,7 @@ class CatalogItem:
 class SearchProductResult:
     """Transparent hybrid-search result returned by :class:`SearchProductsService`."""
 
-    product: MasterProduct
+    product: CanonicalProduct
     listing: RetailerListing | None
     rank: int
     rrf_score: float

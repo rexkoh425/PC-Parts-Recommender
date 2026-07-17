@@ -37,7 +37,7 @@ from pc_build_recommender.catalog import (
 from pc_build_recommender.domain import (
     BuildRequestSpec,
     BuildRecommendation,
-    MasterProduct,
+    CanonicalProduct,
     InteractionRecord,
     RetailerListing,
     SearchQuery,
@@ -118,8 +118,8 @@ def _as_utc(value: datetime) -> datetime:
     return value.astimezone(UTC)
 
 
-def _canonical_product_from_record(record: CanonicalProductRecord) -> MasterProduct:
-    return MasterProduct.model_validate(
+def _canonical_product_from_record(record: CanonicalProductRecord) -> CanonicalProduct:
+    return CanonicalProduct.model_validate(
         {
             "product_id": record.product_id,
             "category": record.category,
@@ -160,7 +160,7 @@ def _retailer_listing_from_record(record: RetailerListingRecord) -> RetailerList
     )
 
 
-def _canonical_product_row_sha256(product: MasterProduct) -> str:
+def _canonical_product_row_sha256(product: CanonicalProduct) -> str:
     return _sha256_json(product.model_dump(mode="json", exclude={"provenance"}))
 
 
@@ -168,7 +168,7 @@ def _retailer_listing_row_sha256(listing: RetailerListing) -> str:
     return _sha256_json(listing.model_dump(mode="json"))
 
 
-def _search_document_identity(product: MasterProduct) -> tuple[str, str]:
+def _search_document_identity(product: CanonicalProduct) -> tuple[str, str]:
     search_document = build_product_embedding_text(product.model_dump(mode="json"))
     content = f"{TEXT_BUILDER_VERSION}\0{product.product_id}\0{search_document}".encode()
     return search_document, hashlib.sha256(content).hexdigest()
@@ -264,7 +264,7 @@ class SqlAlchemyDurableStore:
         *,
         product_ids: Iterable[str],
         listing_ids: Iterable[str],
-        canonical_products: Iterable[MasterProduct] | None = None,
+        canonical_products: Iterable[CanonicalProduct] | None = None,
         retailer_listings: Iterable[RetailerListing] | None = None,
     ) -> None:
         """Ensure durable catalogue rows match the catalogue loaded for serving.

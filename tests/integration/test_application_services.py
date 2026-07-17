@@ -39,7 +39,7 @@ from pc_build_recommender.domain import (
     BuildRequestSpec,
     BuildProfile,
     BuildRequirements,
-    MasterProduct,
+    CanonicalProduct,
     CaseAttributes,
     CaseSize,
     CommonProductAttributes,
@@ -203,10 +203,10 @@ def _product(
     product_id: str | None = None,
     canonical_name: str | None = None,
     status: ProductStatus = ProductStatus.ACTIVE,
-) -> MasterProduct:
+) -> CanonicalProduct:
     resolved_id = product_id or f"{category.value}_{index}"
     name = canonical_name or f"Test {category.value} {index}"
-    return MasterProduct(
+    return CanonicalProduct(
         product_id=resolved_id,
         category=category,
         brand="TestBrand",

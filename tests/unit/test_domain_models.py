@@ -14,7 +14,7 @@ from pc_build_recommender.domain import (
     BuildPreferences,
     BuildProfile,
     BuildRecommendation,
-    MasterProduct,
+    CanonicalProduct,
     CaseAttributes,
     CompatibilityCheck,
     CompatVerdict,
@@ -59,7 +59,7 @@ def test_product_parses_attributes_for_all_eight_categories(
     attributes: dict[str, object],
     attribute_type: type[object],
 ) -> None:
-    product = MasterProduct.model_validate(
+    product = CanonicalProduct.model_validate(
         {
             "product_id": f"prod_{category.value}",
             "category": category,
@@ -75,7 +75,7 @@ def test_product_parses_attributes_for_all_eight_categories(
 
 def test_product_rejects_attributes_from_a_different_category() -> None:
     with pytest.raises(ValidationError, match="GPUAttributes"):
-        MasterProduct(
+        CanonicalProduct(
             category=ComponentKind.GPU,
             brand="Example",
             model="Wrong",
