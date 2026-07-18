@@ -6,7 +6,7 @@ not use MLflow's model-flavour serializers (and therefore never creates pickle m
 
 Tracking is opt-in at the CLI.  When enabled, ``MLFLOW_TRACKING_URI`` may point at an
 HTTP server.  If it is unset, runs use a repository-local file store under
-``artifacts/mlruns``.  The optional ``mlops`` dependency may be absent in serving and
+``artifacts/mlruns``.  The optional mlflow dependency may be absent in serving and
 developer environments; an explicitly requested run is then reported as
 ``dependency_missing`` without affecting model training.
 """
@@ -85,7 +85,7 @@ def add_mlflow_arguments(parser: Any, *, default_experiment: str) -> None:
         action="store_true",
         help=(
             "log this run to MLflow; remains disabled unless this flag is passed "
-            "(install the 'mlops' extra to enable it)"
+            "(install mlflow alongside this project to enable it)"
         ),
     )
     parser.add_argument(
@@ -213,7 +213,7 @@ class OptionalMLflowRun:
             self._mlflow = importlib.import_module("mlflow")
         except (ImportError, ModuleNotFoundError) as error:
             self.status = "dependency_missing"
-            self.errors.append(f"{type(error).__name__}: install the 'mlops' extra")
+            self.errors.append(f"{type(error).__name__}: install mlflow to enable tracking")
             return self
         try:
             self._mlflow.set_tracking_uri(self.config.resolved_tracking_uri)
