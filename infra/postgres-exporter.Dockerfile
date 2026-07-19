@@ -11,4 +11,7 @@ RUN chmod 0555 /bin/postgres_exporter /usr/local/bin/pcbr-postgres-exporter-entr
 
 USER 10004:10004
 EXPOSE 9187
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD ["/bin/sh", "-c", "wget -q -O /dev/null http://127.0.0.1:9187/metrics || exit 1"]
+
 ENTRYPOINT ["/usr/local/bin/pcbr-postgres-exporter-entrypoint"]
