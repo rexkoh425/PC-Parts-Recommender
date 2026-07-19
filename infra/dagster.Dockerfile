@@ -1,8 +1,13 @@
 FROM python:3.12-slim AS runtime
 
 # Patch base-image OS packages. The published python:3.12-slim tag lags Debian
-# security updates, which trivy reports as fixed HIGH advisories.
-RUN apt-get update \n    && apt-get upgrade -y --no-install-recommends \n    && rm -rf /var/lib/apt/lists/*
+# security updates, which the container scan reports as fixed HIGH advisories.
+# DL3005 discourages blanket upgrades; here it is deliberate and the only way to
+# pick up published security fixes without pinning every transitive OS package.
+# hadolint ignore=DL3005
+RUN apt-get update \
+    && apt-get upgrade -y --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ghcr.io/astral-sh/uv:0.9.16 /uv /uvx /bin/
 
