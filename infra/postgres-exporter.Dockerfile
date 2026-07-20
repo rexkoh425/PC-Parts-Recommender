@@ -1,6 +1,6 @@
-FROM quay.io/prometheuscommunity/postgres-exporter:v0.17.1 AS exporter
+FROM quay.io/prometheuscommunity/postgres-exporter:v0.20.1 AS exporter
 
-FROM alpine:3.22
+FROM alpine:3.24
 
 RUN addgroup -g 10004 -S pcbr \
     && adduser -u 10004 -S -D -H -G pcbr pcbr
