@@ -1,6 +1,13 @@
 #!/bin/sh
 set -eu
 
+# The public demo serves a controlled in-memory fixture: it has no database and
+# nothing to migrate, so skip the database wiring a processed-catalogue release
+# requires. Any other mode still fails closed on missing database configuration.
+if [ "${PCBR_API_SERVICE_MODE:-}" = "public_demo" ]; then
+    exec "$@"
+fi
+
 if [ -z "${DATABASE_URL:-}" ]; then
     : "${PCBR_DATABASE_HOST:?PCBR_DATABASE_HOST is required when DATABASE_URL is absent}"
     : "${PCBR_DATABASE_NAME:?PCBR_DATABASE_NAME is required when DATABASE_URL is absent}"

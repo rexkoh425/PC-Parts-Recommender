@@ -1,0 +1,38 @@
+# Render blueprint for the FastAPI service.
+#
+# The API does not fit in a Vercel serverless function: its locked production
+# dependencies (scipy, ortools, pandas, numpy, scikit-learn, lightgbm) measure
+# ~356 MB unzipped against a 250 MB limit, and the optimiser and ranking stack
+# is imported at application start rather than lazily. It therefore runs as a
+# container here while the Next.js app stays on Vercel.
+#
+# Connect this repository in Render (New -> Blueprint). Every value below is
+# non-secret; PCBR_API_IMPRESSION_SIGNING_KEY is marked sync:false so Render
+# prompts for it and stores it encrypted.
+services:
+  - type: web
+    name: pcbr-api
+    runtime: docker
+    dockerfilePath: ./infra/api.Dockerfile
+    dockerContext: .
+    plan: starter
+    region: singapore
+    healthCheckPath: /health/live
+    autoDeployTrigger: commit
+    envVars:
+      - key: PCBR_API_ENVIRONMENT
+        value: production
+      # Controlled public demonstration: deterministic sample products and
+      # builds only. It is not a retailer-data release.
+      - key: PCBR_API_SERVICE_MODE
+        value: public_demo
+      - key: PCBR_API_DOCS_ENABLED
+        value: "false"
+      # Set to the Vercel origin serving the web app, e.g.
+      # ["https://pc-parts-recommender.vercel.app"]
+      - key: PCBR_API_CORS_ORIGINS
+        sync: false
+      # Random value of at least 32 bytes. Prevents a browser forging trusted
+      # interaction attribution; never commit it.
+      - key: PCBR_API_IMPRESSION_SIGNING_KEY
+        sync: false
