@@ -8,9 +8,11 @@ import os
 import tempfile
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import lightgbm as lgb
+if TYPE_CHECKING:
+    import lightgbm as lgb
+
 
 from pc_build_recommender.evaluation.contracts import DataUseDeclaration
 from pc_build_recommender.evaluation.manifest import sha256_file
@@ -462,6 +464,8 @@ def load_performance_artifact(path: str | Path) -> PerformanceModelArtifact:
         for name, value in evaluation_payload.items()
         if isinstance(value, dict)
     }
+    import lightgbm as lgb
+
     booster = lgb.Booster(model_file=str(model_path))
     config = PerformanceModelConfig.from_dict(config_payload)
     if booster.feature_name() != list(config.feature_columns):

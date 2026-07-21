@@ -1176,11 +1176,8 @@ dependencies = [
     { name = "fastapi" },
     { name = "httpcore" },
     { name = "httpx" },
-    { name = "lightgbm" },
     { name = "numpy" },
     { name = "orjson" },
-    { name = "ortools" },
-    { name = "pandas" },
     { name = "pdfplumber" },
     { name = "pgvector" },
     { name = "psycopg", extra = ["binary"] },
@@ -1189,8 +1186,6 @@ dependencies = [
     { name = "pypdf" },
     { name = "python-multipart" },
     { name = "rank-bm25" },
-    { name = "scikit-learn" },
-    { name = "scipy" },
     { name = "sqlalchemy" },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -1198,6 +1193,13 @@ dependencies = [
 [package.optional-dependencies]
 embeddings = [
     { name = "sentence-transformers" },
+]
+modeling = [
+    { name = "lightgbm" },
+    { name = "ortools" },
+    { name = "pandas" },
+    { name = "scikit-learn" },
+    { name = "scipy" },
 ]
 pipeline = [
     { name = "dagster" },
@@ -1230,11 +1232,11 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.115,<1" },
     { name = "httpcore", specifier = ">=1.0.9,<1.1" },
     { name = "httpx", specifier = ">=0.28.1,<0.29" },
-    { name = "lightgbm", specifier = ">=4.5,<5" },
+    { name = "lightgbm", marker = "extra == 'modeling'", specifier = ">=4.5,<5" },
     { name = "numpy", specifier = ">=2.0,<3" },
     { name = "orjson", specifier = ">=3.10,<4" },
-    { name = "ortools", specifier = ">=9.12,<10" },
-    { name = "pandas", specifier = ">=2.2,<4" },
+    { name = "ortools", marker = "extra == 'modeling'", specifier = ">=9.12,<10" },
+    { name = "pandas", marker = "extra == 'modeling'", specifier = ">=2.2,<4" },
     { name = "pdfplumber", specifier = ">=0.11,<1" },
     { name = "pgvector", specifier = ">=0.3,<1" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2,<4" },
@@ -1245,14 +1247,14 @@ requires-dist = [
     { name = "pyyaml", marker = "extra == 'pipeline'", specifier = ">=6,<7" },
     { name = "pyyaml", marker = "extra == 'serving'", specifier = ">=6,<7" },
     { name = "rank-bm25", specifier = ">=0.2.2,<1" },
-    { name = "scikit-learn", specifier = ">=1.6,<2" },
-    { name = "scipy", specifier = ">=1.14,<2" },
+    { name = "scikit-learn", marker = "extra == 'modeling'", specifier = ">=1.6,<2" },
+    { name = "scipy", marker = "extra == 'modeling'", specifier = ">=1.14,<2" },
     { name = "sentence-transformers", marker = "extra == 'embeddings'", specifier = ">=3.4,<6" },
     { name = "sentence-transformers", marker = "extra == 'serving'", specifier = ">=3.4,<6" },
     { name = "sqlalchemy", specifier = ">=2.0.36,<3" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34,<1" },
 ]
-provides-extras = ["embeddings", "serving", "pipeline"]
+provides-extras = ["modeling", "embeddings", "serving", "pipeline"]
 
 [package.metadata.requires-dev]
 dev = [

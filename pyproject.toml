@@ -15,11 +15,8 @@ dependencies = [
   "fastapi>=0.115,<1",
   "httpcore>=1.0.9,<1.1",
   "httpx>=0.28.1,<0.29",
-  "lightgbm>=4.5,<5",
   "numpy>=2.0,<3",
   "orjson>=3.10,<4",
-  "ortools>=9.12,<10",
-  "pandas>=2.2,<4",
   "pdfplumber>=0.11,<1",
   "pgvector>=0.3,<1",
   "psycopg[binary]>=3.2,<4",
@@ -28,13 +25,21 @@ dependencies = [
   "pypdf>=5,<7",
   "python-multipart>=0.0.20,<1",
   "rank-bm25>=0.2.2,<1",
-  "scikit-learn>=1.6,<2",
-  "scipy>=1.14,<2",
   "sqlalchemy>=2.0.36,<3",
   "uvicorn[standard]>=0.34,<1",
 ]
 
 [project.optional-dependencies]
+# Solver and model stack. Only the processed-catalogue release path and the
+# training CLIs need these; the public-demo API imports none of them, which
+# keeps a demo deployment roughly 250 MB smaller.
+modeling = [
+  "lightgbm>=4.5,<5",
+  "ortools>=9.12,<10",
+  "pandas>=2.2,<4",
+  "scikit-learn>=1.6,<2",
+  "scipy>=1.14,<2",
+]
 embeddings = [
   "sentence-transformers>=3.4,<6",
 ]

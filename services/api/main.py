@@ -8,7 +8,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from services.api.core_service import create_processed_catalog_service
 from services.api.errors import install_exception_handlers
 from services.api.impressions import ImpressionSigner
 from services.api.metrics import REQUEST_METRICS
@@ -33,6 +32,10 @@ def create_app(
     if service is not None:
         application_service = service
     elif runtime_settings.service_mode == "processed_catalog":
+        # Imported here so a public-demo deployment never loads the processed
+        # catalogue stack, which pulls pandas, lightgbm, scipy and scikit-learn.
+        from services.api.core_service import create_processed_catalog_service
+
         application_service = create_processed_catalog_service(runtime_settings)
         runtime_settings = application_service.settings
     else:

@@ -38,7 +38,7 @@ try {
             Invoke-Checked "uv" "sync" "--locked"
         }
         if (-not (Test-Path -LiteralPath $PythonPath)) {
-            throw "Missing .venv. Run 'uv sync --locked', then optionally setup-gpu.ps1."
+            throw "Missing .venv. Run 'uv sync --locked --extra modeling', then optionally setup-gpu.ps1."
         }
 
         Invoke-Checked $PythonPath "-m" "ruff" "check" `

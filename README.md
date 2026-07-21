@@ -129,7 +129,7 @@ Prerequisites:
 The repository pins Python in `.python-version` and Node in `.nvmrc`.
 
 ```powershell
-uv sync --locked
+uv sync --locked --extra modeling
 npm install
 ./scripts/check-memory-cap.ps1 -MaxUsedGb 55
 ./scripts/dev.ps1 -Build -Detach
