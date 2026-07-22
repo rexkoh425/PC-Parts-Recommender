@@ -17,19 +17,19 @@ from pc_build_recommender.domain import (
     BuildProfile,
     CanonicalProduct,
     CompatVerdict,
-    ComponentKind,
+    ComponentCategory,
     RetailerListing,
 )
 
-REQUIRED_CATEGORIES: tuple[ComponentKind, ...] = (
-    ComponentKind.CPU,
-    ComponentKind.GPU,
-    ComponentKind.MOTHERBOARD,
-    ComponentKind.MEMORY,
-    ComponentKind.STORAGE,
-    ComponentKind.POWER_SUPPLY,
-    ComponentKind.COOLER,
-    ComponentKind.CASE,
+REQUIRED_CATEGORIES: tuple[ComponentCategory, ...] = (
+    ComponentCategory.CPU,
+    ComponentCategory.GPU,
+    ComponentCategory.MOTHERBOARD,
+    ComponentCategory.MEMORY,
+    ComponentCategory.STORAGE,
+    ComponentCategory.POWER_SUPPLY,
+    ComponentCategory.COOLER,
+    ComponentCategory.CASE,
 )
 
 
@@ -91,7 +91,7 @@ class OptimizationCandidate:
     """One canonical product paired with its selected retailer offer."""
 
     product_id: str
-    category: ComponentKind
+    category: ComponentCategory
     price_cents: int
     brand: str = ""
     canonical_name: str = ""
@@ -111,7 +111,7 @@ class OptimizationCandidate:
     def __post_init__(self) -> None:
         if not self.product_id:
             raise ValueError("product_id must not be empty")
-        object.__setattr__(self, "category", ComponentKind(self.category))
+        object.__setattr__(self, "category", ComponentCategory(self.category))
         if self.price_cents < 0:
             raise ValueError("price_cents must be non-negative")
         for name in ("power_draw_watts", "psu_wattage", "eps_connectors"):
@@ -150,14 +150,14 @@ class OptimizationCandidate:
 class FeatureRequirement:
     """A category-scoped hard feature requirement."""
 
-    category: ComponentKind
+    category: ComponentCategory
     attribute: str
     expected: Any = True
     operator: FeatureOperator = FeatureOperator.EQUALS
     description: str | None = None
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "category", ComponentKind(self.category))
+        object.__setattr__(self, "category", ComponentCategory(self.category))
         object.__setattr__(self, "operator", FeatureOperator(self.operator))
         if not self.attribute:
             raise ValueError("feature attribute must not be empty")
@@ -198,7 +198,7 @@ class PairwiseCompatibility:
         )
 
 
-IndependentValidator = Callable[[Mapping[ComponentKind, OptimizationCandidate]], object]
+IndependentValidator = Callable[[Mapping[ComponentCategory, OptimizationCandidate]], object]
 
 
 @dataclass(frozen=True, slots=True)
@@ -256,12 +256,12 @@ PROFILE_WEIGHTS: Mapping[BuildProfile, ProfileWeights] = {
 }
 
 
-DEFAULT_POWER_ALLOWANCES_WATTS: Mapping[ComponentKind, int] = {
-    ComponentKind.MOTHERBOARD: 50,
-    ComponentKind.MEMORY: 10,
-    ComponentKind.STORAGE: 10,
-    ComponentKind.COOLER: 10,
-    ComponentKind.CASE: 10,
+DEFAULT_POWER_ALLOWANCES_WATTS: Mapping[ComponentCategory, int] = {
+    ComponentCategory.MOTHERBOARD: 50,
+    ComponentCategory.MEMORY: 10,
+    ComponentCategory.STORAGE: 10,
+    ComponentCategory.COOLER: 10,
+    ComponentCategory.CASE: 10,
 }
 
 
@@ -286,12 +286,12 @@ class OptimizationProblem:
     pairwise_compatibility: tuple[PairwiseCompatibility, ...] = ()
     power_headroom_percent: int = 25
     base_power_watts: int = 0
-    category_power_allowances_watts: Mapping[ComponentKind, int] = field(
+    category_power_allowances_watts: Mapping[ComponentCategory, int] = field(
         default_factory=lambda: dict(DEFAULT_POWER_ALLOWANCES_WATTS)
     )
     required_eps_connectors: int = 1
     diversity_distance: int = 2
-    meaningful_categories: tuple[ComponentKind, ...] = REQUIRED_CATEGORIES
+    meaningful_categories: tuple[ComponentCategory, ...] = REQUIRED_CATEGORIES
     exclude_locked_from_budget: bool = True
     independent_validator: IndependentValidator | None = field(
         default=None, repr=False, compare=False
@@ -313,7 +313,7 @@ class OptimizationProblem:
         object.__setattr__(
             self,
             "meaningful_categories",
-            tuple(ComponentKind(category) for category in self.meaningful_categories),
+            tuple(ComponentCategory(category) for category in self.meaningful_categories),
         )
         if self.budget_cents < 0:
             raise ValueError("budget_cents must be non-negative")
@@ -387,7 +387,7 @@ class OptimizationSolution:
     """One independently validated complete build."""
 
     profile: BuildProfile
-    selected: Mapping[ComponentKind, OptimizationCandidate]
+    selected: Mapping[ComponentCategory, OptimizationCandidate]
     total_price_cents: int
     catalog_total_price_cents: int
     objective_value: int

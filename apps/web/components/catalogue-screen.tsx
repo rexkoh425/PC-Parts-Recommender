@@ -11,17 +11,17 @@ import {
 } from "@/lib/catalogue";
 import { categoryLabels, formatSgd } from "@/lib/format";
 import type {
-  ComponentKind,
+  ComponentCategory,
   ProductSearchItem,
   ProductSearchResponse,
 } from "@/lib/types";
 import { StatusPill } from "./status-pill";
 
-const categoryOptions = Object.entries(categoryLabels) as Array<[ComponentKind, string]>;
+const categoryOptions = Object.entries(categoryLabels) as Array<[ComponentCategory, string]>;
 
 interface CatalogueScreenProps {
   initialQuery: string;
-  initialCategory?: ComponentKind;
+  initialCategory?: ComponentCategory;
   initialBrand: string;
   initialInStockOnly: boolean;
   initialPage: number;
@@ -31,7 +31,7 @@ interface CatalogueScreenProps {
 
 interface CatalogueLocation {
   query: string;
-  category?: ComponentKind;
+  category?: ComponentCategory;
   brand: string;
   inStockOnly: boolean;
   page?: number;
@@ -336,7 +336,7 @@ export function CatalogueScreen({
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const query = String(form.get("query") ?? "").trim();
-    const category = String(form.get("category") ?? "") as ComponentKind | "";
+    const category = String(form.get("category") ?? "") as ComponentCategory | "";
     const brand = String(form.get("brand") ?? "").trim();
     const pageSize = Number(form.get("page_size")) || 24;
     const inStockOnly = form.get("in_stock_only") === "on";

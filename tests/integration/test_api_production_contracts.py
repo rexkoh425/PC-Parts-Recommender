@@ -41,7 +41,7 @@ from pc_build_recommender.domain import (
     WorkloadPreference,
 )
 from pc_build_recommender.domain import (
-    ComponentKind as DomainCategory,
+    ComponentCategory as DomainCategory,
 )
 from pc_build_recommender.domain import (
     InteractionRecord as DomainInteractionEvent,

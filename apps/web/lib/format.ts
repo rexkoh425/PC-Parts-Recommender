@@ -1,4 +1,4 @@
-import type { BuildProfile, ComponentKind, WorkloadName } from "./types";
+import type { BuildProfile, ComponentCategory, WorkloadName } from "./types";
 
 const sgdFormatter = new Intl.NumberFormat("en-SG", {
   style: "currency",
@@ -28,7 +28,7 @@ export const profileLabels: Record<BuildProfile, string> = {
   lowest_power: "Lowest power",
 };
 
-export const categoryLabels: Record<ComponentKind, string> = {
+export const categoryLabels: Record<ComponentCategory, string> = {
   cpu: "Processor",
   gpu: "Graphics",
   motherboard: "Motherboard",

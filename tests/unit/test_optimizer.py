@@ -20,7 +20,7 @@ from pc_build_recommender.domain import (
     CanonicalProduct,
     CaseAttributes,
     CompatVerdict,
-    ComponentKind,
+    ComponentCategory,
     CPUAttributes,
     ExistingComponent,
     GPUAttributes,
@@ -50,7 +50,7 @@ from pc_build_recommender.optimizer import (
 
 
 def candidate(
-    category: ComponentKind,
+    category: ComponentCategory,
     suffix: str,
     *,
     price: int = 10_000,
@@ -63,15 +63,15 @@ def candidate(
     brand: str = "Allowed",
 ) -> OptimizationCandidate:
     kwargs: dict[str, object] = {}
-    if category == ComponentKind.CPU:
+    if category == ComponentCategory.CPU:
         kwargs["power_draw_watts"] = 120 if power is None else power
-    elif category == ComponentKind.GPU:
+    elif category == ComponentCategory.GPU:
         kwargs.update(
             power_draw_watts=250 if power is None else power,
             required_power_connectors={"pcie_8pin": 1},
             recommended_psu_watts=650,
         )
-    elif category == ComponentKind.POWER_SUPPLY:
+    elif category == ComponentCategory.POWER_SUPPLY:
         kwargs.update(
             psu_wattage=750,
             provided_power_connectors={"pcie_8pin": 2},
@@ -100,26 +100,26 @@ def candidate(
 
 def complete_catalogue(*, alternatives: bool = False) -> tuple[OptimizationCandidate, ...]:
     attributes = {
-        ComponentKind.GPU: {"vram_gb": 16},
-        ComponentKind.MEMORY: {"capacity_gb": 32, "memory_type": "ddr5"},
-        ComponentKind.STORAGE: {"capacity_gb": 2_000},
-        ComponentKind.MOTHERBOARD: {
+        ComponentCategory.GPU: {"vram_gb": 16},
+        ComponentCategory.MEMORY: {"capacity_gb": 32, "memory_type": "ddr5"},
+        ComponentCategory.STORAGE: {"capacity_gb": 2_000},
+        ComponentCategory.MOTHERBOARD: {
             "wifi_support": True,
             "memory_type": "ddr5",
             "form_factor": "atx",
         },
-        ComponentKind.CASE: {"case_size": "mid_tower"},
+        ComponentCategory.CASE: {"case_size": "mid_tower"},
     }
     result: list[OptimizationCandidate] = []
     for category in (
-        ComponentKind.CPU,
-        ComponentKind.GPU,
-        ComponentKind.MOTHERBOARD,
-        ComponentKind.MEMORY,
-        ComponentKind.STORAGE,
-        ComponentKind.POWER_SUPPLY,
-        ComponentKind.COOLER,
-        ComponentKind.CASE,
+        ComponentCategory.CPU,
+        ComponentCategory.GPU,
+        ComponentCategory.MOTHERBOARD,
+        ComponentCategory.MEMORY,
+        ComponentCategory.STORAGE,
+        ComponentCategory.POWER_SUPPLY,
+        ComponentCategory.COOLER,
+        ComponentCategory.CASE,
     ):
         result.append(
             candidate(
@@ -171,14 +171,14 @@ def test_cp_sat_selects_exactly_one_per_category_and_respects_budget() -> None:
     assert len(result.solutions) == 1
     solution = result.solutions[0]
     assert set(solution.selected) == {
-        ComponentKind.CPU,
-        ComponentKind.GPU,
-        ComponentKind.MOTHERBOARD,
-        ComponentKind.MEMORY,
-        ComponentKind.STORAGE,
-        ComponentKind.POWER_SUPPLY,
-        ComponentKind.COOLER,
-        ComponentKind.CASE,
+        ComponentCategory.CPU,
+        ComponentCategory.GPU,
+        ComponentCategory.MOTHERBOARD,
+        ComponentCategory.MEMORY,
+        ComponentCategory.STORAGE,
+        ComponentCategory.POWER_SUPPLY,
+        ComponentCategory.COOLER,
+        ComponentCategory.CASE,
     }
     assert solution.total_price_cents <= 75_000
     assert validate_selected_build(request, solution.selected) == ()
@@ -199,7 +199,7 @@ def test_locked_existing_component_is_selected_and_excluded_from_purchase_budget
 
     assert result.is_feasible
     solution = result.solutions[0]
-    assert solution.selected[ComponentKind.GPU].product_id == "gpu-a"
+    assert solution.selected[ComponentCategory.GPU].product_id == "gpu-a"
     assert solution.total_price_cents <= 70_000
     assert solution.catalog_total_price_cents > solution.total_price_cents
 
@@ -224,7 +224,7 @@ def test_hard_unknown_and_failure_pairs_are_infeasible() -> None:
 
     solution = BuildOptimizer().optimize(request).solutions[0]
 
-    assert solution.selected[ComponentKind.CPU].product_id == "cpu-b"
+    assert solution.selected[ComponentCategory.CPU].product_id == "cpu-b"
 
 
 def test_excluded_brand_and_required_feature_are_hard_filters() -> None:
@@ -241,18 +241,18 @@ def test_excluded_brand_and_required_feature_are_hard_filters() -> None:
     request = problem(
         tuple(catalogue),
         excluded_brands=frozenset({"blocked"}),
-        required_features=(FeatureRequirement(ComponentKind.CASE, "dust_filter", True),),
+        required_features=(FeatureRequirement(ComponentCategory.CASE, "dust_filter", True),),
     )
 
     solution = BuildOptimizer().optimize(request).solutions[0]
 
-    assert solution.selected[ComponentKind.GPU].product_id == "gpu-b"
-    assert solution.selected[ComponentKind.CASE].product_id == "case-b"
+    assert solution.selected[ComponentCategory.GPU].product_id == "gpu-b"
+    assert solution.selected[ComponentCategory.CASE].product_id == "case-b"
 
 
 def test_power_headroom_gpu_recommendation_and_connectors_are_hard_constraints() -> None:
     catalogue = list(complete_catalogue())
-    old_psu = next(item for item in catalogue if item.category == ComponentKind.POWER_SUPPLY)
+    old_psu = next(item for item in catalogue if item.category == ComponentCategory.POWER_SUPPLY)
     weak_psu = replace(
         old_psu,
         product_id="power_supply-weak",
@@ -265,13 +265,13 @@ def test_power_headroom_gpu_recommendation_and_connectors_are_hard_constraints()
 
     solution = BuildOptimizer().optimize(request).solutions[0]
 
-    assert solution.selected[ComponentKind.POWER_SUPPLY].product_id == "power_supply-a"
+    assert solution.selected[ComponentCategory.POWER_SUPPLY].product_id == "power_supply-a"
     assert solution.required_psu_watts <= 750
 
 
 def test_profile_objectives_choose_performance_and_power_differently() -> None:
     base = list(complete_catalogue())
-    gpu = next(item for item in base if item.category == ComponentKind.GPU)
+    gpu = next(item for item in base if item.category == ComponentCategory.GPU)
     efficient_gpu = replace(
         gpu,
         product_id="gpu-efficient",
@@ -281,7 +281,7 @@ def test_profile_objectives_choose_performance_and_power_differently() -> None:
     )
     fast_gpu = replace(gpu, scores=replace(gpu.scores, performance=100, efficiency=0))
     catalogue = tuple(
-        fast_gpu if item.category == ComponentKind.GPU else item for item in base
+        fast_gpu if item.category == ComponentCategory.GPU else item for item in base
     ) + (efficient_gpu,)
 
     performance = (
@@ -295,8 +295,8 @@ def test_profile_objectives_choose_performance_and_power_differently() -> None:
         .solutions[0]
     )
 
-    assert performance.selected[ComponentKind.GPU].product_id == "gpu-a"
-    assert low_power.selected[ComponentKind.GPU].product_id == "gpu-efficient"
+    assert performance.selected[ComponentCategory.GPU].product_id == "gpu-a"
+    assert low_power.selected[ComponentCategory.GPU].product_id == "gpu-efficient"
     assert low_power.estimated_load_watts < performance.estimated_load_watts
 
 
@@ -321,21 +321,21 @@ def test_diverse_solutions_differ_by_at_least_two_unlocked_components() -> None:
 def test_independent_validator_rejects_candidate_and_solver_reoptimises() -> None:
     catalogue = complete_catalogue() + (
         replace(
-            next(item for item in complete_catalogue() if item.category == ComponentKind.GPU),
+            next(item for item in complete_catalogue() if item.category == ComponentCategory.GPU),
             product_id="gpu-b",
             scores=CandidateScores(performance=10),
         ),
     )
 
     def validator(
-        selected: dict[ComponentKind, OptimizationCandidate],
+        selected: dict[ComponentCategory, OptimizationCandidate],
     ) -> tuple[bool, list[str]]:
-        accepted = selected[ComponentKind.GPU].product_id != "gpu-a"
+        accepted = selected[ComponentCategory.GPU].product_id != "gpu-a"
         return accepted, [] if accepted else ["independent GPU check failed"]
 
     result = BuildOptimizer().optimize(problem(catalogue, independent_validator=validator))
 
-    assert result.solutions[0].selected[ComponentKind.GPU].product_id == "gpu-b"
+    assert result.solutions[0].selected[ComponentCategory.GPU].product_id == "gpu-b"
     assert result.rejected_by_validator == 1
     assert "independent GPU check failed" in result.infeasibility_reasons
 
@@ -353,7 +353,7 @@ def test_cp_sat_matches_exhaustive_oracle_on_reduced_catalogue() -> None:
 
 def test_infeasibility_diagnostics_name_missing_eligible_category() -> None:
     catalogue = tuple(
-        replace(item, in_stock=False) if item.category == ComponentKind.GPU else item
+        replace(item, in_stock=False) if item.category == ComponentCategory.GPU else item
         for item in complete_catalogue()
     )
 
@@ -364,29 +364,29 @@ def test_infeasibility_diagnostics_name_missing_eligible_category() -> None:
     assert any("no eligible gpu" in reason for reason in result.infeasibility_reasons)
 
 
-def _product(category: ComponentKind, product_id: str) -> CanonicalProduct:
+def _product(category: ComponentCategory, product_id: str) -> CanonicalProduct:
     attributes = {
-        ComponentKind.CPU: CPUAttributes(socket="AM5", peak_power_watts=120),
-        ComponentKind.GPU: GPUAttributes(
+        ComponentCategory.CPU: CPUAttributes(socket="AM5", peak_power_watts=120),
+        ComponentCategory.GPU: GPUAttributes(
             vram_gb=16,
             board_power_watts=250,
             recommended_psu_watts=650,
             power_connectors={"pcie_8pin": 1},
         ),
-        ComponentKind.MOTHERBOARD: MotherboardAttributes(
+        ComponentCategory.MOTHERBOARD: MotherboardAttributes(
             socket="AM5", memory_type="ddr5", wifi_support=True
         ),
-        ComponentKind.MEMORY: MemoryAttributes(
+        ComponentCategory.MEMORY: MemoryAttributes(
             memory_type="ddr5", capacity_gb=32, module_count=2
         ),
-        ComponentKind.STORAGE: StorageAttributes(capacity_gb=2_000, interface="nvme_pcie"),
-        ComponentKind.POWER_SUPPLY: PowerSupplyAttributes(
+        ComponentCategory.STORAGE: StorageAttributes(capacity_gb=2_000, interface="nvme_pcie"),
+        ComponentCategory.POWER_SUPPLY: PowerSupplyAttributes(
             wattage=750,
             pcie_connectors={"pcie_8pin": 2},
             eps_connectors=2,
         ),
-        ComponentKind.COOLER: DomainCoolerAttributes(supported_sockets=["AM5"]),
-        ComponentKind.CASE: CaseAttributes(case_size="mid_tower"),
+        ComponentCategory.COOLER: DomainCoolerAttributes(supported_sockets=["AM5"]),
+        ComponentCategory.CASE: CaseAttributes(case_size="mid_tower"),
     }[category]
     return CanonicalProduct(
         product_id=product_id,
@@ -435,14 +435,14 @@ class PassingCompatibilityEngine:
 
 
 def test_domain_adapter_uses_cheapest_listing_and_owned_lock_costs_zero() -> None:
-    products = tuple(_product(category, category.value) for category in ComponentKind)
+    products = tuple(_product(category, category.value) for category in ComponentCategory)
     listings = [_listing(product.product_id) for product in products]
     listings.append(_listing("gpu", Decimal("90")))
     listings[-1] = listings[-1].model_copy(update={"listing_id": "listing-gpu-cheap"})
     request = BuildGenerationRequest(
         budget_sgd=Decimal("700"),
         workloads=[WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=1)],
-        existing_products=[ExistingComponent(category=ComponentKind.GPU, product_id="gpu")],
+        existing_products=[ExistingComponent(category=ComponentCategory.GPU, product_id="gpu")],
         requirements=BuildRequirements(
             minimum_gpu_vram_gb=16,
             minimum_memory_gb=32,

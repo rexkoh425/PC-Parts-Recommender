@@ -30,7 +30,7 @@ from urllib.parse import parse_qsl, unquote, urlsplit
 
 from pc_build_recommender.data_rights import DataUse, DataUseRights
 from pc_build_recommender.domain.enums import (
-    ComponentKind,
+    ComponentCategory,
     ListingCondition,
     StockStatus,
 )
@@ -208,7 +208,7 @@ class AwinFeedPolicy:
     rights: DataUseRights
     allowed_currencies: tuple[str, ...]
     allowed_link_hosts: tuple[str, ...]
-    category_mappings: Mapping[str, ComponentKind]
+    category_mappings: Mapping[str, ComponentCategory]
     compression: str
     delimiter: str
     default_condition: ListingCondition
@@ -285,12 +285,12 @@ class AwinFeedPolicy:
         raw_categories = payload["category_mappings"]
         if not isinstance(raw_categories, Mapping) or not raw_categories:
             raise TypeError("category_mappings must be a non-empty object")
-        category_mappings: dict[str, ComponentKind] = {}
+        category_mappings: dict[str, ComponentCategory] = {}
         for raw_key, raw_category in raw_categories.items():
             key = _category_key(str(raw_key))
             if key in category_mappings:
                 raise ValueError(f"duplicate normalized category mapping: {key}")
-            category_mappings[key] = ComponentKind(str(raw_category))
+            category_mappings[key] = ComponentCategory(str(raw_category))
         raw_feed = payload["feed"]
         if not isinstance(raw_feed, Mapping) or set(raw_feed) != {
             "format",
@@ -909,7 +909,7 @@ class AwinLocalFeedAdapter:
             },
         }
 
-    def _category(self, row: Mapping[str, str]) -> ComponentKind:
+    def _category(self, row: Mapping[str, str]) -> ComponentCategory:
         candidate_keys: list[str] = []
         for prefix, field_name in (
             ("id", "category_id"),

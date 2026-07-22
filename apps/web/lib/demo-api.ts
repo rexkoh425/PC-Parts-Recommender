@@ -7,7 +7,7 @@ import type {
   CompatibilityCheck,
   CompatibilityCheckRequest,
   CompatibilityCheckResponse,
-  ComponentKind,
+  ComponentCategory,
   FreshnessSummary,
   GenerateBuildsResponse,
   InteractionAccepted,
@@ -31,7 +31,7 @@ export const DEMO_SOLVER_VERSION = "browser-demo-v1";
 
 interface DemoProduct {
   product_id: string;
-  category: ComponentKind;
+  category: ComponentCategory;
   canonical_name: string;
   brand: string;
   model: string;
@@ -397,7 +397,7 @@ const profileExplanation: Record<BuildProfile, string> = {
   lowest_power: "Favours the lowest estimated peak load while preserving the hard requirements.",
 };
 
-const categoryOrder: ComponentKind[] = [
+const categoryOrder: ComponentCategory[] = [
   "cpu",
   "gpu",
   "motherboard",
@@ -435,7 +435,7 @@ function stableDemoSearchId(request: ProductSearchRequest): string {
 
 function scoreWorkload(
   workload: WorkloadName,
-  selected: Map<ComponentKind, DemoProduct>,
+  selected: Map<ComponentCategory, DemoProduct>,
 ): number {
   const cpu = selected.get("cpu")?.performance ?? 0;
   const gpu = selected.get("gpu")?.performance ?? 0;
@@ -452,7 +452,7 @@ function caseFits(requested: BuildRequest["requirements"]["case_size"], actual?:
   return sizes.indexOf(actual ?? "mid_tower") <= sizes.indexOf(requested);
 }
 
-function compatibilityChecks(selected: Map<ComponentKind, DemoProduct>): CompatibilityCheck[] {
+function compatibilityChecks(selected: Map<ComponentCategory, DemoProduct>): CompatibilityCheck[] {
   const gpu = selected.get("gpu");
   const cpu = selected.get("cpu");
   const psu = selected.get("psu");
@@ -545,7 +545,7 @@ function buildFromTemplate(
   requestId: string,
   generatedAt: string,
 ): BuildResult | undefined {
-  const selected = new Map<ComponentKind, DemoProduct>();
+  const selected = new Map<ComponentCategory, DemoProduct>();
   for (const productId of template.product_ids) {
     const product = byId.get(productId);
     if (product) selected.set(product.category, product);
@@ -729,7 +729,7 @@ export function searchDemoProducts(request: ProductSearchRequest): ProductSearch
         queryMatches.reduce((counts, product) => {
           counts.set(product.category, (counts.get(product.category) ?? 0) + 1);
           return counts;
-        }, new Map<ComponentKind, number>()),
+        }, new Map<ComponentCategory, number>()),
       ).map(([value, count]) => ({ value, count })),
       brands: Array.from(
         categoryMatches.reduce((counts, product) => {

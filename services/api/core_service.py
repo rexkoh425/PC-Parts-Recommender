@@ -47,7 +47,7 @@ from pc_build_recommender.domain import (
     BuildRequirements as DomainRequirements,
 )
 from pc_build_recommender.domain import (
-    ComponentKind as DomainCategory,
+    ComponentCategory as DomainCategory,
 )
 from pc_build_recommender.domain import (
     ExistingComponent,
@@ -90,7 +90,7 @@ from services.api.models import (
     CompatibilityCheckRequest,
     CompatibilityCheckResponse,
     CompatVerdict,
-    ComponentKind,
+    ComponentCategory,
     ExplanationItem,
     FreshnessResponse,
     GenerateBuildsRequest,
@@ -145,14 +145,14 @@ _REVIEW_POSITIVE_SENTIMENT_THRESHOLD = 0.25
 _REVIEW_NEGATIVE_SENTIMENT_THRESHOLD = -0.25
 
 _API_TO_DOMAIN_CATEGORY = {
-    ComponentKind.CPU: DomainCategory.CPU,
-    ComponentKind.GPU: DomainCategory.GPU,
-    ComponentKind.MOTHERBOARD: DomainCategory.MOTHERBOARD,
-    ComponentKind.MEMORY: DomainCategory.MEMORY,
-    ComponentKind.STORAGE: DomainCategory.STORAGE,
-    ComponentKind.PSU: DomainCategory.POWER_SUPPLY,
-    ComponentKind.COOLER: DomainCategory.COOLER,
-    ComponentKind.CASE: DomainCategory.CASE,
+    ComponentCategory.CPU: DomainCategory.CPU,
+    ComponentCategory.GPU: DomainCategory.GPU,
+    ComponentCategory.MOTHERBOARD: DomainCategory.MOTHERBOARD,
+    ComponentCategory.MEMORY: DomainCategory.MEMORY,
+    ComponentCategory.STORAGE: DomainCategory.STORAGE,
+    ComponentCategory.PSU: DomainCategory.POWER_SUPPLY,
+    ComponentCategory.COOLER: DomainCategory.COOLER,
+    ComponentCategory.CASE: DomainCategory.CASE,
 }
 _DOMAIN_TO_API_CATEGORY = {value: key for key, value in _API_TO_DOMAIN_CATEGORY.items()}
 _PROFILE_ORDER = (
@@ -206,7 +206,7 @@ def _processed_catalog_freshness(
     return latest_catalog, latest_price, status, tuple(blockers)
 
 
-def _api_category(value: DomainCategory) -> ComponentKind:
+def _api_category(value: DomainCategory) -> ComponentCategory:
     return _DOMAIN_TO_API_CATEGORY[value]
 
 
@@ -662,7 +662,7 @@ class CoreRecommendationService(RecommendationApplication):
         else:
             release_blockers = list(report.blockers())
             for category, groups in sorted(report.critical_field_present_by_category.items()):
-                if category not in {item.value for item in ComponentKind}:
+                if category not in {item.value for item in ComponentCategory}:
                     continue
                 product_count = report.products_by_category.get(category, 0)
                 for field_group, present_count in sorted(groups.items()):
@@ -670,7 +670,7 @@ class CoreRecommendationService(RecommendationApplication):
                     if missing_count:
                         missing_fields.append(
                             AdminMissingField(
-                                category=ComponentKind(category),
+                                category=ComponentCategory(category),
                                 field_group=field_group,
                                 missing_product_count=missing_count,
                                 product_count=product_count,
@@ -973,7 +973,7 @@ class CoreRecommendationService(RecommendationApplication):
         # Retrieve the complete filtered candidate universe so ``total`` is not merely the
         # size of an arbitrary top-k window. The processed service currently uses the bounded
         # in-memory snapshot retriever; each category is capped by its measured snapshot size.
-        categories = list(ComponentKind)
+        categories = list(ComponentCategory)
         if request.compatible_with_build_id is not None and request.category is not None:
             categories = [request.category]
         all_results: list[SearchProductResult] = []
@@ -1023,7 +1023,7 @@ class CoreRecommendationService(RecommendationApplication):
 
         category_counts = {
             category: sum(_api_category(hit.product.category) is category for hit in all_results)
-            for category in ComponentKind
+            for category in ComponentCategory
         }
         category_scoped = [
             hit
@@ -1128,7 +1128,7 @@ class CoreRecommendationService(RecommendationApplication):
             facets=ProductSearchFacets(
                 categories=[
                     ProductFacetCount(value=category.value, count=category_counts[category])
-                    for category in ComponentKind
+                    for category in ComponentCategory
                     if category_counts[category] > 0
                 ],
                 brands=[
@@ -1355,15 +1355,15 @@ class CoreRecommendationService(RecommendationApplication):
                 )
                 continue
             records[category.value] = catalog_item.compatibility_record
-        if not checks and len(records) == len(ComponentKind):
+        if not checks and len(records) == len(ComponentCategory):
             report = self.services.generate_builds.compatibility_engine.check_complete_build(
                 records
             )
             checks = [self._compatibility_check(item) for item in report.results]
-        elif len(records) != len(ComponentKind):
+        elif len(records) != len(ComponentCategory):
             missing = [
                 category
-                for category in ComponentKind
+                for category in ComponentCategory
                 if _API_TO_DOMAIN_CATEGORY[category].value not in records
             ]
             checks.append(
@@ -1685,7 +1685,7 @@ class CoreRecommendationService(RecommendationApplication):
         )
 
     def _compatibility_check(self, result: Any) -> CompatibilityCheck:
-        categories: set[ComponentKind] = set()
+        categories: set[ComponentCategory] = set()
 
         def visit(value: Any) -> None:
             if isinstance(value, Mapping):

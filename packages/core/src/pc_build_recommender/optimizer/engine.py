@@ -8,7 +8,7 @@ from typing import Any
 
 from ortools.sat.python import cp_model
 
-from pc_build_recommender.domain import BuildProfile, CompatVerdict, ComponentKind
+from pc_build_recommender.domain import BuildProfile, CompatVerdict, ComponentCategory
 
 from .models import (
     REQUIRED_CATEGORIES,
@@ -63,7 +63,7 @@ def _warning_messages(
 
 def _solution_from_selected(
     problem: OptimizationProblem,
-    selected: Mapping[ComponentKind, OptimizationCandidate],
+    selected: Mapping[ComponentCategory, OptimizationCandidate],
     *,
     profile: BuildProfile,
     objective_value: int,
@@ -157,12 +157,12 @@ class _CpModelState:
         load_expression = self.problem.base_power_watts + sum(
             candidate_power_watts(self.problem, candidate) * self.variables[candidate.product_id]
             for candidate in self.candidates
-            if candidate.category != ComponentKind.POWER_SUPPLY
+            if candidate.category != ComponentCategory.POWER_SUPPLY
         )
         capacity_expression = sum(
             int(candidate.psu_wattage or 0) * self.variables[candidate.product_id]
             for candidate in self.candidates
-            if candidate.category == ComponentKind.POWER_SUPPLY
+            if candidate.category == ComponentCategory.POWER_SUPPLY
         )
         self.model.add(
             load_expression * (100 + self.problem.power_headroom_percent)
@@ -172,12 +172,12 @@ class _CpModelState:
         gpus = [
             candidate
             for candidate in self.candidates
-            if candidate.category == ComponentKind.GPU
+            if candidate.category == ComponentCategory.GPU
         ]
         power_supplies = [
             candidate
             for candidate in self.candidates
-            if candidate.category == ComponentKind.POWER_SUPPLY
+            if candidate.category == ComponentCategory.POWER_SUPPLY
         ]
         for gpu in gpus:
             for psu in power_supplies:
@@ -225,7 +225,7 @@ class _CpModelState:
         self.model.maximize(sum(terms))
 
     def forbid_exact_solution(
-        self, selected: Mapping[ComponentKind, OptimizationCandidate]
+        self, selected: Mapping[ComponentCategory, OptimizationCandidate]
     ) -> None:
         self.model.add(
             sum(self.variables[candidate.product_id] for candidate in selected.values())

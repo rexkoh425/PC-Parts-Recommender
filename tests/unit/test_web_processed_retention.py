@@ -19,7 +19,7 @@ from pipelines.sources.web_product import (
 )
 
 from pc_build_recommender.data_rights import DataUseRights
-from pc_build_recommender.domain.enums import ComponentKind
+from pc_build_recommender.domain.enums import ComponentCategory
 
 SOURCE_NAME = "fixture_web_research"
 TERMS_URL = "https://shop.example.test/terms"
@@ -66,7 +66,7 @@ def _policy(*, retention_days: int = 7) -> WebSourcePolicy:
         licence_or_access_note="Fixture internal-research authority only.",
         rights=rights,
         acquisition_authority=authority,
-        url_categories={PRODUCT_URL: ComponentKind.GPU},
+        url_categories={PRODUCT_URL: ComponentCategory.GPU},
         usage_scope=WebUsageScope.INTERNAL_RESEARCH,
     )
 

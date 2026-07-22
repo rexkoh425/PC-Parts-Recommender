@@ -1,4 +1,4 @@
-import type { ComponentKind, ProductDetail } from "./types";
+import type { ComponentCategory, ProductDetail } from "./types";
 
 export const maximumComparedProducts = 3;
 
@@ -31,7 +31,7 @@ export function comparedProductsShareCategory(products: ProductDetail[]): boolea
   return products.length < 2 || products.every((product) => product.category === products[0]?.category);
 }
 
-export function comparisonCategory(products: ProductDetail[]): ComponentKind | undefined {
+export function comparisonCategory(products: ProductDetail[]): ComponentCategory | undefined {
   return comparedProductsShareCategory(products) ? products[0]?.category : undefined;
 }
 

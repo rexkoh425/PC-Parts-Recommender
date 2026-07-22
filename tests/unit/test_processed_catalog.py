@@ -32,7 +32,7 @@ from pc_build_recommender.catalog import (
     validate_production_readiness,
     validate_review_target,
 )
-from pc_build_recommender.domain import ComponentKind, StockStatus
+from pc_build_recommender.domain import ComponentCategory, StockStatus
 
 NOW = datetime.now(UTC).replace(microsecond=0).isoformat()
 
@@ -285,7 +285,7 @@ def test_exact_mpn_brand_mapping_preserves_unknown_stock(tmp_path: Path) -> None
 
     reader = InMemoryCatalogReader(data)
     assert reader.get_product("prod_asus_5060ti") is not None
-    assert reader.list_products(category=ComponentKind.GPU)[0].product_id == (
+    assert reader.list_products(category=ComponentCategory.GPU)[0].product_id == (
         "prod_asus_5060ti"
     )
 

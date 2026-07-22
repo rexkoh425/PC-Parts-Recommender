@@ -10,7 +10,7 @@ from typing import Any
 from pc_build_recommender.compatibility import CompatibilityEngine
 from pc_build_recommender.domain import (
     BuildGenerationRequest,
-    ComponentKind,
+    ComponentCategory,
     WorkloadName,
     WorkloadPerformanceSignal,
 )
@@ -31,7 +31,7 @@ from .catalog import ApplicationCatalog
 from .models import CandidateLimits, CatalogItem
 from .performance import ArtifactPerformanceProvider
 
-REQUIRED_CATEGORIES: tuple[str, ...] = tuple(category.value for category in ComponentKind)
+REQUIRED_CATEGORIES: tuple[str, ...] = tuple(category.value for category in ComponentCategory)
 
 # Pairwise relations that can safely reject a component before optimisation.
 # Full-build power and retained-component checks still run independently after
@@ -151,12 +151,12 @@ def filters_by_category(
         attribute_equals: dict[str, Any] = {}
         attribute_minimums: dict[str, float] = {}
         required_form_factor: str | None = None
-        if category == ComponentKind.STORAGE.value and requirements.storage_gb is not None:
+        if category == ComponentCategory.STORAGE.value and requirements.storage_gb is not None:
             attribute_minimums["capacity_gb"] = float(requirements.storage_gb)
-        if category == ComponentKind.CASE.value and requirements.case_size is not None:
+        if category == ComponentCategory.CASE.value and requirements.case_size is not None:
             attribute_equals["case_size"] = requirements.case_size.value
         if (
-            category == ComponentKind.MOTHERBOARD.value
+            category == ComponentCategory.MOTHERBOARD.value
             and requirements.required_motherboard_form_factor is not None
         ):
             required_form_factor = requirements.required_motherboard_form_factor.value

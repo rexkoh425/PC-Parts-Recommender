@@ -32,7 +32,7 @@ from urllib.robotparser import RobotFileParser
 import httpcore
 import httpx
 
-from pc_build_recommender.domain.enums import ComponentKind, ListingCondition, StockStatus
+from pc_build_recommender.domain.enums import ComponentCategory, ListingCondition, StockStatus
 from pc_build_recommender.domain.models import PriceSample, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import ParsedBatch, RawSnapshot, rejected_record, sha256_bytes
@@ -366,7 +366,7 @@ class WebSourcePolicy:
     licence_or_access_note: str
     rights: DataUseRights
     acquisition_authority: WebAcquisitionAuthority
-    url_categories: Mapping[str, ComponentKind]
+    url_categories: Mapping[str, ComponentCategory]
     usage_scope: WebUsageScope = WebUsageScope.PRODUCTION_CATALOG
     allowed_currencies: tuple[str, ...] = ("SGD",)
     unknown_shipping: UnknownShippingPolicy = UnknownShippingPolicy.REJECT
@@ -418,7 +418,7 @@ class WebSourcePolicy:
             raise WebCrawlPolicyError(
                 "rights.contract_version_url must identify the exact reviewed terms_url"
             )
-        categories: dict[str, ComponentKind] = {}
+        categories: dict[str, ComponentCategory] = {}
         for raw_url, raw_category in self.url_categories.items():
             canonical_url = _canonical_url(str(raw_url))
             host = _normalise_host(urlsplit(canonical_url).hostname or "")
@@ -432,7 +432,7 @@ class WebSourcePolicy:
                 raise WebCrawlPolicyError("terms_url cannot be mapped as a product URL")
             if urlsplit(canonical_url).path.casefold() == "/robots.txt":
                 raise WebCrawlPolicyError("robots.txt cannot be mapped as a product URL")
-            categories[canonical_url] = ComponentKind(raw_category)
+            categories[canonical_url] = ComponentCategory(raw_category)
         if not categories:
             raise ValueError("url_categories must explicitly map at least one URL to a category")
         object.__setattr__(self, "url_categories", dict(sorted(categories.items())))
@@ -669,7 +669,7 @@ class WebSourcePolicy:
         values["rights"] = DataUseRights.from_mapping(raw_rights)
         values["acquisition_authority"] = WebAcquisitionAuthority.from_mapping(raw_acquisition)
         values["url_categories"] = {
-            str(url): ComponentKind(str(category)) for url, category in raw_categories.items()
+            str(url): ComponentCategory(str(category)) for url, category in raw_categories.items()
         }
         if "allowed_currencies" in values:
             raw_currencies = values["allowed_currencies"]

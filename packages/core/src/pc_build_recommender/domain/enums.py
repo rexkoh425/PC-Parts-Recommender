@@ -5,7 +5,7 @@ from __future__ import annotations
 from enum import StrEnum
 
 
-class ComponentKind(StrEnum):
+class ComponentCategory(StrEnum):
     """The eight component categories required by a complete desktop build."""
 
     CPU = "cpu"

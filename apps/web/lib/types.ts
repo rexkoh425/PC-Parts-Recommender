@@ -9,7 +9,7 @@ export const componentCategories = [
   "case",
 ] as const;
 
-export type ComponentKind = (typeof componentCategories)[number];
+export type ComponentCategory = (typeof componentCategories)[number];
 
 export type WorkloadName =
   | "gaming_1080p"
@@ -30,7 +30,7 @@ export type BuildProfile =
 
 export interface ExistingProductInput {
   product_id: string;
-  category: ComponentKind;
+  category: ComponentCategory;
   canonical_name?: string;
   include_in_budget: boolean;
 }
@@ -94,7 +94,7 @@ export interface CompatibilityCheck {
   rule_id: string;
   status: CompatVerdict;
   message: string;
-  affected_categories?: ComponentKind[];
+  affected_categories?: ComponentCategory[];
   evidence_source?: string;
 }
 
@@ -107,7 +107,7 @@ export interface ExplanationItem {
 export interface ReplacementCandidate {
   product_id: string;
   canonical_name: string;
-  category: ComponentKind;
+  category: ComponentCategory;
   price_sgd: number;
   retailer?: string;
   performance_delta?: number;
@@ -122,7 +122,7 @@ export interface ReplacementOption extends Omit<ReplacementCandidate, "price_sgd
 }
 
 export interface BuildComponent {
-  category: ComponentKind;
+  category: ComponentCategory;
   product_id: string;
   listing_id?: string;
   canonical_name: string;
@@ -164,7 +164,7 @@ export interface BuildResult {
 
 /** Allow-listed snapshot returned from a durable public build-share endpoint. */
 export interface PublicBuildComponent {
-  category: ComponentKind;
+  category: ComponentCategory;
   canonical_name: string;
   brand?: string | null;
   price_sgd?: number | null;
@@ -218,7 +218,7 @@ export interface InfeasibilityExplanation {
   reasons: Array<{
     code: string;
     message: string;
-    affected_categories?: ComponentKind[];
+    affected_categories?: ComponentCategory[];
   }>;
   suggested_relaxations?: SuggestedRelaxation[];
 }
@@ -239,7 +239,7 @@ export interface GenerateBuildsResponse {
 
 export interface ProductSearchItem {
   product_id: string;
-  category: ComponentKind;
+  category: ComponentCategory;
   canonical_name: string;
   brand?: string;
   model?: string;
@@ -250,7 +250,7 @@ export interface ProductSearchItem {
 
 export interface ProductSearchRequest {
   query: string;
-  category?: ComponentKind;
+  category?: ComponentCategory;
   compatible_with_build_id?: string;
   brand?: string;
   in_stock_only?: boolean;
@@ -267,7 +267,7 @@ export interface ProductFacetCount<TValue extends string = string> {
 }
 
 export interface ProductSearchFacets {
-  categories?: ProductFacetCount<ComponentKind>[];
+  categories?: ProductFacetCount<ComponentCategory>[];
   brands?: ProductFacetCount[];
 }
 
@@ -411,14 +411,14 @@ export interface ProductReviewsResponse {
 }
 
 export interface ReplacementRequest {
-  category: ComponentKind;
+  category: ComponentCategory;
   replacement_product_id: string;
   mode: "lock_other_components" | "reoptimize_unlocked";
 }
 
 export interface ReplacementResponse {
   build: BuildResult;
-  changed_categories: ComponentKind[];
+  changed_categories: ComponentCategory[];
   price_delta_sgd: number;
   workload_score_deltas: Record<string, number>;
   new_warnings: CompatibilityCheck[];
@@ -459,7 +459,7 @@ export interface AdminPriceFreshness {
 }
 
 export interface AdminMissingField {
-  category: ComponentKind;
+  category: ComponentCategory;
   field_group: string;
   missing_product_count: number;
   product_count: number;
@@ -510,7 +510,7 @@ export interface CatalogueReadinessSummary {
 
 export interface CompatibilityComponent {
   product_id?: string | null;
-  category: ComponentKind;
+  category: ComponentCategory;
   canonical_name?: string | null;
   attributes?: Record<string, unknown>;
 }

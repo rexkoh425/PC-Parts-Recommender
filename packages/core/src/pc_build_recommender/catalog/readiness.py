@@ -15,7 +15,7 @@ from pc_build_recommender.data_rights import (
 )
 from pc_build_recommender.domain import (
     CanonicalProduct,
-    ComponentKind,
+    ComponentCategory,
     RetailerListing,
     SourceProvenance,
     StockStatus,
@@ -27,20 +27,20 @@ from .er_gate import EntityResolutionEvaluation
 _DATA_USE_RIGHT_FIELDS = tuple(use.field_name for use in DataUse)
 
 # Each inner tuple is an OR group: at least one field in the group must be present.
-CRITICAL_COMPATIBILITY_FIELDS: Mapping[ComponentKind, tuple[tuple[str, ...], ...]] = {
-    ComponentKind.CPU: (
+CRITICAL_COMPATIBILITY_FIELDS: Mapping[ComponentCategory, tuple[tuple[str, ...], ...]] = {
+    ComponentCategory.CPU: (
         ("socket",),
         ("generation",),
         ("peak_power_watts", "tdp_watts"),
     ),
-    ComponentKind.GPU: (
+    ComponentCategory.GPU: (
         ("vram_gb",),
         ("length_mm",),
         ("slot_width",),
         ("board_power_watts",),
         ("power_connectors",),
     ),
-    ComponentKind.MOTHERBOARD: (
+    ComponentCategory.MOTHERBOARD: (
         ("socket",),
         ("chipset",),
         ("supported_cpu_generations", "bios_version"),
@@ -52,28 +52,28 @@ CRITICAL_COMPATIBILITY_FIELDS: Mapping[ComponentKind, tuple[tuple[str, ...], ...
         ("sata_ports",),
         ("wifi_support",),
     ),
-    ComponentKind.MEMORY: (
+    ComponentCategory.MEMORY: (
         ("memory_type",),
         ("capacity_gb",),
         ("module_count",),
     ),
-    ComponentKind.STORAGE: (
+    ComponentCategory.STORAGE: (
         ("capacity_gb",),
         ("interface",),
         ("form_factor",),
     ),
-    ComponentKind.POWER_SUPPLY: (
+    ComponentCategory.POWER_SUPPLY: (
         ("wattage",),
         ("form_factor",),
         ("pcie_connectors",),
         ("eps_connectors",),
     ),
-    ComponentKind.COOLER: (
+    ComponentCategory.COOLER: (
         ("supported_sockets",),
         ("height_mm", "radiator_size_mm"),
         ("estimated_cooling_capacity_watts",),
     ),
-    ComponentKind.CASE: (
+    ComponentCategory.CASE: (
         ("supported_motherboard_sizes",),
         ("maximum_gpu_length_mm",),
         ("maximum_gpu_slot_width",),
@@ -252,7 +252,7 @@ class CatalogReadinessReport:
 
     @property
     def has_complete_priced_coverage(self) -> bool:
-        required = {category.value for category in ComponentKind}
+        required = {category.value for category in ComponentCategory}
         actual = {
             category for category, count in self.matched_listings_by_category.items() if count > 0
         }
@@ -260,7 +260,7 @@ class CatalogReadinessReport:
 
     @property
     def has_complete_in_stock_coverage(self) -> bool:
-        required = {category.value for category in ComponentKind}
+        required = {category.value for category in ComponentCategory}
         actual = {
             category for category, count in self.in_stock_listings_by_category.items() if count > 0
         }
@@ -291,7 +291,7 @@ class CatalogReadinessReport:
             blockers.append(
                 f"product_count={self.product_count} below minimum={active.minimum_products}"
             )
-        for category in ComponentKind:
+        for category in ComponentCategory:
             category_name = category.value
             count = self.products_by_category.get(category_name, 0)
             if count < active.minimum_products_per_category:
@@ -501,7 +501,7 @@ class CatalogReadinessAccumulator:
         self,
         listing: RetailerListing,
         *,
-        category: ComponentKind,
+        category: ComponentCategory,
         provenance: SourceProvenance | None,
     ) -> None:
         self.listing_count += 1
@@ -549,7 +549,7 @@ class CatalogReadinessAccumulator:
         ready_counts: dict[str, int] = {}
         matched_counts: dict[str, int] = {}
         in_stock_counts: dict[str, int] = {}
-        for category in ComponentKind:
+        for category in ComponentCategory:
             category_name = category.value
             product_counts[category_name] = self.products_by_category.get(category_name, 0)
             ready_counts[category_name] = self.ready_by_category.get(category_name, 0)

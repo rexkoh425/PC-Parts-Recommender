@@ -13,7 +13,7 @@ import pytest
 from services.api.core_service import CoreRecommendationService
 from services.api.durability import DurableStorageError, SqlAlchemyDurableStore
 from services.api.models import (
-    ComponentKind as ApiComponentCategory,
+    ComponentCategory as ApiComponentCategory,
 )
 from services.api.models import ReplacementRequest
 from services.api.settings import ApiSettings
@@ -43,7 +43,7 @@ from pc_build_recommender.domain import (
     CaseAttributes,
     CaseSize,
     CommonProductAttributes,
-    ComponentKind,
+    ComponentCategory,
     CoolerAttributes,
     CoolerType,
     CPUAttributes,
@@ -196,7 +196,7 @@ class _PromotedRanker:
 
 
 def _product(
-    category: ComponentKind,
+    category: ComponentCategory,
     index: int,
     attributes: object,
     *,
@@ -239,8 +239,8 @@ def _product(
     )
 
 
-def _attributes(category: ComponentKind, index: int) -> object:
-    if category == ComponentKind.CPU:
+def _attributes(category: ComponentCategory, index: int) -> object:
+    if category == ComponentCategory.CPU:
         return CPUAttributes(
             socket="AM5",
             architecture="Zen 4",
@@ -252,7 +252,7 @@ def _attributes(category: ComponentKind, index: int) -> object:
             tdp_watts=105,
             peak_power_watts=120 + 5 * index,
         )
-    if category == ComponentKind.GPU:
+    if category == ComponentCategory.GPU:
         return GPUAttributes(
             architecture="Test GPU",
             vram_gb=16,
@@ -264,7 +264,7 @@ def _attributes(category: ComponentKind, index: int) -> object:
             recommended_psu_watts=650,
             power_connectors={"pcie_8_pin": 1},
         )
-    if category == ComponentKind.MOTHERBOARD:
+    if category == ComponentCategory.MOTHERBOARD:
         return MotherboardAttributes(
             socket="AM5",
             chipset="B650",
@@ -279,7 +279,7 @@ def _attributes(category: ComponentKind, index: int) -> object:
             wifi_support=True,
             bios_version="2.0",
         )
-    if category == ComponentKind.MEMORY:
+    if category == ComponentCategory.MEMORY:
         return MemoryAttributes(
             memory_type=MemoryType.DDR5,
             capacity_gb=32 + 16 * index,
@@ -288,7 +288,7 @@ def _attributes(category: ComponentKind, index: int) -> object:
             cas_latency=30,
             voltage=1.35,
         )
-    if category == ComponentKind.STORAGE:
+    if category == ComponentCategory.STORAGE:
         return StorageAttributes(
             capacity_gb=2000,
             interface=StorageInterface.NVME_PCIE,
@@ -296,7 +296,7 @@ def _attributes(category: ComponentKind, index: int) -> object:
             sequential_read_mbps=7000 + 100 * index,
             sequential_write_mbps=6000,
         )
-    if category == ComponentKind.POWER_SUPPLY:
+    if category == ComponentCategory.POWER_SUPPLY:
         return PowerSupplyAttributes(
             wattage=850,
             efficiency_rating=EfficiencyRating.GOLD,
@@ -307,7 +307,7 @@ def _attributes(category: ComponentKind, index: int) -> object:
             atx_version="3.0",
             warranty_years=10,
         )
-    if category == ComponentKind.COOLER:
+    if category == ComponentCategory.COOLER:
         return CoolerAttributes(
             cooler_type=CoolerType.AIR,
             supported_sockets=["AM5"],
@@ -315,7 +315,7 @@ def _attributes(category: ComponentKind, index: int) -> object:
             fan_count=2,
             estimated_cooling_capacity_watts=220,
         )
-    if category == ComponentKind.CASE:
+    if category == ComponentCategory.CASE:
         return CaseAttributes(
             case_size=CaseSize.MID_TOWER,
             supported_motherboard_sizes=[MotherboardFormFactor.ATX],
@@ -330,23 +330,23 @@ def _attributes(category: ComponentKind, index: int) -> object:
     raise AssertionError(f"unsupported category: {category}")
 
 
-def _price(category: ComponentKind, index: int) -> Decimal:
+def _price(category: ComponentCategory, index: int) -> Decimal:
     bases = {
-        ComponentKind.CPU: 300,
-        ComponentKind.GPU: 650,
-        ComponentKind.MOTHERBOARD: 220,
-        ComponentKind.MEMORY: 130,
-        ComponentKind.STORAGE: 140,
-        ComponentKind.POWER_SUPPLY: 150,
-        ComponentKind.COOLER: 70,
-        ComponentKind.CASE: 130,
+        ComponentCategory.CPU: 300,
+        ComponentCategory.GPU: 650,
+        ComponentCategory.MOTHERBOARD: 220,
+        ComponentCategory.MEMORY: 130,
+        ComponentCategory.STORAGE: 140,
+        ComponentCategory.POWER_SUPPLY: 150,
+        ComponentCategory.COOLER: 70,
+        ComponentCategory.CASE: 130,
     }
     return Decimal(bases[category] + 15 * index)
 
 
 def _seed_repository(session: Session) -> CatalogRepository:
     repository = CatalogRepository(session)
-    for category in ComponentKind:
+    for category in ComponentCategory:
         for index in range(3):
             product = _product(category, index, _attributes(category, index))
             repository.upsert_product(product)
@@ -367,10 +367,10 @@ def _seed_repository(session: Session) -> CatalogRepository:
                 )
             )
 
-            if category in (ComponentKind.CPU, ComponentKind.GPU):
+            if category in (ComponentCategory.CPU, ComponentCategory.GPU):
                 workload = (
                     WorkloadName.SOFTWARE_DEVELOPMENT
-                    if category == ComponentKind.CPU
+                    if category == ComponentCategory.CPU
                     else WorkloadName.GAMING_1440P
                 )
                 repository.upsert_benchmark(
@@ -388,7 +388,7 @@ def _seed_repository(session: Session) -> CatalogRepository:
                 )
 
     bad_case = _product(
-        ComponentKind.CASE,
+        ComponentCategory.CASE,
         9,
         CaseAttributes(
             case_size=CaseSize.MID_TOWER,
@@ -419,9 +419,9 @@ def _seed_repository(session: Session) -> CatalogRepository:
     )
 
     used_gpu = _product(
-        ComponentKind.GPU,
+        ComponentCategory.GPU,
         8,
-        _attributes(ComponentKind.GPU, 0),
+        _attributes(ComponentCategory.GPU, 0),
         product_id="gpu_used_only",
         canonical_name="Used-only GPU",
     )
@@ -443,9 +443,9 @@ def _seed_repository(session: Session) -> CatalogRepository:
     )
 
     retained_cpu = _product(
-        ComponentKind.CPU,
+        ComponentCategory.CPU,
         7,
-        _attributes(ComponentKind.CPU, 0),
+        _attributes(ComponentCategory.CPU, 0),
         product_id="cpu_discontinued_retained",
         canonical_name="Discontinued retained CPU",
         status=ProductStatus.DISCONTINUED,
@@ -566,7 +566,7 @@ def test_artifact_prediction_reaches_optimizer_presenter_and_api() -> None:
             gpu = next(
                 component
                 for component in build.components
-                if component.category is ComponentKind.GPU
+                if component.category is ComponentCategory.GPU
             )
             signal = gpu.performance_signals[0]
 
@@ -621,7 +621,7 @@ def test_observed_benchmark_precedes_artifact_for_the_same_route() -> None:
             gpu = next(
                 component
                 for component in response.builds[0].components
-                if component.category is ComponentKind.GPU
+                if component.category is ComponentCategory.GPU
             )
             signal = gpu.performance_signals[0]
 
@@ -668,7 +668,7 @@ def test_unpromoted_artifact_requires_explicit_development_opt_in() -> None:
             gpu = next(
                 component
                 for component in response.builds[0].components
-                if component.category is ComponentKind.GPU
+                if component.category is ComponentCategory.GPU
             )
             signal = gpu.performance_signals[0]
             assert signal.basis == "relative"
@@ -767,7 +767,7 @@ def test_discontinued_product_is_retained_but_not_purchasable(application) -> No
         _request(
             existing_products=[
                 ExistingComponent(
-                    category=ComponentKind.CPU,
+                    category=ComponentCategory.CPU,
                     product_id=product_id,
                 )
             ],
@@ -783,7 +783,7 @@ def test_discontinued_product_is_retained_but_not_purchasable(application) -> No
         selected_cpu = next(
             component
             for component in response.builds[0].components
-            if component.category is ComponentKind.CPU
+            if component.category is ComponentCategory.CPU
         )
         assert selected_cpu.product_id == product_id
 
@@ -813,7 +813,7 @@ def test_end_to_end_generation_is_versioned_valid_diverse_and_refresh_safe(
 
     for build in response.builds:
         assert len(build.components) == 8
-        assert {component.category for component in build.components} == set(ComponentKind)
+        assert {component.category for component in build.components} == set(ComponentCategory)
         assert build.total_price_sgd <= request.budget_sgd
         assert build.compatibility_status.value in {"pass", "warning"}
         assert all(
@@ -826,7 +826,7 @@ def test_end_to_end_generation_is_versioned_valid_diverse_and_refresh_safe(
         current = {item.category: item.product_id for item in build.components}
         for prior in response.builds[:index]:
             previous = {item.category: item.product_id for item in prior.components}
-            assert sum(current[key] != previous[key] for key in ComponentKind) >= 2
+            assert sum(current[key] != previous[key] for key in ComponentCategory) >= 2
 
 
 def test_api_presenter_attributes_observed_scores_to_benchmark_evidence(application) -> None:
@@ -870,7 +870,7 @@ def test_search_uses_wire_psu_alias_and_complete_build_compatibility(application
         top_k=5,
     )
     assert psu_results
-    assert all(item.product.category == ComponentKind.POWER_SUPPLY for item in psu_results)
+    assert all(item.product.category == ComponentCategory.POWER_SUPPLY for item in psu_results)
 
     response = application.generate_builds.generate(
         _request(profiles=[BuildProfile.BEST_OVERALL]),
@@ -879,7 +879,7 @@ def test_search_uses_wire_psu_alias_and_complete_build_compatibility(application
     build = response.builds[0]
     case_outcome = application.search_products.search_with_outcome(
         "case",
-        category=ComponentKind.CASE,
+        category=ComponentCategory.CASE,
         top_k=10,
         compatible_with_build_id=build.build_id,
     )
@@ -899,13 +899,13 @@ def test_search_uses_wire_psu_alias_and_complete_build_compatibility(application
 
 def test_locked_existing_component_is_retained_and_excluded_from_budget(application) -> None:
     request = _request(
-        existing_products=[ExistingComponent(category=ComponentKind.GPU, product_id="gpu_2")],
+        existing_products=[ExistingComponent(category=ComponentCategory.GPU, product_id="gpu_2")],
         profiles=[BuildProfile.BEST_OVERALL],
     )
     response = application.generate_builds.generate(request, request_id="req_locked")
     assert len(response.builds) == 1
     gpu = next(
-        item for item in response.builds[0].components if item.category == ComponentKind.GPU
+        item for item in response.builds[0].components if item.category == ComponentCategory.GPU
     )
     assert gpu.product_id == "gpu_2"
     assert gpu.price_sgd == 0
@@ -915,7 +915,7 @@ def test_locked_existing_component_is_retained_and_excluded_from_budget(applicat
 def test_used_only_product_is_not_acquired_but_can_be_retained(application) -> None:
     search_results = application.search_products.search(
         "Used-only GPU",
-        category=ComponentKind.GPU,
+        category=ComponentCategory.GPU,
         top_k=10,
     )
     assert "gpu_used_only" not in {item.product_id for item in search_results}
@@ -930,7 +930,7 @@ def test_used_only_product_is_not_acquired_but_can_be_retained(application) -> N
         _request(
             existing_products=[
                 ExistingComponent(
-                    category=ComponentKind.GPU,
+                    category=ComponentCategory.GPU,
                     product_id="gpu_used_only",
                 )
             ],
@@ -939,7 +939,7 @@ def test_used_only_product_is_not_acquired_but_can_be_retained(application) -> N
         request_id="req_used_retained",
     ).builds[0]
     retained_gpu = next(
-        item for item in retained.components if item.category == ComponentKind.GPU
+        item for item in retained.components if item.category == ComponentCategory.GPU
     )
     assert retained_gpu.product_id == "gpu_used_only"
     assert retained_gpu.listing_id is None
@@ -948,7 +948,7 @@ def test_used_only_product_is_not_acquired_but_can_be_retained(application) -> N
 
 def test_owned_component_can_be_explicitly_included_in_budget(application) -> None:
     request = _request(
-        existing_products=[ExistingComponent(category=ComponentKind.GPU, product_id="gpu_2")],
+        existing_products=[ExistingComponent(category=ComponentCategory.GPU, product_id="gpu_2")],
         profiles=[BuildProfile.BEST_OVERALL],
     )
     response = application.generate_builds.generate(
@@ -957,9 +957,9 @@ def test_owned_component_can_be_explicitly_included_in_budget(application) -> No
         included_existing_product_ids=frozenset({"gpu_2"}),
     )
     build = response.builds[0]
-    gpu = next(item for item in build.components if item.category == ComponentKind.GPU)
+    gpu = next(item for item in build.components if item.category == ComponentCategory.GPU)
     assert gpu.product_id == "gpu_2"
-    assert gpu.price_sgd == _price(ComponentKind.GPU, 2)
+    assert gpu.price_sgd == _price(ComponentCategory.GPU, 2)
     assert build.total_price_sgd == sum(item.price_sgd for item in build.components)
 
 
@@ -967,7 +967,7 @@ def test_replacing_owned_component_turns_replacement_into_acquisition_cost(appli
     initial = application.generate_builds.generate(
         _request(
             existing_products=[
-                ExistingComponent(category=ComponentKind.GPU, product_id="gpu_2")
+                ExistingComponent(category=ComponentCategory.GPU, product_id="gpu_2")
             ],
             profiles=[BuildProfile.BEST_OVERALL],
         ),
@@ -975,22 +975,22 @@ def test_replacing_owned_component_turns_replacement_into_acquisition_cost(appli
     ).builds[0]
     assert (
         next(
-            item.price_sgd for item in initial.components if item.category == ComponentKind.GPU
+            item.price_sgd for item in initial.components if item.category == ComponentCategory.GPU
         )
         == 0
     )
 
     replaced = application.replace_component.replace(
         initial.build_id,
-        category=ComponentKind.GPU,
+        category=ComponentCategory.GPU,
         replacement_product_id="gpu_0",
         request_id="req_owned_replaced",
     ).builds[0]
     replacement = next(
-        item for item in replaced.components if item.category == ComponentKind.GPU
+        item for item in replaced.components if item.category == ComponentCategory.GPU
     )
     assert replacement.product_id == "gpu_0"
-    assert replacement.price_sgd == _price(ComponentKind.GPU, 0)
+    assert replacement.price_sgd == _price(ComponentCategory.GPU, 0)
     assert replaced.total_price_sgd == sum(item.price_sgd for item in replaced.components)
 
 
@@ -1018,13 +1018,13 @@ def test_replacement_modes_preserve_cost_and_lock_semantics(application) -> None
         request_id="req_replace_initial",
     ).builds[0]
     current_gpu = next(
-        item.product_id for item in initial.components if item.category == ComponentKind.GPU
+        item.product_id for item in initial.components if item.category == ComponentCategory.GPU
     )
     replacement_gpu = next(item for item in ("gpu_0", "gpu_1", "gpu_2") if item != current_gpu)
 
     locked_response = application.replace_component.replace(
         initial.build_id,
-        category=ComponentKind.GPU,
+        category=ComponentCategory.GPU,
         replacement_product_id=replacement_gpu,
         mode=ReplacementMode.LOCK_OTHER_COMPONENTS,
         request_id="req_replace_locked",
@@ -1033,16 +1033,16 @@ def test_replacement_modes_preserve_cost_and_lock_semantics(application) -> None
     locked_build = locked_response.builds[0]
     old_by_category = {item.category: item.product_id for item in initial.components}
     new_by_category = {item.category: item.product_id for item in locked_build.components}
-    assert new_by_category[ComponentKind.GPU] == replacement_gpu
+    assert new_by_category[ComponentCategory.GPU] == replacement_gpu
     assert all(
         new_by_category[category] == old_by_category[category]
-        for category in ComponentKind
-        if category != ComponentKind.GPU
+        for category in ComponentCategory
+        if category != ComponentCategory.GPU
     )
 
     reoptimized = application.replace_component.replace(
         initial.build_id,
-        category=ComponentKind.GPU,
+        category=ComponentCategory.GPU,
         replacement_product_id=replacement_gpu,
         mode=ReplacementMode.REOPTIMIZE_UNLOCKED,
         request_id="req_replace_reoptimized",
@@ -1052,7 +1052,7 @@ def test_replacement_modes_preserve_cost_and_lock_semantics(application) -> None
         next(
             item.product_id
             for item in reoptimized.builds[0].components
-            if item.category == ComponentKind.GPU
+            if item.category == ComponentCategory.GPU
         )
         == replacement_gpu
     )
@@ -1083,19 +1083,19 @@ def test_populated_replacement_survives_restart_with_original_ownership_and_time
         initial = first_services.generate_builds.generate(
             _request(
                 existing_products=[
-                    ExistingComponent(category=ComponentKind.GPU, product_id="gpu_2")
+                    ExistingComponent(category=ComponentCategory.GPU, product_id="gpu_2")
                 ],
                 profiles=[BuildProfile.BEST_OVERALL],
             ),
             request_id="req_restart_owned_initial",
         ).builds[0]
         current_cpu = next(
-            item.product_id for item in initial.components if item.category == ComponentKind.CPU
+            item.product_id for item in initial.components if item.category == ComponentCategory.CPU
         )
         replacement_cpu = next(item for item in ("cpu_0", "cpu_1", "cpu_2") if item != current_cpu)
         first_replacement = first_services.replace_component.replace(
             initial.build_id,
-            category=ComponentKind.CPU,
+            category=ComponentCategory.CPU,
             replacement_product_id=replacement_cpu,
             request_id="req_restart_owned_replaced",
         )
@@ -1104,7 +1104,7 @@ def test_populated_replacement_survives_restart_with_original_ownership_and_time
 
     assert first_stored.owned_product_ids == frozenset({"gpu_2"})
     assert first_stored.no_cost_product_ids == frozenset({"gpu_2"})
-    assert len(first_stored.request.existing_products) == len(ComponentKind)
+    assert len(first_stored.request.existing_products) == len(ComponentCategory)
     first_engine.dispose()
 
     restarted_engine = create_db_engine(database_url)
@@ -1134,7 +1134,7 @@ def test_populated_replacement_survives_restart_with_original_ownership_and_time
         current_case = next(
             item.product_id
             for item in first_replaced_build.components
-            if item.category == ComponentKind.CASE
+            if item.category == ComponentCategory.CASE
         )
         replacement_case = next(
             item for item in ("case_0", "case_1", "case_2") if item != current_case
@@ -1162,7 +1162,7 @@ def test_populated_replacement_survives_restart_with_original_ownership_and_time
         generated_count = catalog_session.scalar(select(func.count(GeneratedBuildRecord.build_id)))
         component_count = catalog_session.scalar(select(func.count(BuildComponentRecord.build_id)))
         assert generated_count == 3
-        assert component_count == 3 * len(ComponentKind)
+        assert component_count == 3 * len(ComponentCategory)
     restarted_engine.dispose()
 
 
@@ -1215,14 +1215,14 @@ def test_replacement_preserves_non_feasible_optimizer_status(application) -> Non
         request_id="req_status_replace_initial",
     ).builds[0]
     current_gpu = next(
-        item.product_id for item in initial.components if item.category == ComponentKind.GPU
+        item.product_id for item in initial.components if item.category == ComponentCategory.GPU
     )
     replacement_gpu = next(item for item in ("gpu_0", "gpu_1", "gpu_2") if item != current_gpu)
     application.generate_builds.optimizer = _NonFeasibleOptimizer(OptimizationStatus.MODEL_INVALID)
 
     response = application.replace_component.replace(
         initial.build_id,
-        category=ComponentKind.GPU,
+        category=ComponentCategory.GPU,
         replacement_product_id=replacement_gpu,
         request_id="req_status_replace_invalid",
     )

@@ -37,7 +37,7 @@ from services.api.models import (
     CompatibilityCheckRequest,
     CompatibilityCheckResponse,
     CompatVerdict,
-    ComponentKind,
+    ComponentCategory,
     ExplanationItem,
     FreshnessResponse,
     GenerateBuildsRequest,
@@ -126,7 +126,7 @@ class RecommendationApplication(Protocol):
 @dataclass(frozen=True, slots=True)
 class ProductRecord:
     product_id: str
-    category: ComponentKind
+    category: ComponentCategory
     canonical_name: str
     brand: str
     model: str
@@ -155,7 +155,7 @@ class _InMemoryBuildShare:
 
 def _product(
     product_id: str,
-    category: ComponentKind,
+    category: ComponentCategory,
     canonical_name: str,
     brand: str,
     model: str,
@@ -183,7 +183,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
     products = [
         _product(
             "cpu-amd-7600",
-            ComponentKind.CPU,
+            ComponentCategory.CPU,
             "AMD Ryzen 5 7600",
             "AMD",
             "Ryzen 5 7600",
@@ -197,7 +197,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "cpu-amd-7700",
-            ComponentKind.CPU,
+            ComponentCategory.CPU,
             "AMD Ryzen 7 7700",
             "AMD",
             "Ryzen 7 7700",
@@ -211,7 +211,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "cpu-amd-7900",
-            ComponentKind.CPU,
+            ComponentCategory.CPU,
             "AMD Ryzen 9 7900",
             "AMD",
             "Ryzen 9 7900",
@@ -225,7 +225,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "gpu-rtx-5060ti-16",
-            ComponentKind.GPU,
+            ComponentCategory.GPU,
             "NVIDIA GeForce RTX 5060 Ti 16 GB",
             "NVIDIA",
             "GeForce RTX 5060 Ti 16 GB",
@@ -240,7 +240,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "gpu-rx-7800xt-16",
-            ComponentKind.GPU,
+            ComponentCategory.GPU,
             "AMD Radeon RX 7800 XT 16 GB",
             "AMD",
             "Radeon RX 7800 XT 16 GB",
@@ -255,7 +255,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "gpu-rtx-4070tis-16",
-            ComponentKind.GPU,
+            ComponentCategory.GPU,
             "NVIDIA GeForce RTX 4070 Ti SUPER 16 GB",
             "NVIDIA",
             "GeForce RTX 4070 Ti SUPER 16 GB",
@@ -270,7 +270,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "gpu-oversized-test-fixture",
-            ComponentKind.GPU,
+            ComponentCategory.GPU,
             "Oversized Compatibility Test GPU 16 GB",
             "FixtureGPU",
             "Oversized Test Fixture",
@@ -285,7 +285,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "gpu-unverified-test-fixture",
-            ComponentKind.GPU,
+            ComponentCategory.GPU,
             "Unverified-Dimensions Test GPU 16 GB",
             "FixtureGPU",
             "Unverified Test Fixture",
@@ -297,7 +297,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "mb-b650m-wifi",
-            ComponentKind.MOTHERBOARD,
+            ComponentCategory.MOTHERBOARD,
             "B650M Wi-Fi DDR5 Motherboard",
             "ExampleBoard",
             "B650M Wi-Fi",
@@ -319,7 +319,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "mb-b650-atx-wifi",
-            ComponentKind.MOTHERBOARD,
+            ComponentCategory.MOTHERBOARD,
             "B650 ATX Wi-Fi DDR5 Motherboard",
             "ExampleBoard",
             "B650 ATX Wi-Fi",
@@ -341,7 +341,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "mb-x670-atx-wifi",
-            ComponentKind.MOTHERBOARD,
+            ComponentCategory.MOTHERBOARD,
             "X670 ATX Wi-Fi DDR5 Motherboard",
             "ExampleBoard",
             "X670 ATX Wi-Fi",
@@ -363,7 +363,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "mem-ddr5-32-5600",
-            ComponentKind.MEMORY,
+            ComponentCategory.MEMORY,
             "32 GB DDR5-5600 Memory Kit",
             "ExampleMemory",
             "32 GB DDR5-5600",
@@ -376,7 +376,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "mem-ddr5-32-6000",
-            ComponentKind.MEMORY,
+            ComponentCategory.MEMORY,
             "32 GB DDR5-6000 Low-Latency Memory Kit",
             "ExampleMemory",
             "32 GB DDR5-6000",
@@ -389,7 +389,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "mem-ddr5-64-6000",
-            ComponentKind.MEMORY,
+            ComponentCategory.MEMORY,
             "64 GB DDR5-6000 Memory Kit",
             "ExampleMemory",
             "64 GB DDR5-6000",
@@ -402,7 +402,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "ssd-nvme-2tb-value",
-            ComponentKind.STORAGE,
+            ComponentCategory.STORAGE,
             "2 TB PCIe 4.0 NVMe SSD",
             "ExampleStorage",
             "2 TB NVMe Value",
@@ -414,7 +414,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "ssd-nvme-2tb-fast",
-            ComponentKind.STORAGE,
+            ComponentCategory.STORAGE,
             "2 TB High-Performance PCIe 4.0 NVMe SSD",
             "ExampleStorage",
             "2 TB NVMe Performance",
@@ -426,7 +426,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "psu-750-gold",
-            ComponentKind.PSU,
+            ComponentCategory.PSU,
             "750 W 80 Plus Gold Modular PSU",
             "ExamplePower",
             "750 W Gold",
@@ -439,7 +439,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "psu-850-gold",
-            ComponentKind.PSU,
+            ComponentCategory.PSU,
             "850 W 80 Plus Gold ATX 3.0 Modular PSU",
             "ExamplePower",
             "850 W Gold ATX 3.0",
@@ -452,7 +452,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "cooler-single-tower",
-            ComponentKind.COOLER,
+            ComponentCategory.COOLER,
             "120 mm Single-Tower CPU Cooler",
             "ExampleCooling",
             "Single Tower 120",
@@ -465,7 +465,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "cooler-dual-tower",
-            ComponentKind.COOLER,
+            ComponentCategory.COOLER,
             "120 mm Dual-Tower CPU Cooler",
             "ExampleCooling",
             "Dual Tower 120",
@@ -478,7 +478,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "case-matx-air",
-            ComponentKind.CASE,
+            ComponentCategory.CASE,
             "Airflow Micro-ATX Mini Tower Case",
             "ExampleCase",
             "mATX Air",
@@ -494,7 +494,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "case-atx-air",
-            ComponentKind.CASE,
+            ComponentCategory.CASE,
             "Airflow ATX Mid-Tower Case",
             "ExampleCase",
             "ATX Air",
@@ -510,7 +510,7 @@ def demo_catalog() -> dict[str, ProductRecord]:
         ),
         _product(
             "case-atx-quiet",
-            ComponentKind.CASE,
+            ComponentCategory.CASE,
             "Dampened ATX Quiet Mid-Tower Case",
             "ExampleCase",
             "ATX Quiet",
@@ -678,8 +678,8 @@ class InMemoryRecommendationService:
     async def generate_builds(self, request: GenerateBuildsRequest) -> GenerateBuildsResponse:
         generated_at = datetime.now(UTC)
         request_id = f"req_{uuid4().hex}"
-        existing_by_category: dict[ComponentKind, ProductRecord] = {}
-        include_owned_in_budget: dict[ComponentKind, bool] = {}
+        existing_by_category: dict[ComponentCategory, ProductRecord] = {}
+        include_owned_in_budget: dict[ComponentCategory, bool] = {}
         invalid_existing: list[str] = []
         for existing in request.existing_products:
             product = self.products.get(existing.product_id)
@@ -719,7 +719,7 @@ class InMemoryRecommendationService:
                 self.products[item].category: self.products[item] for item in template.product_ids
             }
             selected.update(existing_by_category)
-            configuration = tuple(selected[category].product_id for category in ComponentKind)
+            configuration = tuple(selected[category].product_id for category in ComponentCategory)
             if configuration in seen_configurations:
                 continue
             seen_configurations.add(configuration)
@@ -842,26 +842,26 @@ class InMemoryRecommendationService:
                     ),
                 )
             )
-        messages: dict[str, tuple[str, list[ComponentKind]]] = {
+        messages: dict[str, tuple[str, list[ComponentCategory]]] = {
             "minimum_gpu_vram": (
                 "No candidate GPU satisfies the requested VRAM minimum.",
-                [ComponentKind.GPU],
+                [ComponentCategory.GPU],
             ),
             "minimum_memory": (
                 "No candidate memory kit satisfies the requested capacity.",
-                [ComponentKind.MEMORY],
+                [ComponentCategory.MEMORY],
             ),
             "storage_capacity": (
                 "No candidate storage product satisfies the requested capacity.",
-                [ComponentKind.STORAGE],
+                [ComponentCategory.STORAGE],
             ),
             "wifi": (
                 "No feasible motherboard provides required Wi-Fi support.",
-                [ComponentKind.MOTHERBOARD],
+                [ComponentCategory.MOTHERBOARD],
             ),
             "case_size": (
                 "No feasible case matches the requested size.",
-                [ComponentKind.CASE],
+                [ComponentCategory.CASE],
             ),
             "excluded_brand": (
                 "Brand exclusions remove all otherwise feasible combinations.",
@@ -890,16 +890,16 @@ class InMemoryRecommendationService:
 
     def _requirement_rejections(
         self,
-        selected: Mapping[ComponentKind, ProductRecord],
+        selected: Mapping[ComponentCategory, ProductRecord],
         request: GenerateBuildsRequest,
     ) -> set[str]:
         codes: set[str] = set()
         requirements = request.requirements
-        gpu = selected[ComponentKind.GPU]
-        memory = selected[ComponentKind.MEMORY]
-        storage = selected[ComponentKind.STORAGE]
-        motherboard = selected[ComponentKind.MOTHERBOARD]
-        case = selected[ComponentKind.CASE]
+        gpu = selected[ComponentCategory.GPU]
+        memory = selected[ComponentCategory.MEMORY]
+        storage = selected[ComponentCategory.STORAGE]
+        motherboard = selected[ComponentCategory.MOTHERBOARD]
+        case = selected[ComponentCategory.CASE]
         if (
             requirements.minimum_gpu_vram_gb is not None
             and int(gpu.attributes.get("vram_gb", -1)) < requirements.minimum_gpu_vram_gb
@@ -928,7 +928,7 @@ class InMemoryRecommendationService:
         return codes
 
     def _evaluate_compatibility(
-        self, selected: Mapping[ComponentKind, ProductRecord]
+        self, selected: Mapping[ComponentCategory, ProductRecord]
     ) -> list[CompatibilityCheck]:
         component_payload = {
             self._core_category(category): self._compatibility_payload(product)
@@ -936,15 +936,15 @@ class InMemoryRecommendationService:
         }
         report = self.compatibility_engine.check_build(component_payload)
         category_aliases = {
-            "cpu": ComponentKind.CPU,
-            "gpu": ComponentKind.GPU,
-            "motherboard": ComponentKind.MOTHERBOARD,
-            "memory": ComponentKind.MEMORY,
-            "storage": ComponentKind.STORAGE,
-            "power_supply": ComponentKind.PSU,
-            "psu": ComponentKind.PSU,
-            "cooler": ComponentKind.COOLER,
-            "case": ComponentKind.CASE,
+            "cpu": ComponentCategory.CPU,
+            "gpu": ComponentCategory.GPU,
+            "motherboard": ComponentCategory.MOTHERBOARD,
+            "memory": ComponentCategory.MEMORY,
+            "storage": ComponentCategory.STORAGE,
+            "power_supply": ComponentCategory.PSU,
+            "psu": ComponentCategory.PSU,
+            "cooler": ComponentCategory.COOLER,
+            "case": ComponentCategory.CASE,
         }
         checks: list[CompatibilityCheck] = []
         for result in report.results:
@@ -971,10 +971,10 @@ class InMemoryRecommendationService:
         return checks
 
     @staticmethod
-    def _core_category(category: ComponentKind) -> str:
+    def _core_category(category: ComponentCategory) -> str:
         """Map the public API name to the core engine's canonical category key."""
 
-        if category is ComponentKind.PSU:
+        if category is ComponentCategory.PSU:
             return "power_supply"
         return category.value
 
@@ -994,16 +994,16 @@ class InMemoryRecommendationService:
         self,
         *,
         template: Template,
-        selected: Mapping[ComponentKind, ProductRecord],
+        selected: Mapping[ComponentCategory, ProductRecord],
         request: GenerateBuildsRequest,
         generated_at: datetime,
         total_cents: int,
-        already_owned: set[ComponentKind],
+        already_owned: set[ComponentCategory],
         checks: list[CompatibilityCheck],
     ) -> BuildResult:
         components: list[BuildComponent] = []
         preferred = {brand.casefold() for brand in request.preferences.preferred_brands}
-        for category in ComponentKind:
+        for category in ComponentCategory:
             product = selected[category]
             reasons = [f"Meets the hard {category.value} requirements."]
             if product.brand.casefold() in preferred:
@@ -1037,9 +1037,9 @@ class InMemoryRecommendationService:
                     alternatives=self._alternatives(product, selected),
                 )
             )
-        cpu_score = selected[ComponentKind.CPU].performance
-        gpu_score = selected[ComponentKind.GPU].performance
-        storage_score = selected[ComponentKind.STORAGE].performance
+        cpu_score = selected[ComponentCategory.CPU].performance
+        gpu_score = selected[ComponentCategory.GPU].performance
+        storage_score = selected[ComponentCategory.STORAGE].performance
         workload_scores: dict[str, float] = {}
         for workload in request.workloads:
             if workload.name.value.startswith("gaming"):
@@ -1061,8 +1061,8 @@ class InMemoryRecommendationService:
             upgradeability_score=template.upgradeability_score,
             efficiency_score=template.efficiency_score,
             estimated_peak_power_w=(
-                selected[ComponentKind.CPU].power_w
-                + selected[ComponentKind.GPU].power_w
+                selected[ComponentCategory.CPU].power_w
+                + selected[ComponentCategory.GPU].power_w
                 + 100
             ),
             workload_scores=workload_scores,
@@ -1104,7 +1104,7 @@ class InMemoryRecommendationService:
     def _alternatives(
         self,
         product: ProductRecord,
-        selected: Mapping[ComponentKind, ProductRecord] | None = None,
+        selected: Mapping[ComponentCategory, ProductRecord] | None = None,
     ) -> list[ReplacementCandidate]:
         alternatives = sorted(
             (
@@ -1428,7 +1428,7 @@ class InMemoryRecommendationService:
 
         category_counts = {
             category: sum(product.category is category for _, product in query_matches)
-            for category in ComponentKind
+            for category in ComponentCategory
         }
         category_scoped = [
             (matched, product)
@@ -1516,7 +1516,7 @@ class InMemoryRecommendationService:
             facets=ProductSearchFacets(
                 categories=[
                     ProductFacetCount(value=category.value, count=category_counts[category])
-                    for category in ComponentKind
+                    for category in ComponentCategory
                     if category_counts[category] > 0
                 ],
                 brands=[
@@ -1643,7 +1643,7 @@ class InMemoryRecommendationService:
     async def check_compatibility(
         self, request: CompatibilityCheckRequest
     ) -> CompatibilityCheckResponse:
-        selected: dict[ComponentKind, ProductRecord] = {}
+        selected: dict[ComponentCategory, ProductRecord] = {}
         custom_unknowns: list[CompatibilityCheck] = []
         for item in request.components:
             if item.category in selected:
@@ -1681,11 +1681,11 @@ class InMemoryRecommendationService:
                 )
                 continue
             selected[item.category] = product
-        if len(selected) == len(ComponentKind) and not custom_unknowns:
+        if len(selected) == len(ComponentCategory) and not custom_unknowns:
             checks = self._evaluate_compatibility(selected)
         else:
             checks = custom_unknowns
-            missing = [category for category in ComponentKind if category not in selected]
+            missing = [category for category in ComponentCategory if category not in selected]
             if missing:
                 checks.append(
                     CompatibilityCheck(

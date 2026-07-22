@@ -19,7 +19,7 @@ from pc_build_recommender.domain import (
     BenchmarkResult,
     CanonicalProduct,
     CaseAttributes,
-    ComponentKind,
+    ComponentCategory,
     GPUAttributes,
     ProductStatus,
     RetailerListing,
@@ -39,7 +39,7 @@ class CatalogReaderFixture:
     def list_products(
         self,
         *,
-        category: ComponentKind | None = None,
+        category: ComponentCategory | None = None,
         brand: str | None = None,
         status: ProductStatus | None = ProductStatus.ACTIVE,
         offset: int = 0,
@@ -103,7 +103,7 @@ def _products(source_type: SourceType) -> tuple[CanonicalProduct, CanonicalProdu
     return (
         CanonicalProduct(
             product_id=gpu_id,
-            category=ComponentKind.GPU,
+            category=ComponentCategory.GPU,
             brand="Example",
             model="GPU",
             canonical_name="Example GPU",
@@ -114,7 +114,7 @@ def _products(source_type: SourceType) -> tuple[CanonicalProduct, CanonicalProdu
         ),
         CanonicalProduct(
             product_id=case_id,
-            category=ComponentKind.CASE,
+            category=ComponentCategory.CASE,
             brand="Example",
             model="Case",
             canonical_name="Example Case",

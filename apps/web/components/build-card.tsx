@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { categoryLabels, formatFreshness, formatScore, formatSgd, humanizeToken, profileLabels } from "@/lib/format";
-import type { BuildResult, ComponentKind } from "@/lib/types";
+import type { BuildResult, ComponentCategory } from "@/lib/types";
 import { ScoreMeter } from "./score-meter";
 import { StatusPill } from "./status-pill";
 
-function componentFor(build: BuildResult, category: ComponentKind) {
+function componentFor(build: BuildResult, category: ComponentCategory) {
   return build.components.find((component) => component.category === category);
 }
 
@@ -24,7 +24,7 @@ export function BuildCard({
   const featured = build.profile === "best_overall";
   const explanation = build.explanation?.[0];
   const explanationText = typeof explanation === "string" ? explanation : explanation?.text;
-  const keyCategories: ComponentKind[] = ["cpu", "gpu", "memory", "storage"];
+  const keyCategories: ComponentCategory[] = ["cpu", "gpu", "memory", "storage"];
   const scoreEntries = Object.entries(build.workload_scores ?? {}).slice(0, 2);
 
   return (

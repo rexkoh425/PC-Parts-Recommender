@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from pc_build_recommender.domain import ComponentKind
+from pc_build_recommender.domain import ComponentCategory
 from pc_build_recommender.optimizer import BuildOptimizer
 from pc_build_recommender.optimizer.evaluation import (
     CLAIM_VALID_BUILD_TARGET,
@@ -125,7 +125,7 @@ def test_independent_oracle_catches_tampered_optimizer_output() -> None:
     )
 
     selected = dict(solution.selected)
-    selected[ComponentKind.GPU] = selected[ComponentKind.CPU]
+    selected[ComponentCategory.GPU] = selected[ComponentCategory.CPU]
     wrong_category = replace(solution, selected=selected)
     category_errors = " ".join(independently_validate_solution(problem, wrong_category))
     assert "gpu key contains a cpu candidate" in category_errors

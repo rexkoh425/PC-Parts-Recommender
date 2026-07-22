@@ -20,7 +20,7 @@ import {
 import type {
   BuildComponent,
   BuildResult,
-  ComponentKind,
+  ComponentCategory,
   PerformanceSignal,
   ReplacementResponse,
   WorkloadName,
@@ -106,7 +106,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
   const [build, setBuild] = useState<BuildResult | null>(null);
   const [error, setError] = useState("");
   const [retryKey, setRetryKey] = useState(0);
-  const [replacementCategory, setReplacementCategory] = useState<ComponentKind | null>(null);
+  const [replacementCategory, setReplacementCategory] = useState<ComponentCategory | null>(null);
   const [announcement, setAnnouncement] = useState("");
   const [replacementResult, setReplacementResult] = useState<ReplacementChangeSummary | null>(null);
   const [shareState, setShareState] = useState<"idle" | "copied" | "failed">("idle");

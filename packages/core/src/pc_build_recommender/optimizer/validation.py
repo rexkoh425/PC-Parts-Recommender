@@ -6,7 +6,7 @@ import math
 from collections import Counter
 from collections.abc import Mapping, Sequence
 
-from pc_build_recommender.domain import CompatVerdict, ComponentKind
+from pc_build_recommender.domain import CompatVerdict, ComponentCategory
 
 from .models import (
     REQUIRED_CATEGORIES,
@@ -75,7 +75,7 @@ def candidate_eligibility_reasons(
     if candidate.brand.casefold() in problem.excluded_brands:
         reasons.append(f"brand {candidate.brand!r} is excluded")
 
-    if candidate.category == ComponentKind.GPU:
+    if candidate.category == ComponentCategory.GPU:
         vram = candidate.attribute("vram_gb")
         if problem.minimum_gpu_vram_gb is not None and (
             vram is None or int(vram) < problem.minimum_gpu_vram_gb
@@ -84,10 +84,10 @@ def candidate_eligibility_reasons(
         if candidate.power_draw_watts is None:
             reasons.append("GPU board power is unknown")
 
-    if candidate.category == ComponentKind.CPU and candidate.power_draw_watts is None:
+    if candidate.category == ComponentCategory.CPU and candidate.power_draw_watts is None:
         reasons.append("CPU peak power is unknown")
 
-    if candidate.category == ComponentKind.MEMORY:
+    if candidate.category == ComponentCategory.MEMORY:
         capacity = candidate.attribute("capacity_gb")
         if problem.minimum_memory_gb is not None and (
             capacity is None or int(capacity) < problem.minimum_memory_gb
@@ -98,14 +98,14 @@ def candidate_eligibility_reasons(
         ) != _normalise_scalar(problem.required_memory_type):
             reasons.append(f"memory type is not {problem.required_memory_type}")
 
-    if candidate.category == ComponentKind.STORAGE:
+    if candidate.category == ComponentCategory.STORAGE:
         capacity = candidate.attribute("capacity_gb")
         if problem.minimum_storage_gb is not None and (
             capacity is None or int(capacity) < problem.minimum_storage_gb
         ):
             reasons.append(f"storage capacity is below {problem.minimum_storage_gb} GB or unknown")
 
-    if candidate.category == ComponentKind.MOTHERBOARD:
+    if candidate.category == ComponentCategory.MOTHERBOARD:
         if problem.wifi_required and candidate.attribute("wifi_support") is not True:
             reasons.append("motherboard Wi-Fi support is absent or unknown")
         if problem.required_memory_type is not None and _normalise_scalar(
@@ -120,14 +120,14 @@ def candidate_eligibility_reasons(
             )
 
     if (
-        candidate.category == ComponentKind.CASE
+        candidate.category == ComponentCategory.CASE
         and problem.required_case_size is not None
         and _normalise_scalar(candidate.attribute("case_size"))
         != _normalise_scalar(problem.required_case_size)
     ):
         reasons.append(f"case size is not {problem.required_case_size}")
 
-    if candidate.category == ComponentKind.POWER_SUPPLY:
+    if candidate.category == ComponentCategory.POWER_SUPPLY:
         if candidate.psu_wattage is None:
             reasons.append("PSU wattage is unknown")
         if candidate.eps_connectors is None:
@@ -156,12 +156,12 @@ def eligible_candidates(problem: OptimizationProblem) -> tuple[OptimizationCandi
 
 def estimated_load_watts(
     problem: OptimizationProblem,
-    selected: Mapping[ComponentKind, OptimizationCandidate],
+    selected: Mapping[ComponentCategory, OptimizationCandidate],
 ) -> int:
     return problem.base_power_watts + sum(
         candidate_power_watts(problem, candidate)
         for candidate in selected.values()
-        if candidate.category != ComponentKind.POWER_SUPPLY
+        if candidate.category != ComponentCategory.POWER_SUPPLY
     )
 
 
@@ -171,7 +171,7 @@ def required_psu_watts(load_watts: int, headroom_percent: int) -> int:
 
 def validate_selected_build(
     problem: OptimizationProblem,
-    selected: Mapping[ComponentKind, OptimizationCandidate] | Sequence[OptimizationCandidate],
+    selected: Mapping[ComponentCategory, OptimizationCandidate] | Sequence[OptimizationCandidate],
 ) -> tuple[str, ...]:
     """Re-evaluate every optimiser hard constraint without consulting the CP model."""
 
@@ -212,8 +212,8 @@ def validate_selected_build(
                 f"{pair.left_product_id}/{pair.right_product_id}: {detail}"
             )
 
-    gpu = selected_by_category[ComponentKind.GPU]
-    psu = selected_by_category[ComponentKind.POWER_SUPPLY]
+    gpu = selected_by_category[ComponentCategory.GPU]
+    psu = selected_by_category[ComponentCategory.POWER_SUPPLY]
     if not _connectors_satisfy(
         gpu.required_power_connectors,
         psu.provided_power_connectors,
