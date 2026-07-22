@@ -52,7 +52,7 @@ from .models import (
     ProductDocument,
     RetrievedCandidate,
     SearchHit,
-    StructuredFilterSpec,
+    StructuredFilters,
 )
 from .postgres import (
     EMBEDDING_DIMENSION,
@@ -174,7 +174,7 @@ __all__ = [
     "SearchHit",
     "SentenceTransformerEmbeddingEncoder",
     "StableHashEmbeddingEncoder",
-    "StructuredFilterSpec",
+    "StructuredFilters",
     "VectorSearchBackend",
     "ValidatedEmbeddingArtifact",
     "ValidatedEncoderBundle",

@@ -40,7 +40,7 @@ from .embedding_index import (
     embedding_encoder_fingerprint,
     load_normalized_product_jsonl,
 )
-from .models import ProductDocument, SearchHit, StructuredFilterSpec
+from .models import ProductDocument, SearchHit, StructuredFilters
 from .postgres_filters import normalize_postgres_category, postgres_structured_predicates
 from .vector import EmbeddingEncoder
 
@@ -829,7 +829,7 @@ class PgVectorSearchBackend:
         category: str,
         top_k: int = 50,
         candidate_ids: set[str] | frozenset[str] | None = None,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
     ) -> list[SearchHit]:
         if top_k < 1 or candidate_ids is not None and not candidate_ids:
             return []
@@ -887,7 +887,7 @@ class PgVectorSearchBackend:
         category: str,
         top_k: int = 50,
         candidate_ids: set[str] | frozenset[str] | None = None,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
     ) -> list[SearchHit]:
         query_vector = self.encode_query(query)
         if query_vector is None:
@@ -908,7 +908,7 @@ class PgVectorSearchBackend:
         category: str,
         top_k: int = 50,
         candidate_ids: set[str] | frozenset[str] | None = None,
-        filters: StructuredFilterSpec | None = None,
+        filters: StructuredFilters | None = None,
     ) -> list[SearchHit]:
         query_vector = self.encode_query(query)
         if query_vector is None:

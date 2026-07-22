@@ -68,7 +68,7 @@ from pc_build_recommender.performance_models import (
 from pc_build_recommender.pipeline_operations import summarize_pipeline_operations
 from pc_build_recommender.pricing import PriceObservation as HistoricalPriceObservation
 from pc_build_recommender.ranking import ProductRanker
-from pc_build_recommender.retrieval import ProductRetriever, StructuredFilterSpec
+from pc_build_recommender.retrieval import ProductRetriever, StructuredFilters
 from services.api.durability import DurableStorageError, SqlAlchemyDurableStore
 from services.api.errors import ApiError
 from services.api.models import (
@@ -993,7 +993,7 @@ class CoreRecommendationService(RecommendationApplication):
                     self.services.search_products.search_with_outcome,
                     query,
                     category=domain_category,
-                    filters=StructuredFilterSpec(in_stock_only=request.in_stock_only),
+                    filters=StructuredFilters(in_stock_only=request.in_stock_only),
                     top_k=category_capacity,
                     compatible_with_build_id=request.compatible_with_build_id,
                 )

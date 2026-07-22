@@ -33,7 +33,7 @@ from pc_build_recommender.retrieval import (
     ProductDocument,
     RetrievedCandidate,
     SearchHit,
-    StructuredFilterSpec,
+    StructuredFilters,
 )
 
 QUERY_SET_SCHEMA_VERSION = "pc-build-recommender.relevance-annotation-query-set.v1"
@@ -642,7 +642,7 @@ def _candidate_set(
         fused_candidates, source_pools = retriever.retrieve_with_source_pools(
             query.query_text,
             category=query.category,
-            filters=StructuredFilterSpec(in_stock_only=False),
+            filters=StructuredFilters(in_stock_only=False),
             top_k=top_k,
             per_source_k=per_source_top_k,
         )
