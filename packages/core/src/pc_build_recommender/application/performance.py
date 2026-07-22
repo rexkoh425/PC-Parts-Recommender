@@ -7,7 +7,7 @@ from decimal import Decimal
 from math import isfinite
 from types import MappingProxyType
 
-from pc_build_recommender.domain import CanonicalProduct, WorkloadLabel, WorkloadPerformanceSignal
+from pc_build_recommender.domain import CanonicalProduct, WorkloadName, WorkloadPerformanceSignal
 from pc_build_recommender.performance_models import (
     ARTIFACT_SCHEMA_VERSION,
     PerformanceModelArtifact,
@@ -73,7 +73,7 @@ class ArtifactPerformanceProvider:
     def validate_catalog(self, catalog: ApplicationCatalog) -> None:
         """Reject artifacts whose online feature contract cannot be supplied."""
 
-        supported_workloads = {workload.value for workload in WorkloadLabel}
+        supported_workloads = {workload.value for workload in WorkloadName}
         for (category, workload), artifact in sorted(self._artifacts.items()):
             if workload not in supported_workloads:
                 raise ValueError(
@@ -112,7 +112,7 @@ class ArtifactPerformanceProvider:
             self._features_for(product, artifact),
         )
         return WorkloadPerformanceSignal(
-            workload=WorkloadLabel(workload),
+            workload=WorkloadName(workload),
             metric=artifact.config.target_column,
             unit=None,
             score=estimate.score,

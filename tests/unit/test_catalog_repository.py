@@ -26,7 +26,7 @@ from pc_build_recommender.domain import (
     SourceProvenance,
     SourceType,
     StockStatus,
-    WorkloadLabel,
+    WorkloadName,
 )
 
 
@@ -141,7 +141,7 @@ def test_benchmark_round_trip_keeps_configuration_fields(session: Session) -> No
     benchmark = BenchmarkResult(
         benchmark_id="bench_gpu_1",
         product_id="prod_gpu_1",
-        workload=WorkloadLabel.GAMING_1440P,
+        workload=WorkloadName.GAMING_1440P,
         benchmark_name="Game suite geometric mean",
         benchmark_version="2026.1",
         score=121.4,

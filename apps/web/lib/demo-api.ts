@@ -21,7 +21,7 @@ import type {
   ProductSearchResponse,
   ReplacementRequest,
   ReplacementResponse,
-  WorkloadLabel,
+  WorkloadName,
 } from "./types";
 
 export const DEMO_DATA_VERSION = "portfolio-demo-2026-07-22";
@@ -434,7 +434,7 @@ function stableDemoSearchId(request: ProductSearchRequest): string {
 }
 
 function scoreWorkload(
-  workload: WorkloadLabel,
+  workload: WorkloadName,
   selected: Map<ComponentKind, DemoProduct>,
 ): number {
   const cpu = selected.get("cpu")?.performance ?? 0;

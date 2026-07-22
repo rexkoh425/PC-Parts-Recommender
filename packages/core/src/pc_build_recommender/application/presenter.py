@@ -18,7 +18,7 @@ from pc_build_recommender.domain import (
     BuildRecommendation,
     CompatibilityCheck,
     CompatVerdict,
-    WorkloadLabel,
+    WorkloadName,
 )
 from pc_build_recommender.optimizer.models import OptimizationSolution
 
@@ -62,9 +62,9 @@ def compatibility_checks(report: CompatibilityReport) -> list[CompatibilityCheck
 def _workload_scores(
     request: BuildGenerationRequest,
     selected: Iterable[RankedCatalogItem],
-) -> dict[WorkloadLabel, float]:
+) -> dict[WorkloadName, float]:
     items = tuple(selected)
-    result: dict[WorkloadLabel, float] = {}
+    result: dict[WorkloadName, float] = {}
     for workload in request.workloads:
         signals = [
             signal

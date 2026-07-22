@@ -28,7 +28,7 @@ from pc_build_recommender.domain import (
     PerformanceEstimate,
     PowerSupplyAttributes,
     StorageAttributes,
-    WorkloadLabel,
+    WorkloadName,
     WorkloadPreference,
 )
 
@@ -95,8 +95,8 @@ def test_build_request_enforces_weight_sum_and_uniqueness() -> None:
     valid = BuildGenerationRequest(
         budget_sgd=Decimal("2500"),
         workloads=[
-            WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=0.6),
-            WorkloadPreference(name=WorkloadLabel.GAMING_1440P, weight=0.4),
+            WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=0.6),
+            WorkloadPreference(name=WorkloadName.GAMING_1440P, weight=0.4),
         ],
         existing_products=[
             ExistingComponent(category=ComponentKind.GPU, product_id="prod_gpu")
@@ -106,7 +106,7 @@ def test_build_request_enforces_weight_sum_and_uniqueness() -> None:
 
     target_request = BuildGenerationRequest(
         budget_sgd=2500,
-        workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)],
+        workloads=[WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=1.0)],
         performance_target="  120 FPS at 1440p high settings  ",
     )
     assert target_request.performance_target == "120 FPS at 1440p high settings"
@@ -114,29 +114,29 @@ def test_build_request_enforces_weight_sum_and_uniqueness() -> None:
     with pytest.raises(ValidationError, match="at most 200 characters"):
         BuildGenerationRequest(
             budget_sgd=2500,
-            workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)],
+            workloads=[WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=1.0)],
             performance_target="x" * 201,
         )
 
     with pytest.raises(ValidationError, match="sum to 1.0"):
         BuildGenerationRequest(
             budget_sgd=2500,
-            workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=0.8)],
+            workloads=[WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=0.8)],
         )
 
     with pytest.raises(ValidationError, match="workload names must be unique"):
         BuildGenerationRequest(
             budget_sgd=2500,
             workloads=[
-                WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=0.5),
-                WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=0.5),
+                WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=0.5),
+                WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=0.5),
             ],
         )
 
     with pytest.raises(ValidationError, match="one existing product"):
         BuildGenerationRequest(
             budget_sgd=2500,
-            workloads=[WorkloadPreference(name=WorkloadLabel.LOCAL_AI, weight=1.0)],
+            workloads=[WorkloadPreference(name=WorkloadName.LOCAL_AI, weight=1.0)],
             existing_products=[
                 ExistingComponent(category=ComponentKind.GPU, product_id="gpu_one"),
                 ExistingComponent(category=ComponentKind.GPU, product_id="gpu_two"),
@@ -152,13 +152,13 @@ def test_brand_preferences_cannot_conflict() -> None:
 def test_predictions_are_never_presented_without_model_provenance() -> None:
     with pytest.raises(ValidationError, match="require model_version"):
         PerformanceEstimate(
-            workload=WorkloadLabel.LOCAL_AI,
+            workload=WorkloadName.LOCAL_AI,
             score=82.5,
             value_kind=BenchmarkValueKind.PREDICTED,
         )
 
     observed = PerformanceEstimate(
-        workload=WorkloadLabel.LOCAL_AI,
+        workload=WorkloadName.LOCAL_AI,
         score=80,
         value_kind=BenchmarkValueKind.OBSERVED,
         supporting_benchmark_ids=["bench_1"],

@@ -12,10 +12,10 @@ import {
   type BuildFormValues,
 } from "@/lib/build-request";
 import { formatSgd, profileLabels, workloadLabels } from "@/lib/format";
-import type { BuildProfile, ExistingProductInput, WorkloadLabel } from "@/lib/types";
+import type { BuildProfile, ExistingProductInput, WorkloadName } from "@/lib/types";
 import { ExistingProductPicker } from "./existing-product-picker";
 
-const workloadOptions = Object.entries(workloadLabels) as Array<[WorkloadLabel, string]>;
+const workloadOptions = Object.entries(workloadLabels) as Array<[WorkloadName, string]>;
 const profileOptions = Object.entries(profileLabels) as Array<[BuildProfile, string]>;
 
 function initialBuildFormValues(): BuildFormValues {
@@ -193,7 +193,7 @@ export function BuildForm() {
                   id="primary-workload"
                   value={values.primary_workload}
                   onChange={(event) =>
-                    setField("primary_workload", event.target.value as WorkloadLabel)
+                    setField("primary_workload", event.target.value as WorkloadName)
                   }
                 >
                   {workloadOptions.map(([value, label]) => (
@@ -211,7 +211,7 @@ export function BuildForm() {
                   onChange={(event) =>
                     setField(
                       "secondary_workload",
-                      event.target.value as WorkloadLabel | "none",
+                      event.target.value as WorkloadName | "none",
                     )
                   }
                   aria-invalid={Boolean(errors.secondary_workload)}
