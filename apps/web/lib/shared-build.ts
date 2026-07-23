@@ -1,7 +1,7 @@
 import {
   componentCategories,
   type BuildProfile,
-  type BuildResult,
+  type BuildSummary,
   type ComponentCategory,
   type PublicBuildSnapshot,
 } from "./types";
@@ -96,7 +96,7 @@ function decodeBase64Url(token: string): string | undefined {
   }
 }
 
-function shareableExplanations(build: BuildResult): string[] {
+function shareableExplanations(build: BuildSummary): string[] {
   return (build.explanation ?? [])
     .map((item) => (typeof item === "string" ? item : item.text))
     .map((item) => boundedText(item))
@@ -104,7 +104,7 @@ function shareableExplanations(build: BuildResult): string[] {
     .slice(0, maximumSharedExplanations);
 }
 
-function shareableWarnings(build: BuildResult): string[] {
+function shareableWarnings(build: BuildSummary): string[] {
   return (build.warnings ?? [])
     .filter((item) => item.status === "warning")
     .map((item) => boundedText(item.message))
@@ -112,7 +112,7 @@ function shareableWarnings(build: BuildResult): string[] {
     .slice(0, maximumSharedWarnings);
 }
 
-export function publicBuildSnapshot(build: BuildResult): SharedBuildSnapshot {
+export function publicBuildSnapshot(build: BuildSummary): SharedBuildSnapshot {
   return {
     version: sharedBuildVersion,
     generated_at: build.generated_at,
@@ -152,11 +152,11 @@ export function publicBuildSnapshot(build: BuildResult): SharedBuildSnapshot {
   };
 }
 
-export function encodeSharedBuild(build: BuildResult): string {
+export function encodeSharedBuild(build: BuildSummary): string {
   return encodeBase64Url(JSON.stringify(publicBuildSnapshot(build)));
 }
 
-export function sharedBuildHref(build: BuildResult): string {
+export function sharedBuildHref(build: BuildSummary): string {
   return `/share?build=${encodeURIComponent(encodeSharedBuild(build))}`;
 }
 

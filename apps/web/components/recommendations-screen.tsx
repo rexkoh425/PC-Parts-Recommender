@@ -9,7 +9,7 @@ import { oneBasedRank } from "@/lib/interactions";
 import { useSavedBuilds } from "@/lib/use-saved-builds";
 import type {
   BuildProfile,
-  BuildResult,
+  BuildSummary,
   GenerateBuildsResponse,
   SuggestedRelaxation,
 } from "@/lib/types";
@@ -155,7 +155,7 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
       .sort((left, right) => profileOrder.indexOf(left.profile) - profileOrder.indexOf(right.profile));
   }, [response]);
 
-  function toggleSaved(build: BuildResult, rankPosition?: number) {
+  function toggleSaved(build: BuildSummary, rankPosition?: number) {
     const nowSaved = toggle(build);
     if (nowSaved && response) {
       void trackInteraction({

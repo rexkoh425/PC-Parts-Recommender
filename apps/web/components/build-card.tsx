@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { categoryLabels, formatFreshness, formatScore, formatSgd, humanizeToken, profileLabels } from "@/lib/format";
-import type { BuildResult, ComponentCategory } from "@/lib/types";
+import type { BuildSummary, ComponentCategory } from "@/lib/types";
 import { ScoreMeter } from "./score-meter";
 import { StatusPill } from "./status-pill";
 
-function componentFor(build: BuildResult, category: ComponentCategory) {
+function componentFor(build: BuildSummary, category: ComponentCategory) {
   return build.components.find((component) => component.category === category);
 }
 
@@ -16,10 +16,10 @@ export function BuildCard({
   saved,
   onToggleSaved,
 }: {
-  build: BuildResult;
+  build: BuildSummary;
   budgetSgd?: number;
   saved: boolean;
-  onToggleSaved(build: BuildResult): void;
+  onToggleSaved(build: BuildSummary): void;
 }) {
   const featured = build.profile === "best_overall";
   const explanation = build.explanation?.[0];

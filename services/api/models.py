@@ -259,7 +259,7 @@ class BuildComponent(ApiModel):
     alternatives: list[ReplacementCandidate] = Field(default_factory=list)
 
 
-class BuildResult(ApiModel):
+class BuildSummary(ApiModel):
     build_id: str
     profile: BuildProfile
     total_price_sgd: float = Field(ge=0)
@@ -284,7 +284,7 @@ class BuildResult(ApiModel):
     solver_ran: bool
 
     @model_validator(mode="after")
-    def ensure_safe_complete_build(self) -> BuildResult:
+    def ensure_safe_complete_build(self) -> BuildSummary:
         if any(
             check.status in {CompatVerdict.FAIL, CompatVerdict.UNKNOWN}
             for check in self.compatibility_checks
@@ -455,7 +455,7 @@ class GenerateBuildsResponse(ApiModel):
     solver_ran: bool
     solver_profile_statuses: list[SolverProfileOutcome] = Field(default_factory=list)
     solver_validator_rejections: int = Field(default=0, ge=0)
-    builds: list[BuildResult]
+    builds: list[BuildSummary]
     infeasibility: InfeasibilityExplanation | None = None
 
     @model_validator(mode="after")
@@ -833,7 +833,7 @@ class ReplacementRequest(ApiModel):
 
 
 class ReplacementResponse(ApiModel):
-    build: BuildResult
+    build: BuildSummary
     changed_categories: list[ComponentCategory]
     price_delta_sgd: float
     workload_score_deltas: dict[str, float]

@@ -31,7 +31,7 @@ from services.api.models import (
     BuildProfile,
     BuildShareCreated,
     BuildShareRevoked,
-    BuildResult,
+    BuildSummary,
     CatalogueCoverage,
     CompatibilityCheck,
     CompatibilityCheckRequest,
@@ -82,7 +82,7 @@ class RecommendationApplication(Protocol):
 
     async def get_request_builds(self, request_id: str) -> GenerateBuildsResponse: ...
 
-    async def get_build(self, build_id: str) -> BuildResult: ...
+    async def get_build(self, build_id: str) -> BuildSummary: ...
 
     async def admin_operations(self) -> AdminOperationsResponse: ...
 
@@ -637,7 +637,7 @@ class InMemoryRecommendationService:
         self.catalog_updated_at = datetime.now(UTC)
         self._requests: dict[str, GenerateBuildsRequest] = {}
         self._responses: dict[str, GenerateBuildsResponse] = {}
-        self._builds: dict[str, BuildResult] = {}
+        self._builds: dict[str, BuildSummary] = {}
         self._build_request_ids: dict[str, str] = {}
         self._build_shares: dict[str, _InMemoryBuildShare] = {}
         self._interactions: list[tuple[str, InteractionRecord, datetime]] = []
@@ -706,7 +706,7 @@ class InMemoryRecommendationService:
             await self._store_generation(request, response)
             return response.model_copy(deep=True)
 
-        feasible_builds: list[BuildResult] = []
+        feasible_builds: list[BuildSummary] = []
         rejection_codes: set[str] = set()
         seen_configurations: set[tuple[str, ...]] = set()
         profiles = request.requested_profiles or [
@@ -1000,7 +1000,7 @@ class InMemoryRecommendationService:
         total_cents: int,
         already_owned: set[ComponentCategory],
         checks: list[CompatibilityCheck],
-    ) -> BuildResult:
+    ) -> BuildSummary:
         components: list[BuildComponent] = []
         preferred = {brand.casefold() for brand in request.preferences.preferred_brands}
         for category in ComponentCategory:
@@ -1052,7 +1052,7 @@ class InMemoryRecommendationService:
                 score = 0.55 * gpu_score + 0.45 * cpu_score
             workload_scores[workload.name.value] = round(min(score, 100), 2)
         warnings = [check for check in checks if check.status is CompatVerdict.WARNING]
-        return BuildResult(
+        return BuildSummary(
             build_id=f"build_{uuid4().hex}",
             profile=template.profile,
             total_price_sgd=round(total_cents / 100, 2),
@@ -1164,7 +1164,7 @@ class InMemoryRecommendationService:
             )
         return response.model_copy(deep=True)
 
-    async def get_build(self, build_id: str) -> BuildResult:
+    async def get_build(self, build_id: str) -> BuildSummary:
         build = self._builds.get(build_id)
         if build is None:
             raise ApiError(
@@ -1368,7 +1368,7 @@ class InMemoryRecommendationService:
             deep=True,
         )
         # Revalidate after model_copy(update=...) because Pydantic deliberately skips it.
-        new_build = BuildResult.model_validate(new_build.model_dump())
+        new_build = BuildSummary.model_validate(new_build.model_dump())
         async with self._lock:
             self._builds[new_build.build_id] = new_build.model_copy(deep=True)
             if request_id:
@@ -1396,7 +1396,7 @@ class InMemoryRecommendationService:
                 code="invalid_pagination_cursor",
                 message=str(error),
             ) from error
-        compatible_build: BuildResult | None = None
+        compatible_build: BuildSummary | None = None
         if (
             request.compatible_with_build_id
             and request.compatible_with_build_id not in self._builds

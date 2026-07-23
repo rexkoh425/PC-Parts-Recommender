@@ -19,7 +19,7 @@ import {
 } from "@/lib/replacement";
 import type {
   BuildComponent,
-  BuildResult,
+  BuildSummary,
   ComponentCategory,
   PerformanceSignal,
   ReplacementResponse,
@@ -31,7 +31,7 @@ import { ReplacementDrawer } from "./replacement-drawer";
 import { ScoreMeter } from "./score-meter";
 import { StatusPill } from "./status-pill";
 
-const profileHeadings: Record<BuildResult["profile"], string> = {
+const profileHeadings: Record<BuildSummary["profile"], string> = {
   best_overall: "The strongest balance across workload fit, value, and flexibility.",
   best_value: "The most workload value inside this compatible shortlist.",
   highest_performance: "The highest relative workload performance that fits the brief.",
@@ -103,7 +103,7 @@ function workloadLabel(workload: string): string {
 
 export function BuildDetailScreen({ buildId }: { buildId: string }) {
   const { savedIds, toggle } = useSavedBuilds();
-  const [build, setBuild] = useState<BuildResult | null>(null);
+  const [build, setBuild] = useState<BuildSummary | null>(null);
   const [error, setError] = useState("");
   const [retryKey, setRetryKey] = useState(0);
   const [replacementCategory, setReplacementCategory] = useState<ComponentCategory | null>(null);

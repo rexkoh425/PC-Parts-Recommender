@@ -1,5 +1,5 @@
 import type {
-  BuildResult,
+  BuildSummary,
   CompatVerdict,
   ComponentCategory,
   ProductSearchItem,
@@ -16,7 +16,7 @@ export interface ReplacementChangeSummary {
 }
 
 export function summarizeReplacementChange(
-  previousBuild: Pick<BuildResult, "estimated_peak_power_w">,
+  previousBuild: Pick<BuildSummary, "estimated_peak_power_w">,
   response: Pick<
     ReplacementResponse,
     "build" | "changed_categories" | "price_delta_sgd" | "workload_score_deltas"

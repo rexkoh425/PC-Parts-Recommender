@@ -83,7 +83,7 @@ from services.api.models import (
     BuildProfile,
     BuildShareCreated,
     BuildShareRevoked,
-    BuildResult,
+    BuildSummary,
     CatalogueCoverage,
     CatalogueReadinessSummary,
     CompatibilityCheck,
@@ -618,7 +618,7 @@ class CoreRecommendationService(RecommendationApplication):
             owned_product_ids=generation.owned_product_ids,
         )
 
-    async def get_build(self, build_id: str) -> BuildResult:
+    async def get_build(self, build_id: str) -> BuildSummary:
         try:
             generation = await asyncio.to_thread(
                 self.services.results.generation_for_build, build_id
@@ -1556,7 +1556,7 @@ class CoreRecommendationService(RecommendationApplication):
         *,
         generated_at: datetime | None = None,
         owned_product_ids: Collection[str] | None = None,
-    ) -> BuildResult:
+    ) -> BuildSummary:
         existing_ids = (
             set(owned_product_ids)
             if owned_product_ids is not None
@@ -1646,7 +1646,7 @@ class CoreRecommendationService(RecommendationApplication):
             )
             for item in build.alternatives
         ]
-        return BuildResult(
+        return BuildSummary(
             build_id=build.build_id,
             profile=BuildProfile(build.profile.value),
             total_price_sgd=float(build.total_price_sgd),

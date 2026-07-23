@@ -9,7 +9,7 @@ from services.api.metrics import DOMAIN_METRICS
 from services.api.models import (
     BuildShareCreated,
     BuildShareRevoked,
-    BuildResult,
+    BuildSummary,
     GenerateBuildsRequest,
     GenerateBuildsResponse,
     PublicBuildShare,
@@ -89,10 +89,10 @@ async def get_request_builds(
 
 @router.get(
     "/builds/{build_id}",
-    response_model=BuildResult,
+    response_model=BuildSummary,
     responses={**NOT_FOUND_ERROR, **SERVICE_ERROR},
 )
-async def get_build(build_id: str, application: ApplicationDependency) -> BuildResult:
+async def get_build(build_id: str, application: ApplicationDependency) -> BuildSummary:
     return await application.get_build(build_id)
 
 

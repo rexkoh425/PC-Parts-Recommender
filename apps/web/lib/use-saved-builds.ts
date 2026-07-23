@@ -8,7 +8,7 @@ import {
   saveBuild,
   SAVED_BUILDS_KEY,
 } from "./saved-builds";
-import type { BuildResult } from "./types";
+import type { BuildSummary } from "./types";
 
 export function useSavedBuilds() {
   const subscribe = useCallback((onStoreChange: () => void) => {
@@ -32,7 +32,7 @@ export function useSavedBuilds() {
     [entries],
   );
 
-  const toggle = useCallback((build: BuildResult) => {
+  const toggle = useCallback((build: BuildSummary) => {
     if (readSavedBuilds().some((entry) => entry.build.build_id === build.build_id)) {
       removeSavedBuild(build.build_id);
       return false;
