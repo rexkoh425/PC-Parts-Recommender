@@ -23,7 +23,7 @@ from pc_build_recommender.domain import (
     CompatVerdict,
     DomainModel,
     RetailerListing,
-    ReviewNote,
+    ReviewEvidence,
 )
 from pc_build_recommender.optimizer import OptimizationStatus
 
@@ -85,7 +85,7 @@ class CatalogItem:
     compatibility_record: Mapping[str, Any]
     workload_scores: Mapping[str, float] = field(default_factory=dict)
     workload_benchmarks: Mapping[str, tuple[BenchmarkResult, ...]] = field(default_factory=dict)
-    review_evidence: tuple[ReviewNote, ...] = ()
+    review_evidence: tuple[ReviewEvidence, ...] = ()
     ranking_signals: Mapping[str, float] = field(default_factory=dict)
 
     def __post_init__(self) -> None:

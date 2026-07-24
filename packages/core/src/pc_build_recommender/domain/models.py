@@ -282,7 +282,7 @@ class CompatibilityRule(DomainModel):
     effective_from: datetime
 
 
-class ReviewNote(DomainModel):
+class ReviewEvidence(DomainModel):
     """One short, permitted and citable statement about a canonical product.
 
     The bounded fields prevent the catalogue from becoming an unbounded

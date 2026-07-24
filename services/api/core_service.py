@@ -129,7 +129,7 @@ from services.api.models import (
     resolve_product_search_page,
 )
 from services.api.models import (
-    ReviewNote as ApiReviewEvidence,
+    ReviewEvidence as ApiReviewEvidence,
 )
 from services.api.pricing import summarize_price_history
 from services.api.public_shares import public_build_snapshot

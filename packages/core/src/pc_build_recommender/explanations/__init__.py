@@ -16,7 +16,7 @@ from .types import (
     MetricEvidence,
     ReasonKind,
     ReplacementComparison,
-    ReviewNote,
+    ReviewEvidence,
     SelectionReason,
     StoredSourceCitation,
 )
@@ -31,7 +31,7 @@ __all__ = [
     "MetricEvidence",
     "ReasonKind",
     "ReplacementComparison",
-    "ReviewNote",
+    "ReviewEvidence",
     "SelectionReason",
     "StoredSourceCitation",
     "explain_build_selection",

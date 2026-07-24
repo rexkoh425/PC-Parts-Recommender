@@ -395,7 +395,7 @@ export interface ProductBenchmarksResponse {
   performance_model_version: string;
 }
 
-export interface ReviewNote {
+export interface ReviewEvidence {
   aspect: string;
   sentiment: "positive" | "neutral" | "negative" | "mixed";
   evidence_text: string;
@@ -406,7 +406,7 @@ export interface ReviewNote {
 
 export interface ProductReviewsResponse {
   product_id: string;
-  evidence: ReviewNote[];
+  evidence: ReviewEvidence[];
   data_version: string;
 }
 

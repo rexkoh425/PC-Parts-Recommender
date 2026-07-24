@@ -24,7 +24,7 @@ from pc_build_recommender.domain import (
     ListingCondition,
     ProductStatus,
     RetailerListing,
-    ReviewNote,
+    ReviewEvidence,
     SourceType,
     StockStatus,
 )
@@ -113,7 +113,7 @@ class CatalogReader(Protocol):
         self, product_id: str, *, workload: str | None = None
     ) -> list[BenchmarkResult]: ...
 
-    def list_review_evidence(self, product_id: str) -> list[ReviewNote]: ...
+    def list_review_evidence(self, product_id: str) -> list[ReviewEvidence]: ...
 
 
 def _all_products(repository: CatalogReader) -> list[CanonicalProduct]:
@@ -340,7 +340,7 @@ def _content_version(
     products: Sequence[CanonicalProduct],
     listings_by_product: Mapping[str, Sequence[RetailerListing]],
     benchmarks_by_product: Mapping[str, Sequence[BenchmarkResult]],
-    reviews_by_product: Mapping[str, Sequence[ReviewNote]],
+    reviews_by_product: Mapping[str, Sequence[ReviewEvidence]],
 ) -> str:
     payload = {
         "products": [
@@ -408,7 +408,7 @@ class ApplicationCatalog:
 
         listings_by_product: dict[str, list[RetailerListing]] = {}
         benchmarks_by_product: dict[str, list[BenchmarkResult]] = {}
-        reviews_by_product: dict[str, list[ReviewNote]] = {}
+        reviews_by_product: dict[str, list[ReviewEvidence]] = {}
         for product in products:
             listings_by_product[product.product_id] = repository.list_listings(
                 product_id=product.product_id,

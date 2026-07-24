@@ -32,7 +32,7 @@ from pc_build_recommender.domain import (
     ListingCondition,
     PriceSample,
     RetailerListing,
-    ReviewNote,
+    ReviewEvidence,
     SourceProvenance,
     SourceType,
     StockStatus,
@@ -48,7 +48,7 @@ def _service(
     stock_status: StockStatus = StockStatus.UNKNOWN,
     rights_ready: bool = False,
     snapshot_prices: tuple[Decimal, ...] | None = None,
-    review_evidence: tuple[ReviewNote, ...] = (),
+    review_evidence: tuple[ReviewEvidence, ...] = (),
     durable_store: SqlAlchemyDurableStore | None = None,
 ) -> CoreRecommendationService:
     if product_count < 1:
@@ -344,7 +344,7 @@ def test_processed_price_observation_response_is_bounded_to_newest_year() -> Non
 def test_processed_service_serves_only_release_bound_review_evidence() -> None:
     service = _service(
         review_evidence=(
-            ReviewNote(
+            ReviewEvidence(
                 evidence_id="review-performance",
                 product_id="prod_real_gpu",
                 aspect="performance",
@@ -354,7 +354,7 @@ def test_processed_service_serves_only_release_bound_review_evidence() -> None:
                 published_at=NOW,
                 confidence=0.91,
             ),
-            ReviewNote(
+            ReviewEvidence(
                 evidence_id="review-noise",
                 product_id="prod_real_gpu",
                 aspect="noise",
@@ -364,7 +364,7 @@ def test_processed_service_serves_only_release_bound_review_evidence() -> None:
                 published_at=NOW,
                 confidence=0.83,
             ),
-            ReviewNote(
+            ReviewEvidence(
                 evidence_id="review-neutral",
                 product_id="prod_real_gpu",
                 aspect="value",
