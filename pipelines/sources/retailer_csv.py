@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from pc_build_recommender.domain.enums import ListingCondition, StockStatus
-from pc_build_recommender.domain.models import PriceSample, RetailerListing
+from pc_build_recommender.domain.models import PriceSnapshot, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
     ParsedBatch,
@@ -203,7 +203,7 @@ class ConsentedRetailerCSVAdapter:
             first_seen_at=observed_at,
             last_seen_at=observed_at,
         )
-        price_snapshot = PriceSample(
+        price_snapshot = PriceSnapshot(
             snapshot_id=stable_identifier(
                 "price",
                 listing_id,

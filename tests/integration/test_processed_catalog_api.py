@@ -30,7 +30,7 @@ from pc_build_recommender.domain import (
     ComponentCategory,
     GPUAttributes,
     ListingCondition,
-    PriceSample,
+    PriceSnapshot,
     RetailerListing,
     ReviewEvidence,
     SourceProvenance,
@@ -120,7 +120,7 @@ def _service(
     )
     snapshots = (
         tuple(
-            PriceSample(
+            PriceSnapshot(
                 snapshot_id=f"price_real_gpu_day_{day}",
                 listing_id=listings[0].listing_id,
                 observed_at=NOW - timedelta(days=day),
@@ -131,7 +131,7 @@ def _service(
         )
         if snapshot_prices is not None
         else tuple(
-            PriceSample(
+            PriceSnapshot(
                 snapshot_id=("price_real_gpu" if index == 0 else f"price_real_gpu_{index + 1}"),
                 listing_id=listing.listing_id,
                 observed_at=NOW,

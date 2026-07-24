@@ -14,7 +14,7 @@ import pdfplumber
 from pdfplumber.pdf import PDF
 
 from pc_build_recommender.domain.enums import ListingCondition, StockStatus
-from pc_build_recommender.domain.models import PriceSample, RetailerListing
+from pc_build_recommender.domain.models import PriceSnapshot, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import (
     ParsedBatch,
@@ -556,7 +556,7 @@ class DynacoreControlledPDFAdapter:
             first_seen_at=DYNACORE_OBSERVED_AT,
             last_seen_at=DYNACORE_OBSERVED_AT,
         )
-        price_snapshot = PriceSample(
+        price_snapshot = PriceSnapshot(
             snapshot_id=stable_identifier(
                 "price_dynacore",
                 listing_id,

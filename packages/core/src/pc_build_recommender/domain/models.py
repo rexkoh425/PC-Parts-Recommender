@@ -147,7 +147,7 @@ class RetailerListing(DomainModel):
         return self
 
 
-class PriceSample(DomainModel):
+class PriceSnapshot(DomainModel):
     snapshot_id: str = Field(default_factory=lambda: new_id("price"), min_length=1)
     listing_id: str = Field(min_length=1)
     observed_at: datetime = Field(default_factory=utc_now)

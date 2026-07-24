@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from pc_build_recommender.domain import (
     BenchmarkResult,
     CanonicalProduct,
-    PriceSample,
+    PriceSnapshot,
     RetailerListing,
     SourceProvenance,
 )
@@ -157,7 +157,7 @@ def load_seed_data(session: Session, data: dict[str, Any]) -> SeedLoadResult:
     for item in sorted(listings, key=lambda value: value["listing_id"]):
         repository.upsert_listing(RetailerListing.model_validate(item))
     for item in sorted(prices, key=lambda value: value["snapshot_id"]):
-        repository.upsert_price_snapshot(PriceSample.model_validate(item))
+        repository.upsert_price_snapshot(PriceSnapshot.model_validate(item))
     for item in sorted(benchmarks, key=lambda value: value["benchmark_id"]):
         repository.upsert_benchmark(BenchmarkResult.model_validate(item))
     for item in sorted(provenance, key=lambda value: value["provenance_id"]):

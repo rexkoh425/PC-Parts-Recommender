@@ -27,7 +27,7 @@ from pc_build_recommender.domain import (
     BenchmarkResult,
     CanonicalProduct,
     ComponentCategory,
-    PriceSample,
+    PriceSnapshot,
     ProductStatus,
     RetailerListing,
     ReviewEvidence,
@@ -748,7 +748,7 @@ class ProcessedCatalogStats:
 class ProcessedCatalogData:
     products: tuple[CanonicalProduct, ...]
     listings: tuple[RetailerListing, ...]
-    price_snapshots: tuple[PriceSample, ...]
+    price_snapshots: tuple[PriceSnapshot, ...]
     stats: ProcessedCatalogStats
     review_evidence: tuple[ReviewEvidence, ...] = ()
     match_method_by_listing: Mapping[str, str] = field(default_factory=dict)
@@ -944,7 +944,7 @@ def load_processed_catalog(
     seen_listing_ids: set[str] = set()
     seen_snapshot_ids: set[str] = set()
     listings: list[RetailerListing] = []
-    snapshots: list[PriceSample] = []
+    snapshots: list[PriceSnapshot] = []
     listing_provenance: list[SourceProvenance] = []
     decisions: list[MappingDecision] = []
     methods: dict[str, str] = {}
@@ -971,7 +971,7 @@ def load_processed_catalog(
         readiness_accumulator.observe_offer_rights(envelope.get("data_use_rights"))
         offer_count += 1
         source_listing = RetailerListing.model_validate(raw_listing)
-        snapshot = PriceSample.model_validate(raw_snapshot)
+        snapshot = PriceSnapshot.model_validate(raw_snapshot)
         if source_listing.listing_id in seen_listing_ids:
             raise ValueError(f"duplicate retailer listing ID: {source_listing.listing_id}")
         if snapshot.snapshot_id in seen_snapshot_ids:
@@ -1290,7 +1290,7 @@ class InMemoryCatalogReader:
     def list_review_evidence(self, product_id: str) -> list[ReviewEvidence]:
         return list(self._review_evidence.get(product_id, ()))
 
-    def list_price_snapshots(self, listing_id: str) -> list[PriceSample]:
+    def list_price_snapshots(self, listing_id: str) -> list[PriceSnapshot]:
         return [item for item in self.data.price_snapshots if item.listing_id == listing_id]
 
 

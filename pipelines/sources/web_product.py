@@ -33,7 +33,7 @@ import httpcore
 import httpx
 
 from pc_build_recommender.domain.enums import ComponentCategory, ListingCondition, StockStatus
-from pc_build_recommender.domain.models import PriceSample, RetailerListing
+from pc_build_recommender.domain.models import PriceSnapshot, RetailerListing
 from pipelines.parsing.normalizers import NORMALISED_RECORD_SCHEMA_VERSION, stable_identifier
 from pipelines.sources.base import ParsedBatch, RawSnapshot, rejected_record, sha256_bytes
 from pipelines.sources.rights import DataUse, DataUseRights
@@ -1829,7 +1829,7 @@ class WebProductCrawlerAdapter:
             first_seen_at=observed_at,
             last_seen_at=observed_at,
         )
-        price_snapshot = PriceSample(
+        price_snapshot = PriceSnapshot(
             snapshot_id=stable_identifier(
                 "price",
                 listing_id,
