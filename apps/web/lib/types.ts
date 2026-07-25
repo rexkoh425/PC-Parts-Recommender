@@ -129,6 +129,10 @@ export interface BuildComponent {
   brand?: string;
   retailer?: string;
   listing_url?: string;
+  // First-party manufacturer page for the part. Kept separate from
+  // listing_url, which means "a recorded retailer price": a spec page carries
+  // no price and is not an offer, so it does not go stale the same way.
+  spec_url?: string;
   price_sgd: number;
   already_owned?: boolean;
   component_score?: number;

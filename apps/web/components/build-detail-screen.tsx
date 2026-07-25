@@ -471,6 +471,15 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                             >
                               Retailer price ↗
                             </a>
+                          ) : component.spec_url ? (
+                            <a
+                              href={component.spec_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label={`Open the manufacturer specification page for ${component.canonical_name}`}
+                            >
+                              Manufacturer spec ↗
+                            </a>
                           ) : (
                             <small>
                               {USING_DEMO_DATA
