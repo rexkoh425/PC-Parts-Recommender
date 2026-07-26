@@ -5891,3 +5891,38 @@ svg {
     --section-y-lead: 80px;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Measure
+   Prose was running the full container width — up to 169 characters per line
+   against a comfortable 45-75. Long lines are what made the page read as
+   "clustered": the eye loses the return sweep and paragraphs turn into slabs.
+   Capping the measure, not the container, keeps the layout width intact.
+--------------------------------------------------------------------------- */
+
+:root {
+  --measure: 68ch;
+  --measure-wide: 80ch;
+}
+
+.hero__copy p,
+.builder-section__heading p,
+.evidence-boundary p,
+.catalogue-readiness__empty p,
+.trust-section p,
+.field-help,
+.section-heading p,
+.lede {
+  max-width: var(--measure);
+}
+
+.evidence-section li,
+.catalogue-readiness li {
+  max-width: var(--measure-wide);
+}
+
+/* Eyebrows are short labels, so the cap is about stopping the box from
+   spanning the full column rather than about line length. */
+.eyebrow {
+  max-width: var(--measure-wide);
+}

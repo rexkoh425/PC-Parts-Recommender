@@ -24,7 +24,7 @@ import type {
   WorkloadName,
 } from "./types";
 
-export const DEMO_DATA_VERSION = "portfolio-demo-2026-07-22";
+export const DEMO_DATA_VERSION = "portfolio-demo-2026-08-21";
 export const DEMO_RANKING_MODEL = "deterministic-demo-ranker-v1";
 export const DEMO_RULE_VERSION = "compat-demo-v1";
 export const DEMO_SOLVER_VERSION = "browser-demo-v1";
@@ -59,6 +59,16 @@ interface DemoTemplate {
 // each one resolves to its manufacturer page. Manufacturer pages are used
 // rather than retailer offers so nothing here implies a live price: these
 // URLs describe the part, they do not quote it.
+const manufacturerPartNumbers: Record<string, string> = {
+  "mem-ddr5-32-5600": "CMK32GX5M2B5600Z36",
+  "mem-ddr5-32-6000": "F5-6000J3036F16GX2-TZ5NRW",
+  "mem-ddr5-64-6000": "F5-6000J3040G32GX2-TZ5NR",
+  "ssd-nvme-2tb-value": "MZ-V9P2T0BW",
+  "ssd-nvme-2tb-fast": "WDS200T2X0E",
+  "psu-750-gold": "CP-9020248-NA",
+  "psu-850-gold": "CP-9020270-NA",
+};
+
 const specUrls: Record<string, string> = {
   "cpu-amd-7600":
     "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-5-7600.html",
@@ -183,7 +193,7 @@ const products: DemoProduct[] = [
     price_sgd: 219,
     performance: 72,
     power_w: 45,
-    attributes: { socket: "AM5", chipset: "B650", memory_type: "DDR5", wifi: true },
+    attributes: { socket: "AM5", chipset: "B650", memory_type: "DDR5", wifi: true, form_factor: "mATX", lan: "2.5 GbE", m2_slots: 2 },
   },
   {
     product_id: "mb-b650-atx-wifi",
@@ -194,7 +204,7 @@ const products: DemoProduct[] = [
     price_sgd: 279,
     performance: 82,
     power_w: 50,
-    attributes: { socket: "AM5", chipset: "B650", memory_type: "DDR5", wifi: true },
+    attributes: { socket: "AM5", chipset: "B650", memory_type: "DDR5", wifi: true, form_factor: "ATX", lan: "2.5 GbE", m2_slots: 3 },
   },
   {
     product_id: "mb-x670-atx-wifi",
@@ -205,7 +215,7 @@ const products: DemoProduct[] = [
     price_sgd: 389,
     performance: 92,
     power_w: 55,
-    attributes: { socket: "AM5", chipset: "X670", memory_type: "DDR5", wifi: true },
+    attributes: { socket: "AM5", chipset: "X670E", memory_type: "DDR5", wifi: true, form_factor: "ATX", lan: "2.5 GbE", m2_slots: 4, power_stages: "16+2" },
   },
   {
     product_id: "mem-ddr5-32-5600",
@@ -217,7 +227,7 @@ const products: DemoProduct[] = [
     performance: 74,
     power_w: 8,
     memory_gb: 32,
-    attributes: { memory_type: "DDR5", capacity_gb: 32, module_count: 2 },
+    attributes: { memory_type: "DDR5", capacity_gb: 32, module_count: 2, speed_mts: 5600, cas_latency: 36, expo: true },
   },
   {
     product_id: "mem-ddr5-32-6000",
@@ -229,7 +239,7 @@ const products: DemoProduct[] = [
     performance: 82,
     power_w: 9,
     memory_gb: 32,
-    attributes: { memory_type: "DDR5", capacity_gb: 32, module_count: 2 },
+    attributes: { memory_type: "DDR5", capacity_gb: 32, module_count: 2, speed_mts: 6000, cas_latency: 30, expo: true },
   },
   {
     product_id: "mem-ddr5-64-6000",
@@ -241,7 +251,7 @@ const products: DemoProduct[] = [
     performance: 94,
     power_w: 12,
     memory_gb: 64,
-    attributes: { memory_type: "DDR5", capacity_gb: 64, module_count: 2 },
+    attributes: { memory_type: "DDR5", capacity_gb: 64, module_count: 2, speed_mts: 6000, cas_latency: 30, expo: true },
   },
   {
     product_id: "ssd-nvme-2tb-value",
@@ -253,7 +263,7 @@ const products: DemoProduct[] = [
     performance: 76,
     power_w: 6,
     storage_gb: 2000,
-    attributes: { capacity_gb: 2000, interface: "NVMe PCIe 4.0" },
+    attributes: { capacity_gb: 2000, interface: "NVMe PCIe 4.0", sequential_read_mb_s: 7450, sequential_write_mb_s: 6900 },
   },
   {
     product_id: "ssd-nvme-2tb-fast",
@@ -265,7 +275,7 @@ const products: DemoProduct[] = [
     performance: 91,
     power_w: 7,
     storage_gb: 2000,
-    attributes: { capacity_gb: 2000, interface: "NVMe PCIe 4.0" },
+    attributes: { capacity_gb: 2000, interface: "NVMe PCIe 4.0", sequential_read_mb_s: 7300, sequential_write_mb_s: 6300 },
   },
   {
     product_id: "psu-750-gold",
@@ -276,7 +286,7 @@ const products: DemoProduct[] = [
     price_sgd: 159,
     performance: 81,
     power_w: 0,
-    attributes: { wattage: 750, efficiency_rating: "80 Plus Gold" },
+    attributes: { wattage: 750, efficiency_rating: "80 Plus Gold", atx_standard: "ATX 3.1", length_mm: 140, modular: "full" },
   },
   {
     product_id: "psu-850-gold",
@@ -287,7 +297,7 @@ const products: DemoProduct[] = [
     price_sgd: 189,
     performance: 90,
     power_w: 0,
-    attributes: { wattage: 850, efficiency_rating: "80 Plus Gold" },
+    attributes: { wattage: 850, efficiency_rating: "80 Plus Gold", atx_standard: "ATX 3.1", modular: "full" },
   },
   {
     product_id: "cooler-single-tower",
@@ -298,7 +308,7 @@ const products: DemoProduct[] = [
     price_sgd: 59,
     performance: 73,
     power_w: 4,
-    attributes: { supported_sockets: ["AM5"], height_mm: 154 },
+    attributes: { supported_sockets: ["AM5", "AM4", "LGA1700"], height_mm: 155, tdp_w: 220, heat_pipes: 4, fans: 1 },
   },
   {
     product_id: "cooler-dual-tower",
@@ -309,7 +319,7 @@ const products: DemoProduct[] = [
     price_sgd: 79,
     performance: 88,
     power_w: 6,
-    attributes: { supported_sockets: ["AM5"], height_mm: 157 },
+    attributes: { supported_sockets: ["AM5", "AM4", "LGA1700"], height_mm: 160, tdp_w: 260, heat_pipes: 6, fans: 2 },
   },
   {
     product_id: "case-matx-air",
@@ -321,7 +331,7 @@ const products: DemoProduct[] = [
     performance: 75,
     power_w: 0,
     case_size: "mini_tower",
-    attributes: { maximum_gpu_length_mm: 330, maximum_cooler_height_mm: 165 },
+    attributes: { maximum_gpu_length_mm: 365, maximum_cooler_height_mm: 170, maximum_psu_length_mm: 150, form_factors: ["mATX", "Mini-ITX"], dimensions_mm: "432 x 215 x 393" },
   },
   {
     product_id: "case-atx-air",
@@ -333,7 +343,7 @@ const products: DemoProduct[] = [
     performance: 84,
     power_w: 0,
     case_size: "mid_tower",
-    attributes: { maximum_gpu_length_mm: 380, maximum_cooler_height_mm: 175 },
+    attributes: { maximum_gpu_length_mm: 392, maximum_cooler_height_mm: 180, maximum_psu_length_mm: 220, form_factors: ["E-ATX", "ATX", "mATX", "Mini-ITX"], dimensions_mm: "481 x 235 x 492" },
   },
   {
     product_id: "case-atx-quiet",
@@ -345,7 +355,7 @@ const products: DemoProduct[] = [
     performance: 82,
     power_w: 0,
     case_size: "mid_tower",
-    attributes: { maximum_gpu_length_mm: 360, maximum_cooler_height_mm: 170 },
+    attributes: { maximum_gpu_length_mm: 470, maximum_cooler_height_mm: 185, maximum_psu_length_mm: 250, form_factors: ["E-ATX", "ATX", "mATX", "Mini-ITX"], layout: "open", dimensions_mm: "547 x 240 x 475" },
   },
 ];
 
@@ -827,10 +837,10 @@ export function getDemoProduct(productId: string): ProductDetail {
     lowest_price_sgd: product.price_sgd,
     stock_status: "demo_only",
     compatibility_status: null,
-    manufacturer_part_number: null,
+    manufacturer_part_number: manufacturerPartNumbers[product.product_id] ?? null,
     attributes: product.attributes,
       source_confidence: null,
-      source_url: null,
+      source_url: specUrls[product.product_id] ?? null,
       source_attributions: [],
       updated_at: "2026-07-22T00:00:00.000Z",
     data_version: DEMO_DATA_VERSION,
@@ -889,6 +899,9 @@ export function getDemoBenchmarks(productId: string): ProductBenchmarksResponse 
     higher_is_better: true,
     basis: "predicted",
     model_version: DEMO_RANKING_MODEL,
+    // Deliberately null: this benchmark is the demo's own synthetic index, not
+    // a figure the manufacturer published. Citing their page here would
+    // attribute the number to them.
     source_url: null,
     observed_at: null,
   };
