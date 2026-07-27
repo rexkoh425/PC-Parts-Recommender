@@ -375,6 +375,13 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
             <Link className="button button--primary" href="/">Use in a complete build</Link>
           </div>
 
+          {product.manufacturer_part_number && (
+            <p className="record-mpn">
+              <span>Manufacturer part number</span>
+              <code>{product.manufacturer_part_number}</code>
+            </p>
+          )}
+
           {product.source_url && <a className="source-record-link" href={product.source_url} target="_blank" rel="noreferrer">Open primary product source ↗</a>}
         </aside>
       </div>
