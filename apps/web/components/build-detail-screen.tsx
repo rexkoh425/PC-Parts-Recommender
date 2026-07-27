@@ -114,6 +114,25 @@ function workloadLabel(workload: string): string {
     : humanizeToken(workload);
 }
 
+const priceBasisLabel = {
+  launch_msrp: "vendor MSRP",
+  street_aug_2026: "retail Aug 2026",
+  estimate: "estimate",
+} as const;
+
+// The tooltip carries the detail the badge has no room for: where the number
+// came from and when, so a reader can judge it rather than just trust it.
+function priceBasisDetail(component: BuildComponent): string {
+  const asOf = component.price_as_of ? ` as of ${component.price_as_of}` : "";
+  if (component.price_basis === "launch_msrp") {
+    return `Manufacturer launch MSRP${component.price_source ? ` published by ${component.price_source}` : ""}, converted at 1 USD = 1.2775 SGD.`;
+  }
+  if (component.price_basis === "street_aug_2026") {
+    return `Retail price${component.price_source ? ` from ${component.price_source}` : ""}${asOf}, converted at 1 USD = 1.2775 SGD. Not a live quote.`;
+  }
+  return `Fixture estimate. Public sources disagreed too widely to cite one${asOf}.`;
+}
+
 export function BuildDetailScreen({ buildId }: { buildId: string }) {
   const router = useRouter();
   const { savedIds, toggle } = useSavedBuilds();
@@ -491,6 +510,14 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                       </td>
                       <td data-label="Price">
                         <strong>{component.already_owned ? "Owned" : formatSgd(component.price_sgd)}</strong>
+                        {!component.already_owned && component.price_basis ? (
+                          <span
+                            className={`price-basis price-basis--${component.price_basis}`}
+                            title={priceBasisDetail(component)}
+                          >
+                            {priceBasisLabel[component.price_basis]}
+                          </span>
+                        ) : null}
                       </td>
                       <td data-label="Action">
                         <button

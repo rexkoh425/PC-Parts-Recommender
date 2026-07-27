@@ -5951,3 +5951,25 @@ svg {
   color: var(--forest-800);
   user-select: all;
 }
+
+/* A price is only as good as its provenance, so the badge sits with the number
+   rather than in a footnote. Estimates are muted and MSRP is stated plainly —
+   the intent is that a reader can tell them apart at a glance without the
+   estimate looking like a warning. */
+.price-basis {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--text-2xs);
+  letter-spacing: 0.02em;
+  color: var(--forest-600);
+  cursor: help;
+}
+
+.price-basis--launch_msrp {
+  color: var(--state-pass);
+}
+
+.price-basis--estimate {
+  color: var(--forest-400);
+  font-style: italic;
+}
