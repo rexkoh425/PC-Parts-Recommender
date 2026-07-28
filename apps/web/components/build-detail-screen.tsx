@@ -534,6 +534,13 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                   })}
                 </tbody>
               </table>
+              <p className="price-note">
+                Memory and storage prices reflect the 2026 DRAM and NAND shortage,
+                which pushed DDR5 to roughly four times and NAND to roughly twice
+                their late-2025 levels as fabrication capacity moved to AI memory.
+                Figures are dated, converted at 1&nbsp;USD&nbsp;=&nbsp;1.2775&nbsp;SGD,
+                and are not live quotes.
+              </p>
             </div>
           </section>
                 ),

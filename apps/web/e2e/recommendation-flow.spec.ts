@@ -91,7 +91,7 @@ const response = {
   ranking_model: "ltr_v1",
   rule_version: "compat_v1",
   request: {
-    budget_sgd: 2500,
+    budget_sgd: 3500,
     workloads: [
       { name: "local_ai", weight: 0.6 },
       { name: "gaming_1440p", weight: 0.4 },
