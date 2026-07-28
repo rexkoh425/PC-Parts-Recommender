@@ -135,7 +135,7 @@ export interface BuildComponent {
   spec_url?: string;
   // Provenance for price_sgd. Without this a vendor-announced MSRP and the
   // fixture's own estimate render identically, which is the misleading case.
-  price_basis?: "launch_msrp" | "street_aug_2026" | "estimate";
+  price_basis?: "launch_msrp" | "manufacturer_list" | "street_aug_2026" | "estimate";
   price_source?: string | null;
   price_as_of?: string;
   price_sgd: number;

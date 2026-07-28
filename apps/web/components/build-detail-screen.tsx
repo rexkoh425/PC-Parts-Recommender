@@ -116,6 +116,7 @@ function workloadLabel(workload: string): string {
 
 const priceBasisLabel = {
   launch_msrp: "vendor MSRP",
+  manufacturer_list: "vendor list price",
   street_aug_2026: "retail Aug 2026",
   estimate: "estimate",
 } as const;
@@ -124,6 +125,9 @@ const priceBasisLabel = {
 // came from and when, so a reader can judge it rather than just trust it.
 function priceBasisDetail(component: BuildComponent): string {
   const asOf = component.price_as_of ? ` as of ${component.price_as_of}` : "";
+  if (component.price_basis === "manufacturer_list") {
+    return `Current list price on the manufacturer's own store${component.price_source ? ` (${component.price_source})` : ""}${asOf}, converted at 1 USD = 1.2775 SGD.`;
+  }
   if (component.price_basis === "launch_msrp") {
     return `Manufacturer launch MSRP${component.price_source ? ` published by ${component.price_source}` : ""}, converted at 1 USD = 1.2775 SGD.`;
   }
