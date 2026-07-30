@@ -81,12 +81,12 @@ export function CatalogueReadinessPanel() {
               ? "The demo is interactive; the market-data release is not connected."
               : productionReady
                 ? "The catalogue has passed its release gate."
-                : "The catalogue is blocked from production recommendations."}
+                : "The catalogue is not yet cleared for live recommendations."}
           </h2>
         </div>
         <p>
           {isDemo
-            ? "Sample components support the portfolio flow only. They do not represent current retailers, stock, source rights, or a production recommendation release."
+            ? "A fixed set of real parts, priced from published sources. Not connected to live retailer stock."
             : "This gate combines category coverage, compatibility fields, listing provenance, data-use rights, entity-resolution controls, and stock coverage."}
         </p>
       </div>

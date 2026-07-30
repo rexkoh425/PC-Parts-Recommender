@@ -678,8 +678,8 @@ export function BuildForm() {
           </button>
           <p className="brief-summary__note">
             {USING_DEMO_DATA
-              ? "Public demo: sample builds are prevalidated and prices are illustrative. Missing evidence is never presented as live data."
-              : "Hard compatibility rules run before ranking. Missing evidence is shown, never assumed."}
+              ? "Prices are real but dated — this demo isn't wired to live retailer stock."
+              : "Compatibility is checked before anything is ranked."}
           </p>
           <div className="generation-status" aria-live="polite">
             {submitting && "Ranking candidates and solving compatibility constraints."}
