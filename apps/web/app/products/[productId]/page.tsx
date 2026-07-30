@@ -3,11 +3,21 @@ import { ProductDetailScreen, type ProductEvidenceState } from "@/components/pro
 import {
   USING_DEMO_DATA,
   getProduct,
+  prerenderableProductIds,
   getProductBenchmarks,
   getProductPrices,
   getProductReviews,
 } from "@/lib/api";
 import { productRecordMetadata, unavailableProductMetadata } from "@/lib/record-metadata";
+
+/**
+ * Prerender the controlled demo's records at build time. The catalogue is a
+ * fixed set of 21, so there is nothing to resolve per request. Unknown IDs
+ * still render on demand, which keeps the not-found path working.
+ */
+export function generateStaticParams(): { productId: string }[] {
+  return prerenderableProductIds().map((productId) => ({ productId }));
+}
 
 export async function generateMetadata({
   params,

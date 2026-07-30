@@ -823,6 +823,9 @@ export function generateDemoBuilds(request: BuildRequest): GenerateBuildsRespons
   };
 }
 
+/** Every product in the controlled demo, for build-time prerendering. */
+export const demoProductIds: string[] = products.map((product) => product.product_id);
+
 export function searchDemoProducts(request: ProductSearchRequest): ProductSearchResponse {
   const tokens = request.query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const queryMatches = products
