@@ -1,0 +1,147 @@
+{
+  "report": {
+    "block_reasons": [
+      "external cohort has 0 leakage families; minimum is 10",
+      "external cohort has 0 rows; minimum is 20",
+      "no novel observations match the complete frozen cohort contract"
+    ],
+    "bounded_memory": {
+      "design": "SQLite disk index plus bounded novel/cohort/catalog collections",
+      "limits": {
+        "maximum_external_rows": 100000,
+        "maximum_novel_observations": 500000,
+        "maximum_novel_submissions": 100000,
+        "maximum_retained_cohort_records": 100000,
+        "maximum_submissions_per_snapshot": 2000000
+      }
+    },
+    "claim_boundary": {
+      "content_creation_claim_scope": "Blender CPU junkshop rendering only",
+      "external_performance_metrics_available": false,
+      "external_rows_pooled_into_development": false,
+      "supports_model_promotion": false
+    },
+    "cohort_contract": {
+      "backend": "CPU",
+      "benchmark_script": "3.1.0",
+      "benchmark_version": "4.0.0",
+      "blender_build_hash": "878f71061b8e",
+      "operating_system": "Windows",
+      "scene": "junkshop",
+      "scene_checksum": "f5515a21a1337b908212d8d76733530df83014464a24c585ab7b96000da0cdce",
+      "source_higher_is_better": true,
+      "source_score_field": "samples_per_minute",
+      "source_unit": "samples/minute"
+    },
+    "effective_at": "2026-07-23T01:56:47.661856+00:00",
+    "evaluation": null,
+    "external_gate": {
+      "candidate_leakage_family_count": 0,
+      "candidate_row_count": 0,
+      "eligible_leakage_family_count": 0,
+      "eligible_row_count": 0,
+      "excluded_development_family_hashes": [],
+      "excluded_development_overlap_family_count": 0,
+      "excluded_development_overlap_row_count": 0,
+      "metric_evaluation_eligible": false,
+      "minimum_external_leakage_families": 10,
+      "minimum_external_rows": 20,
+      "remaining_development_overlap_count": 0
+    },
+    "lineage": {
+      "artifact_manifest_sha256": "84171325a8bef00dab2e27743f63278b56a9db2206ea379b1e5575615f0c4f5f",
+      "artifact_metadata_sha256": "775c1820804effe6f974c0c0121bcc764913ece0e0844ff87b667a0fd7c8a452",
+      "artifact_model_sha256": "6d34ab522ad9b6958f2ac2c07d9aef3ca1e9c7a795897090a7afe00537165074",
+      "buildcores_records_sha256": "8c738c5136615080ac29ced074726f97cab473c5a45eafdf19c26504aa624ce2",
+      "development_csv": {
+        "leakage_family_count": 109,
+        "leakage_family_hashes_sha256": "8a54523833d536319c728e9b42dfdc87b08ad6f7cd3d8378eb4966f6ca4765ce",
+        "path": "data/processed/model_training/blender_cpu_content_creation_corrected_v1/blender_performance.csv",
+        "row_count": 172,
+        "sha256": "a4922e0d51a7981f40a257a363cb25649ce5cc27cf32a7517b5e560652acfdf9"
+      },
+      "development_manifest_sha256": "e9cc28acaa3bea52e5953577cc8c35873a1ce6c1cb27e46639fbf7bdfe727977",
+      "new_snapshot": {
+        "jsonl_compressed_bytes": 98839075,
+        "jsonl_member": "opendata-2026-07-23-000000+0000.jsonl",
+        "jsonl_uncompressed_bytes": 1842996040,
+        "metadata_path": "data/raw/blender_open_data/67582ebca9ead706b0c8d6cc96726bfa25c748664f95e10ad994a5fc81e493f5.zip.metadata.json",
+        "metadata_sha256": "df2599f8855c111ed3a6a6987970e3e3f4d8ab7f53e8e1efa85917f68c34fc58",
+        "parser_version": "blender-open-data-v1",
+        "path": "data/raw/blender_open_data/67582ebca9ead706b0c8d6cc96726bfa25c748664f95e10ad994a5fc81e493f5.zip",
+        "retrieved_at": "2026-07-23T01:56:47.661856+00:00",
+        "sha256": "67582ebca9ead706b0c8d6cc96726bfa25c748664f95e10ad994a5fc81e493f5",
+        "size_bytes": 98842645
+      },
+      "old_snapshot": {
+        "jsonl_compressed_bytes": 98810807,
+        "jsonl_member": "opendata-2026-07-22-000000+0000.jsonl",
+        "jsonl_uncompressed_bytes": 1842504781,
+        "metadata_path": "data/raw/blender_open_data/c0f9d35c20807776138b0590097177b8ef2172119cc19aae8d1bad1b55af4833.zip.metadata.json",
+        "metadata_sha256": "76e4f2e6a4e3c738205b540b90a44b82d2afbbce1ef109efd9fa65c93fc5d224",
+        "parser_version": "blender-open-data-v1",
+        "path": "data/raw/blender_open_data/c0f9d35c20807776138b0590097177b8ef2172119cc19aae8d1bad1b55af4833.zip",
+        "retrieved_at": "2026-07-22T02:12:47.392695+00:00",
+        "sha256": "c0f9d35c20807776138b0590097177b8ef2172119cc19aae8d1bad1b55af4833",
+        "size_bytes": 98814377
+      }
+    },
+    "model_inference_attempted": false,
+    "preparation": {
+      "catalog_cpu_records_retained": 0,
+      "catalog_total_records_scanned": 0,
+      "error": null,
+      "prepared_candidate_rows": 0
+    },
+    "protocol": {
+      "path": "evals/performance/blender_cpu_content_creation_v4_external_protocol.json",
+      "protocol_id": "blender-cpu-content-creation-v4-2026-07-23",
+      "registration_status": "retrospective_integrity_protocol_not_prospective_preregistration",
+      "sha256": "6952cd7a220920fc9be882211577a67a67268a055e702e4b64955ada5123154a"
+    },
+    "schema_version": "pc-build-recommender.blender-temporal-evaluation.v1",
+    "status": "insufficient_external_cohort",
+    "task": "blender_cpu_content_creation_temporal_external_audit",
+    "temporal_diff": {
+      "bounded_memory": {
+        "old_submission_index": "sqlite_on_disk",
+        "peak_retained_record_count": 0
+      },
+      "cohort_mismatch_counts": {
+        "backend": 180,
+        "benchmark_script": 336,
+        "benchmark_version": 339,
+        "blender_build_hash": 339,
+        "operating_system": 87,
+        "scene": 226,
+        "scene_checksum": 226
+      },
+      "device_counts": {
+        "CPU": 159,
+        "HIP": 27,
+        "METAL": 21,
+        "ONEAPI": 9,
+        "OPTIX": 123
+      },
+      "new_max_created_at": "2026-07-22T23:45:04.220628+00:00",
+      "new_snapshot_is_strict_superset": true,
+      "new_submission_count": 422432,
+      "normalisation_rejection_counts": {},
+      "novel_max_created_at": "2026-07-22T23:45:04.220628+00:00",
+      "novel_min_created_at": "2026-07-22T00:18:16.874956+00:00",
+      "novel_normalised_observation_count": 339,
+      "novel_raw_observation_count": 339,
+      "novel_submission_count": 113,
+      "novel_submission_ids_sha256": "3ee5869c9b13510396d1d56c55512f9dd1b6645c02e7c9c0aceac5374349cd91",
+      "old_max_created_at": "2026-07-21T23:31:38.277805+00:00",
+      "old_submission_count": 422319,
+      "removed_submission_count": 0,
+      "retained_cohort_record_count": 0,
+      "retained_source_record_ids_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "schema_version": "pc-build-recommender.blender-temporal-diff.v1",
+      "unique_hardware_name_count": 71
+    }
+  },
+  "report_sha256": "957139150dbc1bbdd6deab1810b966ea59a33d9768b206e5033287c88a3f044b",
+  "schema_version": "pc-build-recommender.blender-temporal-evaluation-envelope.v1"
+}
