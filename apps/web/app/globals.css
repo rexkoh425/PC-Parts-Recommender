@@ -6306,3 +6306,12 @@ h3 {
     grid-column: span 3;
   }
 }
+
+/* The card is a flex column with a 14px gap, but its children kept their own
+   margins, which stack on top of that gap: measured spacing came out at
+   38/46/30/54/54/30/30px — 282px of air against the 98px the gap asks for, and
+   the single largest reason these cards ran past the fold. Let the container
+   own the spacing. */
+.build-card > * {
+  margin: 0;
+}
