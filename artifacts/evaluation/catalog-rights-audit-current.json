@@ -1,0 +1,21 @@
+{
+  "data_version": "processed-66286ad2cb30278c",
+  "source": "dynacore_controlled_pdf",
+  "offer_count": 485,
+  "explicit_data_use_rights_count": 0,
+  "missing_explicit_data_use_rights_count": 485,
+  "production_valid_rights_count": 0,
+  "production_invalid_rights_count": 485,
+  "rights_evaluated_on": "2026-07-22",
+  "rights_territory": "SG",
+  "registry_rights_status": "barred_no_written_permission",
+  "may_display": false,
+  "may_cache": false,
+  "may_store_history": false,
+  "may_redistribute": false,
+  "may_embed": false,
+  "may_train": false,
+  "may_derive": false,
+  "production_ready": false,
+  "measurement_note": "Exact JSONL line and explicit-rights-key counts; active SG production rights are evaluated fail-closed; no matching or inferred rights."
+}

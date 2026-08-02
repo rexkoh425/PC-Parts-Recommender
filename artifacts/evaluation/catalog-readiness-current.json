@@ -1,0 +1,234 @@
+{
+  "ambiguous_exact_match_count": 0,
+  "auto_matched_count": 2,
+  "data_version": "processed-66286ad2cb30278c",
+  "database_upserted": false,
+  "has_complete_in_stock_coverage": false,
+  "has_complete_priced_coverage": false,
+  "in_stock_listings_by_category": {},
+  "known_in_stock_listing_count": 0,
+  "matched_listing_count": 2,
+  "matched_listings_by_category": {
+    "gpu": 1,
+    "power_supply": 1
+  },
+  "offer_count": 485,
+  "priced_categories": [
+    "gpu",
+    "power_supply"
+  ],
+  "product_count": 3000,
+  "products_by_category": {
+    "case": 250,
+    "cooler": 250,
+    "cpu": 250,
+    "gpu": 350,
+    "memory": 450,
+    "motherboard": 650,
+    "power_supply": 350,
+    "storage": 450
+  },
+  "readiness": {
+    "compatibility_ready_products_by_category": {
+      "case": 0,
+      "cooler": 0,
+      "cpu": 250,
+      "gpu": 336,
+      "memory": 448,
+      "motherboard": 0,
+      "power_supply": 343,
+      "storage": 427
+    },
+    "compatibility_ready_rate_by_category": {
+      "case": 0.0,
+      "cooler": 0.0,
+      "cpu": 1.0,
+      "gpu": 0.96,
+      "memory": 0.9955555555555555,
+      "motherboard": 0.0,
+      "power_supply": 0.98,
+      "storage": 0.9488888888888889
+    },
+    "critical_field_present_by_category": {
+      "case": {
+        "maximum_cooler_height_mm|radiator_support_mm": 83,
+        "maximum_gpu_length_mm": 241,
+        "maximum_gpu_slot_width": 0,
+        "supported_motherboard_sizes": 250,
+        "supported_psu_sizes": 10
+      },
+      "cooler": {
+        "estimated_cooling_capacity_watts": 0,
+        "height_mm|radiator_size_mm": 247,
+        "supported_sockets": 249
+      },
+      "cpu": {
+        "generation": 250,
+        "peak_power_watts|tdp_watts": 250,
+        "socket": 250
+      },
+      "gpu": {
+        "board_power_watts": 348,
+        "length_mm": 347,
+        "power_connectors": 349,
+        "slot_width": 339,
+        "vram_gb": 348
+      },
+      "memory": {
+        "capacity_gb": 450,
+        "memory_type": 448,
+        "module_count": 450
+      },
+      "motherboard": {
+        "chipset": 650,
+        "form_factor": 644,
+        "m2_slots": 650,
+        "maximum_memory_gb": 650,
+        "memory_slots": 650,
+        "memory_type": 644,
+        "sata_ports": 650,
+        "socket": 650,
+        "supported_cpu_generations|bios_version": 0,
+        "wifi_support": 50
+      },
+      "power_supply": {
+        "eps_connectors": 350,
+        "form_factor": 343,
+        "pcie_connectors": 350,
+        "wattage": 350
+      },
+      "storage": {
+        "capacity_gb": 450,
+        "form_factor": 442,
+        "interface": 435
+      }
+    },
+    "critical_field_rate_by_category": {
+      "case": {
+        "maximum_cooler_height_mm|radiator_support_mm": 0.332,
+        "maximum_gpu_length_mm": 0.964,
+        "maximum_gpu_slot_width": 0.0,
+        "supported_motherboard_sizes": 1.0,
+        "supported_psu_sizes": 0.04
+      },
+      "cooler": {
+        "estimated_cooling_capacity_watts": 0.0,
+        "height_mm|radiator_size_mm": 0.988,
+        "supported_sockets": 0.996
+      },
+      "cpu": {
+        "generation": 1.0,
+        "peak_power_watts|tdp_watts": 1.0,
+        "socket": 1.0
+      },
+      "gpu": {
+        "board_power_watts": 0.9942857142857143,
+        "length_mm": 0.9914285714285714,
+        "power_connectors": 0.9971428571428571,
+        "slot_width": 0.9685714285714285,
+        "vram_gb": 0.9942857142857143
+      },
+      "memory": {
+        "capacity_gb": 1.0,
+        "memory_type": 0.9955555555555555,
+        "module_count": 1.0
+      },
+      "motherboard": {
+        "chipset": 1.0,
+        "form_factor": 0.9907692307692307,
+        "m2_slots": 1.0,
+        "maximum_memory_gb": 1.0,
+        "memory_slots": 1.0,
+        "memory_type": 0.9907692307692307,
+        "sata_ports": 1.0,
+        "socket": 1.0,
+        "supported_cpu_generations|bios_version": 0.0,
+        "wifi_support": 0.07692307692307693
+      },
+      "power_supply": {
+        "eps_connectors": 1.0,
+        "form_factor": 0.98,
+        "pcie_connectors": 1.0,
+        "wattage": 1.0
+      },
+      "storage": {
+        "capacity_gb": 1.0,
+        "form_factor": 0.9822222222222222,
+        "interface": 0.9666666666666667
+      }
+    },
+    "data_version": "processed-66286ad2cb30278c",
+    "has_complete_in_stock_coverage": false,
+    "has_complete_priced_coverage": false,
+    "in_stock_listings_by_category": {
+      "case": 0,
+      "cooler": 0,
+      "cpu": 0,
+      "gpu": 0,
+      "memory": 0,
+      "motherboard": 0,
+      "power_supply": 0,
+      "storage": 0
+    },
+    "listing_count": 2,
+    "listing_provenance_complete_count": 2,
+    "listing_provenance_missing_count": 0,
+    "mapping_outcomes": {
+      "auto_matched": 2,
+      "unmatched": 483
+    },
+    "mapping_rate": 0.004123711340206186,
+    "matched_listings_by_category": {
+      "case": 0,
+      "cooler": 0,
+      "cpu": 0,
+      "gpu": 1,
+      "memory": 0,
+      "motherboard": 0,
+      "power_supply": 1,
+      "storage": 0
+    },
+    "offer_count": 485,
+    "offer_provenance_complete_count": 485,
+    "offer_provenance_missing_count": 0,
+    "offer_rights_explicit_count": 0,
+    "offer_rights_missing_count": 485,
+    "offer_rights_production_valid_count": 0,
+    "offer_rights_production_invalid_count": 485,
+    "rights_evaluated_on": "2026-07-22",
+    "rights_territory": "SG",
+    "entity_resolution_evaluation": null,
+    "product_count": 3000,
+    "product_provenance_complete_count": 3000,
+    "product_provenance_missing_count": 0,
+    "production_blockers": [
+      "motherboard.supported_cpu_generations|bios_version completeness=0.000 below minimum=0.900",
+      "motherboard.wifi_support completeness=0.077 below minimum=0.900",
+      "cooler.estimated_cooling_capacity_watts completeness=0.000 below minimum=0.900",
+      "case.maximum_gpu_slot_width completeness=0.000 below minimum=0.900",
+      "case.maximum_cooler_height_mm|radiator_support_mm completeness=0.332 below minimum=0.900",
+      "case.supported_psu_sizes completeness=0.040 below minimum=0.900",
+      "offer_mapping_rate=0.004 below minimum=0.800",
+      "485 offers lack explicit data-use rights",
+      "485 offers lack active SG production grants for display, cache, history, and derivation",
+      "no versioned human-labelled entity-resolution evaluation is configured",
+      "priced listing coverage is incomplete across required categories",
+      "known in-stock listing coverage is incomplete across required categories"
+    ],
+    "production_ready": false,
+    "products_by_category": {
+      "case": 250,
+      "cooler": 250,
+      "cpu": 250,
+      "gpu": 350,
+      "memory": 450,
+      "motherboard": 650,
+      "power_supply": 350,
+      "storage": 450
+    }
+  },
+  "rejected_conflict_count": 0,
+  "review_rejected_count": 0,
+  "reviewed_matched_count": 0,
+  "unmatched_offer_count": 483
+}
