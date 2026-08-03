@@ -6356,3 +6356,14 @@ h3 {
 .demo-banner__inner {
   font-size: var(--text-xs);
 }
+
+/* The heading treatment was scoped to `.hero h1`, so every other page kept the
+   old 700-weight, -0.065em setting: the catalogue title rendered at 57.7px with
+   -3.7px tracking while the homepage sat at 62px/600/-0.023em. One rule for all
+   of them, so a visitor moving between pages sees one voice. */
+h1 {
+  font-size: clamp(2.25rem, 4.4vw, 3.25rem);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.08;
+}

@@ -94,7 +94,7 @@ test("browses the catalogue and opens evidence-backed product details", async ({
   await page.goto("/catalogue");
 
   await expect(
-    page.getByRole("heading", { name: "Inspect the market evidence." }),
+    page.getByRole("heading", { name: "Browse the catalogue." }),
   ).toBeVisible();
   await expect(page.getByRole("search")).toBeVisible();
 
@@ -105,7 +105,7 @@ test("browses the catalogue and opens evidence-backed product details", async ({
   await expect(page).toHaveURL(/\/products\//);
   await expect(page.getByRole("heading", { name: "Specifications" })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Price and availability evidence" }),
+    page.getByRole("heading", { name: "Price history" }),
   ).toBeVisible();
   await expect(page.getByText("Eligible current offer")).toBeVisible();
 });
