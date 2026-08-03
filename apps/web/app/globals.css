@@ -6315,3 +6315,44 @@ h3 {
 .build-card > * {
   margin: 0;
 }
+
+/* ===========================================================================
+   Header and hero, seen rather than measured
+   =========================================================================== */
+
+/* Nav items were breaking mid-item ("Data / status", "Saved / builds"), which
+   reads as a broken page. Two internal links have gone, and what remains is
+   held on one line. */
+.header-nav a,
+.header-nav__secondary {
+  white-space: nowrap;
+}
+
+.header-nav {
+  gap: 24px;
+  flex-wrap: nowrap;
+}
+
+/* 128px of lead under a banner and a masthead left the hero floating with a
+   visible dead band above the eyebrow. */
+:root {
+  --section-y-lead: 80px;
+}
+
+/* The second hue existed only on the evidence figures, three screens down, so
+   the palette a visitor actually sees was still one green. These are the two
+   accents in the opening view. */
+.hero .eyebrow > span[aria-hidden="true"] {
+  color: var(--accent);
+}
+
+.recommended-chip {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* The demo banner is a footnote, not an announcement. */
+.demo-banner__inner {
+  font-size: var(--text-xs);
+}

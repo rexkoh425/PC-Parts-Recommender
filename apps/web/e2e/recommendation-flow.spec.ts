@@ -302,7 +302,7 @@ test("generates, inspects, and saves a compatible recommendation", async ({ page
   await expect(page.getByText("Observed", { exact: true }).first()).toBeVisible();
   await expect(page.getByText(/Predicted · high/).first()).toBeVisible();
 
-  await page.getByRole("link", { name: "Saved builds" }).click();
+  await page.getByRole("link", { name: "Saved", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Saved builds", exact: true })).toBeVisible();
   await expect(page.getByText("Best overall", { exact: true })).toBeVisible();
   await page.getByTestId("saved-build-select").check();
