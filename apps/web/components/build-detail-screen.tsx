@@ -65,7 +65,7 @@ function relativeDecisionLabel(signal: PerformanceSignal): string {
     case "precise_predictions_disabled_and_input_outside_training_contract":
       return "Relative score · precise estimate disabled and input outside range";
     case "deterministic_baseline":
-      return "Relative score · deterministic baseline";
+      return "Relative score";
     default:
       return "Relative score";
   }

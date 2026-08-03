@@ -212,7 +212,7 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
             {budget ? ` under ${formatSgd(budget)}` : ""}
           </h1>
           <p className="lede">
-            Each profile uses the same hard requirements, then changes what the optimiser values.
+            Each profile uses the same requirements. They differ in what they prioritise.
           </p>
         </div>
         <Link className="button button--secondary" href="/">

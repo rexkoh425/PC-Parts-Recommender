@@ -527,7 +527,7 @@ export function BuildForm() {
                   <option value="5">5 builds</option>
                 </select>
                 <p className="field-help" id="max-builds-help">
-                  The optimiser may return fewer when constraints leave fewer distinct builds.
+                  You may get fewer if your requirements leave fewer genuinely different builds.
                 </p>
                 <FieldError id="max-builds-error" message={errors.max_builds} />
               </div>

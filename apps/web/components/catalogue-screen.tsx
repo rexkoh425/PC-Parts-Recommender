@@ -158,7 +158,7 @@ function CoverageSummary({ response }: { response: ProductSearchResponse }) {
         <h2 id="catalogue-coverage-title">{coverage.scope_label}</h2>
         <p>
           {USING_DEMO_DATA
-            ? "These counts describe only the controlled illustrative records available in this demo."
+            ? "Counts for the parts included in this demo."
             : "Coverage is reported by the connected catalogue provider and is separate from the current search result count."}
         </p>
         {coverage.as_of && <small>Reported {formatEvidenceTimestamp(coverage.as_of)}</small>}
@@ -459,8 +459,8 @@ export function CatalogueScreen({
         <p>
           <strong>{USING_DEMO_DATA ? "Public portfolio demo." : "Evidence boundary."}</strong>{" "}
           {USING_DEMO_DATA
-            ? "This catalogue uses curated sample components and illustrative SGD prices. No live stock is connected."
-            : "This catalogue shows versioned observations from permitted sources, not guaranteed checkout stock or price."}
+            ? "A fixed set of real parts with prices from August 2026. Not connected to live retailer stock."
+            : "Prices and stock are recorded observations, not a live checkout quote."}
         </p>
       </div>
 
