@@ -6387,3 +6387,46 @@ h1 {
 .compatibility-context-card {
   padding: 20px;
 }
+
+/* ===========================================================================
+   Form controls
+   Measured before this pass: budget input 56px tall at 19px, selects 52px,
+   both floored by min-height 48px, labels at weight 720. That is dialog-sized
+   furniture for a form with eleven fields, and it is what made the page read
+   as oversized. Controls now sit at 44px — still a comfortable touch target —
+   with labels that support the field instead of competing with it.
+   =========================================================================== */
+
+.field label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0;
+  margin-bottom: 6px;
+}
+
+.field input,
+.field select,
+.product-picker input[type="search"] {
+  min-height: 44px;
+  font-size: var(--text-base);
+}
+
+.field input[type="number"],
+.field input[type="text"] {
+  font-size: var(--text-base);
+}
+
+/* Fields in a row were sharing a bottom edge rather than a top one, so a
+   shorter field sat 24px lower than its neighbour — the visible stagger
+   between "Primary workload" and "Secondary workload". Form fields align to
+   their labels, always. */
+.field-grid {
+  align-items: start;
+}
+
+/* The brief panel ran a 24px gap between eight single-line rows, which pushed
+   it well past the form it summarises. */
+.build-brief,
+.build-brief__list {
+  gap: 14px;
+}
