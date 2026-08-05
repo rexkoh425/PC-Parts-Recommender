@@ -663,8 +663,8 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
               <div className="empty-evidence">
                 <strong>Detailed rule outcomes were not returned.</strong>
                 <p>
-                  The overall build status is {build.compatibility_status}, but an absent check list
-                  is never interpreted as evidence that every individual rule passed.
+                  The build status is {build.compatibility_status}. We cannot show the individual
+                  checks behind it here.
                 </p>
               </div>
             )}
@@ -741,7 +741,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                 ? activeShare
                   ? "A public snapshot exists but sharing or automatic cleanup failed. Use the revoke control above."
                   : "Sharing is unavailable in this browser."
-                : "Creates a generation-time public snapshot; it is not a live stock or price quote."}
+                : "Creates a public link to this build as it stands now."}
           </p>
           <div className="summary-provenance">
             <div><span>Generated</span><strong>{formatFreshness(build.generated_at).replace("Updated ", "")}</strong></div>

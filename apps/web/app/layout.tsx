@@ -50,9 +50,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         <footer className="site-footer">
           <div className="shell site-footer__inner">
             <p>
-              <strong>BuildSignal</strong> ranks complete systems, not sponsored parts.
+              <strong>BuildSignal</strong> — complete PC builds, ranked for the work you do.
             </p>
-            <p>A portfolio demo. Prices are real but dated, not live retailer quotes.</p>
+            <p>A portfolio demo. Prices recorded August 2026.</p>
           </div>
         </footer>
       </body>

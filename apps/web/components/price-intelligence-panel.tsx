@@ -28,10 +28,10 @@ export function PriceIntelligencePanel({
   return (
     <div className="price-intelligence" aria-label="Descriptive price history summary">
       <div className="price-intelligence__boundary" role="note">
-        <strong>Descriptive history, not a forecast.</strong>
+        <strong>Past prices</strong>
         <p>
           Calculated only from stored observations through {formatEvidenceTimestamp(intelligence.as_of)}.
-          It does not guarantee a future or live retailer price.
+
         </p>
       </div>
       <dl className="price-intelligence__metrics">

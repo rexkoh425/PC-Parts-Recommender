@@ -221,7 +221,7 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
       <header className="comparison-header">
         <div>
           <p className="eyebrow">Same-category comparison</p>
-          <h1>Compare the fields, not the hype.</h1>
+          <h1>Compare parts side by side.</h1>
           <p className="lede">
             {category ? `${categoryLabels[category]}s` : "Products"} are compared only on reported catalogue fields.
             Missing values remain visible as not reported.
@@ -249,7 +249,7 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
           <p>
             {USING_DEMO_DATA
               ? "Demo catalogue — prices from August 2026."
-              : "Prices and availability are observations, not checkout guarantees."}
+              : "Prices and availability are recorded observations."}
           </p>
         </div>
         <div className="comparison-selected__cards">
