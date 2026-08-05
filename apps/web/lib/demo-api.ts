@@ -892,7 +892,7 @@ export function searchDemoProducts(request: ProductSearchRequest): ProductSearch
       retailer_listings: null,
       source_count: null,
       category_count: new Set(products.map((product) => product.category)).size,
-        as_of: "2026-07-22T00:00:00.000Z",
+        as_of: "2026-08-21T00:00:00.000Z",
         scope_label: "Parts in this demo",
         source_attributions: [],
     },
@@ -921,7 +921,7 @@ export function getDemoProduct(productId: string): ProductDetail {
       source_confidence: null,
       source_url: specUrls[product.product_id] ?? null,
       source_attributions: [],
-      updated_at: "2026-07-22T00:00:00.000Z",
+      updated_at: "2026-08-21T00:00:00.000Z",
     data_version: DEMO_DATA_VERSION,
   };
 }
@@ -931,7 +931,7 @@ export function getDemoPrices(productId: string): ProductPricesResponse {
   const observation: PriceObservation = {
     listing_id: `demo-listing-${product.product_id}`,
     retailer: "Controlled demo catalogue",
-    observed_at: "2026-07-22T00:00:00.000Z",
+    observed_at: "2026-08-21T00:00:00.000Z",
     base_price_sgd: product.price_sgd,
     shipping_price_sgd: 0,
     stock_status: "demo_only",
@@ -1065,8 +1065,8 @@ export function getDemoFreshness(): FreshnessSummary {
     status: "degraded",
     catalogue_status: "degraded",
     price_status: "degraded",
-    last_catalog_update: "2026-07-22T00:00:00.000Z",
-    prices_updated_at: "2026-07-22T00:00:00.000Z",
+    last_catalog_update: "2026-08-21T00:00:00.000Z",
+    prices_updated_at: "2026-08-21T00:00:00.000Z",
     stale_after_hours: 24,
     catalogue_stale_after_hours: 168,
     price_stale_after_hours: 24,
