@@ -1,0 +1,144 @@
+groups:
+  - name: pcbr-core-availability
+    rules:
+      - alert: PcbrCoreEndpointDown
+        expr: probe_success{job="core-http-probes",criticality="core"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PCBR core endpoint {{ $labels.probe_name }} is unavailable"
+          runbook: "docs/deployment-runbook.md#incident-response"
+      - alert: PcbrPostgresExporterDown
+        expr: pg_up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PCBR PostgreSQL is unavailable to its monitoring role"
+          runbook: "docs/deployment-runbook.md#postgresql-recovery"
+
+      - alert: PcbrApiHighErrorRate
+        expr: >-
+          sum(rate(pcbr_http_requests_total{status=~"5.."}[5m]))
+          /
+          clamp_min(sum(rate(pcbr_http_requests_total[5m])), 0.001)
+          > 0.02
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR API 5xx ratio exceeds 2%"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrBuildGenerationP95Slow
+        expr: >-
+          histogram_quantile(
+            0.95,
+            sum(rate(pcbr_http_request_duration_seconds_bucket{route="/v1/builds/generate"}[10m]))
+            by (le)
+          ) > 2.5
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR build-generation p95 exceeds 2.5 seconds"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrApiSustainedConcurrency
+        expr: pcbr_http_requests_in_progress > 50
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR API has more than 50 requests in progress"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrPostgresConnectionsHigh
+        expr: >-
+          sum(pg_stat_activity_count)
+          /
+          clamp_min(max(pg_settings_max_connections), 1)
+          > 0.80
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR PostgreSQL connection usage exceeds 80%"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrPostgresDeadlocks
+        expr: increase(pg_stat_database_deadlocks[10m]) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR PostgreSQL reported a deadlock"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+  - name: pcbr-data-operations
+    rules:
+      - alert: PcbrCatalogueDataStale
+        expr: >-
+          max(pcbr_catalogue_freshness_status{status=~"stale|degraded"}) == 1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PCBR catalogue or price data is stale or cannot be verified"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrCatalogueFreshnessProbeFailed
+        expr: pcbr_catalogue_freshness_probe_success == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "PCBR internal catalogue freshness probe is failing"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrMappingEvidenceUnavailable
+        expr: pcbr_entity_resolution_mapping_observation{state="unavailable"} == 1
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR entity-resolution mapping evidence is unavailable"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrPipelineReceiptEvidenceUnavailable
+        expr: pcbr_pipeline_operations_observation{state="unavailable"} == 1
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR instrumented pipeline receipt evidence is unavailable"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrCatalogueCriticalFieldsMissing
+        expr: pcbr_catalogue_missing_critical_field_values > 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR catalogue has missing critical-field values"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrPipelineOperationFailuresObserved
+        expr: pcbr_pipeline_operation_failures_in_window > 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR has failed instrumented pipeline operations in its receipt window"
+          runbook: "docs/deployment-runbook.md#incident-response"
+
+      - alert: PcbrPipelineReceiptIntegrityDegraded
+        expr: >-
+          pcbr_pipeline_operation_invalid_receipts_in_window > 0
+          or pcbr_pipeline_operation_receipts_truncated > 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "PCBR pipeline receipt evidence is invalid or truncated"
+          runbook: "docs/deployment-runbook.md#incident-response"
