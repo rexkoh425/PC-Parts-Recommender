@@ -103,7 +103,7 @@ FORBIDDEN_CLEAR_TEXT = {
     "PCBR_API_ADMIN_TOKEN",
 }
 PLACEHOLDER_PATTERN = re.compile(r"change[_-]?me|example\.com|<[^>]+>|your[_-]", re.IGNORECASE)
-IMAGE_PATTERN = re.compile(r"^\S+@sha256:[0-9a-f]{65}$", re.IGNORECASE)
+IMAGE_PATTERN = re.compile(r"^\S+@sha256:[0-9a-f]{64}$", re.IGNORECASE)
 IDENTIFIER_PATTERN = re.compile(r"^[a-z_][a-z0-9_]{0,62}$")
 UNSAFE_VERSION_PATTERN = re.compile(r"development|demo|untrained|unknown|change[_-]?me", re.I)
 _SERVING_MANIFEST_SCHEMA = "pc-build-recommender.serving-release.v3"
