@@ -500,7 +500,7 @@ class BuildGenerationResponse(DomainModel):
         return self
 
 
-class InteractionRecord(DomainModel):
+class InteractionEvent(DomainModel):
     event_id: str = Field(default_factory=lambda: new_id("event"), min_length=1)
     session_id: str = Field(min_length=1)
     user_id: str | None = None
@@ -516,7 +516,7 @@ class InteractionRecord(DomainModel):
     created_at: datetime = Field(default_factory=utc_now)
 
     @model_validator(mode="after")
-    def ranked_events_identify_a_result(self) -> InteractionRecord:
+    def ranked_events_identify_a_result(self) -> InteractionEvent:
         if self.rank_position is not None and self.product_id is None and self.build_id is None:
             raise ValueError("ranked events must reference a product or build")
         return self

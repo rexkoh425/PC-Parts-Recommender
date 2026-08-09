@@ -527,7 +527,7 @@ export interface CompatibilityCheckResponse {
   data_version: string;
 }
 
-export interface InteractionRecord {
+export interface InteractionEvent {
   event_type:
     | "search_submitted"
     | "build_generated"

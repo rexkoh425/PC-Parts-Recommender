@@ -9,7 +9,7 @@ import type {
   FreshnessSummary,
   GenerateBuildsResponse,
   InteractionAccepted,
-  InteractionRecord,
+  InteractionEvent,
   ProductBenchmarksResponse,
   ProductDetail,
   ProductPricesResponse,
@@ -461,7 +461,7 @@ export function getSessionId(): string {
 }
 
 export async function trackInteraction(
-  event: InteractionRecord,
+  event: InteractionEvent,
   options: ApiRequestOptions = {},
 ): Promise<void> {
   if (USING_DEMO_DATA) {

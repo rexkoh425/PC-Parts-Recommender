@@ -38,7 +38,7 @@ from pc_build_recommender.domain import (
     BuildGenerationRequest,
     BuildRecommendation,
     CanonicalProduct,
-    InteractionRecord,
+    InteractionEvent,
     RetailerListing,
     SearchQuery,
 )
@@ -855,7 +855,7 @@ class SqlAlchemyDurableStore:
         except SQLAlchemyError as error:
             raise DurableStorageError("failed to revoke public build share") from error
 
-    def add_interaction(self, event: InteractionRecord) -> InteractionRecord:
+    def add_interaction(self, event: InteractionEvent) -> InteractionEvent:
         """Commit an event before the API acknowledges it."""
 
         try:

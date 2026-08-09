@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { oneBasedRank } from "../lib/interactions";
-import type { InteractionRecord } from "../lib/types";
+import type { InteractionEvent } from "../lib/types";
 
 describe("interaction event contract", () => {
   it("converts rendered indexes to one-based rank positions", () => {
@@ -21,7 +21,7 @@ describe("interaction event contract", () => {
       rank_position: oneBasedRank(0),
       rule_version: "compat-v7",
       metadata: { rating: 4, reason: "balanced" },
-    } satisfies InteractionRecord;
+    } satisfies InteractionEvent;
 
     expect(event.rank_position).toBe(1);
     expect(event.metadata.rating).toBe(4);
