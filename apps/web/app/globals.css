@@ -6561,3 +6561,21 @@ textarea:focus-visible {
 .brief-summary a:focus-visible {
   outline-color: var(--mint);
 }
+
+/* `.field input:not([type="range"])` carries an attribute selector, so it sits
+   at (0,3,1) and outranked both `.field input` and `.money-input input` at
+   (0,2,1) — which is why text and money inputs stayed at 12px padding / 48px
+   while selects came down to 44px. Matching that specificity is what it takes. */
+.field input:not([type="range"]) {
+  min-height: 44px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.field input[type="number"]:not([type="range"]),
+.money-input input:not([type="range"]),
+.unit-input input:not([type="range"]) {
+  min-height: 44px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
