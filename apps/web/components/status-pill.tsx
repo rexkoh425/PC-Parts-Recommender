@@ -1,13 +1,13 @@
-import type { CompatVerdict } from "@/lib/types";
+import type { CompatibilityStatus } from "@/lib/types";
 
 export function StatusPill({
   status,
   label,
 }: {
-  status: CompatVerdict;
+  status: CompatibilityStatus;
   label?: string;
 }) {
-  const defaultLabels: Record<CompatVerdict, string> = {
+  const defaultLabels: Record<CompatibilityStatus, string> = {
     pass: "Compatible",
     warning: "Compatible with notes",
     unknown: "Needs verification",

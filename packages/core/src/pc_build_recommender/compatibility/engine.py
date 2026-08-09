@@ -25,7 +25,7 @@ from ._access import (
     token,
     tokens,
 )
-from .models import CompatibilityReport, CompatibilityResult, CompatVerdict, PowerPolicy
+from .models import CompatibilityReport, CompatibilityResult, CompatibilityStatus, PowerPolicy
 
 DEFAULT_RULE_VERSION: Final = "compat_v2"
 COMPATIBILITY_AUTHORITY_KEY: Final = "_compatibility_authority"
@@ -123,7 +123,7 @@ class CompatibilityEngine:
         for category_name in self.required_categories:
             selected = grouped.get(category_name, ())
             count = len(selected)
-            status = CompatVerdict.PASS if count == 1 else CompatVerdict.FAIL
+            status = CompatibilityStatus.PASS if count == 1 else CompatibilityStatus.FAIL
             message = (
                 f"Exactly one {category_name} is selected."
                 if count == 1
@@ -325,14 +325,14 @@ class CompatibilityEngine:
         elif token(cpu_socket_raw) == token(motherboard_socket_raw):
             socket_result = self._result(
                 "compat.cpu_motherboard.socket",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "CPU and motherboard sockets match.",
                 socket_evidence,
             )
         else:
             socket_result = self._result(
                 "compat.cpu_motherboard.socket",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "CPU and motherboard sockets do not match.",
                 socket_evidence,
             )
@@ -437,7 +437,7 @@ class CompatibilityEngine:
             evidence["conflicting_support_fields"] = contradicted_by
             return self._result(
                 "compat.cpu_motherboard.chipset_bios",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "The motherboard chipset or CPU support matrix excludes this CPU.",
                 evidence,
             )
@@ -496,7 +496,7 @@ class CompatibilityEngine:
             if not installed_key or not minimum_key:
                 return self._result(
                     "compat.cpu_motherboard.chipset_bios",
-                    CompatVerdict.UNKNOWN,
+                    CompatibilityStatus.UNKNOWN,
                     "The installed or minimum BIOS version cannot be compared safely.",
                     {**evidence, "missing_fields": ["comparable_bios_versions"]},
                 )
@@ -504,7 +504,7 @@ class CompatibilityEngine:
                 if update_available_raw is False:
                     return self._result(
                         "compat.cpu_motherboard.chipset_bios",
-                        CompatVerdict.FAIL,
+                        CompatibilityStatus.FAIL,
                         "The installed BIOS is too old and the support data reports "
                         "no update path.",
                         evidence,
@@ -517,7 +517,7 @@ class CompatibilityEngine:
                     )
                 return self._result(
                     "compat.cpu_motherboard.chipset_bios",
-                    CompatVerdict.WARNING,
+                    CompatibilityStatus.WARNING,
                     "The CPU is supported after a motherboard BIOS update.",
                     evidence,
                 )
@@ -525,7 +525,7 @@ class CompatibilityEngine:
         if support_status in {"beta", "preview", "experimental"}:
             return self._result(
                 "compat.cpu_motherboard.chipset_bios",
-                CompatVerdict.WARNING,
+                CompatibilityStatus.WARNING,
                 "CPU support is published as beta or preview BIOS support.",
                 evidence,
             )
@@ -536,14 +536,14 @@ class CompatibilityEngine:
         ):
             return self._result(
                 "compat.cpu_motherboard.chipset_bios",
-                CompatVerdict.WARNING,
+                CompatibilityStatus.WARNING,
                 "The support data marks this CPU as requiring a BIOS update.",
                 evidence,
             )
 
         return self._result(
             "compat.cpu_motherboard.chipset_bios",
-            CompatVerdict.PASS,
+            CompatibilityStatus.PASS,
             "The motherboard chipset and CPU support data include this CPU.",
             evidence,
         )
@@ -573,14 +573,14 @@ class CompatibilityEngine:
         elif token(memory_type_raw) == token(motherboard_type_raw):
             type_result = self._result(
                 "compat.memory_motherboard.generation",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "Memory generation matches the motherboard.",
                 type_evidence,
             )
         else:
             type_result = self._result(
                 "compat.memory_motherboard.generation",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "Memory generation does not match the motherboard.",
                 type_evidence,
             )
@@ -612,21 +612,21 @@ class CompatibilityEngine:
         elif capacity <= 0 or maximum <= 0:
             capacity_result = self._result(
                 "compat.memory_motherboard.capacity",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "Memory capacity data is not a positive measurement.",
                 {**capacity_evidence, "invalid_fields": ["capacity_gb"]},
             )
         elif capacity <= maximum:
             capacity_result = self._result(
                 "compat.memory_motherboard.capacity",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "Memory capacity is within the motherboard limit.",
                 capacity_evidence,
             )
         else:
             capacity_result = self._result(
                 "compat.memory_motherboard.capacity",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "Memory capacity exceeds the motherboard limit.",
                 capacity_evidence,
             )
@@ -658,21 +658,21 @@ class CompatibilityEngine:
         elif module_count <= 0 or slot_count <= 0:
             modules_result = self._result(
                 "compat.memory_motherboard.modules",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "Memory module or slot count is not a positive integer.",
                 {**modules_evidence, "invalid_fields": ["module_count_or_memory_slots"]},
             )
         elif module_count <= slot_count:
             modules_result = self._result(
                 "compat.memory_motherboard.modules",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The memory kit fits the available DIMM slots.",
                 modules_evidence,
             )
         else:
             modules_result = self._result(
                 "compat.memory_motherboard.modules",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "The memory kit contains more modules than the motherboard has DIMM slots.",
                 modules_evidence,
             )
@@ -700,20 +700,20 @@ class CompatibilityEngine:
         if interface_name is None or "pcie" not in interface_name:
             return self._result(
                 "compat.gpu_motherboard.pcie_slot",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "The GPU host interface is not recognised as PCI Express.",
                 {**evidence, "missing_fields": ["recognised_gpu_host_interface"]},
             )
         if slot_count >= 1:
             return self._result(
                 "compat.gpu_motherboard.pcie_slot",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The motherboard provides a PCI Express slot for the GPU.",
                 evidence,
             )
         return self._result(
             "compat.gpu_motherboard.pcie_slot",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "The motherboard has no PCI Express slot available for the GPU.",
             evidence,
         )
@@ -747,13 +747,13 @@ class CompatibilityEngine:
         if motherboard_form in supported:
             return self._result(
                 "compat.motherboard_case.form_factor",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The case supports the motherboard form factor.",
                 evidence,
             )
         return self._result(
             "compat.motherboard_case.form_factor",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "The case does not support the motherboard form factor.",
             evidence,
         )
@@ -784,21 +784,21 @@ class CompatibilityEngine:
         elif gpu_length < 0 or maximum_length < 0:
             length_result = self._result(
                 "compat.gpu_case.length",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "GPU length or case clearance is an invalid negative measurement.",
                 {**length_evidence, "invalid_fields": ["gpu_length_or_clearance"]},
             )
         elif gpu_length <= maximum_length:
             length_result = self._result(
                 "compat.gpu_case.length",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "GPU length is within the case clearance.",
                 length_evidence,
             )
         else:
             length_result = self._result(
                 "compat.gpu_case.length",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "GPU length exceeds the case clearance.",
                 length_evidence,
             )
@@ -834,21 +834,21 @@ class CompatibilityEngine:
         elif gpu_slots <= 0 or case_slots <= 0:
             slot_result = self._result(
                 "compat.gpu_case.slot_width",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "GPU slot width or case slot clearance is not positive.",
                 {**slot_evidence, "invalid_fields": ["gpu_slot_width_or_clearance"]},
             )
         elif gpu_slots <= case_slots:
             slot_result = self._result(
                 "compat.gpu_case.slot_width",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "GPU slot width is within the case clearance.",
                 slot_evidence,
             )
         else:
             slot_result = self._result(
                 "compat.gpu_case.slot_width",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "GPU slot width exceeds the case clearance.",
                 slot_evidence,
             )
@@ -888,20 +888,20 @@ class CompatibilityEngine:
             if height < 0 or maximum < 0:
                 return self._result(
                     "compat.cooler_case.clearance",
-                    CompatVerdict.UNKNOWN,
+                    CompatibilityStatus.UNKNOWN,
                     "Cooler height or case clearance is an invalid negative measurement.",
                     {**evidence, "invalid_fields": ["cooler_height_or_clearance"]},
                 )
             if height <= maximum:
                 return self._result(
                     "compat.cooler_case.clearance",
-                    CompatVerdict.PASS,
+                    CompatibilityStatus.PASS,
                     "Air-cooler height is within the case clearance.",
                     evidence,
                 )
             return self._result(
                 "compat.cooler_case.clearance",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "Air-cooler height exceeds the case clearance.",
                 evidence,
             )
@@ -969,14 +969,14 @@ class CompatibilityEngine:
                 if required_position not in support_by_position:
                     return self._result(
                         "compat.cooler_case.clearance",
-                        CompatVerdict.FAIL,
+                        CompatibilityStatus.FAIL,
                         "The case does not provide the required radiator mounting position.",
                         evidence,
                     )
                 if radiator not in support_by_position[required_position]:
                     return self._result(
                         "compat.cooler_case.clearance",
-                        CompatVerdict.FAIL,
+                        CompatibilityStatus.FAIL,
                         "The required case position does not support this radiator size.",
                         evidence,
                     )
@@ -1002,7 +1002,7 @@ class CompatibilityEngine:
                 if radiator_thickness > maximum_thickness:
                     return self._result(
                         "compat.cooler_case.clearance",
-                        CompatVerdict.FAIL,
+                        CompatibilityStatus.FAIL,
                         "The radiator assembly is thicker than the case mounting clearance.",
                         evidence,
                     )
@@ -1014,20 +1014,20 @@ class CompatibilityEngine:
             if fits:
                 return self._result(
                     "compat.cooler_case.clearance",
-                    CompatVerdict.PASS,
+                    CompatibilityStatus.PASS,
                     "The case explicitly supports the cooler radiator size.",
                     evidence,
                 )
             return self._result(
                 "compat.cooler_case.clearance",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "The case does not support the cooler radiator size.",
                 evidence,
             )
 
         return self._result(
             "compat.cooler_case.clearance",
-            CompatVerdict.UNKNOWN,
+            CompatibilityStatus.UNKNOWN,
             "The cooler type is not recognised by the clearance rule.",
             {**evidence, "unsupported_cooler_type": cooler_type},
         )
@@ -1059,13 +1059,13 @@ class CompatibilityEngine:
         if cpu_socket in supported:
             return self._result(
                 "compat.cooler_cpu.socket",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The cooler includes mounting support for the CPU socket.",
                 evidence,
             )
         return self._result(
             "compat.cooler_cpu.socket",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "The cooler does not support the CPU socket.",
             evidence,
         )
@@ -1121,7 +1121,7 @@ class CompatibilityEngine:
         if cpu_power < 0 or gpu_power < 0 or psu_wattage <= 0:
             return self._result(
                 "compat.power_supply.capacity",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "Power inputs contain an invalid measurement.",
                 {**evidence, "invalid_fields": ["power_measurement"]},
             )
@@ -1131,13 +1131,13 @@ class CompatibilityEngine:
         if psu_wattage >= required_wattage:
             return self._result(
                 "compat.power_supply.capacity",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "Power-supply capacity meets the estimated peak load and configured headroom.",
                 evidence,
             )
         return self._result(
             "compat.power_supply.capacity",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "Power-supply capacity is below the estimated peak load with configured headroom.",
             evidence,
         )
@@ -1217,7 +1217,7 @@ class CompatibilityEngine:
         ):
             return self._result(
                 "compat.power_supply.transient_capacity",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "Transient-power inputs contain an invalid measurement.",
                 {**evidence, "invalid_fields": ["power_measurement"]},
             )
@@ -1243,13 +1243,13 @@ class CompatibilityEngine:
         if available_transient_capacity >= required_transient_capacity:
             return self._result(
                 "compat.power_supply.transient_capacity",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The power supply covers the configured GPU transient-load policy.",
                 evidence,
             )
         return self._result(
             "compat.power_supply.transient_capacity",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "The power supply does not cover the configured GPU transient-load policy.",
             evidence,
         )
@@ -1272,7 +1272,7 @@ class CompatibilityEngine:
         if unparsed_required or unparsed_available:
             return self._result(
                 "compat.power_supply.gpu_connectors",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "One or more GPU power connector entries could not be interpreted safely.",
                 {
                     **evidence,
@@ -1286,7 +1286,7 @@ class CompatibilityEngine:
         if not required:
             return self._result(
                 "compat.power_supply.gpu_connectors",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The GPU explicitly requires no auxiliary power connector.",
                 evidence,
             )
@@ -1298,13 +1298,13 @@ class CompatibilityEngine:
         if not shortages:
             return self._result(
                 "compat.power_supply.gpu_connectors",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The power supply provides all GPU power connectors.",
                 evidence,
             )
         return self._result(
             "compat.power_supply.gpu_connectors",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "The power supply is missing one or more required GPU power connectors.",
             {**evidence, "connector_shortages": shortages},
         )
@@ -1331,7 +1331,7 @@ class CompatibilityEngine:
         if unparsed_required or unparsed_available:
             return self._result(
                 "compat.power_supply.eps_connectors",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "One or more EPS connector entries could not be interpreted safely.",
                 {
                     **evidence,
@@ -1349,13 +1349,13 @@ class CompatibilityEngine:
         if not shortages:
             return self._result(
                 "compat.power_supply.eps_connectors",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The power supply provides the motherboard EPS connectors.",
                 evidence,
             )
         return self._result(
             "compat.power_supply.eps_connectors",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "The power supply is missing one or more required motherboard EPS connectors.",
             {**evidence, "connector_shortages": shortages},
         )
@@ -1400,14 +1400,14 @@ class CompatibilityEngine:
         elif interface in supported:
             interface_result = self._result(
                 "compat.storage_motherboard.interface",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The motherboard supports the storage interface.",
                 evidence,
             )
         else:
             interface_result = self._result(
                 "compat.storage_motherboard.interface",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "The motherboard does not support the storage interface.",
                 evidence,
             )
@@ -1437,7 +1437,7 @@ class CompatibilityEngine:
         elif not required_slots:
             slot_result = self._result(
                 "compat.storage_motherboard.slots",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "The storage interface has no recognised slot-allocation rule.",
                 {**slot_evidence, "unsupported_storage_interface": interface},
             )
@@ -1456,14 +1456,14 @@ class CompatibilityEngine:
             if shortages:
                 slot_result = self._result(
                     "compat.storage_motherboard.slots",
-                    CompatVerdict.FAIL,
+                    CompatibilityStatus.FAIL,
                     "The motherboard has no available slot for the selected storage device.",
                     {**slot_evidence, "slot_shortages": shortages},
                 )
             else:
                 slot_result = self._result(
                     "compat.storage_motherboard.slots",
-                    CompatVerdict.PASS,
+                    CompatibilityStatus.PASS,
                     "The motherboard has an available slot for the selected storage device.",
                     slot_evidence,
                 )
@@ -1512,14 +1512,14 @@ class CompatibilityEngine:
         if storage_form == "m2":
             return self._result(
                 "compat.storage_case.drive_bay",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The M.2 storage device does not consume a case drive bay.",
                 evidence,
             )
         if storage_form not in {"2_5_inch", "3_5_inch"}:
             return self._result(
                 "compat.storage_case.drive_bay",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "The storage form factor has no recognised case-bay allocation rule.",
                 {**evidence, "missing_fields": ["recognised_storage_form_factor"]},
             )
@@ -1544,13 +1544,13 @@ class CompatibilityEngine:
         if available >= 1:
             return self._result(
                 "compat.storage_case.drive_bay",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The case provides a compatible bay for the storage device.",
                 evidence,
             )
         return self._result(
             "compat.storage_case.drive_bay",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "The case has no compatible bay for the storage device.",
             evidence,
         )
@@ -1582,13 +1582,13 @@ class CompatibilityEngine:
         if power_supply_form in supported:
             return self._result(
                 "compat.power_supply_case.form_factor",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "The case supports the power-supply form factor.",
                 evidence,
             )
         return self._result(
             "compat.power_supply_case.form_factor",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "The case does not support the power-supply form factor.",
             evidence,
         )
@@ -1668,7 +1668,7 @@ class CompatibilityEngine:
         if malformed:
             return self._result(
                 "compat.motherboard.resource_conflicts",
-                CompatVerdict.UNKNOWN,
+                CompatibilityStatus.UNKNOWN,
                 "One or more shared-resource conflict definitions are malformed.",
                 {
                     **evidence,
@@ -1679,13 +1679,13 @@ class CompatibilityEngine:
         if triggered:
             return self._result(
                 "compat.motherboard.resource_conflicts",
-                CompatVerdict.FAIL,
+                CompatibilityStatus.FAIL,
                 "The selected components trigger a published motherboard resource conflict.",
                 evidence,
             )
         return self._result(
             "compat.motherboard.resource_conflicts",
-            CompatVerdict.PASS,
+            CompatibilityStatus.PASS,
             "No published motherboard shared-resource conflict is triggered.",
             evidence,
         )
@@ -1727,7 +1727,7 @@ class CompatibilityEngine:
                     results.append(
                         self._result(
                             rule_id,
-                            CompatVerdict.PASS,
+                            CompatibilityStatus.PASS,
                             "The selected product is active.",
                             evidence,
                         )
@@ -1736,7 +1736,7 @@ class CompatibilityEngine:
                     results.append(
                         self._result(
                             rule_id,
-                            CompatVerdict.WARNING,
+                            CompatibilityStatus.WARNING,
                             "The discontinued product is allowed only because it is user-owned "
                             "and retained.",
                             evidence,
@@ -1746,7 +1746,7 @@ class CompatibilityEngine:
                     results.append(
                         self._result(
                             rule_id,
-                            CompatVerdict.FAIL,
+                            CompatibilityStatus.FAIL,
                             "A non-active product cannot be selected as a new component.",
                             evidence,
                         )
@@ -1755,7 +1755,7 @@ class CompatibilityEngine:
                     results.append(
                         self._result(
                             rule_id,
-                            CompatVerdict.UNKNOWN,
+                            CompatibilityStatus.UNKNOWN,
                             "The product lifecycle status is not recognised.",
                             {**evidence, "missing_fields": ["recognised_product_status"]},
                         )
@@ -1820,7 +1820,7 @@ class CompatibilityEngine:
         if storage_form == "m2":
             return self._result(
                 "compat.cooler_case.radiator_drive_bays",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "Radiator installation cannot consume a bay needed by the M.2 storage device.",
                 evidence,
             )
@@ -1892,13 +1892,13 @@ class CompatibilityEngine:
         if available_after >= 1:
             return self._result(
                 "compat.cooler_case.radiator_drive_bays",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
                 "A compatible drive bay remains after radiator installation.",
                 evidence,
             )
         return self._result(
             "compat.cooler_case.radiator_drive_bays",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             "Radiator installation removes every bay compatible with the selected storage device.",
             evidence,
         )
@@ -1939,7 +1939,7 @@ class CompatibilityEngine:
                 results.append(
                     self._result(
                         "compat.existing.retained",
-                        CompatVerdict.PASS,
+                        CompatibilityStatus.PASS,
                         "The retained user-owned component remains selected.",
                         evidence,
                     )
@@ -1948,7 +1948,7 @@ class CompatibilityEngine:
                 results.append(
                     self._result(
                         "compat.existing.retained",
-                        CompatVerdict.FAIL,
+                        CompatibilityStatus.FAIL,
                         "A required user-owned component was not retained in the build.",
                         evidence,
                     )
@@ -1958,7 +1958,7 @@ class CompatibilityEngine:
     def _result(
         self,
         rule_id: str,
-        status: CompatVerdict,
+        status: CompatibilityStatus,
         message: str,
         evidence: Mapping[str, Any],
     ) -> CompatibilityResult:
@@ -1999,7 +1999,7 @@ class CompatibilityEngine:
             results.append(
                 self._result(
                     "compat.evidence.authority",
-                    CompatVerdict.UNKNOWN,
+                    CompatibilityStatus.UNKNOWN,
                     "Compatibility rule evaluation was suppressed because authoritative "
                     f"evidence is unavailable for {category_name}: {reason}",
                     {
@@ -2018,7 +2018,7 @@ class CompatibilityEngine:
         fields = sorted(set(missing_fields))
         return self._result(
             rule_id,
-            CompatVerdict.UNKNOWN,
+            CompatibilityStatus.UNKNOWN,
             "Compatibility cannot be determined because required data is missing: "
             f"{', '.join(fields)}.",
             {**evidence, "missing_fields": fields},

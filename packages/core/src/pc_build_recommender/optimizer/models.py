@@ -16,7 +16,7 @@ from pc_build_recommender.domain import (
     BuildGenerationRequest,
     BuildProfile,
     CanonicalProduct,
-    CompatVerdict,
+    CompatibilityStatus,
     ComponentCategory,
     RetailerListing,
 )
@@ -33,11 +33,11 @@ REQUIRED_CATEGORIES: tuple[ComponentCategory, ...] = (
 )
 
 
-def _domain_compatibility_status(value: object) -> CompatVerdict:
+def _domain_compatibility_status(value: object) -> CompatibilityStatus:
     """Normalise the compatibility package's uppercase and domain lowercase statuses."""
 
     raw_value = getattr(value, "value", value)
-    return CompatVerdict(str(raw_value).casefold())
+    return CompatibilityStatus(str(raw_value).casefold())
 
 
 class FeatureOperator(StrEnum):
@@ -173,7 +173,7 @@ class PairwiseCompatibility:
 
     left_product_id: str
     right_product_id: str
-    status: CompatVerdict
+    status: CompatibilityStatus
     message: str = ""
     hard: bool = True
     penalty_points: int = 5
@@ -193,8 +193,8 @@ class PairwiseCompatibility:
 
     @property
     def is_forbidden(self) -> bool:
-        return self.status == CompatVerdict.FAIL or (
-            self.hard and self.status == CompatVerdict.UNKNOWN
+        return self.status == CompatibilityStatus.FAIL or (
+            self.hard and self.status == CompatibilityStatus.UNKNOWN
         )
 
 

@@ -20,7 +20,7 @@ from pc_build_recommender.domain import (
     BuildGenerationResponse,
     BuildProfile,
     CanonicalProduct,
-    CompatVerdict,
+    CompatibilityStatus,
     DomainModel,
     RetailerListing,
     ReviewEvidence,
@@ -142,7 +142,7 @@ class SearchProductResult:
     rrf_score: float
     bm25_score: float
     vector_similarity: float
-    compatibility_status: CompatVerdict | None = None
+    compatibility_status: CompatibilityStatus | None = None
     workload_scores: Mapping[str, float] = field(default_factory=dict)
 
     def __post_init__(self) -> None:

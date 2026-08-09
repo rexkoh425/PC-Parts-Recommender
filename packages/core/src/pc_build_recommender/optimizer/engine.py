@@ -8,7 +8,7 @@ from typing import Any
 
 from ortools.sat.python import cp_model
 
-from pc_build_recommender.domain import BuildProfile, CompatVerdict, ComponentCategory
+from pc_build_recommender.domain import BuildProfile, CompatibilityStatus, ComponentCategory
 
 from .models import (
     REQUIRED_CATEGORIES,
@@ -50,8 +50,8 @@ def _warning_messages(
     messages = []
     for pair in problem.pairwise_compatibility:
         if pair.key <= product_ids and (
-            pair.status == CompatVerdict.WARNING
-            or (pair.status == CompatVerdict.UNKNOWN and not pair.hard)
+            pair.status == CompatibilityStatus.WARNING
+            or (pair.status == CompatibilityStatus.UNKNOWN and not pair.hard)
         ):
             messages.append(
                 pair.message

@@ -30,7 +30,7 @@ from pc_build_recommender.compatibility import (
     DEFAULT_RULE_VERSION,
     CompatibilityEngine,
 )
-from pc_build_recommender.domain import BuildProfile, CompatVerdict, ComponentCategory
+from pc_build_recommender.domain import BuildProfile, CompatibilityStatus, ComponentCategory
 
 from .engine import BuildOptimizer
 from .models import (
@@ -412,8 +412,8 @@ def _objective_value_independently(
         for pair in problem.pairwise_compatibility
         if {pair.left_product_id, pair.right_product_id} <= selected_ids
         and (
-            pair.status is CompatVerdict.WARNING
-            or (pair.status is CompatVerdict.UNKNOWN and not pair.hard)
+            pair.status is CompatibilityStatus.WARNING
+            or (pair.status is CompatibilityStatus.UNKNOWN and not pair.hard)
         )
     )
     return total
@@ -428,8 +428,8 @@ def _warning_messages_independently(
         for pair in problem.pairwise_compatibility
         if {pair.left_product_id, pair.right_product_id} <= selected_ids
         and (
-            pair.status is CompatVerdict.WARNING
-            or (pair.status is CompatVerdict.UNKNOWN and not pair.hard)
+            pair.status is CompatibilityStatus.WARNING
+            or (pair.status is CompatibilityStatus.UNKNOWN and not pair.hard)
         )
     ]
     return tuple(dict.fromkeys(messages))
@@ -561,8 +561,8 @@ def independently_validate_solution(
         errors.append("reported catalogue total does not match selected candidates")
 
     for pair in problem.pairwise_compatibility:
-        forbidden = pair.status is CompatVerdict.FAIL or (
-            pair.status is CompatVerdict.UNKNOWN and pair.hard
+        forbidden = pair.status is CompatibilityStatus.FAIL or (
+            pair.status is CompatibilityStatus.UNKNOWN and pair.hard
         )
         if forbidden and {pair.left_product_id, pair.right_product_id} <= selected_ids:
             errors.append(
@@ -866,19 +866,19 @@ def generate_optimizer_problem(
                 PairwiseCompatibility(
                     f"s{scenario_index:05d}-cpu-c1",
                     f"s{scenario_index:05d}-motherboard-c1",
-                    CompatVerdict.FAIL,
+                    CompatibilityStatus.FAIL,
                     message="generated socket-family negative pair",
                 ),
                 PairwiseCompatibility(
                     f"s{scenario_index:05d}-gpu-c1",
                     f"s{scenario_index:05d}-case-c1",
-                    CompatVerdict.FAIL,
+                    CompatibilityStatus.FAIL,
                     message="generated clearance negative pair",
                 ),
                 PairwiseCompatibility(
                     f"s{scenario_index:05d}-memory-c1",
                     f"s{scenario_index:05d}-storage-c1",
-                    CompatVerdict.WARNING,
+                    CompatibilityStatus.WARNING,
                     message="generated shared-resource warning",
                     hard=False,
                 ),

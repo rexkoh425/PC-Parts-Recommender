@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from pc_build_recommender.domain import BuildProfile, CompatVerdict
+from pc_build_recommender.domain import BuildProfile, CompatibilityStatus
 
 from .models import (
     PROFILE_WEIGHTS,
@@ -56,8 +56,8 @@ def candidate_power_watts(
 
 
 def pair_penalty(pair: PairwiseCompatibility) -> int:
-    if pair.status == CompatVerdict.WARNING or (
-        pair.status == CompatVerdict.UNKNOWN and not pair.hard
+    if pair.status == CompatibilityStatus.WARNING or (
+        pair.status == CompatibilityStatus.UNKNOWN and not pair.hard
     ):
         return pair.penalty_points * 100
     return 0

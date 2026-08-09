@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any, Final
 
 from .engine import DEFAULT_RULE_VERSION, CompatibilityEngine
-from .models import CompatibilityReport, CompatVerdict, PowerPolicy
+from .models import CompatibilityReport, CompatibilityStatus, PowerPolicy
 
 SCENARIO_KINDS: Final = (
     "valid",
@@ -37,7 +37,7 @@ SCENARIO_KINDS: Final = (
 GENERATED_SCENARIO_LABEL: Final = "deterministically_generated_not_observed_market_builds"
 
 type BuildMapping = dict[str, dict[str, Any]]
-type ExpectedOutcome = tuple[str, CompatVerdict]
+type ExpectedOutcome = tuple[str, CompatibilityStatus]
 
 
 class CompatibilityEvaluationError(AssertionError):
@@ -273,28 +273,28 @@ def _inject_scenario(
         build["motherboard"]["socket"] = "LGA1700"
         if build["cpu"]["socket"] == build["motherboard"]["socket"]:
             raise CompatibilityEvaluationError("socket injection did not create a mismatch")
-        expected = (("compat.cpu_motherboard.socket", CompatVerdict.FAIL),)
+        expected = (("compat.cpu_motherboard.socket", CompatibilityStatus.FAIL),)
     elif kind == "ddr_failure":
         build["memory"]["memory_type"] = "DDR4"
         if build["memory"]["memory_type"] == build["motherboard"]["memory_type"]:
             raise CompatibilityEvaluationError("DDR injection did not create a mismatch")
-        expected = (("compat.memory_motherboard.generation", CompatVerdict.FAIL),)
+        expected = (("compat.memory_motherboard.generation", CompatibilityStatus.FAIL),)
     elif kind == "gpu_length_failure":
         build["case"]["maximum_gpu_length_mm"] = int(build["gpu"]["length_mm"]) - rng.randint(1, 20)
         if int(build["gpu"]["length_mm"]) <= int(build["case"]["maximum_gpu_length_mm"]):
             raise CompatibilityEvaluationError("length injection did not exceed clearance")
-        expected = (("compat.gpu_case.length", CompatVerdict.FAIL),)
+        expected = (("compat.gpu_case.length", CompatibilityStatus.FAIL),)
     elif kind == "gpu_slot_failure":
         build["case"]["maximum_gpu_slot_width"] = int(build["gpu"]["slot_width"]) - 1
         if int(build["gpu"]["slot_width"]) <= int(build["case"]["maximum_gpu_slot_width"]):
             raise CompatibilityEvaluationError("slot injection did not exceed clearance")
-        expected = (("compat.gpu_case.slot_width", CompatVerdict.FAIL),)
+        expected = (("compat.gpu_case.slot_width", CompatibilityStatus.FAIL),)
     elif kind == "connector_failure":
         required = int(build["gpu"]["required_power_connectors"]["8-pin PCIe"])
         build["power_supply"]["pcie_connectors"] = {"8-pin PCIe": required - 1}
         if required <= int(build["power_supply"]["pcie_connectors"]["8-pin PCIe"]):
             raise CompatibilityEvaluationError("connector injection did not create a shortage")
-        expected = (("compat.power_supply.gpu_connectors", CompatVerdict.FAIL),)
+        expected = (("compat.power_supply.gpu_connectors", CompatibilityStatus.FAIL),)
     elif kind == "bios_failure":
         generation = str(build["cpu"]["generation"])
         build["motherboard"].update(
@@ -304,7 +304,7 @@ def _inject_scenario(
         )
         if not (1 < 20 and build["motherboard"]["bios_update_available"] is False):
             raise CompatibilityEvaluationError("BIOS injection oracle failed")
-        expected = (("compat.cpu_motherboard.chipset_bios", CompatVerdict.FAIL),)
+        expected = (("compat.cpu_motherboard.chipset_bios", CompatibilityStatus.FAIL),)
     elif kind == "power_failure":
         cpu_power = int(build["cpu"]["peak_power_w"])
         gpu_power = int(build["gpu"]["board_power_w"])
@@ -318,8 +318,8 @@ def _inject_scenario(
         if not int(build["power_supply"]["wattage"]) < min(transient_required, continuous_required):
             raise CompatibilityEvaluationError("power injection did not violate both policies")
         expected = (
-            ("compat.power_supply.capacity", CompatVerdict.FAIL),
-            ("compat.power_supply.transient_capacity", CompatVerdict.FAIL),
+            ("compat.power_supply.capacity", CompatibilityStatus.FAIL),
+            ("compat.power_supply.transient_capacity", CompatibilityStatus.FAIL),
         )
     elif kind == "resource_failure":
         build["motherboard"]["resource_conflicts"] = [
@@ -329,12 +329,12 @@ def _inject_scenario(
                 "evidence_source": "generated-oracle",
             }
         ]
-        expected = (("compat.motherboard.resource_conflicts", CompatVerdict.FAIL),)
+        expected = (("compat.motherboard.resource_conflicts", CompatibilityStatus.FAIL),)
     elif kind == "missing_data":
         del build["case"]["maximum_gpu_length_mm"]
         if "maximum_gpu_length_mm" in build["case"]:
             raise CompatibilityEvaluationError("missing-data injection retained its field")
-        expected = (("compat.gpu_case.length", CompatVerdict.UNKNOWN),)
+        expected = (("compat.gpu_case.length", CompatibilityStatus.UNKNOWN),)
     else:
         raise ValueError(f"unsupported scenario kind: {kind}")
     return _Scenario(kind=kind, build=build, expected_nonpass=expected)
@@ -346,7 +346,7 @@ def _nonpass_outcomes(report: CompatibilityReport) -> tuple[ExpectedOutcome, ...
             (
                 (result.rule_id, result.status)
                 for result in report.results
-                if result.status is not CompatVerdict.PASS
+                if result.status is not CompatibilityStatus.PASS
             ),
             key=lambda item: (item[0], item[1].value),
         )
@@ -354,7 +354,7 @@ def _nonpass_outcomes(report: CompatibilityReport) -> tuple[ExpectedOutcome, ...
 
 
 def _require_rule_status(
-    report: CompatibilityReport, rule_id: str, expected: CompatVerdict
+    report: CompatibilityReport, rule_id: str, expected: CompatibilityStatus
 ) -> None:
     matches = report.by_rule(rule_id)
     if len(matches) != 1 or matches[0].status is not expected:
@@ -382,7 +382,7 @@ def _monotonic_checks(
         _require_rule_status(
             engine.check_pair("gpu", build["gpu"], "case", smaller_case),
             "compat.gpu_case.length",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
         )
         counts["reducing_gpu_clearance_cannot_repair_failure"] += 1
     elif scenario.kind == "gpu_slot_failure":
@@ -393,14 +393,14 @@ def _monotonic_checks(
         _require_rule_status(
             engine.check_pair("gpu", build["gpu"], "case", smaller_case),
             "compat.gpu_case.slot_width",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
         )
         counts["reducing_gpu_slot_clearance_cannot_repair_failure"] += 1
     elif scenario.kind == "ddr_failure":
         _require_rule_status(
             engine.check_pair("memory", build["memory"], "motherboard", build["motherboard"]),
             "compat.memory_motherboard.generation",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
         )
         counts["ddr4_never_passes_ddr5_only_motherboard"] += 1
     elif scenario.kind == "connector_failure":
@@ -413,14 +413,14 @@ def _monotonic_checks(
             _require_rule_status(
                 engine.check_pair("gpu", build["gpu"], "power_supply", power_supply),
                 "compat.power_supply.gpu_connectors",
-                CompatVerdict.PASS,
+                CompatibilityStatus.PASS,
             )
         counts["adding_required_connectors_cannot_create_shortage"] += 1
     elif scenario.kind == "missing_data":
         _require_rule_status(
             engine.check_pair("gpu", build["gpu"], "case", build["case"]),
             "compat.gpu_case.length",
-            CompatVerdict.UNKNOWN,
+            CompatibilityStatus.UNKNOWN,
         )
         counts["missing_clearance_never_passes"] += 1
 

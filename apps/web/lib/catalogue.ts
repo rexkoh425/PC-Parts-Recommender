@@ -1,4 +1,4 @@
-import type { CompatibilityCheck, CompatVerdict, PriceObservation } from "./types";
+import type { CompatibilityCheck, CompatibilityStatus, PriceObservation } from "./types";
 
 const dateFormatter = new Intl.DateTimeFormat("en-SG", {
   dateStyle: "medium",
@@ -109,7 +109,7 @@ export interface CompatibilitySummary {
   warning: number;
   unknown: number;
   fail: number;
-  overall: CompatVerdict;
+  overall: CompatibilityStatus;
 }
 
 export function summarizeCompatibilityChecks(checks: CompatibilityCheck[]): CompatibilitySummary {
@@ -117,7 +117,7 @@ export function summarizeCompatibilityChecks(checks: CompatibilityCheck[]): Comp
     (summary, check) => ({ ...summary, [check.status]: summary[check.status] + 1 }),
     { pass: 0, warning: 0, unknown: 0, fail: 0 },
   );
-  const overall: CompatVerdict = counts.fail
+  const overall: CompatibilityStatus = counts.fail
     ? "fail"
     : counts.unknown
       ? "unknown"

@@ -14,7 +14,7 @@ from types import MappingProxyType
 from typing import Any
 
 
-class CompatVerdict(StrEnum):
+class CompatibilityStatus(StrEnum):
     """Outcome of one compatibility rule or an aggregate report."""
 
     PASS = "PASS"
@@ -32,10 +32,10 @@ class MissingDataRiskLevel(StrEnum):
 
 
 _STATUS_PRIORITY = {
-    CompatVerdict.PASS: 0,
-    CompatVerdict.WARNING: 1,
-    CompatVerdict.UNKNOWN: 2,
-    CompatVerdict.FAIL: 3,
+    CompatibilityStatus.PASS: 0,
+    CompatibilityStatus.WARNING: 1,
+    CompatibilityStatus.UNKNOWN: 2,
+    CompatibilityStatus.FAIL: 3,
 }
 
 
@@ -45,7 +45,7 @@ class CompatibilityResult:
 
     rule_id: str
     rule_version: str
-    status: CompatVerdict
+    status: CompatibilityStatus
     message: str
     evidence: Mapping[str, Any] = field(default_factory=dict)
 
@@ -57,7 +57,7 @@ class CompatibilityResult:
     def is_blocking(self) -> bool:
         """Whether the rule found a known hard incompatibility."""
 
-        return self.status is CompatVerdict.FAIL
+        return self.status is CompatibilityStatus.FAIL
 
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON-friendly representation for API and persisted reports."""
@@ -79,30 +79,30 @@ class CompatibilityReport:
     results: tuple[CompatibilityResult, ...] = ()
 
     @property
-    def status(self) -> CompatVerdict:
+    def status(self) -> CompatibilityStatus:
         """Return the most conservative status present in the report."""
 
         if not self.results:
-            return CompatVerdict.PASS
+            return CompatibilityStatus.PASS
         return max((result.status for result in self.results), key=_STATUS_PRIORITY.__getitem__)
 
     @property
-    def overall_status(self) -> CompatVerdict:
+    def overall_status(self) -> CompatibilityStatus:
         """Alias used by API-facing callers."""
 
         return self.status
 
     @property
     def has_failures(self) -> bool:
-        return any(result.status is CompatVerdict.FAIL for result in self.results)
+        return any(result.status is CompatibilityStatus.FAIL for result in self.results)
 
     @property
     def has_unknowns(self) -> bool:
-        return any(result.status is CompatVerdict.UNKNOWN for result in self.results)
+        return any(result.status is CompatibilityStatus.UNKNOWN for result in self.results)
 
     @property
     def has_warnings(self) -> bool:
-        return any(result.status is CompatVerdict.WARNING for result in self.results)
+        return any(result.status is CompatibilityStatus.WARNING for result in self.results)
 
     @property
     def is_compatible(self) -> bool:
@@ -131,7 +131,7 @@ class CompatibilityReport:
         return MappingProxyType(
             {
                 status.value: sum(result.status is status for result in self.results)
-                for status in CompatVerdict
+                for status in CompatibilityStatus
             }
         )
 
@@ -140,7 +140,7 @@ class CompatibilityReport:
         """Aggregate unresolved fields without discarding their originating rules."""
 
         unknowns = tuple(
-            result for result in self.results if result.status is CompatVerdict.UNKNOWN
+            result for result in self.results if result.status is CompatibilityStatus.UNKNOWN
         )
         missing_fields: set[str] = set()
         affected_components: set[str] = set()

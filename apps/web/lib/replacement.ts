@@ -1,6 +1,6 @@
 import type {
   BuildSummary,
-  CompatVerdict,
+  CompatibilityStatus,
   ComponentCategory,
   ProductSearchItem,
   ReplacementCandidate,
@@ -37,7 +37,7 @@ export function summarizeReplacementChange(
 
 export function replacementCandidateStatus(
   candidate: Pick<ReplacementCandidate, "compatibility_status">,
-): CompatVerdict {
+): CompatibilityStatus {
   return candidate.compatibility_status ?? "unknown";
 }
 
@@ -54,8 +54,8 @@ export function firstApplicableCandidateId(
   return candidates.find(canApplyReplacementCandidate)?.product_id ?? "";
 }
 
-export function replacementStatusLabel(status: CompatVerdict): string {
-  const labels: Record<CompatVerdict, string> = {
+export function replacementStatusLabel(status: CompatibilityStatus): string {
+  const labels: Record<CompatibilityStatus, string> = {
     pass: "Checked",
     warning: "Warning",
     unknown: "Not verified",

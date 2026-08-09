@@ -6,7 +6,7 @@ import pytest
 
 from pc_build_recommender.compatibility import (
     CompatibilityEngine,
-    CompatVerdict,
+    CompatibilityStatus,
     PowerPolicy,
     check_build_compatibility,
 )
@@ -97,7 +97,7 @@ def result_for(report: object, rule_id: str):
 def test_complete_known_valid_build_passes_every_rule() -> None:
     report = CompatibilityEngine().check_complete_build(valid_build())
 
-    assert report.status is CompatVerdict.PASS
+    assert report.status is CompatibilityStatus.PASS
     assert report.is_compatible
     assert report.is_feasible
     assert all(result.rule_version == "compat_v2" for result in report.results)
@@ -111,9 +111,9 @@ def test_missing_critical_field_is_unknown_and_never_compatible() -> None:
     report = CompatibilityEngine().check_build(build)
     result = result_for(report, "compat.gpu_case.length")
 
-    assert result.status is CompatVerdict.UNKNOWN
+    assert result.status is CompatibilityStatus.UNKNOWN
     assert "case_maximum_gpu_length_mm" in result.evidence["missing_fields"]
-    assert report.status is CompatVerdict.UNKNOWN
+    assert report.status is CompatibilityStatus.UNKNOWN
     assert not report.is_compatible
 
 
@@ -152,7 +152,7 @@ def test_empty_default_support_lists_are_missing_evidence_not_hard_failures(
 ) -> None:
     report = CompatibilityEngine().check_pair(left_category, left, right_category, right)
 
-    assert result_for(report, rule_id).status is CompatVerdict.UNKNOWN
+    assert result_for(report, rule_id).status is CompatibilityStatus.UNKNOWN
 
 
 @pytest.mark.parametrize(
@@ -222,8 +222,8 @@ def test_known_hard_incompatibilities_fail(mutate, rule_id: str) -> None:
 
     report = CompatibilityEngine().check_build(build)
 
-    assert result_for(report, rule_id).status is CompatVerdict.FAIL
-    assert report.status is CompatVerdict.FAIL
+    assert result_for(report, rule_id).status is CompatibilityStatus.FAIL
+    assert report.status is CompatibilityStatus.FAIL
     assert not report.is_compatible
 
 
@@ -238,10 +238,10 @@ def test_bios_update_is_a_feasible_warning_with_versioned_evidence() -> None:
     report = CompatibilityEngine(rule_version="compat_test_7").check_build(build)
     result = result_for(report, "compat.cpu_motherboard.chipset_bios")
 
-    assert result.status is CompatVerdict.WARNING
+    assert result.status is CompatibilityStatus.WARNING
     assert result.rule_version == "compat_test_7"
     assert result.evidence["minimum_bios_version"] == "F10"
-    assert report.status is CompatVerdict.WARNING
+    assert report.status is CompatibilityStatus.WARNING
     assert report.is_compatible
 
 
@@ -262,8 +262,8 @@ def test_liquid_cooler_uses_explicit_radiator_support() -> None:
         case,
     )
 
-    assert passes.status is CompatVerdict.PASS
-    assert fails.status is CompatVerdict.FAIL
+    assert passes.status is CompatibilityStatus.PASS
+    assert fails.status is CompatibilityStatus.FAIL
 
 
 def test_storage_requires_supported_interface_and_available_slot() -> None:
@@ -277,9 +277,9 @@ def test_storage_requires_supported_interface_and_available_slot() -> None:
 
     assert (
         result_for(report, "compat.storage_motherboard.interface").status
-        is CompatVerdict.PASS
+        is CompatibilityStatus.PASS
     )
-    assert result_for(report, "compat.storage_motherboard.slots").status is CompatVerdict.FAIL
+    assert result_for(report, "compat.storage_motherboard.slots").status is CompatibilityStatus.FAIL
 
 
 def test_existing_component_must_be_retained_by_stable_identity() -> None:
@@ -291,8 +291,8 @@ def test_existing_component_must_be_retained_by_stable_identity() -> None:
     replaced_build["gpu"]["product_id"] = "gpu-2"
     replaced = CompatibilityEngine().check_build(replaced_build, existing_components=[retained])
 
-    assert result_for(kept, "compat.existing.retained").status is CompatVerdict.PASS
-    assert result_for(replaced, "compat.existing.retained").status is CompatVerdict.FAIL
+    assert result_for(kept, "compat.existing.retained").status is CompatibilityStatus.PASS
+    assert result_for(replaced, "compat.existing.retained").status is CompatibilityStatus.FAIL
 
 
 def test_existing_component_with_no_identity_is_unknown() -> None:
@@ -300,7 +300,7 @@ def test_existing_component_with_no_identity_is_unknown() -> None:
         valid_build(), existing_components=[{"category": "gpu", "model": "unkeyed"}]
     )
 
-    assert result_for(report, "compat.existing.retained").status is CompatVerdict.UNKNOWN
+    assert result_for(report, "compat.existing.retained").status is CompatibilityStatus.UNKNOWN
     assert not report.is_compatible
 
 
@@ -311,8 +311,8 @@ def test_complete_build_enforces_exactly_one_component_per_required_category() -
 
     report = CompatibilityEngine().check_build(build)
 
-    assert result_for(report, "compat.build.cardinality.gpu").status is CompatVerdict.FAIL
-    assert result_for(report, "compat.build.cardinality.storage").status is CompatVerdict.FAIL
+    assert result_for(report, "compat.build.cardinality.gpu").status is CompatibilityStatus.FAIL
+    assert result_for(report, "compat.build.cardinality.storage").status is CompatibilityStatus.FAIL
 
 
 def test_nested_attribute_mappings_and_category_aliases_are_supported() -> None:
@@ -337,7 +337,7 @@ def test_nested_attribute_mappings_and_category_aliases_are_supported() -> None:
         },
     )
 
-    assert report.status is CompatVerdict.PASS
+    assert report.status is CompatibilityStatus.PASS
 
 
 def test_connector_parser_accepts_common_catalogue_strings() -> None:
@@ -348,7 +348,7 @@ def test_connector_parser_accepts_common_catalogue_strings() -> None:
         {"pcie_connectors": ["PCIe 6+2-pin", "PCIe 6+2-pin", "PCIe 6+2-pin"]},
     )
 
-    assert report.status is CompatVerdict.PASS
+    assert report.status is CompatibilityStatus.PASS
 
 
 def test_one_convertible_pcie_lead_cannot_satisfy_two_connector_requirements() -> None:
@@ -359,7 +359,7 @@ def test_one_convertible_pcie_lead_cannot_satisfy_two_connector_requirements() -
         {"pcie_connectors": ["PCIe 6+2-pin"]},
     )
 
-    assert report.status is CompatVerdict.FAIL
+    assert report.status is CompatibilityStatus.FAIL
 
 
 def test_absent_optional_motherboard_eps_requirement_does_not_invent_a_rule() -> None:
@@ -370,7 +370,7 @@ def test_absent_optional_motherboard_eps_requirement_does_not_invent_a_rule() ->
     report = CompatibilityEngine().check_build(build)
 
     assert not report.by_rule("compat.power_supply.eps_connectors")
-    assert report.status is CompatVerdict.PASS
+    assert report.status is CompatibilityStatus.PASS
 
 
 def test_power_policy_is_configurable_and_validated() -> None:
@@ -382,8 +382,8 @@ def test_power_policy_is_configurable_and_validated() -> None:
         power_policy=PowerPolicy(headroom_ratio=0.10, accessory_allowance_w=50)
     ).check_build(build)
 
-    assert result_for(strict, "compat.power_supply.capacity").status is CompatVerdict.FAIL
-    assert result_for(relaxed, "compat.power_supply.capacity").status is CompatVerdict.PASS
+    assert result_for(strict, "compat.power_supply.capacity").status is CompatibilityStatus.FAIL
+    assert result_for(relaxed, "compat.power_supply.capacity").status is CompatibilityStatus.PASS
     with pytest.raises(ValueError):
         PowerPolicy(headroom_ratio=1.1)
     with pytest.raises(ValueError):
@@ -415,7 +415,7 @@ def test_required_bios_with_unknown_installed_version_is_fail_closed() -> None:
     report = CompatibilityEngine().check_build(build)
     result = result_for(report, "compat.cpu_motherboard.chipset_bios")
 
-    assert result.status is CompatVerdict.UNKNOWN
+    assert result.status is CompatibilityStatus.UNKNOWN
     assert result.evidence["missing_fields"] == ["installed_bios_version"]
     assert report.missing_data_risk.blocks_feasibility
     assert "installed_bios_version" in report.missing_data_risk.missing_fields
@@ -439,7 +439,7 @@ def test_bios_support_matrix_can_block_cpu_with_no_update_path() -> None:
         "compat.cpu_motherboard.chipset_bios",
     )
 
-    assert result.status is CompatVerdict.FAIL
+    assert result.status is CompatibilityStatus.FAIL
 
 
 def test_beta_bios_support_is_an_auditable_warning() -> None:
@@ -453,7 +453,7 @@ def test_beta_bios_support_is_an_auditable_warning() -> None:
         "compat.cpu_motherboard.chipset_bios",
     )
 
-    assert result.status is CompatVerdict.WARNING
+    assert result.status is CompatibilityStatus.WARNING
     assert result.evidence["cpu_support_status"] == "beta"
 
 
@@ -473,8 +473,8 @@ def test_radiator_position_and_thickness_are_both_enforced() -> None:
     passes = engine.check_pair("cooler", cooler, "case", case)
     too_thick = engine.check_pair("cooler", {**cooler, "radiator_thickness_mm": 60}, "case", case)
 
-    assert passes.status is CompatVerdict.PASS
-    assert too_thick.status is CompatVerdict.FAIL
+    assert passes.status is CompatibilityStatus.PASS
+    assert too_thick.status is CompatibilityStatus.FAIL
 
 
 def test_pcie_slot_evidence_is_required_for_a_discrete_gpu() -> None:
@@ -485,9 +485,9 @@ def test_pcie_slot_evidence_is_required_for_a_discrete_gpu() -> None:
     failed = engine.check_pair("gpu", gpu, "motherboard", {"pcie_slots": 0})
     passed = engine.check_pair("gpu", gpu, "motherboard", {"pcie_x16_slots": 1})
 
-    assert unknown.status is CompatVerdict.UNKNOWN
-    assert failed.status is CompatVerdict.FAIL
-    assert passed.status is CompatVerdict.PASS
+    assert unknown.status is CompatibilityStatus.UNKNOWN
+    assert failed.status is CompatibilityStatus.FAIL
+    assert passed.status is CompatibilityStatus.PASS
 
 
 def test_storage_drive_bay_type_and_count_are_enforced() -> None:
@@ -501,8 +501,8 @@ def test_storage_drive_bay_type_and_count_are_enforced() -> None:
         "storage", storage, "case", {"drive_bays_by_form_factor": {"2.5-inch": 2}}
     )
 
-    assert passed.status is CompatVerdict.PASS
-    assert failed.status is CompatVerdict.FAIL
+    assert passed.status is CompatibilityStatus.PASS
+    assert failed.status is CompatibilityStatus.FAIL
 
 
 def test_published_shared_resource_conflict_blocks_complete_build() -> None:
@@ -524,7 +524,7 @@ def test_published_shared_resource_conflict_blocks_complete_build() -> None:
         "compat.motherboard.resource_conflicts",
     )
 
-    assert result.status is CompatVerdict.FAIL
+    assert result.status is CompatibilityStatus.FAIL
     assert result.evidence["triggered_conflicts"][0]["evidence_source"] == ("manufacturer-manual")
 
 
@@ -547,7 +547,7 @@ def test_front_radiator_drive_bay_loss_is_a_hard_conflict() -> None:
         "compat.cooler_case.radiator_drive_bays",
     )
 
-    assert result.status is CompatVerdict.FAIL
+    assert result.status is CompatibilityStatus.FAIL
 
 
 def test_discontinued_new_part_fails_but_retained_user_part_warns() -> None:
@@ -559,11 +559,11 @@ def test_discontinued_new_part_fails_but_retained_user_part_warns() -> None:
     retained_selection = CompatibilityEngine().check_build(build, existing_components=[retained])
 
     assert (
-        result_for(new_selection, "compat.product.lifecycle.gpu").status is CompatVerdict.FAIL
+        result_for(new_selection, "compat.product.lifecycle.gpu").status is CompatibilityStatus.FAIL
     )
     assert (
         result_for(retained_selection, "compat.product.lifecycle.gpu").status
-        is CompatVerdict.WARNING
+        is CompatibilityStatus.WARNING
     )
 
 
@@ -575,7 +575,7 @@ def test_unrecognised_connector_type_is_unknown_not_no_connector_required() -> N
         {"pcie_connectors": {"8-pin PCIe": 4}},
     )
 
-    assert report.status is CompatVerdict.UNKNOWN
+    assert report.status is CompatibilityStatus.UNKNOWN
     assert report.results[0].evidence["unparsed_required_connectors"]
 
 
@@ -586,10 +586,10 @@ def test_explicit_gpu_transient_can_fail_when_continuous_headroom_passes() -> No
 
     report = CompatibilityEngine().check_build(build)
 
-    assert result_for(report, "compat.power_supply.capacity").status is CompatVerdict.PASS
+    assert result_for(report, "compat.power_supply.capacity").status is CompatibilityStatus.PASS
     assert (
         result_for(report, "compat.power_supply.transient_capacity").status
-        is CompatVerdict.FAIL
+        is CompatibilityStatus.FAIL
     )
 
 
@@ -601,4 +601,4 @@ def test_power_supply_case_form_factor_is_hard_compatibility() -> None:
         {"supported_psu_sizes": ["SFX", "SFX-L"]},
     )
 
-    assert report.status is CompatVerdict.FAIL
+    assert report.status is CompatibilityStatus.FAIL

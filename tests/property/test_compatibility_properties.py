@@ -5,7 +5,7 @@ from copy import deepcopy
 from hypothesis import given
 from hypothesis import strategies as st
 
-from pc_build_recommender.compatibility import CompatibilityEngine, CompatVerdict
+from pc_build_recommender.compatibility import CompatibilityEngine, CompatibilityStatus
 
 
 def base_build() -> dict[str, dict[str, object]]:
@@ -78,7 +78,7 @@ def base_build() -> dict[str, dict[str, object]]:
     }
 
 
-def status_for(report: object, rule_id: str) -> CompatVerdict:
+def status_for(report: object, rule_id: str) -> CompatibilityStatus:
     results = report.by_rule(rule_id)  # type: ignore[attr-defined]
     assert len(results) == 1
     return results[0].status
@@ -110,8 +110,8 @@ def test_reducing_case_clearance_cannot_turn_failed_gpu_into_pass(
         {"maximum_gpu_length_mm": smaller_clearance, "maximum_gpu_slot_width": 4},
     )
 
-    assert status_for(first, "compat.gpu_case.length") is CompatVerdict.FAIL
-    assert status_for(second, "compat.gpu_case.length") is CompatVerdict.FAIL
+    assert status_for(first, "compat.gpu_case.length") is CompatibilityStatus.FAIL
+    assert status_for(second, "compat.gpu_case.length") is CompatibilityStatus.FAIL
 
 
 @given(
@@ -132,8 +132,8 @@ def test_increasing_psu_wattage_cannot_create_a_wattage_failure(
     build["power_supply"]["wattage"] = required + extra_capacity
     increased = engine.check_build(build)
 
-    assert status_for(at_threshold, "compat.power_supply.capacity") is CompatVerdict.PASS
-    assert status_for(increased, "compat.power_supply.capacity") is CompatVerdict.PASS
+    assert status_for(at_threshold, "compat.power_supply.capacity") is CompatibilityStatus.PASS
+    assert status_for(increased, "compat.power_supply.capacity") is CompatibilityStatus.PASS
 
 
 @given(
@@ -155,9 +155,9 @@ def test_memory_capacity_rule_matches_numeric_boundary(
     )
 
     expected = (
-        CompatVerdict.PASS
+        CompatibilityStatus.PASS
         if memory_capacity <= motherboard_capacity
-        else CompatVerdict.FAIL
+        else CompatibilityStatus.FAIL
     )
     assert status_for(report, "compat.memory_motherboard.capacity") is expected
 
@@ -171,7 +171,7 @@ def test_ddr4_memory_never_passes_ddr5_only_motherboard(ddr4_spelling: str) -> N
         {"memory_type": "DDR5", "maximum_memory_gb": 128, "memory_slots": 4},
     )
 
-    assert status_for(report, "compat.memory_motherboard.generation") is CompatVerdict.FAIL
+    assert status_for(report, "compat.memory_motherboard.generation") is CompatibilityStatus.FAIL
 
 
 @given(wrong_socket=st.sampled_from(["AM4", "LGA1700", "LGA1851", "sTR5"]))
@@ -200,7 +200,7 @@ def test_removing_required_category_always_makes_complete_build_infeasible(
     report = CompatibilityEngine().check_complete_build(build)
 
     rule_id = f"compat.build.cardinality.{category_to_remove}"
-    assert status_for(report, rule_id) is CompatVerdict.FAIL
+    assert status_for(report, rule_id) is CompatibilityStatus.FAIL
     assert not report.is_feasible
 
 
@@ -224,10 +224,10 @@ def test_increasing_transient_capacity_cannot_create_transient_failure(
 
     assert (
         status_for(at_threshold, "compat.power_supply.transient_capacity")
-        is CompatVerdict.PASS
+        is CompatibilityStatus.PASS
     )
     assert (
-        status_for(increased, "compat.power_supply.transient_capacity") is CompatVerdict.PASS
+        status_for(increased, "compat.power_supply.transient_capacity") is CompatibilityStatus.PASS
     )
 
 
@@ -253,5 +253,5 @@ def test_increasing_compatible_drive_bays_cannot_create_drive_bay_failure(
         {"drive_bays_by_form_factor": {"3.5-inch": initial_bays + added_bays}},
     )
 
-    assert status_for(initial, "compat.storage_case.drive_bay") is CompatVerdict.PASS
-    assert status_for(increased, "compat.storage_case.drive_bay") is CompatVerdict.PASS
+    assert status_for(initial, "compat.storage_case.drive_bay") is CompatibilityStatus.PASS
+    assert status_for(increased, "compat.storage_case.drive_bay") is CompatibilityStatus.PASS

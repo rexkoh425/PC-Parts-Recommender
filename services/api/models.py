@@ -69,7 +69,7 @@ class SolverStatus(StrEnum):
     UNKNOWN = "UNKNOWN"
 
 
-class CompatVerdict(StrEnum):
+class CompatibilityStatus(StrEnum):
     PASS = "pass"
     FAIL = "fail"
     WARNING = "warning"
@@ -218,7 +218,7 @@ class PerformanceSignal(ApiModel):
 
 class CompatibilityCheck(ApiModel):
     rule_id: str
-    status: CompatVerdict
+    status: CompatibilityStatus
     message: str
     affected_categories: list[ComponentCategory] = Field(default_factory=list)
     evidence_source: str | None = None
@@ -286,7 +286,7 @@ class BuildSummary(ApiModel):
     @model_validator(mode="after")
     def ensure_safe_complete_build(self) -> BuildSummary:
         if any(
-            check.status in {CompatVerdict.FAIL, CompatVerdict.UNKNOWN}
+            check.status in {CompatibilityStatus.FAIL, CompatibilityStatus.UNKNOWN}
             for check in self.compatibility_checks
         ):
             raise ValueError("returned builds may not contain hard FAIL or UNKNOWN checks")
@@ -635,7 +635,7 @@ class ProductSearchItem(ApiModel):
     model: str | None = None
     lowest_price_sgd: float | None = Field(default=None, ge=0)
     stock_status: str | None = None
-    compatibility_status: CompatVerdict | None = None
+    compatibility_status: CompatibilityStatus | None = None
 
 
 class ProductFacetCount(ApiModel):
@@ -860,7 +860,7 @@ class CompatibilityCheckRequest(ApiModel):
 
 
 class CompatibilityCheckResponse(ApiModel):
-    status: CompatVerdict
+    status: CompatibilityStatus
     is_feasible: bool
     checks: list[CompatibilityCheck]
     rule_version: str

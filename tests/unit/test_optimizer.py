@@ -10,7 +10,7 @@ from pc_build_recommender.compatibility import (
     CompatibilityResult,
 )
 from pc_build_recommender.compatibility import (
-    CompatVerdict as EngineCompatibilityStatus,
+    CompatibilityStatus as EngineCompatibilityStatus,
 )
 from pc_build_recommender.domain import (
     BuildGenerationRequest,
@@ -19,7 +19,7 @@ from pc_build_recommender.domain import (
     BuildRequirements,
     CanonicalProduct,
     CaseAttributes,
-    CompatVerdict,
+    CompatibilityStatus,
     ComponentCategory,
     CPUAttributes,
     ExistingComponent,
@@ -210,13 +210,13 @@ def test_hard_unknown_and_failure_pairs_are_infeasible() -> None:
         PairwiseCompatibility(
             "cpu-a",
             "motherboard-a",
-            CompatVerdict.UNKNOWN,
+            CompatibilityStatus.UNKNOWN,
             message="BIOS support missing",
         ),
         PairwiseCompatibility(
             "cpu-a",
             "motherboard-b",
-            CompatVerdict.FAIL,
+            CompatibilityStatus.FAIL,
             message="socket mismatch",
         ),
     )
@@ -465,7 +465,7 @@ def test_domain_adapter_uses_cheapest_listing_and_owned_lock_costs_zero() -> Non
     assert result.solutions[0].total_price_cents == 70_000
     recommendation = solution_to_domain(result.solutions[0])
     assert engine.received_mapping
-    assert recommendation.compatibility_status == CompatVerdict.PASS
+    assert recommendation.compatibility_status == CompatibilityStatus.PASS
     assert len(recommendation.components) == 8
     assert recommendation.compatibility_checks[0].rule_id == "compat.test"
     assert recommendation.compatibility_checks[0].component_ids == ["cpu", "gpu"]
@@ -473,7 +473,7 @@ def test_domain_adapter_uses_cheapest_listing_and_owned_lock_costs_zero() -> Non
 
 def test_uppercase_compatibility_statuses_are_normalised_in_pairwise_adapter() -> None:
     pair = PairwiseCompatibility("cpu-a", "motherboard-a", EngineCompatibilityStatus.FAIL)
-    assert pair.status == CompatVerdict.FAIL
+    assert pair.status == CompatibilityStatus.FAIL
     assert pair.is_forbidden
 
 

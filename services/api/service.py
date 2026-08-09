@@ -36,7 +36,7 @@ from services.api.models import (
     CompatibilityCheck,
     CompatibilityCheckRequest,
     CompatibilityCheckResponse,
-    CompatVerdict,
+    CompatibilityStatus,
     ComponentCategory,
     ExplanationItem,
     FreshnessResponse,
@@ -730,7 +730,7 @@ class InMemoryRecommendationService:
                 continue
             checks = self._evaluate_compatibility(selected)
             if any(
-                check.status in {CompatVerdict.FAIL, CompatVerdict.UNKNOWN}
+                check.status in {CompatibilityStatus.FAIL, CompatibilityStatus.UNKNOWN}
                 for check in checks
             ):
                 rejection_codes.add("compatibility")
@@ -963,7 +963,7 @@ class InMemoryRecommendationService:
             checks.append(
                 CompatibilityCheck(
                     rule_id=result.rule_id,
-                    status=CompatVerdict(result.status.value.casefold()),
+                    status=CompatibilityStatus(result.status.value.casefold()),
                     message=result.message,
                     affected_categories=affected,
                 )
@@ -1051,7 +1051,7 @@ class InMemoryRecommendationService:
             else:
                 score = 0.55 * gpu_score + 0.45 * cpu_score
             workload_scores[workload.name.value] = round(min(score, 100), 2)
-        warnings = [check for check in checks if check.status is CompatVerdict.WARNING]
+        warnings = [check for check in checks if check.status is CompatibilityStatus.WARNING]
         return BuildSummary(
             build_id=f"build_{uuid4().hex}",
             profile=template.profile,
@@ -1123,13 +1123,13 @@ class InMemoryRecommendationService:
                 substituted[product.category] = candidate
                 checks = self._evaluate_compatibility(substituted)
                 if any(
-                    check.status in {CompatVerdict.FAIL, CompatVerdict.UNKNOWN}
+                    check.status in {CompatibilityStatus.FAIL, CompatibilityStatus.UNKNOWN}
                     for check in checks
                 ):
                     continue
                 status = (
                     "warning"
-                    if any(check.status is CompatVerdict.WARNING for check in checks)
+                    if any(check.status is CompatibilityStatus.WARNING for check in checks)
                     else "pass"
                 )
             evaluated.append(
@@ -1287,7 +1287,7 @@ class InMemoryRecommendationService:
         blocking = [
             check
             for check in checks
-            if check.status in {CompatVerdict.FAIL, CompatVerdict.UNKNOWN}
+            if check.status in {CompatibilityStatus.FAIL, CompatibilityStatus.UNKNOWN}
         ]
         if blocking:
             raise ApiError(
@@ -1359,7 +1359,7 @@ class InMemoryRecommendationService:
                 "components": components,
                 "compatibility_checks": checks,
                 "warnings": [
-                    check for check in checks if check.status is CompatVerdict.WARNING
+                    check for check in checks if check.status is CompatibilityStatus.WARNING
                 ],
                 "generated_at": datetime.now(UTC),
                 "solver_status": SolverStatus.FEASIBLE,
@@ -1447,11 +1447,11 @@ class InMemoryRecommendationService:
         ]
         filtered_brand = len(category_scoped) - len(brand_scoped)
 
-        matching: list[tuple[int, ProductRecord, CompatVerdict | None]] = []
+        matching: list[tuple[int, ProductRecord, CompatibilityStatus | None]] = []
         filtered_incompatible = 0
         filtered_unknown = 0
         for matched, product in brand_scoped:
-            compatibility_status: CompatVerdict | None = None
+            compatibility_status: CompatibilityStatus | None = None
             if selected is not None:
                 current = selected.get(product.category)
                 if current is not None and current.product_id == product.product_id:
@@ -1459,16 +1459,16 @@ class InMemoryRecommendationService:
                 substituted = dict(selected)
                 substituted[product.category] = product
                 checks = self._evaluate_compatibility(substituted)
-                if any(check.status is CompatVerdict.FAIL for check in checks):
+                if any(check.status is CompatibilityStatus.FAIL for check in checks):
                     filtered_incompatible += 1
                     continue
-                if any(check.status is CompatVerdict.UNKNOWN for check in checks):
+                if any(check.status is CompatibilityStatus.UNKNOWN for check in checks):
                     filtered_unknown += 1
                     continue
                 compatibility_status = (
-                    CompatVerdict.WARNING
-                    if any(check.status is CompatVerdict.WARNING for check in checks)
-                    else CompatVerdict.PASS
+                    CompatibilityStatus.WARNING
+                    if any(check.status is CompatibilityStatus.WARNING for check in checks)
+                    else CompatibilityStatus.PASS
                 )
             matching.append((matched, product, compatibility_status))
         matching.sort(
@@ -1650,7 +1650,7 @@ class InMemoryRecommendationService:
                 custom_unknowns.append(
                     CompatibilityCheck(
                         rule_id="exactly-one-per-category",
-                        status=CompatVerdict.FAIL,
+                        status=CompatibilityStatus.FAIL,
                         message=f"Multiple {item.category.value} components were supplied.",
                         affected_categories=[item.category],
                     )
@@ -1661,7 +1661,7 @@ class InMemoryRecommendationService:
                 custom_unknowns.append(
                     CompatibilityCheck(
                         rule_id="catalogue-specifications-known",
-                        status=CompatVerdict.UNKNOWN,
+                        status=CompatibilityStatus.UNKNOWN,
                         message=(
                             f"No verified catalogue specifications are available for "
                             f"'{item.product_id or item.canonical_name or item.category.value}'."
@@ -1674,7 +1674,7 @@ class InMemoryRecommendationService:
                 custom_unknowns.append(
                     CompatibilityCheck(
                         rule_id="catalogue-category",
-                        status=CompatVerdict.FAIL,
+                        status=CompatibilityStatus.FAIL,
                         message="The supplied category conflicts with the canonical product.",
                         affected_categories=[item.category, product.category],
                     )
@@ -1690,24 +1690,24 @@ class InMemoryRecommendationService:
                 checks.append(
                     CompatibilityCheck(
                         rule_id="complete-build",
-                        status=CompatVerdict.UNKNOWN,
+                        status=CompatibilityStatus.UNKNOWN,
                         message=(
                             "A complete-build decision requires all eight component categories."
                         ),
                         affected_categories=missing,
                     )
                 )
-        if any(check.status is CompatVerdict.FAIL for check in checks):
-            status = CompatVerdict.FAIL
-        elif any(check.status is CompatVerdict.UNKNOWN for check in checks):
-            status = CompatVerdict.UNKNOWN
-        elif any(check.status is CompatVerdict.WARNING for check in checks):
-            status = CompatVerdict.WARNING
+        if any(check.status is CompatibilityStatus.FAIL for check in checks):
+            status = CompatibilityStatus.FAIL
+        elif any(check.status is CompatibilityStatus.UNKNOWN for check in checks):
+            status = CompatibilityStatus.UNKNOWN
+        elif any(check.status is CompatibilityStatus.WARNING for check in checks):
+            status = CompatibilityStatus.WARNING
         else:
-            status = CompatVerdict.PASS
+            status = CompatibilityStatus.PASS
         return CompatibilityCheckResponse(
             status=status,
-            is_feasible=status in {CompatVerdict.PASS, CompatVerdict.WARNING},
+            is_feasible=status in {CompatibilityStatus.PASS, CompatibilityStatus.WARNING},
             checks=checks,
             rule_version=self.settings.compatibility_rule_version,
             data_version=self.settings.data_version,

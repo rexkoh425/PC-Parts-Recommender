@@ -19,7 +19,7 @@ export type WorkloadName =
   | "software_development"
   | "content_creation";
 
-export type CompatVerdict = "pass" | "warning" | "unknown" | "fail";
+export type CompatibilityStatus = "pass" | "warning" | "unknown" | "fail";
 
 export type BuildProfile =
   | "best_overall"
@@ -92,7 +92,7 @@ export interface PerformanceSignal {
 
 export interface CompatibilityCheck {
   rule_id: string;
-  status: CompatVerdict;
+  status: CompatibilityStatus;
   message: string;
   affected_categories?: ComponentCategory[];
   evidence_source?: string;
@@ -113,7 +113,7 @@ export interface ReplacementCandidate {
   performance_delta?: number;
   price_delta_sgd?: number;
   power_delta_w?: number;
-  compatibility_status?: CompatVerdict;
+  compatibility_status?: CompatibilityStatus;
   reasons?: string[];
 }
 
@@ -245,7 +245,7 @@ export interface ProductSearchItem {
   model?: string;
   lowest_price_sgd?: number | null;
   stock_status?: string | null;
-  compatibility_status?: CompatVerdict | null;
+  compatibility_status?: CompatibilityStatus | null;
 }
 
 export interface ProductSearchRequest {
@@ -520,7 +520,7 @@ export interface CompatibilityCheckRequest {
 }
 
 export interface CompatibilityCheckResponse {
-  status: CompatVerdict;
+  status: CompatibilityStatus;
   is_feasible: boolean;
   checks: CompatibilityCheck[];
   rule_version: string;
