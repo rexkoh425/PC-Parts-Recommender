@@ -29,6 +29,7 @@ from .enums import (
     CaseSize,
     CompatibilityStatus,
     ComponentCategory,
+    InteractionTrustLevel,
     InteractionType,
     ListingCondition,
     MemoryType,
@@ -513,12 +514,33 @@ class InteractionEvent(DomainModel):
     data_version: str | None = None
     rule_version: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
+    impression_id: str | None = Field(default=None, max_length=80)
+    trust_level: InteractionTrustLevel = InteractionTrustLevel.LEGACY_UNTRUSTED
+    idempotency_key_sha256: str | None = Field(
+        default=None, min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$"
+    )
+    idempotency_payload_sha256: str | None = Field(
+        default=None, min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$"
+    )
     created_at: datetime = Field(default_factory=utc_now)
 
     @model_validator(mode="after")
     def ranked_events_identify_a_result(self) -> InteractionEvent:
         if self.rank_position is not None and self.product_id is None and self.build_id is None:
             raise ValueError("ranked events must reference a product or build")
+        if (self.idempotency_key_sha256 is None) != (
+            self.idempotency_payload_sha256 is None
+        ):
+            raise ValueError("idempotency key and payload digests must be supplied together")
+        if self.trust_level is InteractionTrustLevel.VERIFIED_IMPRESSION and (
+            self.impression_id is None or self.idempotency_key_sha256 is None
+        ):
+            raise ValueError("verified interactions require impression and idempotency proof")
+        if (
+            self.trust_level is InteractionTrustLevel.LEGACY_UNTRUSTED
+            and self.impression_id is not None
+        ):
+            raise ValueError("legacy interactions cannot carry a verified impression identity")
         return self
 
 

@@ -156,3 +156,9 @@ class InteractionType(StrEnum):
     RECOMMENDATION_DISMISSED = "recommendation_dismissed"
     FEEDBACK_SUBMITTED = "feedback_submitted"
 
+
+class InteractionTrustLevel(StrEnum):
+    """Whether an interaction is eligible to become behavioural ranking evidence."""
+
+    VERIFIED_IMPRESSION = "verified_impression"
+    LEGACY_UNTRUSTED = "legacy_untrusted"
