@@ -6627,3 +6627,87 @@ textarea:focus-visible {
     min-height: 44px;
   }
 }
+
+/* ===========================================================================
+   How it works
+   The homepage was 3.7 screens, 38% of it explaining the project rather than
+   helping anyone build a PC. That material lives here now, so the homepage
+   does one job and this page answers the questions it used to interrupt with.
+   =========================================================================== */
+
+.page-intro {
+  padding-top: var(--section-y-lead);
+  padding-bottom: 48px;
+}
+
+.page-intro .lede {
+  max-width: var(--measure);
+  margin-top: 16px;
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.faq-section {
+  padding-top: var(--section-y);
+  padding-bottom: var(--section-y);
+}
+
+.faq-list {
+  display: grid;
+  gap: 0;
+  max-width: var(--measure-wide);
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-item > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 20px 40px 20px 0;
+  position: relative;
+  font-size: var(--text-md);
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+
+.faq-item > summary::-webkit-details-marker { display: none; }
+
+/* A rotating caret rather than a swapped glyph, so open and closed read as one
+   control moving instead of two different marks. */
+.faq-item > summary::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--forest-400);
+  border-bottom: 2px solid var(--forest-400);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.faq-item[open] > summary::after {
+  transform: translateY(-30%) rotate(225deg);
+}
+
+.faq-item > summary:hover {
+  color: var(--forest-600);
+}
+
+.faq-item > p {
+  margin: 0;
+  padding: 0 40px 24px 0;
+  max-width: var(--measure);
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+
+.faq-cta {
+  margin-top: 40px;
+}

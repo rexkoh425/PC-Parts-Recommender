@@ -28,10 +28,8 @@ export function SiteHeader() {
         </Link>
 
         <nav className="header-nav" aria-label="Primary navigation">
-          <Link className="header-nav__secondary" href="/#method">Method</Link>
-          <Link className="header-nav__secondary header-nav__evidence" href="/#evidence">
-            Evidence
-          </Link>
+          <Link className="header-nav__secondary header-nav__evidence" href="/how-it-works">How it works</Link>
+
           <Link href="/catalogue">Catalogue</Link>
           <Link className="header-nav__comparison" href="/compare">
             Compare
