@@ -371,6 +371,40 @@ class InteractionEventRecord(Base):
     __table_args__ = (
         Index("ix_event_created_type", "created_at", "event_type"),
         Index("ix_event_query_rank", "query_id", "rank_position"),
+        Index("ix_interaction_impression_id", "impression_id"),
+        UniqueConstraint(
+            "session_id",
+            "idempotency_key_sha256",
+            name="uq_interaction_session_idempotency",
+        ),
+        UniqueConstraint(
+            "impression_id",
+            "event_type",
+            name="uq_interaction_impression_event",
+        ),
+        CheckConstraint(
+            "trust_level IN ('verified_impression', 'legacy_untrusted')",
+            name="ck_interaction_trust_level",
+        ),
+        CheckConstraint(
+            "((idempotency_key_sha256 IS NULL AND idempotency_payload_sha256 IS NULL) "
+            "OR (idempotency_key_sha256 IS NOT NULL "
+            "AND idempotency_payload_sha256 IS NOT NULL))",
+            name="ck_interaction_idempotency_pair",
+        ),
+        CheckConstraint(
+            "idempotency_key_sha256 IS NULL OR length(idempotency_key_sha256) = 64",
+            name="ck_interaction_idempotency_key_length",
+        ),
+        CheckConstraint(
+            "idempotency_payload_sha256 IS NULL OR length(idempotency_payload_sha256) = 64",
+            name="ck_interaction_idempotency_payload_length",
+        ),
+        CheckConstraint(
+            "trust_level != 'verified_impression' OR "
+            "(impression_id IS NOT NULL AND idempotency_key_sha256 IS NOT NULL)",
+            name="ck_interaction_verified_evidence",
+        ),
     )
 
     event_id: Mapped[str] = mapped_column(String(80), primary_key=True)
@@ -384,6 +418,12 @@ class InteractionEventRecord(Base):
     model_version: Mapped[str | None] = mapped_column(String(80))
     data_version: Mapped[str | None] = mapped_column(String(80))
     rule_version: Mapped[str | None] = mapped_column(String(80))
+    impression_id: Mapped[str | None] = mapped_column(String(80))
+    trust_level: Mapped[str] = mapped_column(
+        String(40), nullable=False, default="legacy_untrusted", server_default="legacy_untrusted"
+    )
+    idempotency_key_sha256: Mapped[str | None] = mapped_column(String(64))
+    idempotency_payload_sha256: Mapped[str | None] = mapped_column(String(64))
     event_metadata: Mapped[dict[str, Any]] = mapped_column("metadata", JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
 
