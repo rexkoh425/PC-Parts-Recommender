@@ -20,6 +20,8 @@ from services.api.serving_release import (
     load_production_catalog_release,
     production_catalog_policy_from_entity_resolution,
 )
+from sqlalchemy import Connection
+from sqlalchemy.orm import Session, sessionmaker
 
 from pc_build_recommender.application import ServingConfigurationError
 from pc_build_recommender.catalog import (
@@ -65,6 +67,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--review-evidence", type=Path, required=True)
     parser.add_argument("--serving-manifest", type=Path, required=True)
     parser.add_argument("--serving-manifest-sha256", required=True)
+    parser.add_argument("--source-registry", type=Path, required=True)
+    parser.add_argument("--source-trust-root-sha256", required=True)
     parser.add_argument("--readiness-artifact", type=Path, required=True)
     parser.add_argument("--expected-data-version", required=True)
     parser.add_argument(
@@ -253,6 +257,24 @@ def _load_release_data(
     return data
 
 
+def _release_session_factory(connection: Connection) -> sessionmaker[Session]:
+    """Create sessions that cannot commit past the outer release transaction.
+
+    The processed importer and vector importer deliberately own their normal unit-of-work
+    boundaries. Binding both to one already-open connection in rollback-only join mode keeps
+    their inner commits from propagating to the outer release transaction. A later vector or
+    exact-identity failure therefore rolls back the earlier catalogue upsert as well.
+    """
+
+    return sessionmaker(
+        bind=connection,
+        class_=Session,
+        expire_on_commit=False,
+        autoflush=False,
+        join_transaction_mode="rollback_only",
+    )
+
+
 def run_catalog_release(
     *,
     buildcores: Path,
@@ -261,6 +283,8 @@ def run_catalog_release(
     review_evidence: Path,
     serving_manifest: Path,
     serving_manifest_sha256: str,
+    source_registry: Path,
+    source_trust_root_sha256: str,
     readiness_artifact: Path,
     expected_data_version: str,
     database_url: str,
@@ -282,6 +306,8 @@ def run_catalog_release(
         offers_path=offers,
         reviewed_mappings_path=reviewed_mappings,
         review_evidence_path=review_evidence,
+        current_source_registry_path=source_registry,
+        expected_source_trust_root_sha256=source_trust_root_sha256,
         expected_catalog_data_version=expected_data_version,
         expected_manifest_sha256=serving_manifest_sha256,
     )
@@ -310,20 +336,27 @@ def run_catalog_release(
             listing_ids=expected_listing_ids,
         )
 
-        with session_scope(store.session_factory) as session:
-            seed_processed_catalog(session, data)
+        # Keep catalogue rows, release-bound search documents/vectors, and the final exact
+        # identity check inside one outer transaction. The generic catalogue upsert correctly
+        # invalidates ``search_document_hash``; the pinned vector import must restore it before
+        # this transaction is allowed to commit.
+        with engine.begin() as connection:
+            release_factory = _release_session_factory(connection)
+            release_store = SqlAlchemyDurableStore(engine, release_factory)
+            with session_scope(release_factory) as session:
+                seed_processed_catalog(session, data)
 
-        vector_result = PostgresVectorCatalogRepository(engine).import_artifact(
-            embedding_artifact,
-            batch_size=batch_size,
-            reconcile_stale_provenance=False,
-        )
-        store.verify_catalog_identity(
-            product_ids=expected_product_ids,
-            listing_ids=expected_listing_ids,
-            canonical_products=data.products,
-            retailer_listings=data.listings,
-        )
+            vector_result = PostgresVectorCatalogRepository(connection).import_artifact(
+                embedding_artifact,
+                batch_size=batch_size,
+                reconcile_stale_provenance=False,
+            )
+            release_store.verify_catalog_identity(
+                product_ids=expected_product_ids,
+                listing_ids=expected_listing_ids,
+                canonical_products=data.products,
+                retailer_listings=data.listings,
+            )
     finally:
         engine.dispose()
 
@@ -334,6 +367,15 @@ def run_catalog_release(
         "data_version": data.stats.data_version,
         "canonical_products": len(data.products),
         "retailer_listings": len(data.listings),
+        "authorized_source_release": {
+            "manifest_sha256": release.source_release.manifest_sha256,
+            "source_name": release.source_release.source_name,
+            "raw_snapshot_sha256": release.source_release.raw_snapshot_sha256,
+            "processed_run_sha256": release.source_release.processed_run_sha256,
+            "authority_expires_at": release.source_release.authority_expires_at.isoformat(),
+            "accepted_count": release.source_release.accepted_count,
+            "rejected_count": release.source_release.rejected_count,
+        },
         "embedding": {
             "data_version": embedding_artifact.data_version,
             "index_version": embedding_artifact.index_version,
@@ -343,6 +385,7 @@ def run_catalog_release(
             "database_import": vector_result.to_dict(),
         },
         "identity_verification": "exact",
+        "atomic_release_transaction": True,
         "stale_row_policy": "fail_closed",
         "destructive_reconciliation_performed": False,
     }
@@ -359,6 +402,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         review_evidence=args.review_evidence,
         serving_manifest=args.serving_manifest,
         serving_manifest_sha256=args.serving_manifest_sha256,
+        source_registry=args.source_registry,
+        source_trust_root_sha256=args.source_trust_root_sha256,
         readiness_artifact=args.readiness_artifact,
         expected_data_version=args.expected_data_version,
         database_url=args.database_url,

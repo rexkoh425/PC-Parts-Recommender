@@ -16,6 +16,7 @@ from services.api.serving_release import (
 )
 
 from pc_build_recommender.catalog import (
+    CanonicalIdentityImportError,
     ProductionCatalogReadinessError,
     StreamedCatalogImportResult,
     create_db_engine,
@@ -87,6 +88,18 @@ def _parser() -> argparse.ArgumentParser:
         help="Lowercase SHA-256 pinned by the deployment operator for --serving-manifest.",
     )
     parser.add_argument(
+        "--source-registry",
+        type=Path,
+        help=(
+            "Independently mounted current source registry used to revalidate the signed "
+            "source release declared by --serving-manifest."
+        ),
+    )
+    parser.add_argument(
+        "--source-trust-root-sha256",
+        help="Independent operator pin for the source-release trust root.",
+    )
+    parser.add_argument(
         "--database-url",
         default=os.environ.get("DATABASE_URL"),
         help="Optional SQLAlchemy URL. If omitted, the command is read-only and prints a report.",
@@ -96,7 +109,11 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--require-production-ready",
         action="store_true",
-        help="Fail closed and roll back database writes when the production policy is unmet.",
+        help=(
+            "Apply the production readiness policy to a read-only report. Production database "
+            "releases must use scripts/import_catalog_release.py so the pinned retrieval corpus "
+            "and exact durable identity are committed atomically."
+        ),
     )
     parser.add_argument(
         "--require-migrated-schema",
@@ -115,7 +132,10 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--verify-durable-identity",
         action="store_true",
-        help="Verify every imported product and listing ID exists after the transaction commits.",
+        help=(
+            "Development-only ID existence check after import. This does not verify the "
+            "manifest-pinned vector/search-document release identity."
+        ),
     )
     parser.add_argument("--report-output", type=Path)
     parser.add_argument(
@@ -213,12 +233,28 @@ def main() -> int:
         )
     if args.readiness_artifact is not None and not args.require_production_ready:
         raise ValueError("release evidence verification requires --require-production-ready")
+    if args.require_production_ready and args.database_url:
+        raise ValueError(
+            "production-ready database writes require scripts/import_catalog_release.py so "
+            "processed rows, the pinned vector/search-document corpus, and exact durable "
+            "identity share one release transaction"
+        )
     if (args.serving_manifest is None) != (args.serving_manifest_sha256 is None):
         raise ValueError(
             "--serving-manifest and --serving-manifest-sha256 must be provided together"
         )
+    if (args.source_registry is None) != (args.source_trust_root_sha256 is None):
+        raise ValueError(
+            "--source-registry and --source-trust-root-sha256 must be provided together"
+        )
     if args.require_production_ready and args.serving_manifest is None:
         raise ValueError("production catalogue import requires a pinned serving manifest")
+    if args.serving_manifest is not None and args.source_registry is None:
+        raise ValueError(
+            "a pinned serving manifest requires independent source registry and trust-root pins"
+        )
+    if args.serving_manifest is None and args.source_registry is not None:
+        raise ValueError("source authority pins require a pinned serving manifest")
     if args.require_production_ready and (
         args.entity_resolution_model is not None
         or args.entity_resolution_evaluation is not None
@@ -236,6 +272,8 @@ def main() -> int:
             offers_path=offer_path,
             reviewed_mappings_path=args.reviewed_mappings,
             review_evidence_path=args.review_evidence,
+            current_source_registry_path=args.source_registry,
+            expected_source_trust_root_sha256=args.source_trust_root_sha256,
             expected_catalog_data_version=args.expected_data_version,
             expected_manifest_sha256=args.serving_manifest_sha256,
         )
@@ -327,6 +365,16 @@ def main() -> int:
                 require_production_ready=args.require_production_ready,
                 production_policy=production_policy,
             )
+    except CanonicalIdentityImportError as error:
+        report = {
+            "database_upserted": False,
+            "canonical_identity_gate_failed": True,
+            "canonical_identity_preflight": error.report.to_dict(),
+        }
+        if args.report_output:
+            _atomic_json(args.report_output, report)
+        print(json.dumps(report, indent=2, sort_keys=True))
+        return 2
     except ProductionCatalogReadinessError as error:
         report = {
             "database_upserted": False,
