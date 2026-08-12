@@ -19,9 +19,14 @@ from pathlib import Path
 from typing import Any, NoReturn, Protocol, cast
 
 from .features import FEATURE_NAMES
+from .listing_labels import (
+    ER_LISTING_REVIEW_PROTOCOL,
+    load_frozen_canonical_catalogue,
+    load_frozen_listing_label_set,
+)
 from .models import ARTIFACT_FORMAT_VERSION, LightGBMEntityResolver, load_entity_resolver
 from .release_contracts import (
-    ER_EVALUATION_SCHEMA_VERSION_V2,
+    ER_EVALUATION_SCHEMA_VERSION_V4,
     EntityResolutionPolicy,
     EntityResolutionProductionEvaluation,
     EntityResolutionReleaseIdentity,
@@ -32,6 +37,7 @@ from .release_contracts import (
     load_entity_resolution_policy,
     load_entity_resolution_rights_approval,
 )
+from .review import SourceUsePolicy
 
 ER_SERVING_EVIDENCE_SCHEMA_VERSION = "pc-build-recommender.er-serving-evidence.v1"
 ER_SERVING_EVIDENCE_FILENAME = "serving_evidence.json"
@@ -41,6 +47,8 @@ ER_CATALOG_MATCHER_DECISION_VERSION = "catalog-er-decision-v1"
 ER_SERVING_PROJECTION_VERSION = "governed-offer-er-projection-v1"
 _SHA256 = re.compile(r"[0-9a-f]{64}")
 _MAX_JSON_ARTIFACT_BYTES = 4 * 1024 * 1024
+_MAX_DECISION_EVIDENCE_BYTES = 128 * 1024 * 1024
+_MAX_DECISION_LINE_BYTES = 4 * 1024 * 1024
 
 
 class EntityResolutionArtifactError(ValueError):
@@ -94,6 +102,36 @@ class ProductionEntityResolutionEvaluation(Protocol):
 
     @property
     def precision_ci_upper(self) -> float | None: ...
+
+    @property
+    def matcher_decision_version(self) -> str | None: ...
+
+    @property
+    def review_protocol(self) -> str | None: ...
+
+    @property
+    def max_candidates(self) -> int | None: ...
+
+    @property
+    def minimum_text_score(self) -> float | None: ...
+
+    @property
+    def minimum_auto_margin(self) -> float | None: ...
+
+    @property
+    def candidate_blocking_recall(self) -> float | None: ...
+
+    @property
+    def winner_selection_accuracy(self) -> float | None: ...
+
+    @property
+    def ambiguity_case_count(self) -> int | None: ...
+
+    @property
+    def ambiguity_deferred_count(self) -> int | None: ...
+
+    @property
+    def ambiguity_false_auto_match_count(self) -> int | None: ...
 
     @property
     def recall(self) -> float | None: ...
@@ -389,8 +427,8 @@ class EntityResolutionRuntime:
                 "a production entity-resolution evaluation is required for model activation"
             )
         blockers: list[str] = []
-        if evaluation.schema_version != ER_EVALUATION_SCHEMA_VERSION_V2:
-            blockers.append("evaluation schema is not production v2")
+        if evaluation.schema_version != ER_EVALUATION_SCHEMA_VERSION_V4:
+            blockers.append("evaluation schema is not production v4")
         if evaluation.model_version != self.model_version:
             blockers.append("evaluation model_version does not match activated artifact")
         if evaluation.dataset_version != self.evidence.dataset_version:
@@ -436,6 +474,22 @@ class EntityResolutionRuntime:
             blockers.append("evaluation recall is below the production threshold")
         if evaluation.f1 is None or evaluation.f1 < minimum_f1:
             blockers.append("evaluation F1 is below the production threshold")
+        if evaluation.matcher_decision_version != ER_CATALOG_MATCHER_DECISION_VERSION:
+            blockers.append("evaluation matcher decision version does not match runtime")
+        if evaluation.review_protocol != ER_LISTING_REVIEW_PROTOCOL:
+            blockers.append("evaluation does not use the independent-review protocol")
+        if evaluation.candidate_blocking_recall is None or (
+            evaluation.candidate_blocking_recall < minimum_recall
+        ):
+            blockers.append("evaluation candidate-blocking recall is below threshold")
+        if evaluation.winner_selection_accuracy is None or (
+            evaluation.winner_selection_accuracy < minimum_recall
+        ):
+            blockers.append("evaluation winner-selection accuracy is below threshold")
+        if evaluation.ambiguity_false_auto_match_count:
+            blockers.append("evaluation ambiguity margin produced an automatic match")
+        if evaluation.ambiguity_deferred_count != evaluation.ambiguity_case_count:
+            blockers.append("evaluation ambiguity cases were not all deferred")
         if not self.production_authorized:
             if evaluation.reportable is not True:
                 blockers.append("evaluation is not reportable under its source policy")
@@ -641,6 +695,116 @@ def _canonical_value_sha256(value: object) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def _load_listing_decision_rows(path: Path) -> tuple[Mapping[str, Any], ...]:
+    """Load bounded immutable matcher traces without trusting their reported metrics."""
+
+    if path.stat().st_size > _MAX_DECISION_EVIDENCE_BYTES:
+        raise EntityResolutionArtifactError("ER decision evidence exceeds 128 MiB")
+    seen: set[str] = set()
+    rows: list[Mapping[str, Any]] = []
+    with path.open("rb") as source:
+        for line_number, raw_line in enumerate(source, start=1):
+            if len(raw_line) > _MAX_DECISION_LINE_BYTES:
+                raise EntityResolutionArtifactError(
+                    f"ER decision evidence line {line_number} exceeds 4 MiB"
+                )
+            if not raw_line.strip():
+                continue
+            try:
+                row_value: Any = json.loads(
+                    raw_line.decode("utf-8"),
+                    object_pairs_hook=_reject_json_duplicate_keys,
+                    parse_constant=_reject_json_constant,
+                )
+            except (UnicodeDecodeError, json.JSONDecodeError) as error:
+                raise EntityResolutionArtifactError(
+                    f"invalid ER decision evidence on line {line_number}"
+                ) from error
+            if not isinstance(row_value, Mapping):
+                raise EntityResolutionArtifactError(
+                    f"ER decision evidence line {line_number} must be an object"
+                )
+            listing_id = row_value.get("listing_id")
+            if not isinstance(listing_id, str) or not listing_id:
+                raise EntityResolutionArtifactError("ER decision listing_id is invalid")
+            if listing_id in seen:
+                raise EntityResolutionArtifactError("ER decision evidence repeats a listing")
+            seen.add(listing_id)
+            rows.append(cast(Mapping[str, Any], row_value))
+    return tuple(rows)
+
+
+def _verify_replayed_listing_evaluation(
+    *,
+    persisted_rows: tuple[Mapping[str, Any], ...],
+    replay: Any,
+    evaluation: EntityResolutionProductionEvaluation,
+) -> None:
+    """Bind every decision and metric to a fresh run of the pinned model and policy."""
+
+    if _canonical_value_sha256(list(persisted_rows)) != _canonical_value_sha256(
+        list(replay.decision_rows)
+    ):
+        raise EntityResolutionArtifactError(
+            "ER decision evidence does not match pinned matcher/model replay"
+        )
+    expected_fields = {
+        "labelled_pair_count": replay.labelled_pair_count,
+        "listing_count": replay.listing_count,
+        "independent_reviewer_count": replay.independent_reviewer_count,
+        "candidate_blocking_hits": replay.candidate_blocking_hits,
+        "candidate_blocking_denominator": replay.candidate_blocking_denominator,
+        "candidate_blocking_recall": replay.candidate_blocking_recall,
+        "winner_selection_correct": replay.winner_selection_correct,
+        "winner_selection_denominator": replay.winner_selection_denominator,
+        "winner_selection_accuracy": replay.winner_selection_accuracy,
+        "precision_numerator": replay.auto_match_correct,
+        "precision_denominator": replay.auto_match_count,
+        "precision": replay.auto_match_precision,
+        "precision_ci_lower": replay.auto_match_precision_ci_lower,
+        "precision_ci_upper": replay.auto_match_precision_ci_upper,
+        "recall": replay.auto_match_recall,
+        "f1": replay.auto_match_f1,
+        "ambiguity_case_count": replay.ambiguity_case_count,
+        "ambiguity_deferred_count": replay.ambiguity_deferred_count,
+        "ambiguity_false_auto_match_count": replay.ambiguity_false_auto_match_count,
+        "canonical_catalogue_version": replay.canonical_catalogue_version,
+        "canonical_catalogue_sha256": replay.canonical_catalogue_sha256,
+        "canonical_catalogue_file_sha256": replay.canonical_catalogue_file_sha256,
+        "canonical_catalogue_product_count": replay.canonical_catalogue_product_count,
+        "in_catalogue_listing_count": replay.in_catalogue_listing_count,
+        "unmatched_listing_count": replay.unmatched_listing_count,
+        "anchor_auto_match_count": replay.anchor_auto_match_count,
+        "model_route_listing_count": replay.model_route_listing_count,
+        "model_in_catalogue_listing_count": replay.model_in_catalogue_listing_count,
+        "model_unmatched_listing_count": replay.model_unmatched_listing_count,
+        "model_hard_negative_pair_count": replay.model_hard_negative_pair_count,
+        "model_hard_negative_listing_count": replay.model_hard_negative_listing_count,
+        "model_auto_match_correct": replay.model_auto_match_correct,
+        "model_auto_match_count": replay.model_auto_match_count,
+        "model_auto_match_precision": replay.model_auto_match_precision,
+        "model_auto_match_precision_ci_lower": (
+            replay.model_auto_match_precision_ci_lower
+        ),
+        "model_auto_match_precision_ci_upper": (
+            replay.model_auto_match_precision_ci_upper
+        ),
+        "model_auto_match_recall": replay.model_auto_match_recall,
+        "model_auto_match_f1": replay.model_auto_match_f1,
+    }
+    for field, expected in expected_fields.items():
+        actual = getattr(evaluation, field)
+        if isinstance(expected, float):
+            matches = isinstance(actual, int | float) and not isinstance(actual, bool)
+            matches = matches and abs(float(actual) - expected) <= 1e-12
+        else:
+            matches = actual == expected
+        if not matches:
+            raise EntityResolutionArtifactError(
+                f"ER evaluation {field} does not match pinned matcher replay"
+            )
+
+
 def _release_blockers(
     runtime: EntityResolutionRuntime,
     evaluation: EntityResolutionProductionEvaluation,
@@ -648,13 +812,23 @@ def _release_blockers(
     rights: EntityResolutionRightsApproval,
     *,
     evaluation_sha256: str,
+    label_dataset_file_sha256: str,
+    decision_rows_sha256: str,
+    label_dataset_sha256: str,
+    label_dataset_version: str,
+    label_source_review_queue_sha256: str,
+    label_frozen_groups_sha256: str,
+    label_pair_count: int,
+    label_listing_count: int,
+    label_reviewer_count: int,
+    label_source_policy: SourceUsePolicy,
 ) -> tuple[str, ...]:
     """Return every immutable-evidence mismatch without trusting eligibility flags."""
 
     evidence = runtime.evidence
     blockers: list[str] = []
-    if evaluation.schema_version != ER_EVALUATION_SCHEMA_VERSION_V2:
-        blockers.append("evaluation schema is not production v2")
+    if evaluation.schema_version != ER_EVALUATION_SCHEMA_VERSION_V4:
+        blockers.append("evaluation schema is not production v4")
     if policy.claim_scope != ER_PRODUCTION_CLAIM_SCOPE:
         blockers.append("policy claim scope is not the PC retailer catalogue")
     if policy.required_label_source != "human_reviewed":
@@ -682,12 +856,62 @@ def _release_blockers(
         blockers.append("evaluation review_queue_sha256 does not match serving evidence")
     if evaluation.frozen_test_groups_sha256 != evidence.frozen_test_groups_sha256:
         blockers.append("evaluation frozen_test_groups_sha256 does not match serving evidence")
+    if evaluation.label_dataset_file_sha256 != label_dataset_file_sha256:
+        blockers.append("evaluation label dataset digest does not match exact labels.json bytes")
+    if evaluation.label_dataset_sha256 != label_dataset_sha256:
+        blockers.append("evaluation semantic label dataset digest does not match labels.json")
+    if evaluation.dataset_version != label_dataset_version:
+        blockers.append("evaluation dataset version does not match labels.json")
+    if evaluation.review_queue_sha256 != label_source_review_queue_sha256:
+        blockers.append("evaluation review queue does not match labels.json")
+    if evaluation.frozen_test_groups_sha256 != label_frozen_groups_sha256:
+        blockers.append("evaluation frozen groups do not match labels.json")
+    if evaluation.labelled_pair_count != label_pair_count:
+        blockers.append("evaluation labelled-pair count does not match labels.json")
+    if evaluation.listing_count != label_listing_count:
+        blockers.append("evaluation listing count does not match labels.json")
+    if evaluation.independent_reviewer_count != label_reviewer_count:
+        blockers.append("evaluation reviewer count does not match labels.json")
+    if label_source_policy.listing_source != evidence.listing_source:
+        blockers.append("label listing source does not match model evidence")
+    if label_source_policy.catalogue_source != evidence.catalogue_source:
+        blockers.append("label catalogue source does not match model evidence")
+    if label_source_policy.training_eligible is not evidence.source_training_eligible:
+        blockers.append("label training permission does not match model evidence")
+    if (
+        label_source_policy.published_metrics_eligible
+        is not evidence.source_published_metrics_eligible
+    ):
+        blockers.append("label metric-publication permission does not match model evidence")
+    if (
+        label_source_policy.model_serving_eligible
+        is not evidence.source_model_serving_eligible
+    ):
+        blockers.append("label serving permission does not match model evidence")
+    if not (
+        label_source_policy.training_eligible
+        and label_source_policy.published_metrics_eligible
+        and label_source_policy.model_serving_eligible
+    ):
+        blockers.append("label source policy is not eligible for production model evidence")
+    if evaluation.decision_rows_sha256 != decision_rows_sha256:
+        blockers.append("evaluation decision digest does not match exact decisions.jsonl bytes")
     if evaluation.auto_match_threshold != policy.auto_match_threshold:
         blockers.append("evaluation auto-match threshold does not match policy")
     if runtime.resolver.thresholds.auto_match != policy.auto_match_threshold:
         blockers.append("model auto-match threshold does not match policy")
     if runtime.resolver.thresholds.manual_review != policy.manual_review_threshold:
         blockers.append("model manual-review threshold does not match policy")
+    if evaluation.matcher_decision_version != policy.required_matcher_decision_version:
+        blockers.append("evaluation matcher decision version does not match policy")
+    if evaluation.review_protocol != ER_LISTING_REVIEW_PROTOCOL:
+        blockers.append("evaluation does not use the independent-review protocol")
+    if evaluation.max_candidates != policy.max_candidates:
+        blockers.append("evaluation max-candidates setting does not match policy")
+    if evaluation.minimum_text_score != policy.minimum_text_score:
+        blockers.append("evaluation blocking threshold does not match policy")
+    if evaluation.minimum_auto_margin != policy.minimum_auto_margin:
+        blockers.append("evaluation ambiguity margin does not match policy")
     if evaluation.precision < policy.minimum_precision:
         blockers.append("evaluation precision is below policy")
     if evaluation.labelled_pair_count < policy.minimum_labelled_pairs:
@@ -701,7 +925,10 @@ def _release_blockers(
             blockers.append("evaluation automatic-match support is below policy")
         if denominator > evaluation.labelled_pair_count:
             blockers.append("evaluation automatic-match support exceeds labelled pairs")
-        if abs(numerator / denominator - evaluation.precision) > 1e-9:
+        if denominator == 0:
+            if numerator != 0 or evaluation.precision != 0.0:
+                blockers.append("zero-support precision evidence is inconsistent")
+        elif abs(numerator / denominator - evaluation.precision) > 1e-9:
             blockers.append("evaluation precision does not match evidence counts")
     if (
         evaluation.precision_ci_lower is None
@@ -712,6 +939,63 @@ def _release_blockers(
         blockers.append("evaluation recall is below policy")
     if evaluation.f1 is None or evaluation.f1 < policy.minimum_f1:
         blockers.append("evaluation F1 is below policy")
+    if (
+        evaluation.candidate_blocking_recall is None
+        or evaluation.candidate_blocking_recall < policy.minimum_recall
+    ):
+        blockers.append("evaluation candidate-blocking recall is below policy")
+    if (
+        evaluation.winner_selection_accuracy is None
+        or evaluation.winner_selection_accuracy < policy.minimum_recall
+    ):
+        blockers.append("evaluation winner-selection accuracy is below policy")
+    if evaluation.ambiguity_false_auto_match_count:
+        blockers.append("evaluation ambiguity margin produced an automatic match")
+    if evaluation.ambiguity_deferred_count != evaluation.ambiguity_case_count:
+        blockers.append("evaluation ambiguity cases were not all deferred")
+    if (
+        evaluation.canonical_catalogue_product_count is None
+        or evaluation.canonical_catalogue_product_count < policy.minimum_products
+    ):
+        blockers.append("evaluation canonical catalogue coverage is below policy")
+    model_count = evaluation.model_auto_match_count
+    model_correct = evaluation.model_auto_match_correct
+    if (
+        model_count is None
+        or model_correct is None
+        or model_count < policy.minimum_auto_matches
+    ):
+        blockers.append("evaluation model-only automatic-match support is below policy")
+    if (
+        evaluation.model_auto_match_precision is None
+        or evaluation.model_auto_match_precision < policy.minimum_precision
+    ):
+        blockers.append("evaluation model-only precision is below policy")
+    if (
+        evaluation.model_auto_match_precision_ci_lower is None
+        or evaluation.model_auto_match_precision_ci_lower < policy.minimum_precision
+    ):
+        blockers.append("evaluation model-only precision confidence lower bound is below policy")
+    if (
+        evaluation.model_auto_match_recall is None
+        or evaluation.model_auto_match_recall < policy.minimum_recall
+    ):
+        blockers.append("evaluation model-only recall is below policy")
+    if (
+        evaluation.model_auto_match_f1 is None
+        or evaluation.model_auto_match_f1 < policy.minimum_f1
+    ):
+        blockers.append("evaluation model-only F1 is below policy")
+    if (
+        evaluation.model_hard_negative_listing_count is None
+        or evaluation.model_hard_negative_listing_count < policy.minimum_auto_matches
+    ):
+        blockers.append("evaluation model-only hard-negative coverage is below policy")
+    if (
+        evaluation.model_unmatched_listing_count is None
+        or evaluation.model_unmatched_listing_count < policy.minimum_auto_matches
+    ):
+        blockers.append("evaluation model-only unmatched coverage is below policy")
 
     # These exact references make the operator-reviewed rights record the trust root.
     # The legacy evaluation `reportable` and `deployment_eligible` booleans are parsed
@@ -753,8 +1037,53 @@ def load_entity_resolution_release(
     evaluation = load_entity_resolution_evaluation(evaluation_path)
     if evaluation is None:  # pragma: no cover - the non-optional path makes this defensive.
         raise EntityResolutionArtifactError("production ER evaluation is required")
+    if evaluation.schema_version != ER_EVALUATION_SCHEMA_VERSION_V4:
+        raise EntityResolutionArtifactError("evaluation schema is not production v4")
     rights = load_entity_resolution_rights_approval(rights_path)
     evaluation_sha256 = entity_resolution_file_sha256(evaluation_path)
+    evaluation_root = Path(evaluation_path).resolve().parent
+    label_dataset_path = evaluation_root / "labels.json"
+    decision_rows_path = evaluation_root / "decisions.jsonl"
+    canonical_catalogue_path = evaluation_root / "canonical-catalogue.json"
+    if not label_dataset_path.is_file():
+        raise EntityResolutionArtifactError("production ER release requires sibling labels.json")
+    if not decision_rows_path.is_file():
+        raise EntityResolutionArtifactError(
+            "production ER release requires sibling decisions.jsonl"
+        )
+    if not canonical_catalogue_path.is_file():
+        raise EntityResolutionArtifactError(
+            "production ER release requires sibling canonical-catalogue.json"
+        )
+    label_dataset_file_sha256 = entity_resolution_file_sha256(label_dataset_path)
+    decision_rows_sha256 = entity_resolution_file_sha256(decision_rows_path)
+    label_dataset = load_frozen_listing_label_set(label_dataset_path)
+    canonical_catalogue_file_sha256 = entity_resolution_file_sha256(
+        canonical_catalogue_path
+    )
+    canonical_catalogue = load_frozen_canonical_catalogue(canonical_catalogue_path)
+    if label_dataset.canonical_catalogue_file_sha256 != canonical_catalogue_file_sha256:
+        raise EntityResolutionArtifactError(
+            "labels do not bind the exact canonical-catalogue.json bytes"
+        )
+    if label_dataset.canonical_catalogue_sha256 != canonical_catalogue.catalogue_sha256:
+        raise EntityResolutionArtifactError(
+            "labels do not bind the canonical catalogue semantic release"
+        )
+    if label_dataset.canonical_catalogue_version != canonical_catalogue.catalogue_version:
+        raise EntityResolutionArtifactError(
+            "labels canonical catalogue version does not match the release"
+        )
+    if label_dataset.products != canonical_catalogue.products:
+        raise EntityResolutionArtifactError(
+            "label matcher catalogue is not the complete canonical catalogue release"
+        )
+    label_frozen_groups_sha256 = hashlib.sha256(
+        "\n".join(
+            sorted(group.listing.listing_id for group in label_dataset.listing_groups)
+        ).encode("utf-8")
+    ).hexdigest()
+    persisted_decision_rows = _load_listing_decision_rows(decision_rows_path)
 
     if as_of is not None and (as_of.tzinfo is None or as_of.utcoffset() is None):
         raise EntityResolutionArtifactError("ER release as_of must include a timezone")
@@ -766,12 +1095,35 @@ def load_entity_resolution_release(
         model_dir,
         allow_unpromoted_human_diagnostic=True,
     )
+    # Import locally to keep the entity-resolution package independent of the catalogue
+    # facade during module initialization. Production authorization always performs this
+    # deterministic replay; hashes and self-reported rows alone never confer authority.
+    from pc_build_recommender.catalog.entity_resolution_evaluation import (
+        evaluate_listing_matcher,
+    )
+
+    replay = evaluate_listing_matcher(label_dataset, runtime, policy)
+    _verify_replayed_listing_evaluation(
+        persisted_rows=persisted_decision_rows,
+        replay=replay,
+        evaluation=evaluation,
+    )
     blockers = _release_blockers(
         runtime,
         evaluation,
         policy,
         rights,
         evaluation_sha256=evaluation_sha256,
+        label_dataset_file_sha256=label_dataset_file_sha256,
+        decision_rows_sha256=decision_rows_sha256,
+        label_dataset_sha256=label_dataset.dataset_sha256,
+        label_dataset_version=label_dataset.dataset_version,
+        label_source_review_queue_sha256=label_dataset.source_review_queue_sha256,
+        label_frozen_groups_sha256=label_frozen_groups_sha256,
+        label_pair_count=label_dataset.labelled_pair_count,
+        label_listing_count=len(label_dataset.listing_groups),
+        label_reviewer_count=label_dataset.independent_reviewer_count,
+        label_source_policy=label_dataset.source_policy,
     )
     if blockers:
         raise EntityResolutionArtifactError("; ".join(blockers))
