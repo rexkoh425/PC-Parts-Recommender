@@ -6951,3 +6951,92 @@ h2 {
 .faq-list {
   border-color: color-mix(in srgb, var(--line) 70%, transparent);
 }
+
+/* ===========================================================================
+   Atmosphere
+   The page was a stack of flat bands: one canvas tone, one dark strip, no
+   depth between them. These are quiet moves — a wash behind the hero, real
+   dividers in the dark strip, buttons that respond — but they are what
+   separates a designed page from a correct one.
+   =========================================================================== */
+
+body {
+  /* Two soft washes rather than one mint blob: a cool tint behind the hero and
+     a warm one low and left, so the ground has a gradient instead of a stain. */
+  background:
+    radial-gradient(60rem 32rem at 88% -8%, rgb(58 122 99 / 9%), transparent 62%),
+    radial-gradient(48rem 30rem at -10% 18%, rgb(176 82 29 / 5%), transparent 60%),
+    var(--canvas);
+  background-attachment: fixed;
+}
+
+/* The strip carried four steps with nothing between them. Hairlines in a
+   lighter tint of its own ground read as structure, not decoration. */
+.method-strip {
+  background: linear-gradient(180deg, var(--forest-800) 0%, var(--forest-deep) 100%);
+}
+
+.method-strip__inner > div + div {
+  border-left: 1px solid rgb(255 255 255 / 9%);
+}
+
+.method-strip__inner > div > span {
+  color: var(--mint);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+/* Buttons had no depth and no travel. A hairline highlight along the top edge
+   catches light the way a raised surface would. */
+.button--primary {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 12%),
+    var(--elevation-1);
+  transition:
+    background-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.button--primary:hover {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 16%),
+    var(--elevation-2);
+  transform: translateY(-1px);
+}
+
+.button--primary:active {
+  transform: translateY(0);
+  box-shadow: var(--elevation-1);
+}
+
+.button--secondary {
+  background: var(--surface);
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.button--secondary:hover {
+  background: var(--forest-50);
+  border-color: var(--forest-200);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button--primary,
+  .button--primary:hover,
+  .button--primary:active {
+    transform: none;
+    transition: none;
+  }
+}
+
+/* The eyebrow dot was a bare bullet; a small filled disc reads as a mark. */
+.hero .eyebrow > span[aria-hidden="true"] {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  text-indent: -9999px;
+  overflow: hidden;
+}
