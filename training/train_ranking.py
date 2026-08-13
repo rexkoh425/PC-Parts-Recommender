@@ -26,7 +26,6 @@ from pc_build_recommender.evaluation.splits import deterministic_group_split
 from pc_build_recommender.ranking import (
     LabeledRankingQuery,
     LambdaMARTRanker,
-    RankerMetadata,
     RankingCandidate,
     RankingContext,
     relative_ndcg_improvement,
@@ -347,28 +346,6 @@ def _mean_ndcg(
     return sum(learned) / len(learned), sum(bm25) / len(bm25)
 
 
-def _promotion_blockers(
-    *,
-    ranker_metadata: RankerMetadata,
-    minimum_independent_reviewers: int,
-    query_count: int,
-    row_count: int,
-    relative_improvement: float | None,
-) -> list[str]:
-    blockers = list(ranker_metadata.promotion_block_reasons)
-    if not ranker_metadata.promotion_eligible and not blockers:
-        blockers.append("ranker metadata is not promotion-eligible")
-    if minimum_independent_reviewers < 2:
-        blockers.append("fewer than two independent human relevance reviewers")
-    if query_count < 150:
-        blockers.append("fewer than the target 150 independently graded queries")
-    if row_count < 2000:
-        blockers.append("fewer than the target 2,000 graded query-product rows")
-    if relative_improvement is None or relative_improvement < 15.0:
-        blockers.append("held-out NDCG@10 improvement has not reached the 15% target")
-    return blockers
-
-
 def _training_publication_intent_sha256(
     *,
     source_sha256: str,
@@ -595,18 +572,12 @@ def main(argv: list[str] | None = None) -> int:
         publication_intent_sha256=publication_intent_sha256,
     )
     # Publication can adopt an already-committed same-intent artifact after a
-    # process crash or concurrent run.  Measure only after publication so the
-    # report always describes the exact booster whose hashes it records.
-    learned_ndcg, bm25_ndcg = _mean_ndcg(ranker, split["test"])
+    # process crash or concurrent run.  Training diagnostics are restricted to
+    # validation.  The frozen test cohort is accessible only through the sealed,
+    # preregistered evaluation command.
+    learned_ndcg, bm25_ndcg = _mean_ndcg(ranker, split["validation"])
     improvement = relative_ndcg_improvement(learned_ndcg, bm25_ndcg) if bm25_ndcg > 0 else None
     row_count = sum(len(query.candidates) for query in queries)
-    blockers = _promotion_blockers(
-        ranker_metadata=ranker.metadata,
-        minimum_independent_reviewers=evidence.minimum_independent_reviewers,
-        query_count=len(queries),
-        row_count=row_count,
-        relative_improvement=improvement,
-    )
     training_evidence_payload: dict[str, Any] = {
         "schema_version": "pc-build-recommender.ranking-training-evidence.v3",
         "source_sha256": source_sha256,
@@ -676,7 +647,11 @@ def main(argv: list[str] | None = None) -> int:
         "validation_query_hashes": sorted(
             sha256_text(query.context.query_id) for query in split["validation"]
         ),
-        "test_query_hashes": sorted(sha256_text(query.context.query_id) for query in split["test"]),
+        "frozen_test_cohort": {
+            "query_count": len(split["test"]),
+            "metrics_accessed": False,
+            "evaluation_requires_preregistered_intent": True,
+        },
         "ranker_metadata": ranker.metadata.to_dict(),
     }
     write_json(args.artifact_dir / "training_evidence.json", training_evidence_payload)
@@ -730,12 +705,16 @@ def main(argv: list[str] | None = None) -> int:
             "estimated_materialization_memory_mb": estimated_materialization_mib,
             "host_memory_preflight": host_memory_preflight.to_dict(),
         },
-        "heldout_test": {
+        "validation_diagnostic": {
             "ndcg_at_10": learned_ndcg,
             "bm25_ndcg_at_10": bm25_ndcg,
             "relative_improvement_percent": improvement,
+            "promotion_evidence": False,
         },
-        "promotion": {"eligible": not blockers, "block_reasons": blockers},
+        "promotion_decision": {
+            "emitted": False,
+            "reason": "promotion requires the separately preregistered sealed test evaluator",
+        },
     }
     report_path = args.report or args.artifact_dir / "training_report.json"
     write_json(report_path, report)
@@ -755,9 +734,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         tracking.log_metrics(
             {
-                "test.ndcg_at_10": learned_ndcg,
-                "test.bm25_ndcg_at_10": bm25_ndcg,
-                "test.relative_improvement_percent": improvement,
+                "validation.ndcg_at_10": learned_ndcg,
+                "validation.bm25_ndcg_at_10": bm25_ndcg,
+                "validation.relative_improvement_percent": improvement,
                 **ranker.metadata.metrics,
             }
         )
@@ -769,10 +748,15 @@ def main(argv: list[str] | None = None) -> int:
                 "label.provenance": ranker.metadata.training_label_source,
                 "device.requested": args.device,
                 "device.actual": args.device,
-                **promotion_blocker_tags(blockers),
+                "test.evaluated": "false",
+                "promotion.decision_emitted": "false",
+                **promotion_blocker_tags(ranker.metadata.promotion_block_reasons),
             }
         )
-        tracking.log_dict(report["promotion"], "evidence/promotion-gate.json")
+        tracking.log_dict(
+            report["promotion_decision"],
+            "evidence/training-evaluation-boundary.json",
+        )
         tracking.log_dict(training_evidence_payload, "evidence/training-evidence.json")
         report["mlflow_tracking"] = tracking.describe()
         write_json(report_path, report)
