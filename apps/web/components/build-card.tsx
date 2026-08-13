@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type React from "react";
 import { categoryLabels, formatScore, formatSgd, profileLabels } from "../lib/format";
 import type { BuildSummary, ComponentCategory } from "../lib/types";
 import { ScoreMeter } from "./score-meter";
@@ -42,7 +43,13 @@ export function BuildCard({
           <small>Total for new parts</small>
           <h2>{formatSgd(build.total_price_sgd)}</h2>
         </div>
-        <div className="overall-score" aria-label={`Relative fit score ${formatScore(build.overall_score)} out of 100 for this request`}>
+        <div
+          className="overall-score"
+          // The ring reads the value from a custom property so the figure and
+          // the arc can never disagree.
+          style={{ "--score": build.overall_score } as React.CSSProperties}
+          aria-label={`Relative fit score ${formatScore(build.overall_score)} out of 100 for this request`}
+        >
           <strong>{formatScore(build.overall_score)}</strong>
           <small>fit</small>
         </div>

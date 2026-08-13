@@ -7040,3 +7040,70 @@ body {
   text-indent: -9999px;
   overflow: hidden;
 }
+
+/* ===========================================================================
+   Figures
+   The overall score sat in a 57px grey disc with a hairline — a badge, not a
+   figure. It is the number that separates one build from another, so it should
+   read as data. A conic ring shows the value as well as stating it, which the
+   plain disc never did.
+   =========================================================================== */
+
+.overall-score {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border: none;
+  background: none;
+  /* --score is set inline per card; the fallback keeps the ring sane if a
+     build ever renders without one. */
+  --score: 0;
+}
+
+.overall-score::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--forest-600) calc(var(--score) * 1%),
+    var(--forest-100) 0
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+}
+
+.overall-score strong {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+}
+
+.overall-score small {
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+/* Meters were a flat bar. A rounded cap and an eased fill make the value feel
+   measured rather than drawn. */
+.score-meter__track {
+  background: var(--forest-100);
+  overflow: hidden;
+}
+
+.score-meter__track > span {
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--forest-400), var(--forest-600));
+  transition: width 320ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.score-meter__header strong {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .score-meter__track > span {
+    transition: none;
+  }
+}
