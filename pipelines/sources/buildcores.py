@@ -3,31 +3,40 @@
 from __future__ import annotations
 
 import json
+import os
 import zipfile
 from collections.abc import Mapping, Sequence
 from pathlib import Path, PurePosixPath
 
+from pc_build_recommender.catalog.canonical_identity import audit_canonical_envelopes
 from pipelines.parsing.normalizers import BUILDCORES_CATEGORY_MAP, normalise_buildcores_product
 from pipelines.sources.base import (
     ParsedBatch,
     RawSnapshot,
     fetch_http_snapshot,
     rejected_record,
+    sha256_file,
     snapshot_local_file,
 )
-from pc_build_recommender.catalog.canonical_identity import audit_canonical_envelopes
 
 BUILDCORES_COMMIT = "6a64ab14fb1ab1bc1f3030d36b70bddcc2afeb0f"
 BUILDCORES_ARCHIVE_URL = (
     "https://github.com/buildcores/buildcores-open-db/archive/"
     f"{BUILDCORES_COMMIT}.zip"
 )
+BUILDCORES_ARCHIVE_SHA256 = "f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f"
 BUILDCORES_LICENSE_NOTE = (
     "BuildCores OpenDB database licensed ODC-By 1.0; attribution required. "
     "Community-maintained specifications require field-level verification for hard compatibility."
 )
 BUILDCORES_PARSER_VERSION = "buildcores-open-db-v1"
 DEFAULT_CATEGORIES = tuple(BUILDCORES_CATEGORY_MAP)
+MAXIMUM_ARCHIVE_BYTES = 150 * 1024 * 1024
+MAXIMUM_ARCHIVE_MEMBERS = 100_000
+MAXIMUM_UNCOMPRESSED_BYTES = 512 * 1024 * 1024
+MAXIMUM_MEMBER_BYTES = 16 * 1024 * 1024
+MAXIMUM_COMPRESSION_RATIO = 100
+_ALLOWED_COMPRESSION = frozenset({zipfile.ZIP_STORED, zipfile.ZIP_DEFLATED})
 
 
 class BuildCoresOpenDBAdapter:
@@ -48,6 +57,8 @@ class BuildCoresOpenDBAdapter:
                 licence_or_access_note=BUILDCORES_LICENSE_NOTE,
                 suffix=".zip",
                 media_type="application/zip",
+                expected_sha256=BUILDCORES_ARCHIVE_SHA256,
+                maximum_bytes=MAXIMUM_ARCHIVE_BYTES,
             )
         return fetch_http_snapshot(
             source_name="buildcores_open_db",
@@ -57,7 +68,8 @@ class BuildCoresOpenDBAdapter:
             parser_version=BUILDCORES_PARSER_VERSION,
             licence_or_access_note=BUILDCORES_LICENSE_NOTE,
             suffix=".zip",
-            maximum_bytes=150 * 1024 * 1024,
+            expected_sha256=BUILDCORES_ARCHIVE_SHA256,
+            maximum_bytes=MAXIMUM_ARCHIVE_BYTES,
         )
 
     def parse(
@@ -68,6 +80,7 @@ class BuildCoresOpenDBAdapter:
         per_category_limit: int | None = 100,
         per_category_limits: Mapping[str, int] | None = None,
     ) -> ParsedBatch:
+        self._validate_snapshot(snapshot)
         if per_category_limit is not None and per_category_limit <= 0:
             raise ValueError("per_category_limit must be positive or None")
         unknown_categories = set(categories) - set(BUILDCORES_CATEGORY_MAP)
@@ -85,6 +98,7 @@ class BuildCoresOpenDBAdapter:
         accepted_by_category = {category: 0 for category in categories}
         available_by_category = {category: 0 for category in categories}
         with zipfile.ZipFile(snapshot.path) as archive:
+            member_count, uncompressed_bytes = self._validate_archive(archive)
             entries = self._category_entries(archive, categories)
             for category in categories:
                 category_entries = entries[category]
@@ -126,6 +140,9 @@ class BuildCoresOpenDBAdapter:
         identity_preflight = audit_canonical_envelopes(batch.records)
         batch.statistics = {
             "commit": BUILDCORES_COMMIT,
+            "archive_sha256": BUILDCORES_ARCHIVE_SHA256,
+            "archive_member_count": member_count,
+            "archive_uncompressed_bytes": uncompressed_bytes,
             "available_records": sum(available_by_category.values()),
             "selected_records": batch.accepted_count + batch.rejected_count,
             "accepted_by_category": accepted_by_category,
@@ -134,6 +151,66 @@ class BuildCoresOpenDBAdapter:
             "canonical_identity_preflight": identity_preflight.to_dict(),
         }
         return batch
+
+    @staticmethod
+    def _validate_snapshot(snapshot: RawSnapshot) -> None:
+        is_junction = getattr(os.path, "isjunction", None)
+        if (
+            snapshot.source_name != "buildcores_open_db"
+            or snapshot.source_url != BUILDCORES_ARCHIVE_URL
+            or snapshot.source_type != "import"
+            or snapshot.parser_version != BUILDCORES_PARSER_VERSION
+            or snapshot.media_type != "application/zip"
+            or snapshot.licence_or_access_note != BUILDCORES_LICENSE_NOTE
+            or snapshot.content_sha256 != BUILDCORES_ARCHIVE_SHA256
+            or snapshot.byte_count > MAXIMUM_ARCHIVE_BYTES
+            or snapshot.path.is_symlink()
+            or bool(is_junction is not None and is_junction(snapshot.path))
+            or not snapshot.path.is_file()
+        ):
+            raise ValueError("BuildCores snapshot does not match the pinned archive authority")
+        if (
+            snapshot.path.stat().st_size != snapshot.byte_count
+            or sha256_file(snapshot.path) != BUILDCORES_ARCHIVE_SHA256
+        ):
+            raise ValueError("BuildCores snapshot bytes changed after acquisition")
+
+    @staticmethod
+    def _validate_archive(archive: zipfile.ZipFile) -> tuple[int, int]:
+        entries = archive.infolist()
+        if len(entries) > MAXIMUM_ARCHIVE_MEMBERS:
+            raise ValueError("BuildCores archive exceeds its member-count limit")
+        names: set[str] = set()
+        uncompressed_bytes = 0
+        for entry in entries:
+            filename = entry.filename
+            path = PurePosixPath(filename)
+            if (
+                not filename
+                or "\\" in filename
+                or path.is_absolute()
+                or any(part in {"", ".", ".."} for part in path.parts)
+                or filename in names
+            ):
+                raise ValueError("BuildCores archive contains an unsafe or duplicate member")
+            names.add(filename)
+            if entry.flag_bits & 0x1:
+                raise ValueError("BuildCores archive contains an encrypted member")
+            if entry.compress_type not in _ALLOWED_COMPRESSION:
+                raise ValueError("BuildCores archive uses an unsupported compression method")
+            if entry.file_size < 0 or entry.compress_size < 0:
+                raise ValueError("BuildCores archive contains an invalid member size")
+            if entry.file_size > MAXIMUM_MEMBER_BYTES:
+                raise ValueError("BuildCores archive member exceeds its size limit")
+            uncompressed_bytes += entry.file_size
+            if uncompressed_bytes > MAXIMUM_UNCOMPRESSED_BYTES:
+                raise ValueError("BuildCores archive exceeds its uncompressed-size limit")
+            if entry.file_size and (
+                entry.compress_size == 0
+                or entry.file_size / entry.compress_size > MAXIMUM_COMPRESSION_RATIO
+            ):
+                raise ValueError("BuildCores archive member exceeds its compression-ratio limit")
+        return len(entries), uncompressed_bytes
 
     @staticmethod
     def _category_entries(
