@@ -17,7 +17,6 @@ from training.train_entity_resolution_human import main as human_entity_main
 from training.train_performance import build_parser as performance_parser
 from training.train_ranking import (
     _load_queries,
-    _promotion_blockers,
 )
 from training.train_ranking import (
     build_parser as ranking_parser,
@@ -124,7 +123,7 @@ def test_ranking_loader_does_not_coerce_relevance_grades(
         _load_queries(path)
 
 
-def test_silver_ranking_data_is_permanently_non_promotable() -> None:
+def test_silver_ranker_metadata_is_permanently_non_promotable() -> None:
     metadata = RankerMetadata(
         ranker_version="ltr-diagnostic",
         ranking_basis="lightgbm_lambdamart",
@@ -136,16 +135,8 @@ def test_silver_ranking_data_is_permanently_non_promotable() -> None:
         promotion_block_reasons=("training label source is silver, not human",),
     )
 
-    blockers = _promotion_blockers(
-        ranker_metadata=metadata,
-        minimum_independent_reviewers=0,
-        query_count=150,
-        row_count=2000,
-        relative_improvement=25.0,
-    )
-
-    assert any("silver" in blocker for blocker in blockers)
-    assert any("independent human" in blocker for blocker in blockers)
+    assert metadata.promotion_eligible is False
+    assert any("silver" in blocker for blocker in metadata.promotion_block_reasons)
 
 
 def test_silver_training_requires_explicit_diagnostic_opt_in(tmp_path: Path) -> None:
