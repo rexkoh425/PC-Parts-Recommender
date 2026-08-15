@@ -16,13 +16,15 @@ from pc_build_recommender.ranking import (
     RankerArtifactIdentity,
     RankerPromotionDecision,
     RankerPromotionPolicy,
+    RankingEvaluationBundleError,
+    assert_production_ranker_promotion_policy,
     load_ranker_promotion_decision,
+    verify_ranking_evaluation_bundle,
 )
 from pc_build_recommender.retrieval import (
     COMPARISON_REPORT_SCHEMA_VERSION,
     PostgresHybridRetriever,
     ValidatedEmbeddingArtifact,
-    load_ranking_comparison_report,
 )
 from pc_build_recommender.retrieval.embedding_index import MANIFEST_SCHEMA_VERSION
 
@@ -182,8 +184,11 @@ def validate_promoted_serving_models(
     retrieval_evaluation_model: str,
     ranker: ProductRanker,
     expected_ranker_version: str,
-    ranker_promotion_decision_path: str | Path,
-    expected_ranker_promotion_decision_sha256: str,
+    ranker_evaluation_bundle_manifest_path: str | Path,
+    expected_ranker_evaluation_bundle_manifest_sha256: str,
+    expected_ranker_evaluation_ledger_identity_sha256: str,
+    expected_ranker_evaluator_source_sha256: str,
+    expected_ranker_dependency_lock_sha256: str,
     expected_ranker_promotion_policy: RankerPromotionPolicy,
     performance_artifacts: Sequence[PerformanceModelArtifact],
     expected_performance_versions: Mapping[str, str],
@@ -196,7 +201,58 @@ def validate_promoted_serving_models(
         )
     _validate_embedding_release(embedding_artifact, retriever, embedding_expectation)
 
-    report = load_ranking_comparison_report(retrieval_comparison_report_path)
+    try:
+        sealed_evaluation = verify_ranking_evaluation_bundle(
+            ranker_evaluation_bundle_manifest_path
+        )
+    except (FileNotFoundError, OSError, RankingEvaluationBundleError) as error:
+        raise ServingConfigurationError(
+            f"invalid sealed ranking evaluation bundle: {error}"
+        ) from error
+    expected_bundle_sha256 = _require_sha256(
+        expected_ranker_evaluation_bundle_manifest_sha256,
+        "expected_ranker_evaluation_bundle_manifest_sha256",
+    )
+    if sealed_evaluation.manifest_sha256 != expected_bundle_sha256:
+        raise ServingConfigurationError(
+            "ranking evaluation bundle does not match the operator-pinned digest"
+        )
+    expected_ledger_identity = _require_sha256(
+        expected_ranker_evaluation_ledger_identity_sha256,
+        "expected_ranker_evaluation_ledger_identity_sha256",
+    )
+    if sealed_evaluation.ledger_identity_sha256 != expected_ledger_identity:
+        raise ServingConfigurationError(
+            "ranking evaluation ledger does not match the operator-pinned identity"
+        )
+    expected_evaluator_source = _require_sha256(
+        expected_ranker_evaluator_source_sha256,
+        "expected_ranker_evaluator_source_sha256",
+    )
+    expected_dependency_lock = _require_sha256(
+        expected_ranker_dependency_lock_sha256,
+        "expected_ranker_dependency_lock_sha256",
+    )
+    if (
+        sealed_evaluation.evaluator_source_sha256 != expected_evaluator_source
+        or sealed_evaluation.dependency_lock_sha256 != expected_dependency_lock
+    ):
+        raise ServingConfigurationError(
+            "ranking evaluator source or dependency lock does not match operator pins"
+        )
+    if sealed_evaluation.comparison_report_path != Path(
+        retrieval_comparison_report_path
+    ).resolve():
+        raise ServingConfigurationError(
+            "retrieval comparison report is outside the sealed ranking evaluation bundle"
+        )
+    try:
+        assert_production_ranker_promotion_policy(expected_ranker_promotion_policy)
+    except ValueError as error:
+        raise ServingConfigurationError(
+            f"ranker promotion policy weakens production floors: {error}"
+        ) from error
+    report = sealed_evaluation.comparison_report
     if report.get("schema_version") != COMPARISON_REPORT_SCHEMA_VERSION:
         raise ServingConfigurationError("unsupported retrieval comparison report schema")
     dataset = report.get("dataset")
@@ -227,15 +283,7 @@ def validate_promoted_serving_models(
         raise ServingConfigurationError("ranker version does not match production configuration")
     if not metadata.promotion_eligible or metadata.ranking_basis != "lightgbm_lambdamart":
         raise ServingConfigurationError("configured ranker is not a promoted LambdaMART model")
-    decision = _load_passing_ranker_decision(ranker_promotion_decision_path)
-    expected_decision_sha256 = _require_sha256(
-        expected_ranker_promotion_decision_sha256,
-        "expected_ranker_promotion_decision_sha256",
-    )
-    if decision.decision_sha256 != expected_decision_sha256:
-        raise ServingConfigurationError(
-            "ranker promotion decision does not match the operator-pinned digest"
-        )
+    decision = sealed_evaluation.promotion_decision
     if decision.policy != expected_ranker_promotion_policy:
         raise ServingConfigurationError(
             "ranker promotion policy does not match the operator-reviewed policy"

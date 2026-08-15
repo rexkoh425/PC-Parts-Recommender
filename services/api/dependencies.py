@@ -8,6 +8,7 @@ from typing import Annotated, cast
 from fastapi import Depends, Request
 
 from services.api.errors import ApiError
+from services.api.impressions import ImpressionSigner
 from services.api.service import RecommendationApplication
 from services.api.settings import ApiSettings
 
@@ -20,8 +21,13 @@ def get_settings(request: Request) -> ApiSettings:
     return cast(ApiSettings, request.app.state.settings)
 
 
+def get_impression_signer(request: Request) -> ImpressionSigner:
+    return cast(ImpressionSigner, request.app.state.impression_signer)
+
+
 ApplicationDependency = Annotated[RecommendationApplication, Depends(get_application)]
 SettingsDependency = Annotated[ApiSettings, Depends(get_settings)]
+ImpressionSignerDependency = Annotated[ImpressionSigner, Depends(get_impression_signer)]
 
 
 def require_admin(request: Request, settings: SettingsDependency) -> None:

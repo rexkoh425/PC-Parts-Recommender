@@ -6,9 +6,15 @@ import json
 import os
 from collections.abc import Mapping
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from pipelines.source_release import (
+    AuthorizedBatchReleaseError,
+    VerifiedAuthorizedBatchRelease,
+    verify_awin_production_batch_release,
+)
 from sqlalchemy.orm import Session, sessionmaker
 
 from pc_build_recommender.application import (
@@ -44,7 +50,7 @@ from pc_build_recommender.retrieval import (
     validate_encoder_bundle,
 )
 
-SERVING_RELEASE_SCHEMA_VERSION = "pc-build-recommender.serving-release.v3"
+SERVING_RELEASE_SCHEMA_VERSION = "pc-build-recommender.serving-release.v4"
 _SHA256_LENGTH = 64
 _TOP_LEVEL_FIELDS = frozenset(
     {
@@ -52,6 +58,7 @@ _TOP_LEVEL_FIELDS = frozenset(
         "catalog_data_version",
         "catalog",
         "catalog_inputs",
+        "source_release",
         "embedding",
         "retrieval",
         "entity_resolution",
@@ -244,6 +251,7 @@ class ProductionCatalogRelease:
     offers_path: Path
     reviewed_mappings_path: Path
     review_evidence_path: Path
+    source_release: VerifiedAuthorizedBatchRelease
     entity_resolution: EntityResolutionRelease
     entity_resolution_evaluation_path: Path
     entity_resolution_policy_path: Path
@@ -325,6 +333,111 @@ def _release_reference(
     return path
 
 
+def _verified_authorized_source_release(
+    value: object,
+    *,
+    root: Path,
+    offers_path: Path,
+    current_source_registry_path: Path,
+    expected_source_trust_root_sha256: str,
+) -> VerifiedAuthorizedBatchRelease:
+    """Verify one signed source batch and bind its accepted records to serving offers."""
+
+    config = _exact_fields(
+        value,
+        field="manifest.source_release",
+        expected=frozenset(
+            {
+                "manifest",
+                "raw_snapshot",
+                "rejections",
+                "current_source_registry",
+                "expected_trust_root_sha256",
+            }
+        ),
+    )
+    manifest_reference = _ArtifactReference.parse(
+        config["manifest"], field="manifest.source_release.manifest"
+    )
+    source_manifest_path = manifest_reference.resolve(
+        root, field="manifest.source_release.manifest"
+    )
+    if source_manifest_path.name != "manifest.json":
+        raise ServingConfigurationError(
+            "manifest.source_release.manifest.path must end with 'manifest.json'"
+        )
+    if source_manifest_path.parent.name != manifest_reference.digest.sha256:
+        raise ServingConfigurationError(
+            "manifest.source_release.manifest must use its file SHA-256 as parent directory"
+        )
+    raw_snapshot_path = _release_reference(
+        config["raw_snapshot"],
+        field="manifest.source_release.raw_snapshot",
+        root=root,
+    )
+    rejections_path = _release_reference(
+        config["rejections"],
+        field="manifest.source_release.rejections",
+        root=root,
+    )
+    current_registry_path = current_source_registry_path.resolve()
+    _ContentDigest.parse(
+        config["current_source_registry"],
+        field="manifest.source_release.current_source_registry",
+    ).verify(
+        current_registry_path,
+        field="operator-mounted current source registry",
+    )
+    if current_registry_path == source_manifest_path.parent / "source-registry.yaml":
+        raise ServingConfigurationError(
+            "manifest.source_release.current_source_registry must be independent of "
+            "the signed source-release bundle"
+        )
+    trust_root_sha256 = _sha256(
+        config["expected_trust_root_sha256"],
+        field="manifest.source_release.expected_trust_root_sha256",
+    )
+    operator_trust_root_sha256 = _sha256(
+        expected_source_trust_root_sha256,
+        field="operator-pinned source trust-root SHA-256",
+    )
+    if trust_root_sha256 != operator_trust_root_sha256:
+        raise ServingConfigurationError(
+            "source trust-root SHA-256 does not match the independent operator pin"
+        )
+    try:
+        verified = verify_awin_production_batch_release(
+            manifest_path=source_manifest_path,
+            expected_manifest_sha256=manifest_reference.digest.sha256,
+            expected_trust_root_sha256=trust_root_sha256,
+            current_source_registry=current_registry_path,
+            raw_snapshot=raw_snapshot_path,
+            records=offers_path,
+            rejections=rejections_path,
+        )
+    except AuthorizedBatchReleaseError as error:
+        raise ServingConfigurationError(
+            f"authorized source release failed validation: {error}"
+        ) from error
+    if (
+        verified.manifest_path != source_manifest_path
+        or verified.manifest_sha256 != manifest_reference.digest.sha256
+    ):
+        raise ServingConfigurationError(
+            "authorized source verifier returned an inconsistent release identity"
+        )
+    authority_expires_at = getattr(verified, "authority_expires_at", None)
+    if (
+        not isinstance(authority_expires_at, datetime)
+        or authority_expires_at.utcoffset() is None
+        or authority_expires_at <= datetime.now(UTC)
+    ):
+        raise ServingConfigurationError(
+            "authorized source verifier returned no active timezone-aware authority expiry"
+        )
+    return verified
+
+
 def _catalog_release_from_manifest(
     manifest: Mapping[str, Any],
     *,
@@ -333,6 +446,8 @@ def _catalog_release_from_manifest(
     offers_path: Path,
     reviewed_mappings_path: Path,
     review_evidence_path: Path,
+    current_source_registry_path: Path,
+    expected_source_trust_root_sha256: str,
     expected_catalog_data_version: str | None,
 ) -> ProductionCatalogRelease:
     root = manifest_path.parent.resolve()
@@ -367,6 +482,13 @@ def _catalog_release_from_manifest(
         catalog_inputs["review_evidence"],
         field="manifest.catalog_inputs.review_evidence",
     ).verify(review_evidence_path, field="review evidence artifact")
+    source_release = _verified_authorized_source_release(
+        manifest["source_release"],
+        root=root,
+        offers_path=offers_path,
+        current_source_registry_path=current_source_registry_path,
+        expected_source_trust_root_sha256=expected_source_trust_root_sha256,
+    )
 
     er = _exact_fields(
         manifest["entity_resolution"],
@@ -475,6 +597,7 @@ def _catalog_release_from_manifest(
         offers_path=offers_path,
         reviewed_mappings_path=reviewed_mappings_path,
         review_evidence_path=review_evidence_path,
+        source_release=source_release,
         entity_resolution=entity_release,
         entity_resolution_evaluation_path=evaluation_path,
         entity_resolution_policy_path=policy_path,
@@ -489,6 +612,8 @@ def load_production_catalog_release(
     offers_path: str | Path,
     reviewed_mappings_path: str | Path | None,
     review_evidence_path: str | Path | None,
+    current_source_registry_path: str | Path,
+    expected_source_trust_root_sha256: str,
     expected_catalog_data_version: str | None,
     expected_manifest_sha256: str,
 ) -> ProductionCatalogRelease:
@@ -515,6 +640,8 @@ def load_production_catalog_release(
             offers_path=Path(offers_path).resolve(),
             reviewed_mappings_path=Path(reviewed_mappings_path).resolve(),
             review_evidence_path=Path(review_evidence_path).resolve(),
+            current_source_registry_path=Path(current_source_registry_path).resolve(),
+            expected_source_trust_root_sha256=expected_source_trust_root_sha256,
             expected_catalog_data_version=expected_catalog_data_version,
         )
     except ServingConfigurationError:
@@ -532,6 +659,8 @@ def _load_release(
     offers_path: Path,
     reviewed_mappings_path: Path,
     review_evidence_path: Path,
+    current_source_registry_path: Path,
+    expected_source_trust_root_sha256: str,
     session_factory: sessionmaker[Session],
     expected_catalog_data_version: str,
     expected_ranker_version: str,
@@ -551,6 +680,8 @@ def _load_release(
         offers_path=offers_path,
         reviewed_mappings_path=reviewed_mappings_path,
         review_evidence_path=review_evidence_path,
+        current_source_registry_path=current_source_registry_path,
+        expected_source_trust_root_sha256=expected_source_trust_root_sha256,
         expected_catalog_data_version=expected_catalog_data_version,
     )
     manifest_catalog_version = _string(
@@ -698,16 +829,38 @@ def _load_release(
     promotion = _exact_fields(
         manifest["ranker_promotion"],
         field="manifest.ranker_promotion",
-        expected=frozenset({"decision", "decision_sha256", "policy"}),
+        expected=frozenset(
+            {
+                "evaluation_bundle_manifest",
+                "bundle_manifest_sha256",
+                "ledger_identity_sha256",
+                "evaluator_source_sha256",
+                "dependency_lock_sha256",
+                "policy",
+            }
+        ),
     )
-    promotion_decision_path = _release_reference(
-        promotion["decision"],
-        field="manifest.ranker_promotion.decision",
+    evaluation_bundle_manifest_path = _release_reference(
+        promotion["evaluation_bundle_manifest"],
+        field="manifest.ranker_promotion.evaluation_bundle_manifest",
         root=root,
+        expected_name="manifest.json",
     )
-    expected_decision_sha256 = _sha256(
-        promotion["decision_sha256"],
-        field="manifest.ranker_promotion.decision_sha256",
+    expected_bundle_manifest_sha256 = _sha256(
+        promotion["bundle_manifest_sha256"],
+        field="manifest.ranker_promotion.bundle_manifest_sha256",
+    )
+    expected_ledger_identity_sha256 = _sha256(
+        promotion["ledger_identity_sha256"],
+        field="manifest.ranker_promotion.ledger_identity_sha256",
+    )
+    expected_evaluator_source_sha256 = _sha256(
+        promotion["evaluator_source_sha256"],
+        field="manifest.ranker_promotion.evaluator_source_sha256",
+    )
+    expected_dependency_lock_sha256 = _sha256(
+        promotion["dependency_lock_sha256"],
+        field="manifest.ranker_promotion.dependency_lock_sha256",
     )
     try:
         expected_promotion_policy = RankerPromotionPolicy.from_dict(
@@ -759,8 +912,15 @@ def _load_release(
         retrieval_evaluation_model=retrieval_evaluation_model,
         ranker=ranker,
         expected_ranker_version=expected_ranker_version,
-        ranker_promotion_decision_path=promotion_decision_path,
-        expected_ranker_promotion_decision_sha256=expected_decision_sha256,
+        ranker_evaluation_bundle_manifest_path=evaluation_bundle_manifest_path,
+        expected_ranker_evaluation_bundle_manifest_sha256=(
+            expected_bundle_manifest_sha256
+        ),
+        expected_ranker_evaluation_ledger_identity_sha256=(
+            expected_ledger_identity_sha256
+        ),
+        expected_ranker_evaluator_source_sha256=expected_evaluator_source_sha256,
+        expected_ranker_dependency_lock_sha256=expected_dependency_lock_sha256,
         expected_ranker_promotion_policy=expected_promotion_policy,
         performance_artifacts=tuple(artifacts),
         expected_performance_versions=expected_performance_versions,
@@ -785,6 +945,8 @@ def load_production_serving_release(
     offers_path: str | Path,
     reviewed_mappings_path: str | Path,
     review_evidence_path: str | Path,
+    current_source_registry_path: str | Path,
+    expected_source_trust_root_sha256: str,
     session_factory: sessionmaker[Session],
     expected_catalog_data_version: str,
     expected_ranker_version: str,
@@ -799,6 +961,7 @@ def load_production_serving_release(
     resolved_offers = Path(offers_path).resolve()
     resolved_reviewed_mappings = Path(reviewed_mappings_path).resolve()
     resolved_review_evidence = Path(review_evidence_path).resolve()
+    resolved_source_registry = Path(current_source_registry_path).resolve()
     try:
         return _load_release(
             manifest_path=resolved_manifest,
@@ -806,6 +969,8 @@ def load_production_serving_release(
             offers_path=resolved_offers,
             reviewed_mappings_path=resolved_reviewed_mappings,
             review_evidence_path=resolved_review_evidence,
+            current_source_registry_path=resolved_source_registry,
+            expected_source_trust_root_sha256=expected_source_trust_root_sha256,
             session_factory=session_factory,
             expected_catalog_data_version=expected_catalog_data_version,
             expected_ranker_version=expected_ranker_version,

@@ -84,6 +84,7 @@ from services.api.models import (
     BuildShareCreated,
     BuildShareRevoked,
     BuildSummary,
+    CanonicalInteractionEvent,
     CatalogueCoverage,
     CatalogueReadinessSummary,
     CompatibilityCheck,
@@ -98,7 +99,6 @@ from services.api.models import (
     InfeasibilityExplanation,
     InfeasibilityReason,
     InteractionAccepted,
-    InteractionEvent,
     InvalidProductSearchCursor,
     PerformanceBenchmarkEvidence,
     PerformanceSignal,
@@ -133,7 +133,11 @@ from services.api.models import (
 )
 from services.api.pricing import summarize_price_history
 from services.api.public_shares import public_build_snapshot
-from services.api.service import RecommendationApplication
+from services.api.service import (
+    RecommendationApplication,
+    interaction_event_id,
+    same_canonical_interaction,
+)
 from services.api.serving_release import (
     load_production_serving_release,
     production_catalog_policy_from_entity_resolution,
@@ -167,43 +171,149 @@ _PROFILE_ORDER = (
 def _processed_catalog_freshness(
     processed_data: ProcessedCatalogData,
     *,
-    stale_after_hours: int,
+    catalogue_stale_after_hours: int,
+    price_stale_after_hours: int,
     now: datetime,
 ) -> tuple[
-    datetime | None, datetime | None, Literal["fresh", "stale", "degraded"], tuple[str, ...]
+    datetime | None,
+    datetime | None,
+    Literal["fresh", "stale", "degraded"],
+    Literal["fresh", "stale", "degraded"],
+    Literal["fresh", "stale", "degraded"],
+    tuple[str, ...],
 ]:
     """Measure catalogue and price recency without inferring missing evidence as fresh."""
 
-    latest_catalog = max(
-        (item.updated_at for item in processed_data.products),
-        default=None,
+    def measure_dimension(
+        values: Sequence[object],
+        *,
+        dimension: Literal["Catalogue", "Price"],
+        timestamp_label: str,
+        missing_message: str,
+        stale_after_hours: int,
+    ) -> tuple[datetime | None, Literal["fresh", "stale", "degraded"], tuple[str, ...]]:
+        valid: list[datetime] = []
+        invalid_count = 0
+        future_count = 0
+        for value in values:
+            if not isinstance(value, datetime) or value.tzinfo is None or value.utcoffset() is None:
+                invalid_count += 1
+                continue
+            normalised = value.astimezone(UTC)
+            if normalised > now:
+                future_count += 1
+            valid.append(normalised)
+
+        watermark = min(valid, default=None)
+        blockers: list[str] = []
+        if not values:
+            blockers.append(missing_message)
+        if invalid_count:
+            blockers.append(
+                f"{dimension} freshness cannot be verified because {invalid_count} "
+                "timestamp value(s) are missing or not timezone-aware."
+            )
+        if future_count:
+            blockers.append(
+                f"{dimension} freshness cannot be verified because {future_count} "
+                "timestamp value(s) are in the future."
+            )
+        if blockers:
+            return watermark, "degraded", tuple(blockers)
+
+        # Every catalogue product and every listing's latest price observation must be
+        # current. A single fresh row must not hide stale required serving evidence.
+        assert watermark is not None
+        if (now - watermark).total_seconds() / 3600 > stale_after_hours:
+            return (
+                watermark,
+                "stale",
+                (
+                    f"{dimension} data is stale: {timestamp_label} exceeds "
+                    f"stale_after_hours={stale_after_hours}.",
+                ),
+            )
+        return watermark, "fresh", ()
+
+    catalog_values = tuple(
+        getattr(item, "updated_at", None) for item in processed_data.products
     )
-    latest_price = max(
-        (item.observed_at for item in getattr(processed_data, "price_snapshots", ())),
-        default=None,
+    price_snapshots = tuple(getattr(processed_data, "price_snapshots", ()))
+    price_values_by_listing: dict[str, list[object]] = {}
+    for index, snapshot in enumerate(price_snapshots):
+        listing_id = str(getattr(snapshot, "listing_id", f"__snapshot_{index}"))
+        price_values_by_listing.setdefault(listing_id, []).append(
+            getattr(snapshot, "observed_at", None)
+        )
+    expected_listing_ids = {
+        str(getattr(listing, "listing_id", ""))
+        for listing in getattr(processed_data, "listings", ())
+        if str(getattr(listing, "listing_id", ""))
+    }
+    price_values: list[object] = []
+    for listing_id in sorted(set(price_values_by_listing) | expected_listing_ids):
+        observations = price_values_by_listing.get(listing_id, [])
+        valid_observations = [
+            value
+            for value in observations
+            if isinstance(value, datetime)
+            and value.tzinfo is not None
+            and value.utcoffset() is not None
+        ]
+        if len(valid_observations) != len(observations) or not observations:
+            price_values.append(None)
+        if valid_observations:
+            price_values.append(max(valid_observations))
+
+    catalog_watermark, catalogue_status, catalogue_blockers = measure_dimension(
+        catalog_values,
+        dimension="Catalogue",
+        timestamp_label="last_catalog_update",
+        missing_message="Catalogue freshness cannot be verified because no products are loaded.",
+        stale_after_hours=catalogue_stale_after_hours,
     )
-    blockers: list[str] = []
-    if latest_catalog is None:
-        blockers.append("Catalogue freshness cannot be verified because no products are loaded.")
-    elif (now - latest_catalog).total_seconds() / 3600 > stale_after_hours:
-        blockers.append(
-            "Catalogue data is stale: last_catalog_update exceeds "
-            f"stale_after_hours={stale_after_hours}."
-        )
-    if latest_price is None:
-        blockers.append("Price freshness cannot be verified because no price snapshots are loaded.")
-    elif (now - latest_price).total_seconds() / 3600 > stale_after_hours:
-        blockers.append(
-            f"Price data is stale: prices_updated_at exceeds stale_after_hours={stale_after_hours}."
-        )
+    price_watermark, price_status, price_blockers = measure_dimension(
+        tuple(price_values),
+        dimension="Price",
+        timestamp_label="prices_updated_at",
+        missing_message="Price freshness cannot be verified because no price snapshots are loaded.",
+        stale_after_hours=price_stale_after_hours,
+    )
+    blockers = (*catalogue_blockers, *price_blockers)
     status: Literal["fresh", "stale", "degraded"]
-    if latest_catalog is None or latest_price is None:
+    if "degraded" in {catalogue_status, price_status}:
         status = "degraded"
-    elif blockers:
+    elif "stale" in {catalogue_status, price_status}:
         status = "stale"
     else:
         status = "fresh"
-    return latest_catalog, latest_price, status, tuple(blockers)
+    return (
+        catalog_watermark,
+        price_watermark,
+        catalogue_status,
+        price_status,
+        status,
+        blockers,
+    )
+
+
+def _normalise_source_authority_expiry(expires_at: object) -> datetime | None:
+    """Normalise trustworthy expiry evidence and reject missing or naive values."""
+
+    if (
+        not isinstance(expires_at, datetime)
+        or expires_at.tzinfo is None
+        or expires_at.utcoffset() is None
+    ):
+        return None
+    return expires_at.astimezone(UTC)
+
+
+def _source_authority_is_active(expires_at: object, *, now: datetime) -> bool:
+    """Return whether independently verified source authority is still active."""
+
+    normalised_expiry = _normalise_source_authority_expiry(expires_at)
+    return normalised_expiry is not None and normalised_expiry > now
 
 
 def _api_category(value: DomainCategory) -> ComponentCategory:
@@ -374,6 +484,7 @@ class CoreRecommendationService(RecommendationApplication):
         durable_store: SqlAlchemyDurableStore | None = None,
         semantic_encoder_ready: bool | None = None,
         release_artifacts_verified: bool = False,
+        source_authority_expires_at: datetime | None = None,
     ) -> None:
         self.services = services
         self.reader = reader
@@ -392,6 +503,7 @@ class CoreRecommendationService(RecommendationApplication):
             self._release_artifact_verification = "development_unverified"
         else:
             self._release_artifact_verification = "not_verified"
+        self._source_authority_expires_at = source_authority_expires_at
         self.settings = settings.model_copy(
             update={
                 "data_version": services.versions.data_version,
@@ -401,7 +513,7 @@ class CoreRecommendationService(RecommendationApplication):
             }
         )
         self._mutation_lock = asyncio.Lock()
-        self._interactions: list[tuple[str, InteractionEvent, datetime]] = []
+        self._interactions: list[tuple[str, CanonicalInteractionEvent, datetime]] = []
         self._generated_at_by_request: dict[str, datetime] = {}
 
     async def ready(self) -> bool:
@@ -412,17 +524,81 @@ class CoreRecommendationService(RecommendationApplication):
         if durable_store is not None:
             await asyncio.to_thread(durable_store.engine.dispose)
 
+    def _release_artifact_status(
+        self,
+    ) -> Literal["verified", "development_unverified", "not_verified"]:
+        """Return the bounded serving-release verification state.
+
+        Production eligibility must never be inferred from catalogue contents alone.  The
+        immutable serving release is a separate trust boundary and therefore remains an
+        explicit input to readiness and every decision-serving operation.
+        """
+
+        return getattr(
+            self,
+            "_release_artifact_verification",
+            (
+                "development_unverified"
+                if self.settings.is_development_environment
+                else "not_verified"
+            ),
+        )
+
+    async def _require_production_operation_eligible(
+        self,
+        operation: Literal["generate", "search", "replace"],
+    ) -> None:
+        """Fail closed when a production decision would use ineligible evidence.
+
+        Startup and readiness probes are advisory to load balancers; they do not prevent a
+        caller from reaching an already-running worker.  Re-evaluate the live freshness and
+        source-authority contract at the point of use so an expiry or stale watermark takes
+        effect without a restart.
+        """
+
+        if not self.settings.requires_durable_storage:
+            return
+        evidence = await self.freshness()
+        if evidence.production_ready:
+            return
+        raise ApiError(
+            status_code=503,
+            code="production_serving_not_ready",
+            message=(
+                "Production recommendations are temporarily unavailable because the active "
+                "serving evidence is not eligible."
+            ),
+            details={
+                "operation": operation,
+                "freshness_status": evidence.status,
+                "catalogue_status": evidence.catalogue_status,
+                "price_status": evidence.price_status,
+                "release_artifact_verification": evidence.release_artifact_verification,
+                "source_authority_expires_at": evidence.source_authority_expires_at,
+                "readiness_blockers": evidence.readiness_blockers,
+                "retryable": True,
+            },
+        )
+
     async def readiness_checks(self) -> dict[str, Literal["ready", "not_ready"]]:
         categories = {product.category for product in self.processed_data.products}
         all_categories = set(DomainCategory)
         report = self.processed_data.readiness
-        _, _, freshness_status, _ = _processed_catalog_freshness(
+        now = datetime.now(UTC)
+        _, _, _, _, freshness_status, _ = _processed_catalog_freshness(
             self.processed_data,
-            stale_after_hours=self.settings.stale_after_hours,
-            now=datetime.now(UTC),
+            catalogue_stale_after_hours=self.settings.catalogue_stale_after_hours,
+            price_stale_after_hours=self.settings.price_stale_after_hours,
+            now=now,
         )
         freshness_ready = freshness_status == "fresh"
-        production_ready = report is not None and not report.blockers() and freshness_ready
+        release_artifacts_verified = self._release_artifact_status() == "verified"
+        production_ready = (
+            report is not None
+            and not report.blockers()
+            and freshness_ready
+            and release_artifacts_verified
+        )
         application_catalog = getattr(self.services, "catalog", None)
         authority_policy = getattr(
             application_catalog,
@@ -441,6 +617,12 @@ class CoreRecommendationService(RecommendationApplication):
             self,
             "_semantic_encoder_ready",
             not self.settings.requires_durable_storage,
+        )
+        source_authority_expires_at = _normalise_source_authority_expiry(
+            getattr(self, "_source_authority_expires_at", None)
+        )
+        source_authority_ready = not self.settings.requires_durable_storage or (
+            _source_authority_is_active(source_authority_expires_at, now=now)
         )
         return {
             "catalogue": "ready" if self.processed_data.products else "not_ready",
@@ -463,6 +645,8 @@ class CoreRecommendationService(RecommendationApplication):
             "optimizer": "ready" if self.services.versions.optimizer_version else "not_ready",
             "durable_storage": "ready" if durable_storage_ready else "not_ready",
             "semantic_encoder": ("ready" if semantic_encoder_ready else "not_ready"),
+            "serving_release": "ready" if release_artifacts_verified else "not_ready",
+            "source_authority": "ready" if source_authority_ready else "not_ready",
         }
 
     async def freshness(self) -> FreshnessResponse:
@@ -472,14 +656,22 @@ class CoreRecommendationService(RecommendationApplication):
                 code="catalog_unavailable",
                 message="No verified catalogue products are loaded.",
             )
-        latest_catalog, latest_price, freshness_status, freshness_blockers = (
+        now = datetime.now(UTC)
+        (
+            catalog_watermark,
+            price_watermark,
+            catalogue_status,
+            price_status,
+            freshness_status,
+            freshness_blockers,
+        ) = (
             _processed_catalog_freshness(
                 self.processed_data,
-                stale_after_hours=self.settings.stale_after_hours,
-                now=datetime.now(UTC),
+                catalogue_stale_after_hours=self.settings.catalogue_stale_after_hours,
+                price_stale_after_hours=self.settings.price_stale_after_hours,
+                now=now,
             )
         )
-        assert latest_catalog is not None
         readiness = self.processed_data.readiness
         blockers = (
             list(readiness.blockers())
@@ -487,6 +679,15 @@ class CoreRecommendationService(RecommendationApplication):
             else ["A measured production-readiness report is unavailable."]
         )
         blockers.extend(item for item in freshness_blockers if item not in blockers)
+        source_authority_expires_at = _normalise_source_authority_expiry(
+            getattr(self, "_source_authority_expires_at", None)
+        )
+        if self.settings.requires_durable_storage and (
+            not _source_authority_is_active(source_authority_expires_at, now=now)
+        ):
+            blockers.append(
+                "Signed retailer-source authority is expired or its earliest expiry is unavailable."
+            )
         application_catalog = getattr(self.services, "catalog", None)
         if getattr(
             application_catalog, "compatibility_evidence_policy", None
@@ -507,28 +708,29 @@ class CoreRecommendationService(RecommendationApplication):
         source_names.update(
             provenance.source_name for provenance in self.processed_data.listing_provenance
         )
-        release_artifact_verification: Literal[
-            "verified", "development_unverified", "not_verified"
-        ] = getattr(
-            self,
-            "_release_artifact_verification",
-            (
-                "development_unverified"
-                if self.settings.is_development_environment
-                else "not_verified"
-            ),
-        )
+        release_artifact_verification = self._release_artifact_status()
+        if release_artifact_verification != "verified" and (
+            self.settings.requires_durable_storage or not blockers
+        ):
+            blockers.append(
+                "Immutable serving-release artifacts have not been independently verified."
+            )
         return FreshnessResponse(
             data_version=self.services.versions.data_version,
             status=freshness_status,
-            last_catalog_update=latest_catalog,
-            prices_updated_at=latest_price or latest_catalog,
-            stale_after_hours=self.settings.stale_after_hours,
+            catalogue_status=catalogue_status,
+            price_status=price_status,
+            last_catalog_update=catalog_watermark,
+            prices_updated_at=price_watermark,
+            stale_after_hours=self.settings.price_stale_after_hours,
+            catalogue_stale_after_hours=self.settings.catalogue_stale_after_hours,
+            price_stale_after_hours=self.settings.price_stale_after_hours,
             source_count=len(source_names),
             product_count=self.processed_data.stats.product_count,
             listing_count=self.processed_data.stats.matched_listing_count,
             production_ready=not blockers,
             release_artifact_verification=release_artifact_verification,
+            source_authority_expires_at=source_authority_expires_at,
             readiness_blockers=blockers,
             catalogue_readiness=_public_catalogue_readiness(
                 readiness,
@@ -537,6 +739,7 @@ class CoreRecommendationService(RecommendationApplication):
         )
 
     async def generate_builds(self, request: GenerateBuildsRequest) -> GenerateBuildsResponse:
+        await self._require_production_operation_eligible("generate")
         domain_request = _domain_request(request)
         included = frozenset(
             item.product_id for item in request.existing_products if item.include_in_budget
@@ -651,8 +854,15 @@ class CoreRecommendationService(RecommendationApplication):
         report = self.processed_data.readiness
         now = datetime.now(UTC)
         snapshots = self.processed_data.price_snapshots
-        newest = max((item.observed_at for item in snapshots), default=None)
-        stale_cutoff = now - timedelta(hours=self.settings.stale_after_hours)
+        latest_snapshots_by_listing: dict[str, Any] = {}
+        for index, snapshot in enumerate(snapshots):
+            listing_id = str(getattr(snapshot, "listing_id", "")) or f"__snapshot_{index}"
+            incumbent = latest_snapshots_by_listing.get(listing_id)
+            if incumbent is None or snapshot.observed_at > incumbent.observed_at:
+                latest_snapshots_by_listing[listing_id] = snapshot
+        latest_snapshots = tuple(latest_snapshots_by_listing.values())
+        newest = max((item.observed_at for item in latest_snapshots), default=None)
+        stale_cutoff = now - timedelta(hours=self.settings.price_stale_after_hours)
         missing_fields: list[AdminMissingField] = []
         release_blockers: list[str]
         if report is None:
@@ -733,19 +943,19 @@ class CoreRecommendationService(RecommendationApplication):
                 model_rejected_count=stats.model_rejected_count,
             ),
             price_freshness=AdminPriceFreshness(
-                snapshot_count=len(snapshots),
+                snapshot_count=len(latest_snapshots),
                 newest_observed_at=newest,
                 stale_snapshot_count=sum(
-                    1 for snapshot in snapshots if snapshot.observed_at < stale_cutoff
+                    1 for snapshot in latest_snapshots if snapshot.observed_at < stale_cutoff
                 ),
-                stale_after_hours=self.settings.stale_after_hours,
+                stale_after_hours=self.settings.price_stale_after_hours,
             ),
             missing_critical_fields=missing_fields,
             release_blockers=release_blockers,
             pipeline_operations=pipeline_operations,
             pipeline_failure_events_available=pipeline_events_available,
             notes=[
-                "Price freshness counts snapshots, not distinct retailer listings.",
+                "Price freshness evaluates the latest observation for each distinct listing.",
                 *pipeline_notes,
             ],
         )
@@ -858,6 +1068,7 @@ class CoreRecommendationService(RecommendationApplication):
     async def replace_component(
         self, build_id: str, request: ReplacementRequest
     ) -> ReplacementResponse:
+        await self._require_production_operation_eligible("replace")
         try:
             prior = await asyncio.to_thread(self.services.results.generation_for_build, build_id)
             old_build = next(item for item in prior.response.builds if item.build_id == build_id)
@@ -961,6 +1172,7 @@ class CoreRecommendationService(RecommendationApplication):
         )
 
     async def search_products(self, request: ProductSearchRequest) -> ProductSearchResponse:
+        await self._require_production_operation_eligible("search")
         try:
             requested_page = resolve_product_search_page(request)
         except InvalidProductSearchCursor as error:
@@ -1090,6 +1302,7 @@ class CoreRecommendationService(RecommendationApplication):
             request,
             data_version=self.services.versions.data_version,
             retrieval_model=self.services.versions.retrieval_model,
+            rule_version=self.services.versions.rule_version,
         )
         durable_store = getattr(self, "_durable_store", None)
         if durable_store is not None:
@@ -1383,38 +1596,63 @@ class CoreRecommendationService(RecommendationApplication):
             data_version=self.services.versions.data_version,
         )
 
-    async def record_interaction(self, event: InteractionEvent) -> InteractionAccepted:
-        event_id = f"evt_{uuid4().hex}"
+    async def record_interaction(
+        self, event: CanonicalInteractionEvent
+    ) -> InteractionAccepted:
+        event_id = interaction_event_id(event)
         accepted_at = datetime.now(UTC)
-        canonical_event = event.model_copy(
-            update={"rule_version": event.rule_version or self.services.versions.rule_version},
-            deep=True,
-        )
         domain_event = DomainInteractionEvent(
             event_id=event_id,
-            session_id=canonical_event.session_id,
-            user_id=canonical_event.user_id,
-            query_id=canonical_event.query_id,
-            product_id=canonical_event.product_id,
-            build_id=canonical_event.build_id,
-            event_type=InteractionType(canonical_event.event_type),
-            rank_position=canonical_event.rank_position,
-            model_version=canonical_event.model_version,
-            data_version=canonical_event.data_version,
-            rule_version=canonical_event.rule_version,
-            metadata=canonical_event.metadata,
+            session_id=event.session_id,
+            user_id=event.user_id,
+            query_id=event.query_id,
+            product_id=event.product_id,
+            build_id=event.build_id,
+            event_type=InteractionType(event.event_type),
+            rank_position=event.rank_position,
+            model_version=event.model_version,
+            data_version=event.data_version,
+            rule_version=event.rule_version,
+            metadata=event.metadata,
+            impression_id=event.impression_id,
+            trust_level=event.trust_level,
+            idempotency_key_sha256=event.idempotency_key_sha256,
+            idempotency_payload_sha256=event.idempotency_payload_sha256,
             created_at=accepted_at,
         )
         durable_store = getattr(self, "_durable_store", None)
+        replayed = False
         if durable_store is None:
-            self._interactions.append((event_id, canonical_event, accepted_at))
+            existing = next(
+                (item for item in self._interactions if item[0] == event_id),
+                None,
+            )
+            if existing is not None:
+                _, existing_event, existing_at = existing
+                if not same_canonical_interaction(existing_event, event):
+                    raise ApiError(
+                        status_code=409,
+                        code="interaction_idempotency_conflict",
+                        message="Idempotency-Key was already used for another interaction.",
+                    )
+                accepted_at = existing_at
+                replayed = True
+            else:
+                self._interactions.append((event_id, event, accepted_at))
         else:
             try:
-                await asyncio.to_thread(durable_store.add_interaction, domain_event)
+                write = await asyncio.to_thread(durable_store.put_interaction, domain_event)
+                accepted_at = write.event.created_at
+                replayed = write.replayed
             except RequestConflictError as error:
+                is_idempotency_conflict = "Idempotency-Key" in str(error)
                 raise ApiError(
                     status_code=409,
-                    code="interaction_reference_conflict",
+                    code=(
+                        "interaction_idempotency_conflict"
+                        if is_idempotency_conflict
+                        else "interaction_reference_conflict"
+                    ),
                     message=str(error),
                 ) from error
             except DurableStorageError as error:
@@ -1426,8 +1664,10 @@ class CoreRecommendationService(RecommendationApplication):
         return InteractionAccepted(
             event_id=event_id,
             accepted_at=accepted_at,
-            data_version=self.services.versions.data_version,
-            rule_version=canonical_event.rule_version or self.services.versions.rule_version,
+            data_version=event.data_version or self.services.versions.data_version,
+            rule_version=event.rule_version or self.services.versions.rule_version,
+            trust_level=event.trust_level,
+            replayed=replayed,
         )
 
     def _generation_response(
@@ -1647,6 +1887,7 @@ class CoreRecommendationService(RecommendationApplication):
             for item in build.alternatives
         ]
         return BuildSummary(
+            request_id=response.request_id,
             build_id=build.build_id,
             profile=BuildProfile(build.profile.value),
             total_price_sgd=float(build.total_price_sgd),
@@ -1753,6 +1994,10 @@ def create_processed_catalog_service(
             raise RuntimeError(
                 "non-development processed_catalog mode requires a pinned serving_manifest_path"
             )
+        if settings.source_registry_path is None or settings.source_trust_root_sha256 is None:
+            raise RuntimeError(
+                "non-development processed_catalog mode requires independent source authority pins"
+            )
         if (
             settings.semantic_encoder_bundle_path is None
             or settings.semantic_encoder_bundle_sha256 is None
@@ -1777,6 +2022,8 @@ def create_processed_catalog_service(
             offers_path=settings.governed_offers_path,
             reviewed_mappings_path=settings.reviewed_mapping_path,
             review_evidence_path=settings.review_evidence_path,
+            current_source_registry_path=settings.source_registry_path,
+            expected_source_trust_root_sha256=settings.source_trust_root_sha256,
             session_factory=durable_store.session_factory,
             expected_catalog_data_version=settings.data_version,
             expected_ranker_version=settings.ranking_model_version,
@@ -1858,4 +2105,9 @@ def create_processed_catalog_service(
         durable_store=durable_store,
         semantic_encoder_ready=(release.semantic_encoder_ready if release is not None else None),
         release_artifacts_verified=release is not None,
+        source_authority_expires_at=(
+            getattr(release.catalog_release.source_release, "authority_expires_at", None)
+            if release is not None
+            else None
+        ),
     )
