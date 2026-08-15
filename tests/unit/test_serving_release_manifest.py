@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, TypedDict
@@ -61,7 +62,9 @@ def _release_fixture(
             "ranker/ranker.txt.artifact-manifest.json",
             "{}",
         ),
-        "decision": _write(root, "ranker/promotion.json", "{}"),
+        "ranking_bundle_manifest": _write(
+            root, "ranker/evaluation/manifest.json", "{}"
+        ),
         "performance": _write(root, "performance/gpu-ai/artifact_manifest.json", "{}"),
         "er_metadata": _write(root, "entity-resolution/model/metadata.json", "{}"),
         "er_model": _write(root, "entity-resolution/model/model.txt", "er-model"),
@@ -73,7 +76,23 @@ def _release_fixture(
         "er_evaluation": _write(root, "entity-resolution/evaluation.json", "{}"),
         "er_policy": _write(root, "entity-resolution/policy.json", "{}"),
         "er_rights": _write(root, "entity-resolution/rights.json", "{}"),
+        "source_raw": _write(root, "source-input/raw-snapshot.csv", "fixture-source-row\n"),
+        "source_rejections": _write(root, "source-input/rejections.jsonl", ""),
+        "source_registry": _write(
+            root,
+            "source-input/source-registry.yaml",
+            "schema_version: pc-build-recommender.source-registry.v1\n",
+        ),
     }
+    source_manifest_staging = _write(
+        root,
+        "source-releases/fixture/staging/manifest.json",
+        '{"fixture":"signed-source-release"}\n',
+    )
+    source_manifest_sha256 = sha256_file(source_manifest_staging)
+    source_manifest_directory = source_manifest_staging.parent.with_name(source_manifest_sha256)
+    source_manifest_staging.parent.rename(source_manifest_directory)
+    files["source_manifest"] = source_manifest_directory / "manifest.json"
     encoder_staging_file = _write(root, "encoders/staging/modules.json", "[]\n")
     encoder_identity = inspect_encoder_bundle(encoder_staging_file.parent)
     encoder_bundle = encoder_staging_file.parent.with_name(encoder_identity.sha256)
@@ -117,6 +136,16 @@ def _release_fixture(
                 "sha256": sha256_file(review_evidence),
             },
         },
+        "source_release": {
+            "manifest": _reference(root, files["source_manifest"]),
+            "raw_snapshot": _reference(root, files["source_raw"]),
+            "rejections": _reference(root, files["source_rejections"]),
+            "current_source_registry": {
+                "size_bytes": files["source_registry"].stat().st_size,
+                "sha256": sha256_file(files["source_registry"]),
+            },
+            "expected_trust_root_sha256": "5" * 64,
+        },
         "embedding": {
             "artifact_manifest": _reference(root, files["embedding"]),
             "data_version": "embedding-data-v1",
@@ -156,8 +185,13 @@ def _release_fixture(
             "ranker_version": "ltr-v4",
         },
         "ranker_promotion": {
-            "decision": _reference(root, files["decision"]),
-            "decision_sha256": "e" * 64,
+            "evaluation_bundle_manifest": _reference(
+                root, files["ranking_bundle_manifest"]
+            ),
+            "bundle_manifest_sha256": "e" * 64,
+            "ledger_identity_sha256": "6" * 64,
+            "evaluator_source_sha256": "7" * 64,
+            "dependency_lock_sha256": "8" * 64,
             "policy": RankerPromotionPolicy().to_dict(),
         },
         "performance": [
@@ -191,6 +225,15 @@ def _encoder_arguments(manifest: Path) -> _EncoderArguments:
     }
 
 
+def _source_arguments(manifest: Path) -> dict[str, object]:
+    return {
+        "current_source_registry_path": manifest.parent
+        / "source-input"
+        / "source-registry.yaml",
+        "expected_source_trust_root_sha256": "5" * 64,
+    }
+
+
 def _patch_loaders(
     monkeypatch: pytest.MonkeyPatch,
     er_identity: dict[str, str],
@@ -205,6 +248,20 @@ def _patch_loaders(
         runtime=SimpleNamespace(model_version="er-lightgbm-release-v1"),
         policy=object(),
         identity=SimpleNamespace(**er_identity),
+    )
+    source_release = SimpleNamespace()
+
+    def verify_source_release(**kwargs: object) -> object:
+        source_release.manifest_path = Path(str(kwargs["manifest_path"])).resolve()
+        source_release.manifest_sha256 = kwargs["expected_manifest_sha256"]
+        source_release.records_path = Path(str(kwargs["records"])).resolve()
+        source_release.authority_expires_at = datetime(2099, 1, 1, tzinfo=UTC)
+        return source_release
+
+    monkeypatch.setattr(
+        serving_release,
+        "verify_awin_production_batch_release",
+        verify_source_release,
     )
     monkeypatch.setattr(
         serving_release,
@@ -286,6 +343,7 @@ def test_qualifying_content_addressed_release_composes_all_runtime_models(
         expected_catalog_data_version="catalog-v1",
         expected_ranker_version="ltr-v4",
         expected_manifest_sha256=json.loads(manifest.read_text())["content_sha256"],
+        **_source_arguments(manifest),
         **_encoder_arguments(manifest),
     )
 
@@ -320,6 +378,7 @@ def test_catalog_import_and_api_bootstrap_resolve_identical_er_authority(
         review_evidence_path=tmp_path / "review-evidence.jsonl",
         expected_catalog_data_version="catalog-v1",
         expected_manifest_sha256=manifest_sha256,
+        **_source_arguments(manifest),
     )
     api_release = serving_release.load_production_serving_release(
         manifest,
@@ -331,6 +390,7 @@ def test_catalog_import_and_api_bootstrap_resolve_identical_er_authority(
         expected_catalog_data_version="catalog-v1",
         expected_ranker_version="ltr-v4",
         expected_manifest_sha256=manifest_sha256,
+        **_source_arguments(manifest),
         **_encoder_arguments(manifest),
     ).catalog_release
 
@@ -348,6 +408,14 @@ def test_catalog_import_and_api_bootstrap_resolve_identical_er_authority(
         == (tmp_path / "review-evidence.jsonl").resolve()
     )
     assert import_release.entity_resolution is api_release.entity_resolution is er_release
+    assert import_release.source_release is api_release.source_release
+    assert import_release.source_release.records_path == offers.resolve()
+    assert (
+        import_release.source_release.manifest_sha256
+        == json.loads(manifest.read_text(encoding="utf-8"))["source_release"]["manifest"][
+            "sha256"
+        ]
+    )
     assert (
         import_release.entity_resolution.identity.binding_sha256
         == api_release.entity_resolution.identity.binding_sha256
@@ -362,11 +430,15 @@ def test_catalog_import_and_api_bootstrap_resolve_identical_er_authority(
         "offers",
         "reviewed",
         "review_evidence",
+        "source_manifest",
+        "source_raw",
+        "source_rejections",
+        "source_registry",
         "embedding",
         "retrieval",
         "ranker_model",
         "ranker_manifest",
-        "decision",
+        "ranking_bundle_manifest",
         "performance",
         "er_metadata",
         "er_model",
@@ -400,6 +472,7 @@ def test_release_fails_closed_when_any_pinned_artifact_is_tampered(
             expected_catalog_data_version="catalog-v1",
             expected_ranker_version="ltr-v4",
             expected_manifest_sha256=json.loads(manifest.read_text())["content_sha256"],
+            **_source_arguments(manifest),
             **_encoder_arguments(manifest),
         )
 
@@ -425,7 +498,161 @@ def test_release_fails_closed_on_manifest_tampering(
             expected_catalog_data_version="catalog-v1",
             expected_ranker_version="ltr-v4",
             expected_manifest_sha256=payload["content_sha256"],
+            **_source_arguments(manifest),
             **_encoder_arguments(manifest),
+        )
+
+
+def test_source_release_verification_receives_exact_governed_offers_and_pins(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest, catalog, offers, reviewed, files, er_identity = _release_fixture(tmp_path)
+    _patch_loaders(monkeypatch, er_identity)
+    calls: list[dict[str, object]] = []
+    verified = SimpleNamespace(
+        manifest_path=files["source_manifest"].resolve(),
+        manifest_sha256=sha256_file(files["source_manifest"]),
+        authority_expires_at=datetime(2099, 1, 1, tzinfo=UTC),
+    )
+
+    def capture_verification(**kwargs: object) -> object:
+        calls.append(kwargs)
+        return verified
+
+    monkeypatch.setattr(
+        serving_release,
+        "verify_awin_production_batch_release",
+        capture_verification,
+    )
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    release = serving_release.load_production_catalog_release(
+        manifest,
+        catalog_path=catalog,
+        offers_path=offers,
+        reviewed_mappings_path=reviewed,
+        review_evidence_path=tmp_path / "review-evidence.jsonl",
+        expected_catalog_data_version="catalog-v1",
+        expected_manifest_sha256=payload["content_sha256"],
+        **_source_arguments(manifest),
+    )
+
+    assert release.source_release is verified
+    assert calls == [
+        {
+            "manifest_path": files["source_manifest"].resolve(),
+            "expected_manifest_sha256": payload["source_release"]["manifest"]["sha256"],
+            "expected_trust_root_sha256": "5" * 64,
+            "current_source_registry": files["source_registry"].resolve(),
+            "raw_snapshot": files["source_raw"].resolve(),
+            "records": offers.resolve(),
+            "rejections": files["source_rejections"].resolve(),
+        }
+    ]
+
+
+def test_source_release_failure_blocks_catalogue_admission_after_outer_rehash(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest, catalog, offers, reviewed, _, er_identity = _release_fixture(tmp_path)
+    _patch_loaders(monkeypatch, er_identity)
+
+    def reject_release(**_kwargs: object) -> object:
+        raise serving_release.AuthorizedBatchReleaseError(
+            "accepted records do not match signed batch"
+        )
+
+    monkeypatch.setattr(
+        serving_release,
+        "verify_awin_production_batch_release",
+        reject_release,
+    )
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    _write_manifest(manifest, payload)
+
+    with pytest.raises(
+        ServingConfigurationError,
+        match="authorized source release failed validation: accepted records",
+    ):
+        serving_release.load_production_catalog_release(
+            manifest,
+            catalog_path=catalog,
+            offers_path=offers,
+            reviewed_mappings_path=reviewed,
+            review_evidence_path=tmp_path / "review-evidence.jsonl",
+            expected_catalog_data_version="catalog-v1",
+            expected_manifest_sha256=payload["content_sha256"],
+            **_source_arguments(manifest),
+        )
+
+
+def test_source_trust_root_must_match_independent_operator_pin(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest, catalog, offers, reviewed, _, er_identity = _release_fixture(tmp_path)
+    _patch_loaders(monkeypatch, er_identity)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    source_arguments = _source_arguments(manifest)
+    source_arguments["expected_source_trust_root_sha256"] = "0" * 64
+
+    with pytest.raises(ServingConfigurationError, match="independent operator pin"):
+        serving_release.load_production_catalog_release(
+            manifest,
+            catalog_path=catalog,
+            offers_path=offers,
+            reviewed_mappings_path=reviewed,
+            review_evidence_path=tmp_path / "review-evidence.jsonl",
+            expected_catalog_data_version="catalog-v1",
+            expected_manifest_sha256=payload["content_sha256"],
+            **source_arguments,
+        )
+
+
+def test_source_release_path_escape_is_rejected_even_when_outer_manifest_is_rehashed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest, catalog, offers, reviewed, _, er_identity = _release_fixture(tmp_path)
+    _patch_loaders(monkeypatch, er_identity)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload["source_release"]["raw_snapshot"]["path"] = "../outside.csv"
+    _write_manifest(manifest, payload)
+
+    with pytest.raises(ServingConfigurationError, match="relative and confined"):
+        serving_release.load_production_catalog_release(
+            manifest,
+            catalog_path=catalog,
+            offers_path=offers,
+            reviewed_mappings_path=reviewed,
+            review_evidence_path=tmp_path / "review-evidence.jsonl",
+            expected_catalog_data_version="catalog-v1",
+            expected_manifest_sha256=payload["content_sha256"],
+            **_source_arguments(manifest),
+        )
+
+
+def test_missing_source_release_is_rejected_even_when_outer_manifest_is_rehashed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    manifest, catalog, offers, reviewed, _, er_identity = _release_fixture(tmp_path)
+    _patch_loaders(monkeypatch, er_identity)
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+    payload.pop("source_release")
+    _write_manifest(manifest, payload)
+
+    with pytest.raises(ServingConfigurationError, match="manifest fields do not match"):
+        serving_release.load_production_catalog_release(
+            manifest,
+            catalog_path=catalog,
+            offers_path=offers,
+            reviewed_mappings_path=reviewed,
+            review_evidence_path=tmp_path / "review-evidence.jsonl",
+            expected_catalog_data_version="catalog-v1",
+            expected_manifest_sha256=payload["content_sha256"],
+            **_source_arguments(manifest),
         )
 
 
@@ -450,6 +677,7 @@ def test_legacy_v1_manifest_is_rejected_even_when_rehashed_and_pinned(
             expected_catalog_data_version="catalog-v1",
             expected_ranker_version="ltr-v4",
             expected_manifest_sha256=payload["content_sha256"],
+            **_source_arguments(manifest),
             **_encoder_arguments(manifest),
         )
 
@@ -475,6 +703,7 @@ def test_release_rejects_path_escape_even_when_manifest_is_rehashed(
             expected_catalog_data_version="catalog-v1",
             expected_ranker_version="ltr-v4",
             expected_manifest_sha256=payload["content_sha256"],
+            **_source_arguments(manifest),
             **_encoder_arguments(manifest),
         )
 
@@ -497,6 +726,7 @@ def test_release_rejects_a_valid_but_unpinned_manifest(
             expected_catalog_data_version="catalog-v1",
             expected_ranker_version="ltr-v4",
             expected_manifest_sha256="0" * 64,
+            **_source_arguments(manifest),
             **_encoder_arguments(manifest),
         )
 
@@ -521,6 +751,7 @@ def test_release_rejects_an_encoder_bundle_not_pinned_by_the_operator(
             expected_catalog_data_version="catalog-v1",
             expected_ranker_version="ltr-v4",
             expected_manifest_sha256=json.loads(manifest.read_text())["content_sha256"],
+            **_source_arguments(manifest),
             **arguments,
         )
 
@@ -546,6 +777,7 @@ def test_release_rejects_encoder_bundle_count_drift_in_rehashed_manifest(
             expected_catalog_data_version="catalog-v1",
             expected_ranker_version="ltr-v4",
             expected_manifest_sha256=payload["content_sha256"],
+            **_source_arguments(manifest),
             **_encoder_arguments(manifest),
         )
 
@@ -569,6 +801,7 @@ def test_release_fails_closed_without_the_mounted_encoder_bundle(
             expected_catalog_data_version="catalog-v1",
             expected_ranker_version="ltr-v4",
             expected_manifest_sha256=json.loads(manifest.read_text())["content_sha256"],
+            **_source_arguments(manifest),
             **_encoder_arguments(manifest),
         )
 
@@ -600,5 +833,6 @@ def test_release_fails_closed_when_encoder_warmup_fails(
             expected_catalog_data_version="catalog-v1",
             expected_ranker_version="ltr-v4",
             expected_manifest_sha256=json.loads(manifest.read_text())["content_sha256"],
+            **_source_arguments(manifest),
             **_encoder_arguments(manifest),
         )

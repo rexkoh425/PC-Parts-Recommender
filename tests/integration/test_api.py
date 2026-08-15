@@ -15,6 +15,18 @@ from services.api.settings import ApiSettings
 from pc_build_recommender.domain import BuildProfile as DomainBuildProfile
 
 
+def _without_impression_tokens(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            key: _without_impression_tokens(item)
+            for key, item in value.items()
+            if key != "impression_token"
+        }
+    if isinstance(value, list):
+        return [_without_impression_tokens(item) for item in value]
+    return value
+
+
 @pytest.fixture
 def client() -> Iterator[TestClient]:
     settings = ApiSettings(
@@ -224,12 +236,16 @@ def test_generate_returns_diverse_refresh_safe_compatible_builds(
 
     refreshed_request = client.get(f"/v1/requests/{payload['request_id']}/builds")
     assert refreshed_request.status_code == 200
-    assert refreshed_request.json() == payload
+    assert _without_impression_tokens(refreshed_request.json()) == _without_impression_tokens(
+        payload
+    )
 
     first_build = payload["builds"][0]
     refreshed_build = client.get(f"/v1/builds/{first_build['build_id']}")
     assert refreshed_build.status_code == 200
-    assert refreshed_build.json() == first_build
+    assert _without_impression_tokens(refreshed_build.json()) == _without_impression_tokens(
+        first_build
+    )
 
 
 @pytest.mark.integration
@@ -573,7 +589,9 @@ def test_product_search_pagination_facets_coverage_and_cursor_are_deterministic(
 
     assert second.status_code == repeated.status_code == 200
     second_payload = second.json()
-    assert second_payload == repeated.json()
+    assert _without_impression_tokens(second_payload) == _without_impression_tokens(
+        repeated.json()
+    )
     assert second_payload["pagination"]["page"] == 2
     assert second_payload["pagination"]["has_previous"] is True
     assert second_payload["pagination"]["previous_cursor"]
@@ -694,7 +712,9 @@ def test_compatible_replacement_creates_new_refresh_safe_build(
     refreshed_new = client.get(f"/v1/builds/{replacement['build']['build_id']}")
     assert refreshed_new.json() == replacement["build"]
     refreshed_original = client.get(f"/v1/builds/{original['build_id']}")
-    assert refreshed_original.json() == original
+    assert _without_impression_tokens(refreshed_original.json()) == _without_impression_tokens(
+        original
+    )
 
 
 @pytest.mark.integration
@@ -722,7 +742,9 @@ def test_unlocked_reoptimization_mode_is_explicitly_rejected(
     assert response.status_code == 422
     assert response.json()["error"]["code"] == "replacement_mode_not_available"
     assert response.json()["error"]["request_id"] == response.headers["x-request-id"]
-    assert client.get(f"/v1/builds/{original['build_id']}").json() == original
+    assert _without_impression_tokens(
+        client.get(f"/v1/builds/{original['build_id']}").json()
+    ) == _without_impression_tokens(original)
 
 
 @pytest.mark.integration
@@ -745,6 +767,8 @@ def test_interaction_ingestion_is_versioned(client: TestClient) -> None:
     assert response.json()["event_id"].startswith("evt_")
     assert response.json()["data_version"] == "test-data-v1"
     assert response.json()["rule_version"] == "compat-test-v1"
+    assert response.json()["trust_level"] == "legacy_untrusted"
+    assert response.json()["replayed"] is False
 
     # Starlette's TestClient annotation exposes only the ASGI callable, while this
     # integration assertion intentionally inspects the application state fixture.
@@ -760,6 +784,115 @@ def test_interaction_ingestion_is_versioned(client: TestClient) -> None:
     )
     assert defaulted.status_code == 202
     assert defaulted.json()["rule_version"] == "compat-test-v1"
+
+
+@pytest.mark.integration
+def test_signed_product_interaction_is_canonical_idempotent_and_tamper_safe(
+    client: TestClient,
+) -> None:
+    search = client.post(
+        "/v1/products/search",
+        json={"query": "GPU", "page": 1, "page_size": 3, "in_stock_only": False},
+    )
+    assert search.status_code == 200, search.text
+    item = search.json()["products"][0]
+    token = item["impression_token"]
+    event = {
+        "event_type": "component_viewed",
+        "session_id": "session-signed-product",
+        "impression_token": token,
+    }
+    headers = {"Idempotency-Key": "product-view-retry-0001"}
+
+    accepted = client.post("/v1/interactions", json=event, headers=headers)
+    replayed = client.post("/v1/interactions", json=event, headers=headers)
+
+    assert accepted.status_code == replayed.status_code == 202
+    assert accepted.json()["trust_level"] == "verified_impression"
+    assert accepted.json()["replayed"] is False
+    assert replayed.json()["replayed"] is True
+    assert replayed.json()["event_id"] == accepted.json()["event_id"]
+    assert replayed.json()["accepted_at"] == accepted.json()["accepted_at"]
+
+    service = cast(Any, client).app.state.application_service
+    matching_events = [
+        item for item in service._interactions if item[0] == accepted.json()["event_id"]
+    ]
+    assert len(matching_events) == 1
+    canonical = next(
+        item[1] for item in service._interactions if item[0] == accepted.json()["event_id"]
+    )
+    assert canonical.query_id == search.json()["query_id"]
+    assert canonical.product_id == item["product_id"]
+    assert canonical.rank_position == 1
+    assert canonical.model_version == search.json()["retrieval_model"]
+    assert canonical.impression_id.startswith("imp_")
+    assert canonical.impression_token is None
+    assert canonical.idempotency_key_sha256 != "product-view-retry-0001"
+
+    conflict = client.post(
+        "/v1/interactions",
+        json={**event, "metadata": {"changed": True}},
+        headers=headers,
+    )
+    assert conflict.status_code == 409
+    assert conflict.json()["error"]["code"] == "interaction_idempotency_conflict"
+
+    forged_rank = client.post(
+        "/v1/interactions",
+        json={**event, "rank_position": 99},
+        headers={"Idempotency-Key": "product-view-retry-0002"},
+    )
+    assert forged_rank.status_code == 409
+    assert forged_rank.json()["error"]["code"] == "impression_claim_mismatch"
+
+    replacement = "A" if token[-1] != "A" else "B"
+    tampered = client.post(
+        "/v1/interactions",
+        json={**event, "impression_token": token[:-1] + replacement},
+        headers={"Idempotency-Key": "product-view-retry-0003"},
+    )
+    assert tampered.status_code == 401
+    assert tampered.json()["error"]["code"] == "invalid_impression"
+
+    metadata_claim = client.post(
+        "/v1/interactions",
+        json={**event, "metadata": {"rank_position": 999}},
+        headers={"Idempotency-Key": "product-view-reserved-metadata"},
+    )
+    assert metadata_claim.status_code == 422
+    assert metadata_claim.json()["error"]["code"] == "reserved_interaction_metadata"
+
+
+@pytest.mark.integration
+def test_signed_build_interaction_uses_server_result_claims(client: TestClient) -> None:
+    generated = client.post(
+        "/v1/builds/generate",
+        json={
+            "budget_sgd": 2500,
+            "workloads": [{"name": "local_ai", "weight": 1.0}],
+        },
+    )
+    assert generated.status_code == 200, generated.text
+    build = generated.json()["builds"][0]
+
+    accepted = client.post(
+        "/v1/interactions",
+        json={
+            "event_type": "build_saved",
+            "session_id": "session-signed-build",
+            "impression_token": build["impression_token"],
+        },
+        headers={"Idempotency-Key": "build-save-retry-0001"},
+    )
+
+    assert accepted.status_code == 202, accepted.text
+    service = cast(Any, client).app.state.application_service
+    canonical = service._interactions[-1][1]
+    assert canonical.query_id == generated.json()["request_id"]
+    assert canonical.build_id == build["build_id"]
+    assert canonical.rank_position == 1
+    assert canonical.trust_level == "verified_impression"
 
 
 @pytest.mark.integration

@@ -11,9 +11,10 @@ import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 from services.api.main import create_app
+from services.api.metrics import RequestMetrics
 from services.api.middleware import (
-    BuildGenerationAdmissionController,
-    BuildGenerationAdmissionMiddleware,
+    OptimizerAdmissionController,
+    OptimizerAdmissionMiddleware,
     RequestBodyLimitMiddleware,
 )
 from services.api.service import InMemoryRecommendationService
@@ -135,7 +136,7 @@ async def test_body_limit_rejects_conflicting_content_lengths() -> None:
 
 
 @pytest.mark.asyncio
-async def test_generation_admission_distinguishes_full_queue_from_timeout() -> None:
+async def test_optimizer_admission_is_shared_and_distinguishes_full_queue_from_timeout() -> None:
     release_generation = asyncio.Event()
     first_started = asyncio.Event()
     downstream_calls = 0
@@ -148,36 +149,120 @@ async def test_generation_admission_distinguishes_full_queue_from_timeout() -> N
         await send({"type": "http.response.start", "status": 204, "headers": []})
         await send({"type": "http.response.body", "body": b""})
 
-    controller = BuildGenerationAdmissionController(
+    metrics = RequestMetrics()
+    controller = OptimizerAdmissionController(
         max_concurrency=1,
         max_queue_size=1,
         queue_timeout_seconds=0.05,
+        metrics=metrics,
     )
-    middleware = BuildGenerationAdmissionMiddleware(downstream, controller=controller)
+    middleware = OptimizerAdmissionMiddleware(downstream, controller=controller)
 
     first = asyncio.create_task(_invoke(middleware))
     await asyncio.wait_for(first_started.wait(), timeout=1)
-    second = asyncio.create_task(_invoke(middleware))
+    replacement_scope = _http_scope(path="/v1/builds/build-resource-test/replace")
+    second = asyncio.create_task(_invoke(middleware, scope=replacement_scope))
+    for _ in range(100):
+        if await controller.snapshot() == (1, 1):
+            break
+        await asyncio.sleep(0.001)
+    assert await controller.snapshot() == (1, 1)
+    assert await controller.operation_snapshot() == {
+        "generate": (1, 0),
+        "replace": (0, 1),
+    }
+
+    queue_full = await _invoke(middleware, scope=replacement_scope)
+    queue_timeout = await asyncio.wait_for(second, timeout=1)
+    release_generation.set()
+    completed = await asyncio.wait_for(first, timeout=1)
+
+    assert _response_status(queue_full) == 429
+    assert _response_json(queue_full)["error"]["code"] == "component_replacement_queue_full"
+    assert _response_json(queue_full)["error"]["details"]["operation"] == "replace"
+    assert _response_headers(queue_full)[b"retry-after"] == b"1"
+    assert _response_status(queue_timeout) == 503
+    assert _response_json(queue_timeout)["error"]["code"] == (
+        "component_replacement_queue_timeout"
+    )
+    assert _response_json(queue_timeout)["error"]["details"]["operation"] == "replace"
+    assert _response_headers(queue_timeout)[b"retry-after"] == b"1"
+    assert _response_status(completed) == 204
+    assert downstream_calls == 1
+    assert await controller.snapshot() == (0, 0)
+    assert await controller.operation_snapshot() == {
+        "generate": (0, 0),
+        "replace": (0, 0),
+    }
+    rendered = metrics.render()
+    assert (
+        'pcbr_optimizer_admission_outcomes_total{operation="generate",outcome="admitted"} 1'
+        in rendered
+    )
+    assert (
+        'pcbr_optimizer_admission_outcomes_total{operation="replace",outcome="queue_full"} 1'
+        in rendered
+    )
+    assert (
+        'pcbr_optimizer_admission_outcomes_total{operation="replace",outcome="queue_timeout"} 1'
+        in rendered
+    )
+    assert 'pcbr_optimizer_admission_active{operation="generate"} 0' in rendered
+    assert 'pcbr_optimizer_admission_queued{operation="replace"} 0' in rendered
+
+
+@pytest.mark.asyncio
+async def test_optimizer_admission_cancellation_does_not_leak_queue_or_capacity() -> None:
+    metrics = RequestMetrics()
+    controller = OptimizerAdmissionController(
+        max_concurrency=1,
+        max_queue_size=1,
+        queue_timeout_seconds=1,
+        metrics=metrics,
+    )
+    await controller.acquire("generate")
+    queued = asyncio.create_task(controller.acquire("replace"))
     for _ in range(100):
         if await controller.snapshot() == (1, 1):
             break
         await asyncio.sleep(0.001)
     assert await controller.snapshot() == (1, 1)
 
-    queue_full = await _invoke(middleware)
-    queue_timeout = await asyncio.wait_for(second, timeout=1)
-    release_generation.set()
-    completed = await asyncio.wait_for(first, timeout=1)
+    queued.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await queued
+    assert await controller.snapshot() == (1, 0)
+    await controller.release("generate")
 
-    assert _response_status(queue_full) == 429
-    assert _response_json(queue_full)["error"]["code"] == "build_generation_queue_full"
-    assert _response_headers(queue_full)[b"retry-after"] == b"1"
-    assert _response_status(queue_timeout) == 503
-    assert _response_json(queue_timeout)["error"]["code"] == ("build_generation_queue_timeout")
-    assert _response_headers(queue_timeout)[b"retry-after"] == b"1"
-    assert _response_status(completed) == 204
-    assert downstream_calls == 1
     assert await controller.snapshot() == (0, 0)
+    rendered = metrics.render()
+    assert (
+        'pcbr_optimizer_admission_outcomes_total{operation="replace",outcome="cancelled"} 1'
+        in rendered
+    )
+    assert 'pcbr_optimizer_admission_queued{operation="replace"} 0' in rendered
+
+
+def test_optimizer_admission_metrics_reject_unbounded_labels_and_invalid_state() -> None:
+    metrics = RequestMetrics()
+
+    with pytest.raises(ValueError, match="unsupported optimizer operation"):
+        metrics.record_optimizer_admission_transition(
+            operation="caller-controlled",
+            outcome="admitted",
+            wait_seconds=0,
+        )
+    with pytest.raises(ValueError, match="unsupported optimizer admission outcome"):
+        metrics.record_optimizer_admission_transition(
+            operation="generate",
+            outcome="caller-controlled",
+            wait_seconds=0,
+        )
+    with pytest.raises(ValueError, match="cannot become negative"):
+        metrics.record_optimizer_admission_transition(
+            operation="replace",
+            queued_delta=-1,
+        )
 
 
 def test_create_app_rejects_oversized_body_before_endpoint() -> None:
@@ -218,11 +303,14 @@ def test_openapi_documents_resource_control_responses() -> None:
 
     generation_responses = schema["paths"]["/v1/builds/generate"]["post"]["responses"]
     assert {"413", "429", "503"}.issubset(generation_responses)
+    replacement_responses = schema["paths"]["/v1/builds/{build_id}/replace"]["post"][
+        "responses"
+    ]
+    assert {"413", "429", "503"}.issubset(replacement_responses)
     for path in (
         "/v1/products/search",
         "/v1/compatibility/check",
         "/v1/interactions",
-        "/v1/builds/{build_id}/replace",
     ):
         assert "413" in schema["paths"][path]["post"]["responses"]
 
