@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, Response
 
-from services.api.dependencies import ApplicationDependency
+from services.api.dependencies import (
+    ApplicationDependency,
+    ImpressionSignerDependency,
+    SettingsDependency,
+)
+from services.api.impressions import prepare_impression_response
 from services.api.metrics import DOMAIN_METRICS
 from services.api.models import (
     ProductBenchmarksResponse,
@@ -30,10 +35,51 @@ router = APIRouter(prefix="/v1/products", tags=["products"])
     responses={**NOT_FOUND_ERROR, **VALIDATION_ERROR, **PAYLOAD_TOO_LARGE_ERROR},
 )
 async def search_products(
-    request: ProductSearchRequest, application: ApplicationDependency
+    request: ProductSearchRequest,
+    http_request: Request,
+    http_response: Response,
+    application: ApplicationDependency,
+    signer: ImpressionSignerDependency,
+    settings: SettingsDependency,
 ) -> ProductSearchResponse:
     response = validate_service_response(
         await application.search_products(request), ProductSearchResponse
+    )
+    page = response.pagination.page if response.pagination is not None else 1
+    page_size = (
+        response.pagination.page_size
+        if response.pagination is not None
+        else request.effective_page_size
+    )
+    first_rank = (page - 1) * page_size + 1
+    actor_id = prepare_impression_response(
+        http_request,
+        http_response,
+        signer=signer,
+        secure_cookie=not settings.is_development_environment,
+    )
+    response = response.model_copy(
+        update={
+            "products": [
+                product.model_copy(
+                    update={
+                        "impression_token": signer.issue(
+                            actor_id=actor_id,
+                            query_id=response.query_id,
+                            kind="product_search_result",
+                            rank_position=first_rank + offset,
+                            product_id=product.product_id,
+                            model_version=response.retrieval_model,
+                            data_version=response.data_version,
+                            rule_version=settings.compatibility_rule_version,
+                        )
+                    },
+                    deep=True,
+                )
+                for offset, product in enumerate(response.products)
+            ]
+        },
+        deep=True,
     )
     DOMAIN_METRICS.record_product_search(
         result_count=len(response.products),
