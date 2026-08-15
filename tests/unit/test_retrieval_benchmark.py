@@ -14,6 +14,7 @@ from pc_build_recommender.ranking import (
     RankerArtifactIdentity,
     RankerMetadata,
     RankerPromotionPolicy,
+    assert_production_ranker_promotion_policy,
     evaluate_ranker_promotion,
 )
 from pc_build_recommender.retrieval import (
@@ -319,6 +320,23 @@ def test_silver_labels_are_non_promotable_even_with_strong_diagnostic_scores() -
 def test_ranker_promotion_policy_rejects_non_finite_thresholds(value: float) -> None:
     with pytest.raises(ValueError, match="must be finite"):
         RankerPromotionPolicy(minimum_recall_at_50=value)
+
+
+@pytest.mark.parametrize(
+    "policy",
+    [
+        RankerPromotionPolicy(minimum_test_query_groups=49),
+        RankerPromotionPolicy(minimum_recall_at_50=0.94),
+        RankerPromotionPolicy(minimum_relative_ndcg_lift_percent_over_bm25=14.9),
+        RankerPromotionPolicy(minimum_bm25_ndcg_delta_ci_lower=-0.001),
+        RankerPromotionPolicy(rrf_ndcg_noninferiority_margin=0.011),
+    ],
+)
+def test_production_ranker_policy_floors_cannot_be_lowered(
+    policy: RankerPromotionPolicy,
+) -> None:
+    with pytest.raises(ValueError, match="weakens production floors"):
+        assert_production_ranker_promotion_policy(policy)
 
 
 def test_ranker_promotion_rejects_non_finite_report_metrics() -> None:
