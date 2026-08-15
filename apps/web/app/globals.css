@@ -7156,3 +7156,146 @@ details.evidence-ledger {
 details.evidence-ledger > summary {
   width: fit-content;
 }
+
+/* ===========================================================================
+   Components
+   Chips, cards and badges had each been styled where they were first needed,
+   so they shared no shape language: different radii, different label casing,
+   different weights. These give them one voice.
+   =========================================================================== */
+
+/* Chips read as labels, not buttons: soft tint, no shadow, one radius. */
+.category-chip,
+.recommended-chip,
+.demo-chip,
+.profile-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.category-chip {
+  padding: 6px 10px;
+  background: var(--forest-50);
+  color: var(--forest-600);
+  border: 1px solid var(--forest-100);
+}
+
+.recommended-chip {
+  padding: 6px 10px;
+}
+
+/* Catalogue cards were a stack of loosely related blocks. A consistent rhythm
+   and a rule above the price separate identity from commerce. */
+.catalogue-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: var(--elevation-1);
+  transition: transform 180ms cubic-bezier(0.2, 0, 0, 1),
+    box-shadow 180ms cubic-bezier(0.2, 0, 0, 1),
+    border-color 180ms ease;
+}
+
+.catalogue-card > * {
+  margin: 0;
+}
+
+.catalogue-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--forest-200);
+  box-shadow: var(--elevation-3);
+}
+
+.catalogue-card__identity h2 {
+  font-size: var(--text-lg);
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+}
+
+.catalogue-card__identity small {
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.catalogue-card__price {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.catalogue-card__price small {
+  display: block;
+  font-size: var(--text-2xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.catalogue-card__price strong {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: var(--text-2xl);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+}
+
+/* The action sits at the card's foot whatever the name length, so a grid of
+   cards has one baseline instead of a ragged one. */
+.catalogue-card .button {
+  margin-top: auto;
+}
+
+/* The coverage mark was a heavy dark slab for a single number. Lighter, with
+   the figure carrying the weight instead of the box. */
+.catalogue-header__mark {
+  display: grid;
+  gap: 2px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  box-shadow: var(--elevation-1);
+  text-align: left;
+}
+
+.catalogue-header__mark > span {
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  color: var(--ink-faint);
+}
+
+.catalogue-header__mark > strong {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: var(--text-3xl);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.02em;
+  color: var(--forest-600);
+  line-height: 1.05;
+}
+
+.catalogue-header__mark > small {
+  font-size: var(--text-xs);
+  color: var(--ink-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catalogue-card,
+  .catalogue-card:hover {
+    transition: none;
+    transform: none;
+  }
+}
