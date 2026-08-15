@@ -9,7 +9,7 @@ Unknown stock remains unknown.
 ## Read-only coverage report
 
 ```powershell
-.venv/Scripts/python.exe scripts/import_processed_catalog.py `
+.venv/Scripts/python.exe -m scripts.import_processed_catalog `
   --buildcores <buildcores-records.jsonl> `
   --offers <governed-offers-records.jsonl> `
   --report-output artifacts/evaluation/catalog-readiness-current.json `
@@ -20,9 +20,11 @@ The importer streams JSONL records with an 8 MiB per-line limit and retains only
 compact identity index needed for entity resolution. `--max-line-bytes` and
 `--batch-size` are configurable.
 
-To persist records, add `--database-url <sqlalchemy-url>`. Add
-`--require-production-ready` for a fail-closed import. A failed production gate exits
-with code 2 and rolls back the import transaction.
+To persist development records, add `--database-url <sqlalchemy-url>`. The
+`--require-production-ready` switch is a read-only readiness gate in this standalone utility; a
+failed gate exits with code 2. Combining it with a database URL is rejected because a catalogue-only
+write would invalidate the release-bound search-document hashes without restoring the pinned
+vector corpus.
 
 The standalone processed importer is a development and readiness-report surface. Production uses
 `scripts/import_catalog_release.py`, which has no switch to weaken its gates. It first validates
@@ -32,10 +34,16 @@ and recomputes the exact processed snapshot and readiness report before opening 
 It then:
 
 1. rejects any canonical product or retailer-listing row outside the pinned release;
-2. upserts the processed catalogue;
+2. opens one outer PostgreSQL release transaction and upserts the processed catalogue;
 3. imports the pinned vectors and search-document hashes without deleting stale provenance; and
 4. verifies the exact product set, listing set, canonical rows, listing rows, and search-document
-   identities before succeeding.
+   identities before allowing that outer transaction to commit.
+
+The ordinary processed upsert intentionally clears each `search_document_hash`, because changing
+a canonical row is not proof that its prior retrieval corpus remains valid. The manifest-pinned
+vector step must restore the matching document and content hash. If vector import or final identity
+verification fails, PostgreSQL rolls back the catalogue upsert and the release job remains failed;
+rerunning the same pinned release is idempotent.
 
 There is intentionally no automatic stale-row cleanup. A stale product, listing, or provenance
 blocks deployment and requires a separately reviewed reconciliation design with an explicit
@@ -53,13 +61,28 @@ The default production policy requires:
 It also requires a production-authorized entity-resolution runtime. A production import accepts
 that authority only through `--serving-manifest` plus the operator-pinned
 `--serving-manifest-sha256`; direct model, evaluation, or shadow-mode arguments are rejected.
-The version-3 serving manifest binds the exact LightGBM model, embedded calibrator, serving
+The version-4 serving manifest binds the exact LightGBM model, embedded calibrator, serving
 evidence, human-labelled v2 evaluation, matcher/catalogue policy, rights approval, governed
 offers, reviewed mappings, and review-evidence JSONL. The policy supplies the deployed thresholds,
 while the rights approval binds the exact model release, evaluation bytes, review queue, frozen
 test groups, and permitted SG serving uses. Their composite release identity becomes part of the processed
 catalogue data version, so the release job and API bootstrap cannot silently use different ER
 decisions.
+
+Version 4 also requires one content-addressed
+`pc-build-recommender.authorized-source-batch-release.v1` manifest, its raw snapshot and rejection
+stream. The v4 declaration also pins the exact bytes of an independently mounted current source
+registry and must match the separately configured Ed25519 trust-root digest. The
+catalogue importer and API both reverify that complete signed ingestion chain and deliberately
+pass the exact governed-offers file as the source verifier's accepted-record artifact. Rehashing
+only the outer serving manifest cannot authorize different offers. Missing, unsigned, stale,
+path-escaping, or byte-mismatched source evidence blocks production admission; development
+catalogue loading remains permissive.
+
+This first contract admits exactly one Awin source batch, so the governed-offers JSONL must be
+byte-for-byte that batch's accepted-record stream. Aggregating multiple retailers or batches is
+not supported by v4 and fails admission; a future multi-source contract must define and verify a
+deterministic aggregate manifest first.
 
 Current synthetic and external-transfer artifacts do not satisfy this contract and cannot be
 activated. No promoted production ER release is shipped by the repository.

@@ -4,7 +4,7 @@ Status: measured open-data development catalogue; production retailer coverage i
 
 Geography: Singapore  
 Currency: SGD  
-Last updated: 2026-07-23
+Last updated: 2026-08-15
 
 ## Summary
 
@@ -37,6 +37,15 @@ The BuildCores 800-record fast slice and 3,000-record portfolio slice are subset
 and bounded API demonstrations only. Full local paths live under
 `data/processed/<source>/<raw-hash>/`; these source artifacts are Git-ignored and may require
 re-acquisition according to their access terms.
+
+The deterministic canonical-identity preflight over the 3,000-record portfolio currently reports
+2,986 rows with a complete normalized brand/MPN identity, 14 rows without a manufacturer part
+number, and 14 duplicate normalized brand/MPN groups spanning 28 rows. It found no duplicate
+internal product IDs. The preflight digest is
+`865abca8c6f5daa9d45bfc60598f2344b7fc0ed5f25063d61f3c054b065106e9`. These findings are
+retained as reviewable diagnostics; no row is silently merged or dropped. They are explicit
+production-release blockers, so 3,000 source rows must not be represented as 3,000 resolved unique
+SKUs until the conflicts and missing identifiers are adjudicated.
 
 Exact verified evidence registry:
 
@@ -337,6 +346,10 @@ Catalog data is non-personal, but interaction events can become personal when ti
 Anonymous sessions are the default. Retention and deletion policy must be defined before public
 accounts launch. Logs avoid raw free text and credential-bearing URLs. If public build sharing is
 released, it must use an allow-listed projection rather than the full query or event record.
+Ranked-result feedback is trusted only after verification of a short-lived server-issued opaque
+impression and idempotent ingestion. Unsigned legacy/development events remain explicitly
+`legacy_untrusted` and are ineligible for LambdaMART labels; neither raw impression tokens nor raw
+idempotency keys are retained.
 
 ## Version and reproducibility contract
 
