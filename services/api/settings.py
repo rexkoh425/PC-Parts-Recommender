@@ -10,7 +10,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class ApiSettings(BaseSettings):
-    """Settings are environment-driven and intentionally contain no secrets."""
+    """Environment-driven settings with secrets masked by ``SecretStr``."""
 
     model_config = SettingsConfigDict(
         env_prefix="PCBR_API_",
@@ -22,7 +22,7 @@ class ApiSettings(BaseSettings):
 
     app_name: str = "PC Build Recommender API"
     environment: str = "development"
-    service_mode: Literal["demo", "processed_catalog"] = "demo"
+    service_mode: Literal["demo", "public_demo", "processed_catalog"] = "demo"
     log_level: str = "INFO"
     docs_enabled: bool = True
     cors_origins: list[str] = Field(
@@ -33,7 +33,11 @@ class ApiSettings(BaseSettings):
     ranking_model_version: str = "deterministic-baseline-v1"
     compatibility_rule_version: str = "compat_v2"
     solver_version: str = "in-memory-baseline-v1"
+    # ``stale_after_hours`` remains as a compatibility input for older deployments.
+    # New deployments should set the two cadence-specific thresholds explicitly.
     stale_after_hours: int = Field(default=24, ge=1, le=24 * 30)
+    catalogue_stale_after_hours: int = Field(default=24 * 7, ge=1, le=24 * 30)
+    price_stale_after_hours: int = Field(default=24, ge=1, le=24 * 30)
 
     request_id_header: str = "X-Request-ID"
     max_request_body_bytes: int = Field(
@@ -41,10 +45,15 @@ class ApiSettings(BaseSettings):
         ge=1024,
         le=16 * 1024 * 1024,
     )
-    build_generation_max_concurrency: int = Field(default=1, ge=1, le=16)
+    # The catalog-backed application serializes result mutations with one process-wide lock.
+    # Keep admission honest until that mutation boundary is redesigned and proven concurrent.
+    build_generation_max_concurrency: int = Field(default=1, ge=1, le=1)
     build_generation_max_queue_size: int = Field(default=8, ge=0, le=256)
     build_generation_queue_timeout_seconds: float = Field(default=2.0, gt=0, le=60)
     build_share_ttl_hours: int = Field(default=24 * 30, ge=1, le=24 * 365)
+    impression_ttl_minutes: int = Field(default=120, ge=1, le=24 * 60)
+    impression_signing_key: SecretStr | None = None
+    impression_signing_key_file: Path | None = None
     admin_token: SecretStr | None = Field(default=None)
     admin_token_file: Path | None = None
     pipeline_operations_path: Path | None = None
@@ -77,6 +86,8 @@ class ApiSettings(BaseSettings):
     entity_resolution_evaluation_path: Path | None = None
     serving_manifest_path: Path | None = None
     serving_manifest_sha256: str | None = None
+    source_registry_path: Path | None = None
+    source_trust_root_sha256: str | None = None
     semantic_encoder_bundle_path: Path | None = None
     semantic_encoder_bundle_sha256: str | None = None
     allow_development_catalog: bool = False
@@ -85,6 +96,33 @@ class ApiSettings(BaseSettings):
 
     @model_validator(mode="after")
     def processed_catalog_paths_are_explicit(self) -> ApiSettings:
+        configured_fields = self.model_fields_set
+        if "stale_after_hours" in configured_fields:
+            if "catalogue_stale_after_hours" not in configured_fields:
+                self.catalogue_stale_after_hours = self.stale_after_hours
+            if "price_stale_after_hours" not in configured_fields:
+                self.price_stale_after_hours = self.stale_after_hours
+        if self.impression_signing_key is not None and self.impression_signing_key_file is not None:
+            raise ValueError(
+                "configure only one of impression_signing_key or impression_signing_key_file"
+            )
+        if self.impression_signing_key_file is not None:
+            try:
+                signing_key = self.impression_signing_key_file.read_text(encoding="utf-8").strip()
+            except OSError as error:
+                raise ValueError("impression_signing_key_file could not be read") from error
+            if "\n" in signing_key or "\r" in signing_key:
+                raise ValueError(
+                    "impression_signing_key_file must contain exactly one secret value"
+                )
+            if len(signing_key.encode("utf-8")) < 32:
+                raise ValueError("impression_signing_key_file must contain at least 32 bytes")
+            self.impression_signing_key = SecretStr(signing_key)
+        elif (
+            self.impression_signing_key is not None
+            and len(self.impression_signing_key.get_secret_value().encode("utf-8")) < 32
+        ):
+            raise ValueError("impression_signing_key must contain at least 32 bytes")
         if self.admin_token is not None and self.admin_token_file is not None:
             raise ValueError("configure only one of admin_token or admin_token_file")
         if self.admin_token_file is not None:
@@ -99,6 +137,13 @@ class ApiSettings(BaseSettings):
             self.admin_token = SecretStr(token)
         elif self.admin_token is not None and len(self.admin_token.get_secret_value().strip()) < 24:
             raise ValueError("admin_token must contain at least 24 non-whitespace characters")
+        if (
+            self.impression_signing_key is not None
+            and self.admin_token is not None
+            and self.impression_signing_key.get_secret_value()
+            == self.admin_token.get_secret_value()
+        ):
+            raise ValueError("impression signing key must not reuse the administrator token")
         if self.service_mode == "processed_catalog" and (
             self.buildcores_catalog_path is None or self.governed_offers_path is None
         ):
@@ -122,6 +167,12 @@ class ApiSettings(BaseSettings):
             raise ValueError(
                 "serving_manifest_path and serving_manifest_sha256 must be configured together"
             )
+        if (self.source_registry_path is None) != (self.source_trust_root_sha256 is None):
+            raise ValueError(
+                "source_registry_path and source_trust_root_sha256 must be configured together"
+            )
+        if self.source_registry_path is not None and self.service_mode != "processed_catalog":
+            raise ValueError("source_registry_path applies only to processed_catalog mode")
         if (self.semantic_encoder_bundle_path is None) != (
             self.semantic_encoder_bundle_sha256 is None
         ):
@@ -149,6 +200,14 @@ class ApiSettings(BaseSettings):
             )
         ):
             raise ValueError("semantic_encoder_bundle_sha256 must be a lowercase SHA-256 digest")
+        if self.source_trust_root_sha256 is not None and (
+            len(self.source_trust_root_sha256) != 64
+            or any(
+                character not in "0123456789abcdef"
+                for character in self.source_trust_root_sha256
+            )
+        ):
+            raise ValueError("source_trust_root_sha256 must be a lowercase SHA-256 digest")
         if self.performance_artifact_paths and self.service_mode != "processed_catalog":
             raise ValueError("performance artifacts apply only to processed_catalog mode")
         if self.allow_unpromoted_performance_models and not self.performance_artifact_paths:
@@ -203,6 +262,15 @@ class ApiSettings(BaseSettings):
             if self.review_evidence_path is None:
                 raise ValueError(
                     "non-development processed_catalog mode requires a pinned review_evidence_path"
+                )
+            if self.impression_signing_key_file is None:
+                raise ValueError(
+                    "non-development processed_catalog mode requires impression_signing_key_file"
+                )
+            if self.source_registry_path is None:
+                raise ValueError(
+                    "non-development processed_catalog mode requires source_registry_path "
+                    "and source_trust_root_sha256"
                 )
             database_url = self.database_url.get_secret_value().casefold()
             if not database_url.startswith(("postgresql://", "postgresql+")):

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from datetime import datetime
 from threading import Lock
 from typing import TYPE_CHECKING
 
@@ -10,6 +11,10 @@ if TYPE_CHECKING:
     from services.api.models import AdminOperationsResponse
 
 _DURATION_BUCKETS_SECONDS = (0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0)
+_OPTIMIZER_OPERATIONS = frozenset({"generate", "replace"})
+_OPTIMIZER_ADMISSION_OUTCOMES = frozenset(
+    {"admitted", "queue_full", "queue_timeout", "cancelled"}
+)
 _BUILD_OUTCOMES = frozenset({"complete", "partial", "infeasible"})
 _SOLVER_STATUSES = frozenset({"OPTIMAL", "FEASIBLE", "INFEASIBLE", "MODEL_INVALID", "UNKNOWN"})
 _BUILD_PROFILES = frozenset(
@@ -32,6 +37,7 @@ _INTERACTION_EVENT_TYPES = frozenset(
     }
 )
 _FRESHNESS_STATUSES = frozenset({"fresh", "stale", "degraded"})
+_FRESHNESS_DATA_KINDS = ("catalogue", "prices")
 _RELEASE_ARTIFACT_VERIFICATIONS = frozenset({"verified", "development_unverified", "not_verified"})
 _PERFORMANCE_SIGNAL_BASES = frozenset({"observed", "predicted", "relative", "insufficient_data"})
 _PERFORMANCE_SIGNAL_CONFIDENCES = frozenset({"observed", "high", "medium", "low", "not_applicable"})
@@ -76,6 +82,14 @@ class RequestMetrics:
         self._duration_count: defaultdict[tuple[str, str], int] = defaultdict(int)
         self._duration_sum: defaultdict[tuple[str, str], float] = defaultdict(float)
         self._duration_buckets: defaultdict[tuple[str, str, float], int] = defaultdict(int)
+        self._optimizer_admission_active: defaultdict[str, int] = defaultdict(int)
+        self._optimizer_admission_queued: defaultdict[str, int] = defaultdict(int)
+        self._optimizer_admission_outcomes: defaultdict[tuple[str, str], int] = defaultdict(int)
+        self._optimizer_admission_wait_count: defaultdict[str, int] = defaultdict(int)
+        self._optimizer_admission_wait_sum: defaultdict[str, float] = defaultdict(float)
+        self._optimizer_admission_wait_buckets: defaultdict[tuple[str, float], int] = defaultdict(
+            int
+        )
 
     def request_started(self) -> None:
         with self._lock:
@@ -99,6 +113,48 @@ class RequestMetrics:
                 if duration_seconds <= bucket:
                     self._duration_buckets[(method, route, bucket)] += 1
 
+    def record_optimizer_admission_transition(
+        self,
+        *,
+        operation: str,
+        active_delta: int = 0,
+        queued_delta: int = 0,
+        outcome: str | None = None,
+        wait_seconds: float | None = None,
+    ) -> None:
+        """Atomically record one bounded optimizer admission state transition."""
+
+        operation = _require_label(operation, _OPTIMIZER_OPERATIONS, "optimizer operation")
+        if active_delta not in {-1, 0, 1} or queued_delta not in {-1, 0, 1}:
+            raise ValueError("optimizer admission state deltas must be -1, 0, or 1")
+        if outcome is None and wait_seconds is not None:
+            raise ValueError("optimizer wait duration requires a terminal admission outcome")
+        if outcome is not None:
+            outcome = _require_label(
+                outcome,
+                _OPTIMIZER_ADMISSION_OUTCOMES,
+                "optimizer admission outcome",
+            )
+            if wait_seconds is None or wait_seconds < 0:
+                raise ValueError(
+                    "optimizer admission outcomes require a non-negative wait duration"
+                )
+
+        with self._lock:
+            active = self._optimizer_admission_active[operation] + active_delta
+            queued = self._optimizer_admission_queued[operation] + queued_delta
+            if active < 0 or queued < 0:
+                raise ValueError("optimizer admission state cannot become negative")
+            self._optimizer_admission_active[operation] = active
+            self._optimizer_admission_queued[operation] = queued
+            if outcome is not None and wait_seconds is not None:
+                self._optimizer_admission_outcomes[(operation, outcome)] += 1
+                self._optimizer_admission_wait_count[operation] += 1
+                self._optimizer_admission_wait_sum[operation] += wait_seconds
+                for bucket in _DURATION_BUCKETS_SECONDS:
+                    if wait_seconds <= bucket:
+                        self._optimizer_admission_wait_buckets[(operation, bucket)] += 1
+
     def render(self) -> str:
         """Render the Prometheus text exposition format from one consistent snapshot."""
 
@@ -108,6 +164,12 @@ class RequestMetrics:
             duration_count = dict(self._duration_count)
             duration_sum = dict(self._duration_sum)
             duration_buckets = dict(self._duration_buckets)
+            optimizer_admission_active = dict(self._optimizer_admission_active)
+            optimizer_admission_queued = dict(self._optimizer_admission_queued)
+            optimizer_admission_outcomes = dict(self._optimizer_admission_outcomes)
+            optimizer_admission_wait_count = dict(self._optimizer_admission_wait_count)
+            optimizer_admission_wait_sum = dict(self._optimizer_admission_wait_sum)
+            optimizer_admission_wait_buckets = dict(self._optimizer_admission_wait_buckets)
 
         lines = [
             "# HELP pcbr_http_requests_in_progress Current API requests in progress.",
@@ -143,6 +205,68 @@ class RequestMetrics:
                 f"{duration_sum[(method, route)]:.9f}"
             )
             lines.append(f"pcbr_http_request_duration_seconds_count{{{labels}}} {count}")
+        lines.extend(
+            [
+                "# HELP pcbr_optimizer_admission_active Current optimizer executions admitted "
+                "by operation.",
+                "# TYPE pcbr_optimizer_admission_active gauge",
+            ]
+        )
+        for operation in sorted(_OPTIMIZER_OPERATIONS):
+            lines.append(
+                "pcbr_optimizer_admission_active{"
+                f'operation="{operation}"}} {optimizer_admission_active.get(operation, 0)}'
+            )
+        lines.extend(
+            [
+                "# HELP pcbr_optimizer_admission_queued Current optimizer requests waiting "
+                "by operation.",
+                "# TYPE pcbr_optimizer_admission_queued gauge",
+            ]
+        )
+        for operation in sorted(_OPTIMIZER_OPERATIONS):
+            lines.append(
+                "pcbr_optimizer_admission_queued{"
+                f'operation="{operation}"}} {optimizer_admission_queued.get(operation, 0)}'
+            )
+        lines.extend(
+            [
+                "# HELP pcbr_optimizer_admission_outcomes_total Optimizer admission outcomes.",
+                "# TYPE pcbr_optimizer_admission_outcomes_total counter",
+            ]
+        )
+        for (operation, outcome), count in sorted(optimizer_admission_outcomes.items()):
+            lines.append(
+                "pcbr_optimizer_admission_outcomes_total{"
+                f'operation="{operation}",outcome="{outcome}"}} {count}'
+            )
+        lines.extend(
+            [
+                "# HELP pcbr_optimizer_admission_wait_seconds Time spent waiting for shared "
+                "optimizer admission.",
+                "# TYPE pcbr_optimizer_admission_wait_seconds histogram",
+            ]
+        )
+        for operation in sorted(optimizer_admission_wait_count):
+            labels = f'operation="{operation}"'
+            for bucket in _DURATION_BUCKETS_SECONDS:
+                count = optimizer_admission_wait_buckets.get((operation, bucket), 0)
+                lines.append(
+                    "pcbr_optimizer_admission_wait_seconds_bucket{"
+                    f'{labels},le="{bucket:g}"}} {count}'
+                )
+            count = optimizer_admission_wait_count[operation]
+            lines.append(
+                "pcbr_optimizer_admission_wait_seconds_bucket{"
+                f'{labels},le="+Inf"}} {count}'
+            )
+            lines.append(
+                "pcbr_optimizer_admission_wait_seconds_sum{"
+                f"{labels}}} {optimizer_admission_wait_sum[operation]:.9f}"
+            )
+            lines.append(
+                f"pcbr_optimizer_admission_wait_seconds_count{{{labels}}} {count}"
+            )
         return "\n".join(lines) + "\n"
 
 
@@ -173,6 +297,15 @@ class DomainMetrics:
         self._interaction_events: defaultdict[str, int] = defaultdict(int)
         self._freshness_observations: defaultdict[tuple[str, str], int] = defaultdict(int)
         self._catalogue_freshness_status = "degraded"
+        self._data_freshness_status = {
+            kind: "degraded" for kind in _FRESHNESS_DATA_KINDS
+        }
+        self._data_last_update_timestamp_seconds: dict[str, float | None] = {
+            kind: None for kind in _FRESHNESS_DATA_KINDS
+        }
+        self._data_stale_after_seconds = {
+            kind: 0 for kind in _FRESHNESS_DATA_KINDS
+        }
         self._catalogue_production_ready = False
         self._freshness_probe_success = False
         self._catalogue_products = 0
@@ -330,6 +463,12 @@ class DomainMetrics:
         self,
         *,
         status: str,
+        catalogue_status: str,
+        price_status: str,
+        last_catalog_update: datetime | None,
+        prices_updated_at: datetime | None,
+        catalogue_stale_after_hours: int,
+        price_stale_after_hours: int,
         production_ready: bool,
         product_count: int,
         listing_count: int,
@@ -337,16 +476,49 @@ class DomainMetrics:
         release_artifact_verification: str,
     ) -> None:
         status = _require_label(status, _FRESHNESS_STATUSES, "freshness status")
+        data_statuses = {
+            "catalogue": _require_label(
+                catalogue_status, _FRESHNESS_STATUSES, "catalogue freshness status"
+            ),
+            "prices": _require_label(
+                price_status, _FRESHNESS_STATUSES, "price freshness status"
+            ),
+        }
+        stale_after_hours = {
+            "catalogue": catalogue_stale_after_hours,
+            "prices": price_stale_after_hours,
+        }
+        if min(stale_after_hours.values()) < 1:
+            raise ValueError("freshness stale-after thresholds must be positive")
+        raw_timestamps = {
+            "catalogue": last_catalog_update,
+            "prices": prices_updated_at,
+        }
+        timestamps: dict[str, float | None] = {}
+        for kind, value in raw_timestamps.items():
+            if value is None:
+                timestamps[kind] = None
+                continue
+            if value.tzinfo is None or value.utcoffset() is None:
+                raise ValueError(f"{kind} freshness timestamp must be timezone-aware")
+            timestamps[kind] = value.timestamp()
         release_artifact_verification = _require_label(
             release_artifact_verification,
             _RELEASE_ARTIFACT_VERIFICATIONS,
             "release artifact verification",
         )
+        if production_ready and release_artifact_verification != "verified":
+            raise ValueError("production-ready metrics require verified serving artifacts")
         if min(product_count, listing_count, release_blocker_count) < 0:
             raise ValueError("freshness metric counts must be non-negative")
         with self._lock:
             self._freshness_observations[(status, _boolean_label(production_ready))] += 1
             self._catalogue_freshness_status = status
+            self._data_freshness_status = data_statuses
+            self._data_last_update_timestamp_seconds = timestamps
+            self._data_stale_after_seconds = {
+                kind: hours * 3600 for kind, hours in stale_after_hours.items()
+            }
             self._catalogue_production_ready = production_ready
             self._freshness_probe_success = True
             self._catalogue_products = product_count
@@ -360,6 +532,9 @@ class DomainMetrics:
         with self._lock:
             self._freshness_observations[("degraded", "false")] += 1
             self._catalogue_freshness_status = "degraded"
+            self._data_freshness_status = {
+                kind: "degraded" for kind in _FRESHNESS_DATA_KINDS
+            }
             self._catalogue_production_ready = False
             self._freshness_probe_success = False
             self._catalogue_release_blockers = max(self._catalogue_release_blockers, 1)
@@ -478,6 +653,11 @@ class DomainMetrics:
             interaction_events = dict(self._interaction_events)
             freshness_observations = dict(self._freshness_observations)
             catalogue_freshness_status = self._catalogue_freshness_status
+            data_freshness_status = dict(self._data_freshness_status)
+            data_last_update_timestamp_seconds = dict(
+                self._data_last_update_timestamp_seconds
+            )
+            data_stale_after_seconds = dict(self._data_stale_after_seconds)
             catalogue_production_ready = self._catalogue_production_ready
             freshness_probe_success = self._freshness_probe_success
             catalogue_products = self._catalogue_products
@@ -654,6 +834,55 @@ class DomainMetrics:
                 "pcbr_catalogue_freshness_status{"
                 f'status="{freshness_status}"'
                 f"}} {int(freshness_status == catalogue_freshness_status)}"
+            )
+        lines.extend(
+            [
+                "# HELP pcbr_data_last_update_timestamp_seconds Latest measured update "
+                "timestamp for bounded serving-data kinds; zero means unavailable.",
+                "# TYPE pcbr_data_last_update_timestamp_seconds gauge",
+            ]
+        )
+        for kind in _FRESHNESS_DATA_KINDS:
+            timestamp = data_last_update_timestamp_seconds[kind]
+            lines.append(
+                "pcbr_data_last_update_timestamp_seconds{"
+                f'kind="{kind}"}} {0 if timestamp is None else timestamp:.6f}'
+            )
+        lines.extend(
+            [
+                "# HELP pcbr_data_timestamp_available Whether the latest freshness probe "
+                "contained a timestamp for each bounded serving-data kind.",
+                "# TYPE pcbr_data_timestamp_available gauge",
+            ]
+        )
+        for kind in _FRESHNESS_DATA_KINDS:
+            lines.append(
+                "pcbr_data_timestamp_available{"
+                f'kind="{kind}"}} '
+                f"{int(data_last_update_timestamp_seconds[kind] is not None)}"
+            )
+        lines.extend(
+            [
+                "# HELP pcbr_data_stale Whether a bounded serving-data kind is stale or "
+                "cannot be verified.",
+                "# TYPE pcbr_data_stale gauge",
+            ]
+        )
+        for kind in _FRESHNESS_DATA_KINDS:
+            lines.append(
+                f'pcbr_data_stale{{kind="{kind}"}} '
+                f'{int(data_freshness_status[kind] != "fresh")}'
+            )
+        lines.extend(
+            [
+                "# HELP pcbr_data_stale_after_seconds Configured maximum serving-data age.",
+                "# TYPE pcbr_data_stale_after_seconds gauge",
+            ]
+        )
+        for kind in _FRESHNESS_DATA_KINDS:
+            lines.append(
+                f'pcbr_data_stale_after_seconds{{kind="{kind}"}} '
+                f"{data_stale_after_seconds[kind]}"
             )
         lines.extend(
             [
