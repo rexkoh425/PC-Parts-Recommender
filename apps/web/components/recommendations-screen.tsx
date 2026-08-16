@@ -5,23 +5,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { getRequestBuilds, getSessionId, trackInteraction } from "@/lib/api";
 import { categoryLabels, formatScore, formatSgd, profileLabels } from "@/lib/format";
-import { oneBasedRank } from "@/lib/interactions";
 import { useSavedBuilds } from "@/lib/use-saved-builds";
 import type {
-  BuildProfile,
   BuildSummary,
   GenerateBuildsResponse,
   SuggestedRelaxation,
 } from "@/lib/types";
 import { BuildCard } from "./build-card";
-
-const profileOrder: BuildProfile[] = [
-  "best_overall",
-  "best_value",
-  "highest_performance",
-  "most_upgradeable",
-  "lowest_power",
-];
 
 function ResultSkeleton() {
   return (
@@ -118,14 +108,6 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
       .then((result) => {
         if (!active) return;
         setResponse(result);
-        void trackInteraction({
-          event_type: "build_generated",
-          session_id: getSessionId(),
-          query_id: result.request_id,
-          model_version: result.ranking_model,
-          data_version: result.data_version,
-          rule_version: result.rule_version,
-        });
       })
       .catch((requestError) => {
         if (active) {
@@ -144,29 +126,23 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
 
   const builds = useMemo(() => {
     if (!response) return [];
-    return response.builds
-      .map((build) => ({
+    return response.builds.map((build) => ({
         ...build,
+        request_id: build.request_id ?? response.request_id,
         generated_at: build.generated_at ?? response.generated_at,
         data_version: build.data_version ?? response.data_version,
         ranking_model: build.ranking_model ?? response.ranking_model,
         rule_version: build.rule_version ?? response.rule_version,
-      }))
-      .sort((left, right) => profileOrder.indexOf(left.profile) - profileOrder.indexOf(right.profile));
+      }));
   }, [response]);
 
-  function toggleSaved(build: BuildSummary, rankPosition?: number) {
+  function toggleSaved(build: BuildSummary) {
     const nowSaved = toggle(build);
     if (nowSaved && response) {
       void trackInteraction({
         event_type: "build_saved",
         session_id: getSessionId(),
-        query_id: response.request_id,
-        build_id: build.build_id,
-        rank_position: rankPosition,
-        model_version: response.ranking_model,
-        data_version: response.data_version,
-        rule_version: response.rule_version,
+        impression_token: build.impression_token ?? undefined,
       });
     }
   }
@@ -265,15 +241,13 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
       </div>
 
       <section className="results-grid" aria-label="Ranked PC builds">
-        {builds.map((build, index) => (
+        {builds.map((build) => (
           <BuildCard
             key={build.build_id}
             build={build}
             budgetSgd={budget}
             saved={savedIds.has(build.build_id)}
-            onToggleSaved={(selectedBuild) =>
-              toggleSaved(selectedBuild, oneBasedRank(index))
-            }
+            onToggleSaved={toggleSaved}
           />
         ))}
       </section>

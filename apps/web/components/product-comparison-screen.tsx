@@ -134,8 +134,6 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
     void trackInteraction({
       event_type: "comparison_opened",
       session_id: getSessionId(),
-      product_id: products[0]?.product_id,
-      data_version: products[0]?.data_version,
       metadata: {
         product_ids: productIds,
         category: products[0]?.category,

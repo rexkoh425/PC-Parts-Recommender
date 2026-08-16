@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getFreshness, USING_DEMO_DATA } from "@/lib/api";
-import { formatFreshness } from "@/lib/format";
+import { formatFreshnessSummary } from "@/lib/format";
 import type { FreshnessSummary } from "@/lib/types";
 
 export function SiteHeader() {
@@ -26,18 +26,11 @@ export function SiteHeader() {
     };
   }, []);
 
-  const updatedAt = freshness?.prices_updated_at ?? freshness?.last_catalog_update;
   const freshnessLabel = USING_DEMO_DATA
     ? "Curated demo data"
     : offline
       ? "Data service offline"
-      : freshness?.status === "stale"
-        ? `Prices stale · ${formatFreshness(updatedAt)}`
-        : freshness?.status === "degraded"
-          ? "Coverage degraded"
-          : freshness
-            ? formatFreshness(updatedAt)
-            : "Checking market data";
+      : formatFreshnessSummary(freshness);
   const freshnessState = USING_DEMO_DATA
     ? "demo"
     : offline

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   getProduct,
@@ -8,6 +9,7 @@ import {
   getProductPrices,
   getProductReviews,
   getSessionId,
+  readProductImpression,
   trackInteraction,
   USING_DEMO_DATA,
 } from "@/lib/api";
@@ -54,6 +56,8 @@ function EvidencePanelError({ title, message }: { title: string; message?: strin
 }
 
 export function ProductDetailScreen({ productId }: { productId: string }) {
+  const searchParams = useSearchParams();
+  const impressionContext = searchParams.get("impression");
   const [state, setState] = useState<ProductEvidenceState | null>(null);
   const [error, setError] = useState("");
   const [retryKey, setRetryKey] = useState(0);
@@ -91,8 +95,10 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
       void trackInteraction({
         event_type: "component_viewed",
         session_id: getSessionId(),
-        product_id: productResult.value.product_id,
-        data_version: productResult.value.data_version,
+        impression_token: readProductImpression(
+          productResult.value.product_id,
+          impressionContext,
+        ),
         metadata: { category: productResult.value.category, surface: "catalogue_detail" },
       });
     });
@@ -100,7 +106,7 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
       active = false;
       controller.abort();
     };
-  }, [productId, retryKey]);
+  }, [impressionContext, productId, retryKey]);
 
   const dataVersions = useMemo(() => {
     if (!state) return [];
@@ -110,6 +116,20 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
       state.benchmarks?.data_version,
       state.reviews?.data_version,
     ].filter((value): value is string => Boolean(value)))];
+  }, [state]);
+
+  useEffect(() => {
+    if (!state || typeof window === "undefined") return;
+    const evidenceTarget = window.location.hash.slice(1);
+    if (!["prices-heading", "benchmarks-heading", "reviews-heading"].includes(evidenceTarget)) {
+      return;
+    }
+    const frame = window.requestAnimationFrame(() => {
+      const heading = document.getElementById(evidenceTarget);
+      heading?.scrollIntoView({ block: "start" });
+      heading?.focus({ preventScroll: true });
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [state]);
 
   if (error) {
@@ -184,7 +204,7 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
           </p>
           <Link className="product-header__compare" href={`/compare?products=${encodeURIComponent(product.product_id)}`}>
             Compare with similar {categoryLabels[product.category].toLowerCase()}s
-            <span aria-hidden="true">â†’</span>
+            <span aria-hidden="true">→</span>
           </Link>
         </div>
         <div className="product-price-block">
@@ -227,7 +247,7 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
 
           <section className="detail-section product-section" aria-labelledby="prices-heading">
             <div className="section-heading">
-              <div><p className="eyebrow">{USING_DEMO_DATA ? "Controlled demo price record" : "Retailer observations"}</p><h2 id="prices-heading">Price and availability evidence</h2></div>
+              <div><p className="eyebrow">{USING_DEMO_DATA ? "Controlled demo price record" : "Retailer observations"}</p><h2 id="prices-heading" tabIndex={-1}>Price and availability evidence</h2></div>
               <p>{prices ? `Data ${prices.data_version}` : "Evidence endpoint unavailable"}</p>
             </div>
             {prices?.price_intelligence && (
@@ -243,7 +263,7 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
                       <div><strong>{observation.retailer}</strong><span>{offer.conditionLabel}</span></div>
                       <div><strong>{formatSgd(delivered)}</strong><small>{observation.shipping_price_sgd ? `${formatSgd(observation.shipping_price_sgd)} shipping included` : "No shipping charge recorded"}</small></div>
                       <div><span>{observedStockLabel(observation.stock_status)}</span><small>{offer.eligibilityLabel}</small></div>
-                      <div><span>{formatEvidenceTimestamp(observation.observed_at)}</span>{observation.listing_url && <a href={observation.listing_url} target="_blank" rel="noreferrer">Open retailer ↗</a>}</div>
+                      <div><span>{formatEvidenceTimestamp(observation.observed_at)}</span>{observation.listing_url && <a href={observation.listing_url} target="_blank" rel="noreferrer" aria-label={`Open ${observation.retailer} retailer observation`}>Open retailer ↗</a>}</div>
                     </article>
                   );
                 })}
@@ -255,7 +275,7 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
 
           <section className="detail-section product-section" aria-labelledby="benchmarks-heading">
             <div className="section-heading">
-              <div><p className="eyebrow">Observed versus modelled</p><h2 id="benchmarks-heading">Benchmark evidence</h2></div>
+              <div><p className="eyebrow">Observed versus modelled</p><h2 id="benchmarks-heading" tabIndex={-1}>Benchmark evidence</h2></div>
               <p>{benchmarks ? `Performance model ${benchmarks.performance_model_version}` : "Model version unavailable"}</p>
             </div>
             {state.benchmarksError ? <EvidencePanelError title="Benchmark evidence could not be loaded" message={state.benchmarksError} /> : benchmarks?.benchmarks.length ? (
@@ -266,7 +286,7 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
                     <h3>{benchmark.benchmark_name}</h3>
                     <strong className="benchmark-card__score">{benchmark.score.toLocaleString("en-SG")} <small>{benchmark.unit}</small></strong>
                     <dl><div><dt>Direction</dt><dd>{benchmark.higher_is_better ? "Higher is better" : "Lower is better"}</dd></div>{benchmark.model_version && <div><dt>Model</dt><dd>{benchmark.model_version}</dd></div>}</dl>
-                    <footer><span>{formatEvidenceTimestamp(benchmark.observed_at)}</span>{benchmark.source_url && <a href={benchmark.source_url} target="_blank" rel="noreferrer">Source ↗</a>}</footer>
+                    <footer><span>{formatEvidenceTimestamp(benchmark.observed_at)}</span>{benchmark.source_url && <a href={benchmark.source_url} target="_blank" rel="noreferrer" aria-label={`Open source for ${benchmark.benchmark_name}`}>Source ↗</a>}</footer>
                   </article>
                 ))}
               </div>
@@ -277,7 +297,7 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
 
           <section className="detail-section product-section" aria-labelledby="reviews-heading">
             <div className="section-heading">
-              <div><p className="eyebrow">Permitted cited sources</p><h2 id="reviews-heading">Review evidence</h2></div>
+              <div><p className="eyebrow">Permitted cited sources</p><h2 id="reviews-heading" tabIndex={-1}>Review evidence</h2></div>
               <p>{reviews ? `Data ${reviews.data_version}` : "Evidence endpoint unavailable"}</p>
             </div>
             {state.reviewsError ? <EvidencePanelError title="Review evidence could not be loaded" message={state.reviewsError} /> : reviews?.evidence.length ? (
@@ -288,7 +308,7 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
                     <article key={`${evidence.aspect}-${index}`}>
                       <div><span className={`sentiment-chip sentiment-chip--${evidence.sentiment}`}>{evidence.sentiment}</span><strong>{humanizeAttributeKey(evidence.aspect)}</strong></div>
                       <p>{evidence.evidence_text}</p>
-                      <footer><span>{evidenceConfidence.label}</span><span>{formatEvidenceTimestamp(evidence.published_at)}</span>{evidence.source_url && <a href={evidence.source_url} target="_blank" rel="noreferrer">Evidence source ↗</a>}</footer>
+                      <footer><span>{evidenceConfidence.label}</span><span>{formatEvidenceTimestamp(evidence.published_at)}</span>{evidence.source_url && <a href={evidence.source_url} target="_blank" rel="noreferrer" aria-label={`Open ${humanizeAttributeKey(evidence.aspect)} review evidence source`}>Evidence source ↗</a>}</footer>
                     </article>
                   );
                 })}
