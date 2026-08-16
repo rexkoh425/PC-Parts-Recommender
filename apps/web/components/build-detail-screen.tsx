@@ -1,8 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { createBuildShare, getBuild, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
+import {
+  createBuildShare,
+  getBuild,
+  getSessionId,
+  productImpressionContext,
+  rememberProductImpression,
+  revokeBuildShare,
+  trackInteraction,
+  USING_DEMO_DATA,
+} from "@/lib/api";
 import { formatSignedDelta, summarizeCompatibilityChecks } from "@/lib/catalogue";
 import {
   categoryLabels,
@@ -19,6 +29,7 @@ import {
 } from "@/lib/replacement";
 import type {
   BuildComponent,
+  BuildShareCreated,
   BuildSummary,
   ComponentCategory,
   PerformanceSignal,
@@ -27,6 +38,7 @@ import type {
 } from "@/lib/types";
 import { useSavedBuilds } from "@/lib/use-saved-builds";
 import { sharedBuildHref } from "@/lib/shared-build";
+import { BuildBudgetBreakdown } from "./build-budget-breakdown";
 import { ReplacementDrawer } from "./replacement-drawer";
 import { ScoreMeter } from "./score-meter";
 import { StatusPill } from "./status-pill";
@@ -102,6 +114,7 @@ function workloadLabel(workload: string): string {
 }
 
 export function BuildDetailScreen({ buildId }: { buildId: string }) {
+  const router = useRouter();
   const { savedIds, toggle } = useSavedBuilds();
   const [build, setBuild] = useState<BuildSummary | null>(null);
   const [error, setError] = useState("");
@@ -109,7 +122,8 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
   const [replacementCategory, setReplacementCategory] = useState<ComponentCategory | null>(null);
   const [announcement, setAnnouncement] = useState("");
   const [replacementResult, setReplacementResult] = useState<ReplacementChangeSummary | null>(null);
-  const [shareState, setShareState] = useState<"idle" | "copied" | "failed">("idle");
+  const [shareState, setShareState] = useState<"idle" | "copied" | "failed" | "revoking" | "revoked">("idle");
+  const [activeShare, setActiveShare] = useState<BuildShareCreated | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -121,10 +135,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
         void trackInteraction({
           event_type: "build_viewed",
           session_id: getSessionId(),
-          build_id: result.build_id,
-          model_version: result.ranking_model,
-          data_version: result.data_version,
-          rule_version: result.rule_version,
+          impression_token: result.impression_token ?? undefined,
         });
       })
       .catch((requestError) => {
@@ -158,11 +169,37 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
     void trackInteraction({
       event_type: "component_replaced",
       session_id: getSessionId(),
-      build_id: response.build.build_id,
-      model_version: response.build.ranking_model,
-      data_version: response.build.data_version,
-      rule_version: response.rule_version,
+      impression_token: response.build.impression_token ?? undefined,
     });
+    router.replace(`/builds/${encodeURIComponent(response.build.build_id)}`);
+  }
+
+  async function revokeCreatedShare(created: BuildShareCreated): Promise<boolean> {
+    try {
+      await revokeBuildShare(created.share_id, created.revocation_token);
+      window.sessionStorage.removeItem(`pcbr:build-share-revocation:${created.share_id}`);
+      setActiveShare(null);
+      return true;
+    } catch {
+      window.sessionStorage.setItem(
+        `pcbr:build-share-revocation:${created.share_id}`,
+        created.revocation_token,
+      );
+      setActiveShare(created);
+      return false;
+    }
+  }
+
+  async function revokeActiveShare() {
+    if (!activeShare) return;
+    setShareState("revoking");
+    if (await revokeCreatedShare(activeShare)) {
+      setShareState("revoked");
+      setAnnouncement("The public build snapshot has been revoked.");
+    } else {
+      setShareState("failed");
+      setAnnouncement("The public snapshot could not be revoked. The revoke control remains available so you can try again.");
+    }
   }
 
   async function shareBuildSnapshot() {
@@ -173,14 +210,12 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
       text: "A generation-time BuildSignal PC build snapshot.",
       url,
     };
+    let createdShare: BuildShareCreated | undefined;
     try {
       if (!USING_DEMO_DATA) {
-        const created = await createBuildShare(build.build_id);
-        window.sessionStorage.setItem(
-          `pcbr:build-share-revocation:${created.share_id}`,
-          created.revocation_token,
-        );
-        url = new URL(`/share?share=${encodeURIComponent(created.share_id)}`, window.location.origin).toString();
+        const share = activeShare ?? await createBuildShare(build.build_id);
+        if (!activeShare) createdShare = share;
+        url = new URL(`/share?share=${encodeURIComponent(share.share_id)}`, window.location.origin).toString();
         shareData.url = url;
       }
       if (navigator.share) {
@@ -190,19 +225,31 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
       } else {
         throw new Error("Sharing is not available in this browser.");
       }
+      if (createdShare) {
+        window.sessionStorage.setItem(
+          `pcbr:build-share-revocation:${createdShare.share_id}`,
+          createdShare.revocation_token,
+        );
+        setActiveShare(createdShare);
+      }
       setShareState("copied");
       setAnnouncement("A shareable build snapshot is ready. Re-run it before buying to check current data.");
       void trackInteraction({
         event_type: "build_shared",
         session_id: getSessionId(),
-        build_id: build.build_id,
-        model_version: build.ranking_model,
-        data_version: build.data_version,
-        rule_version: build.rule_version,
+        impression_token: build.impression_token ?? undefined,
         metadata: { share_format: "public_snapshot_v1" },
       });
     } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") {
+      const wasCancelled = error instanceof DOMException && error.name === "AbortError";
+      const revoked = createdShare ? await revokeCreatedShare(createdShare) : true;
+      if (!revoked) {
+        setShareState("failed");
+        setAnnouncement("Sharing did not finish and automatic cleanup failed. Use Revoke public snapshot to remove the created link.");
+        return;
+      }
+      if (wasCancelled) {
+        setShareState("idle");
         setAnnouncement("Sharing was cancelled.");
         return;
       }
@@ -335,6 +382,8 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
 
       <div className="detail-layout">
         <div className="detail-main">
+          <BuildBudgetBreakdown build={build} demo={USING_DEMO_DATA} />
+
           <section className="detail-section" aria-labelledby="components-heading">
             <div className="section-heading">
               <div>
@@ -355,7 +404,14 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {build.components.map((component) => (
+                  {build.components.map((component) => {
+                    const impressionContext = productImpressionContext({
+                      surface: "build_component",
+                      sourceId: build.build_id,
+                      productId: component.product_id,
+                    });
+                    const productHref = `/products/${encodeURIComponent(component.product_id)}?impression=${encodeURIComponent(impressionContext)}`;
+                    return (
                     <tr key={`${component.category}-${component.product_id}`} data-testid="component-row">
                       <th scope="row" data-label="Category">
                         <span className={`category-icon category-icon--${component.category}`} aria-hidden="true">
@@ -369,30 +425,50 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                         {component.already_owned ? (
                           <small className="owned-chip">Already owned · excluded from spend</small>
                         ) : component.retailer ? (
-                          component.listing_url ? (
-                            <a
-                              href={component.listing_url}
-                              target="_blank"
-                              rel="noreferrer"
-                              onClick={() =>
-                                void trackInteraction({
-                                  event_type: "retailer_clicked",
-                                  session_id: getSessionId(),
-                                  build_id: build.build_id,
-                                  product_id: component.product_id,
-                                  rule_version: build.rule_version,
-                                })
-                              }
-                            >
-                              {component.retailer} ↗
-                            </a>
-                          ) : (
-                            <small>{component.retailer}</small>
-                          )
+                          <small>{component.retailer}</small>
                         ) : null}
                       </td>
                       <td data-label="Evidence">
                         <EvidenceBadge signal={component.performance_signals?.[0]} />
+                        <div className="component-evidence-links">
+                          <Link
+                            href={`${productHref}#prices-heading`}
+                            aria-label={`View price history evidence for ${component.canonical_name}`}
+                            onClick={() => rememberProductImpression(component, impressionContext)}
+                          >
+                            Price history
+                          </Link>
+                          <Link
+                            href={`${productHref}#reviews-heading`}
+                            aria-label={`View review evidence for ${component.canonical_name}`}
+                            onClick={() => rememberProductImpression(component, impressionContext)}
+                          >
+                            Reviews
+                          </Link>
+                          {component.listing_url ? (
+                            <a
+                              href={component.listing_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label={`Open recorded retailer price for ${component.canonical_name}`}
+                              onClick={() =>
+                                void trackInteraction({
+                                  event_type: "retailer_clicked",
+                                  session_id: getSessionId(),
+                                  impression_token: component.impression_token ?? undefined,
+                                })
+                              }
+                            >
+                              Retailer price ↗
+                            </a>
+                          ) : (
+                            <small>
+                              {USING_DEMO_DATA
+                                ? "No external demo listing"
+                                : "No retailer URL recorded"}
+                            </small>
+                          )}
+                        </div>
                       </td>
                       <td data-label="Price">
                         <strong>{component.already_owned ? "Owned" : formatSgd(component.price_sgd)}</strong>
@@ -402,12 +478,14 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                           type="button"
                           className="text-button"
                           onClick={() => setReplacementCategory(component.category)}
+                          aria-label={`Replace ${component.canonical_name}`}
                         >
                           Replace
                         </button>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -446,7 +524,13 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                     {(signal.sources ?? []).length > 0 && (
                       <div className="evidence-list__sources">
                         {(signal.sources ?? []).map((source) => (
-                          <a key={source.url} href={source.url} target="_blank" rel="noreferrer">
+                          <a
+                            key={source.url}
+                            href={source.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            aria-label={`Open ${source.label} source for ${signal.metric}`}
+                          >
                             {source.label} ↗
                           </a>
                         ))}
@@ -551,10 +635,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                 void trackInteraction({
                   event_type: "build_saved",
                   session_id: getSessionId(),
-                  build_id: build.build_id,
-                  model_version: build.ranking_model,
-                  data_version: build.data_version,
-                  rule_version: build.rule_version,
+                  impression_token: build.impression_token ?? undefined,
                 });
               }
             }}
@@ -565,14 +646,29 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
             className="button button--secondary button--large"
             type="button"
             onClick={() => void shareBuildSnapshot()}
+            disabled={shareState === "revoking"}
           >
             {shareState === "copied" ? "Share link ready" : "Share snapshot"}
           </button>
+          {activeShare && !USING_DEMO_DATA && (
+            <button
+              className="text-button"
+              type="button"
+              onClick={() => void revokeActiveShare()}
+              disabled={shareState === "revoking"}
+            >
+              {shareState === "revoking" ? "Revoking public snapshot…" : "Revoke public snapshot"}
+            </button>
+          )}
           <p className={`share-status share-status--${shareState}`} role="status">
             {shareState === "copied"
               ? "A public snapshot was shared or copied. It excludes your request, saved builds, and retailer links."
+              : shareState === "revoked"
+                ? "The previously created public snapshot has been revoked."
               : shareState === "failed"
-                ? "Sharing is unavailable in this browser."
+                ? activeShare
+                  ? "A public snapshot exists but sharing or automatic cleanup failed. Use the revoke control above."
+                  : "Sharing is unavailable in this browser."
                 : "Creates a generation-time public snapshot; it is not a live stock or price quote."}
           </p>
           <div className="summary-provenance">
