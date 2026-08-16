@@ -1,0 +1,11 @@
+{
+  "schema_version": "buildsignal.public-evidence-receipt.v1",
+  "evidence_kind": "catalogue_batch_manifest",
+  "artifact_path": "data/processed/buildcores_open_db/f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f/full/manifest.json",
+  "artifact_sha256": "72fe9ef33e06452d795b14f13aa8742fdc0767b32ec25c008a4c683777e5dd39",
+  "source_snapshot_sha256": "f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f",
+  "record_stream_sha256": "8c738c5136615080ac29ced074726f97cab473c5a45eafdf19c26504aa624ce2",
+  "accepted_count": 25666,
+  "rejected_count": 33,
+  "claim_boundary": "Materialised open catalogue records; not live retailer offers, prices, or stock."
+}

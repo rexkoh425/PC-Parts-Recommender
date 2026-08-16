@@ -1,0 +1,15 @@
+{
+  "schema_version": "buildsignal.public-evidence-receipt.v1",
+  "evidence_kind": "optimizer_generated_build_evaluation",
+  "artifact_path": "artifacts/evaluation/optimizer-generated-builds-v1/optimizer-generated-seed-20260723-n-10000-12c1305bec5666d4.json",
+  "artifact_file_sha256": "169c03872943920c741589f11dd450d8b00732e6ff4620022a968dbbe26e7e8e",
+  "artifact_content_sha256": "12c1305bec5666d4561d167ec64fd09a850409857f7edbaa053e4cac5c7eea74",
+  "scenario_count": 10000,
+  "optimizer_output_count": 10000,
+  "independently_checked_output_count": 10000,
+  "independently_valid_output_count": 10000,
+  "invalid_output_count": 0,
+  "compatibility_rule_version": "compat_v2",
+  "evaluation_passed": true,
+  "claim_boundary": "Deterministic generated optimizer requests independently rechecked with compat_v2; not observed customer or market builds."
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "buildsignal.public-evidence-receipt.v1",
+  "evidence_kind": "embedding_index_manifest",
+  "artifact_path": "artifacts/retrieval/buildcores-full-embeddings-pinned/manifest.json",
+  "artifact_sha256": "4e9ccfc65af09962fb3caf8a259681464255edaa8f6a5984f9ac9520f62225c0",
+  "data_version": "buildcores-full-25666-8c738c513661",
+  "product_count": 25666,
+  "shape": [25666, 384],
+  "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+  "model_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "resolved_device": "cuda",
+  "embedding_stream_sha256": "e8d66fefcf56624a063441296bac297d69920aa26a428d6e99db7ba61de1d123",
+  "claim_boundary": "Revision-pinned development embedding index; not evidence of retrieval relevance quality."
+}

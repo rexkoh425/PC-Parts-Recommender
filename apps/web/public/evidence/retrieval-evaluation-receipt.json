@@ -1,0 +1,11 @@
+{
+  "schema_version": "buildsignal.public-evidence-receipt.v1",
+  "evidence_kind": "silver_retrieval_diagnostic",
+  "artifact_path": "artifacts/evaluation/retrieval-silver-full-v2/metrics.json",
+  "artifact_file_sha256": "13ba6c7e074157d6bb654c1b4be5d244dfb9b02f3004b69464183e214efb2caf",
+  "query_count": 32,
+  "catalog_product_count": 25666,
+  "judgment_method": "Deterministic weak labels from declared category specification predicates.",
+  "promotion_eligible": false,
+  "claim_boundary": "Silver-label development diagnostic only; not a human-labelled ranking or resume metric claim."
+}
