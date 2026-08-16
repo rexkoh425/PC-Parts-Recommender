@@ -3,6 +3,7 @@ import type {
   AdminOperationsResponse,
   BuildRequest,
   BuildShareCreated,
+  BuildShareRevoked,
   BuildSummary,
   CompatibilityCheckRequest,
   CompatibilityCheckResponse,
@@ -33,6 +34,7 @@ import {
   searchDemoProducts,
 } from "./demo-api";
 import { apiBaseUrl, apiRequestTimeoutMs, usingDemoData } from "./runtime";
+import { readSavedBuilds } from "./saved-builds";
 
 export const API_BASE_URL = apiBaseUrl;
 export const USING_DEMO_DATA = usingDemoData;
@@ -45,6 +47,16 @@ export interface ApiRequestOptions {
 const requestCachePrefix = "pcbr:request:";
 const buildCachePrefix = "pcbr:build:";
 const sessionIdKey = "pcbr:session-id";
+const productImpressionPrefix = "pcbr:product-impression-context:";
+const productImpressionMaximumAgeMs = 10 * 60 * 1000;
+
+export type ProductImpressionSurface = "catalogue_result" | "build_component";
+
+interface StoredProductImpression {
+  product_id: string;
+  impression_token: string;
+  stored_at: number;
+}
 
 export class ApiError extends Error {
   constructor(
@@ -152,6 +164,7 @@ async function apiRequest<T>(
   try {
     const response = await fetch(`${API_BASE_URL}${path}`, {
       ...init,
+      credentials: "include",
       headers: {
         Accept: "application/json",
         ...(init?.body ? { "Content-Type": "application/json" } : {}),
@@ -207,6 +220,21 @@ function readCachedRequest(requestId: string): GenerateBuildsResponse | undefine
   }
 }
 
+/** Returns the original structured brief only while its request cache remains in this browser session. */
+export function readCachedBuildRequest(requestId: string): BuildRequest | undefined {
+  const request = readCachedRequest(requestId)?.request;
+  if (
+    !request ||
+    typeof request.budget_sgd !== "number" ||
+    !Number.isFinite(request.budget_sgd) ||
+    !Array.isArray(request.workloads) ||
+    !Array.isArray(request.existing_products)
+  ) {
+    return undefined;
+  }
+  return request;
+}
+
 export function readCachedBuild(buildId: string): BuildSummary | undefined {
   if (typeof window === "undefined") return undefined;
   const value = window.sessionStorage.getItem(`${buildCachePrefix}${buildId}`);
@@ -214,6 +242,64 @@ export function readCachedBuild(buildId: string): BuildSummary | undefined {
   try {
     return JSON.parse(value) as BuildSummary;
   } catch {
+    return undefined;
+  }
+}
+
+function readSavedBuild(buildId: string): BuildSummary | undefined {
+  return readSavedBuilds().find((entry) => entry.build.build_id === buildId)?.build;
+}
+
+export function productImpressionContext({
+  surface,
+  sourceId,
+  productId,
+  rankPosition,
+}: {
+  surface: ProductImpressionSurface;
+  sourceId: string;
+  productId: string;
+  rankPosition?: number;
+}): string {
+  const context = `${surface}:${sourceId}:${rankPosition ?? 0}:${productId}`;
+  return context.length <= 512 ? context : "";
+}
+
+export function rememberProductImpression(
+  product: Pick<ProductSearchResponse["products"][number], "product_id" | "impression_token">,
+  context: string,
+): void {
+  if (typeof window === "undefined" || !product.impression_token || !context) return;
+  const value: StoredProductImpression = {
+    product_id: product.product_id,
+    impression_token: product.impression_token,
+    stored_at: Date.now(),
+  };
+  window.sessionStorage.setItem(
+    `${productImpressionPrefix}${context}`,
+    JSON.stringify(value),
+  );
+}
+
+export function readProductImpression(productId: string, context: string | null): string | undefined {
+  if (typeof window === "undefined" || !context || context.length > 512) return undefined;
+  const key = `${productImpressionPrefix}${context}`;
+  const raw = window.sessionStorage.getItem(key);
+  if (!raw) return undefined;
+  try {
+    const value = JSON.parse(raw) as Partial<StoredProductImpression>;
+    if (
+      value.product_id !== productId ||
+      typeof value.impression_token !== "string" ||
+      typeof value.stored_at !== "number" ||
+      Date.now() - value.stored_at > productImpressionMaximumAgeMs
+    ) {
+      window.sessionStorage.removeItem(key);
+      return undefined;
+    }
+    return value.impression_token;
+  } catch {
+    window.sessionStorage.removeItem(key);
     return undefined;
   }
 }
@@ -246,17 +332,21 @@ export async function getRequestBuilds(
     if (cached) return cached;
     throw new ApiError("This demo recommendation is not available in this browser session.", 404);
   }
+  const cached = readCachedRequest(requestId);
   try {
     const response = await apiRequest<GenerateBuildsResponse>(
       `/v1/requests/${encodeURIComponent(requestId)}/builds`,
       undefined,
       options,
     );
-    cacheResponse(response);
-    return response;
+    const enriched = {
+      ...response,
+      request: response.request ?? cached?.request,
+    };
+    cacheResponse(enriched);
+    return enriched;
   } catch (error) {
     if (options.signal?.aborted) throw error;
-    const cached = readCachedRequest(requestId);
     if (cached) return cached;
     throw error;
   }
@@ -267,7 +357,7 @@ export async function getBuild(
   options: ApiRequestOptions = {},
 ): Promise<BuildSummary> {
   if (USING_DEMO_DATA) {
-    const cached = readCachedBuild(buildId);
+    const cached = readCachedBuild(buildId) ?? readSavedBuild(buildId);
     if (cached) return cached;
     throw new ApiError("This demo build is not available in this browser session.", 404);
   }
@@ -278,13 +368,32 @@ export async function getBuild(
       options,
     );
     const build = "build" in response ? response.build : response;
+    const cached = readCachedBuild(buildId);
+    const enriched = {
+      ...build,
+      request_id: build.request_id ?? cached?.request_id,
+      ...(!build.impression_token && cached?.impression_token
+        ? {
+            impression_token: cached.impression_token,
+            components: build.components.map((component) => ({
+              ...component,
+              impression_token: cached.components.find(
+                (cachedComponent) => cachedComponent.product_id === component.product_id,
+              )?.impression_token,
+            })),
+          }
+        : {}),
+    };
     if (typeof window !== "undefined") {
-      window.sessionStorage.setItem(`${buildCachePrefix}${build.build_id}`, JSON.stringify(build));
+      window.sessionStorage.setItem(
+        `${buildCachePrefix}${enriched.build_id}`,
+        JSON.stringify(enriched),
+      );
     }
-    return build;
+    return enriched;
   } catch (error) {
     if (options.signal?.aborted) throw error;
-    const cached = readCachedBuild(buildId);
+    const cached = readCachedBuild(buildId) ?? readSavedBuild(buildId);
     if (cached) return cached;
     throw error;
   }
@@ -318,6 +427,26 @@ export function getBuildShare(
   return apiRequest<PublicBuildShare>(
     `/v1/build-shares/${encodeURIComponent(shareId)}`,
     undefined,
+    options,
+  );
+}
+
+export function revokeBuildShare(
+  shareId: string,
+  revocationToken: string,
+  options: ApiRequestOptions = {},
+): Promise<BuildShareRevoked> {
+  if (USING_DEMO_DATA) {
+    return Promise.reject(
+      new ApiError("Durable build sharing is not available in the public demo.", 503),
+    );
+  }
+  return apiRequest<BuildShareRevoked>(
+    `/v1/build-shares/${encodeURIComponent(shareId)}/revoke`,
+    {
+      method: "POST",
+      body: JSON.stringify({ revocation_token: revocationToken }),
+    },
     options,
   );
 }
@@ -407,7 +536,7 @@ export async function replaceComponent(
   request: ReplacementRequest,
   options: ApiRequestOptions = {},
 ): Promise<ReplacementResponse> {
-  const cachedBuild = USING_DEMO_DATA ? readCachedBuild(buildId) : undefined;
+  const cachedBuild = readCachedBuild(buildId) ?? readSavedBuild(buildId);
   if (USING_DEMO_DATA && !cachedBuild) {
     throw new ApiError("This demo build is not available in this browser session.", 404);
   }
@@ -421,13 +550,20 @@ export async function replaceComponent(
         },
         options,
       );
+  const enriched = {
+    ...response,
+    build: {
+      ...response.build,
+      request_id: response.build.request_id ?? cachedBuild?.request_id,
+    },
+  };
   if (typeof window !== "undefined") {
     window.sessionStorage.setItem(
-      `${buildCachePrefix}${response.build.build_id}`,
-      JSON.stringify(response.build),
+      `${buildCachePrefix}${enriched.build.build_id}`,
+      JSON.stringify(enriched.build),
     );
   }
-  return response;
+  return enriched;
 }
 
 export function getFreshness(options: ApiRequestOptions = {}): Promise<FreshnessSummary> {
@@ -469,16 +605,38 @@ export async function trackInteraction(
     return;
   }
   try {
+    const idempotencyKey = event.impression_token
+      ? await interactionIdempotencyKey(event)
+      : undefined;
     await apiRequest<InteractionAccepted>(
       "/v1/interactions",
       {
         method: "POST",
         body: JSON.stringify(event),
         keepalive: true,
+        headers: idempotencyKey ? { "Idempotency-Key": idempotencyKey } : undefined,
       },
       options,
     );
   } catch {
     // Analytics is deliberately non-blocking for the recommendation flow.
   }
+}
+
+async function interactionIdempotencyKey(event: InteractionEvent): Promise<string> {
+  const canonical = `${event.session_id}\u0000${event.event_type}\u0000${event.impression_token ?? ""}`;
+  const bytes = new TextEncoder().encode(canonical);
+  if (globalThis.crypto?.subtle) {
+    const digest = await globalThis.crypto.subtle.digest("SHA-256", bytes);
+    const hex = Array.from(new Uint8Array(digest), (value) =>
+      value.toString(16).padStart(2, "0"),
+    ).join("");
+    return `interaction-${hex}`;
+  }
+  let hash = 2166136261;
+  for (const value of bytes) {
+    hash ^= value;
+    hash = Math.imul(hash, 16777619);
+  }
+  return `interaction-fallback-${(hash >>> 0).toString(16).padStart(8, "0")}`;
 }
