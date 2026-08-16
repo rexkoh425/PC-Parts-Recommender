@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   DEFAULT_API_REQUEST_TIMEOUT_MS,
   parseApiRequestTimeout,
+  resolveApiBaseUrl,
   runtimeCapabilitiesForDataMode,
 } from "../lib/runtime";
 import { resolveSiteUrl } from "../lib/site-url";
@@ -19,6 +20,12 @@ describe("runtime production boundaries", () => {
     expect(runtimeCapabilitiesForDataMode("api").reoptimizeUnlockedReplacement).toBe(true);
     expect(runtimeCapabilitiesForDataMode("demo").reoptimizeUnlockedReplacement).toBe(false);
     expect(runtimeCapabilitiesForDataMode("unexpected").reoptimizeUnlockedReplacement).toBe(false);
+  });
+
+  it("supports a same-origin API for a single-domain deployment", () => {
+    expect(resolveApiBaseUrl("/")).toBe("");
+    expect(resolveApiBaseUrl("https://api.example.test/")).toBe("https://api.example.test");
+    expect(resolveApiBaseUrl(undefined)).toBe("http://localhost:8000");
   });
 
   it("normalises an explicit public site origin", () => {
