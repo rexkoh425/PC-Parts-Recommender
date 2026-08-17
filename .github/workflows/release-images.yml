@@ -79,7 +79,7 @@ jobs:
           cache-from: type=gha,scope=release-${{ matrix.name }}
           cache-to: type=gha,mode=max,scope=release-${{ matrix.name }}
       - name: Scan candidate before publication
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: pcbr/${{ matrix.name }}:release-candidate
           severity: HIGH,CRITICAL
