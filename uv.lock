@@ -1701,6 +1701,7 @@ pipeline = [
     { name = "pyyaml" },
 ]
 serving = [
+    { name = "pyyaml" },
     { name = "sentence-transformers" },
 ]
 
@@ -1738,6 +1739,7 @@ requires-dist = [
     { name = "pypdf", specifier = ">=5,<7" },
     { name = "python-multipart", specifier = ">=0.0.20,<1" },
     { name = "pyyaml", marker = "extra == 'pipeline'", specifier = ">=6,<7" },
+    { name = "pyyaml", marker = "extra == 'serving'", specifier = ">=6,<7" },
     { name = "rank-bm25", specifier = ">=0.2.2,<1" },
     { name = "scikit-learn", specifier = ">=1.6,<2" },
     { name = "scipy", specifier = ">=1.14,<2" },
