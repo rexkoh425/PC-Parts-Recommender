@@ -58,15 +58,15 @@ export function productRecordMetadata(product: ProductDetail): Metadata {
   });
 }
 
-export function unavailableProductMetadata(
-  productId: string,
-  { definitiveMissing = false }: { definitiveMissing?: boolean } = {},
-): Metadata {
+// An unavailable record is never indexable, whether the miss is a definitive
+// 404 or a transient upstream failure: indexing either one would publish a
+// placeholder page as if it were catalogue evidence.
+export function unavailableProductMetadata(productId: string): Metadata {
   return recordMetadata({
     title: "Product evidence unavailable",
     description: "This catalogue record is unavailable in the current BuildSignal data release.",
     canonical: `/products/${encodeURIComponent(productId)}`,
-    noIndex: definitiveMissing,
+    noIndex: true,
   });
 }
 
@@ -87,12 +87,10 @@ export function sharedBuildRecordMetadata(
   });
 }
 
-export function unavailableSharedBuildMetadata({
-  definitiveMissing = false,
-}: { definitiveMissing?: boolean } = {}): Metadata {
+export function unavailableSharedBuildMetadata(): Metadata {
   return recordMetadata({
     title: "Shared PC build unavailable",
     description: "This bounded BuildSignal build snapshot is invalid, incomplete, or no longer available.",
-    noIndex: definitiveMissing,
+    noIndex: true,
   });
 }

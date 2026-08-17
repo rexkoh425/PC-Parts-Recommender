@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { SharedBuildScreen } from "@/components/shared-build-screen";
-import { ApiError, getBuildShare } from "@/lib/api";
+import { getBuildShare } from "@/lib/api";
 import {
   sharedBuildRecordMetadata,
   unavailableSharedBuildMetadata,
@@ -24,7 +24,6 @@ function firstValue(value: string | string[] | undefined): string | undefined {
 interface ShareMetadataResult {
   snapshot?: SharedBuildSnapshot;
   verified: boolean;
-  definitiveMissing: boolean;
 }
 
 async function metadataSnapshot(searchParams: ShareSearchParams): Promise<ShareMetadataResult> {
@@ -32,27 +31,18 @@ async function metadataSnapshot(searchParams: ShareSearchParams): Promise<ShareM
   const shareId = firstValue(params.share);
   if (shareId) {
     if (!/^[A-Za-z0-9_-]{1,80}$/.test(shareId)) {
-      return { verified: false, definitiveMissing: true };
+      return { verified: false };
     }
     try {
       return {
         snapshot: sharedSnapshotFromApi((await getBuildShare(shareId)).snapshot),
         verified: true,
-        definitiveMissing: false,
       };
-    } catch (error) {
-      return {
-        verified: false,
-        definitiveMissing: error instanceof ApiError && error.status === 404,
-      };
+    } catch {
+      return { verified: false };
     }
   }
-  const snapshot = decodeSharedBuild(firstValue(params.build));
-  return {
-    snapshot,
-    verified: false,
-    definitiveMissing: !snapshot,
-  };
+  return { snapshot: decodeSharedBuild(firstValue(params.build)), verified: false };
 }
 
 export async function generateMetadata({
@@ -63,7 +53,7 @@ export async function generateMetadata({
   const result = await metadataSnapshot(searchParams);
   return result.snapshot
     ? sharedBuildRecordMetadata(result.snapshot, { verified: result.verified })
-    : unavailableSharedBuildMetadata({ definitiveMissing: result.definitiveMissing });
+    : unavailableSharedBuildMetadata();
 }
 
 export default function SharedBuildPage() {
