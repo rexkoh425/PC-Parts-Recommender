@@ -178,9 +178,14 @@ services:
         source: ${PCBR_SERVING_RELEASE_DIR:?Set PCBR_SERVING_RELEASE_DIR}
         target: /run/pcbr-serving
         read_only: true
+      - type: bind
+        source: ${PCBR_SOURCE_REGISTRY_FILE:?Set PCBR_SOURCE_REGISTRY_FILE}
+        target: /run/pcbr-source/source-registry.yaml
+        read_only: true
     command:
       - python
-      - scripts/import_catalog_release.py
+      - -m
+      - scripts.import_catalog_release
       - --buildcores
       - /run/pcbr-release/buildcores.jsonl
       - --offers
@@ -193,8 +198,10 @@ services:
       - /run/pcbr-serving/serving-manifest.json
       - --serving-manifest-sha256
       - ${PCBR_API_SERVING_MANIFEST_SHA256:?Set PCBR_API_SERVING_MANIFEST_SHA256}
-      - --require-production-ready
-      - --require-migrated-schema
+      - --source-registry
+      - /run/pcbr-source/source-registry.yaml
+      - --source-trust-root-sha256
+      - ${PCBR_API_SOURCE_TRUST_ROOT_SHA256:?Set PCBR_API_SOURCE_TRUST_ROOT_SHA256}
       - --readiness-artifact
       - /run/pcbr-release/catalog-readiness.json
       - --expected-data-version
@@ -231,7 +238,8 @@ services:
       PCBR_API_RANKING_MODEL_VERSION: ${PCBR_API_RANKING_MODEL_VERSION:?Set PCBR_API_RANKING_MODEL_VERSION}
       PCBR_API_COMPATIBILITY_RULE_VERSION: ${PCBR_API_COMPATIBILITY_RULE_VERSION:?Set PCBR_API_COMPATIBILITY_RULE_VERSION}
       PCBR_API_SOLVER_VERSION: ${PCBR_API_SOLVER_VERSION:?Set PCBR_API_SOLVER_VERSION}
-      PCBR_API_STALE_AFTER_HOURS: ${PCBR_API_STALE_AFTER_HOURS:-24}
+      PCBR_API_CATALOGUE_STALE_AFTER_HOURS: ${PCBR_API_CATALOGUE_STALE_AFTER_HOURS:-168}
+      PCBR_API_PRICE_STALE_AFTER_HOURS: ${PCBR_API_PRICE_STALE_AFTER_HOURS:-24}
       PCBR_API_PIPELINE_OPERATIONS_PATH: /run/pcbr-operations
       PCBR_API_PIPELINE_OPERATIONS_WINDOW_HOURS: ${PCBR_API_PIPELINE_OPERATIONS_WINDOW_HOURS:-168}
       PCBR_API_MAX_REQUEST_BODY_BYTES: ${PCBR_API_MAX_REQUEST_BODY_BYTES:-1048576}
@@ -239,12 +247,16 @@ services:
       PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE: ${PCBR_API_BUILD_GENERATION_MAX_QUEUE_SIZE:-8}
       PCBR_API_BUILD_GENERATION_QUEUE_TIMEOUT_SECONDS: ${PCBR_API_BUILD_GENERATION_QUEUE_TIMEOUT_SECONDS:-2}
       PCBR_API_ADMIN_TOKEN_FILE: /run/secrets/admin_token
+      PCBR_API_IMPRESSION_TTL_MINUTES: ${PCBR_API_IMPRESSION_TTL_MINUTES:-120}
+      PCBR_API_IMPRESSION_SIGNING_KEY_FILE: /run/secrets/impression_signing_key
       PCBR_API_BUILDCORES_CATALOG_PATH: /run/pcbr-data/buildcores.jsonl
       PCBR_API_GOVERNED_OFFERS_PATH: /run/pcbr-data/governed-offers.jsonl
       PCBR_API_REVIEWED_MAPPING_PATH: /run/pcbr-data/reviewed-mappings.json
       PCBR_API_REVIEW_EVIDENCE_PATH: /run/pcbr-data/review-evidence.jsonl
       PCBR_API_SERVING_MANIFEST_PATH: /run/pcbr-serving/serving-manifest.json
       PCBR_API_SERVING_MANIFEST_SHA256: ${PCBR_API_SERVING_MANIFEST_SHA256:?Set PCBR_API_SERVING_MANIFEST_SHA256}
+      PCBR_API_SOURCE_REGISTRY_PATH: /run/pcbr-source/source-registry.yaml
+      PCBR_API_SOURCE_TRUST_ROOT_SHA256: ${PCBR_API_SOURCE_TRUST_ROOT_SHA256:?Set PCBR_API_SOURCE_TRUST_ROOT_SHA256}
       PCBR_API_SEMANTIC_ENCODER_BUNDLE_PATH: /run/pcbr-serving/encoders/${PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256:?Set PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256}
       PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256: ${PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256:?Set PCBR_API_SEMANTIC_ENCODER_BUNDLE_SHA256}
     secrets:
@@ -252,6 +264,8 @@ services:
         target: database_password
       - source: api_admin_token
         target: admin_token
+      - source: api_impression_signing_key
+        target: impression_signing_key
     volumes:
       - type: bind
         source: ${PCBR_BUILDCORES_CATALOG_FILE:?Set PCBR_BUILDCORES_CATALOG_FILE}
@@ -272,6 +286,10 @@ services:
       - type: bind
         source: ${PCBR_SERVING_RELEASE_DIR:?Set PCBR_SERVING_RELEASE_DIR}
         target: /run/pcbr-serving
+        read_only: true
+      - type: bind
+        source: ${PCBR_SOURCE_REGISTRY_FILE:?Set PCBR_SOURCE_REGISTRY_FILE}
+        target: /run/pcbr-source/source-registry.yaml
         read_only: true
       - type: bind
         source: ${PCBR_PIPELINE_OPERATIONS_DIR:?Set PCBR_PIPELINE_OPERATIONS_DIR}
@@ -371,6 +389,10 @@ services:
       - type: bind
         source: ${PCBR_PIPELINE_ARTIFACTS_DIR:?Set PCBR_PIPELINE_ARTIFACTS_DIR}
         target: /app/artifacts
+      - type: bind
+        source: ${PCBR_SOURCE_REGISTRY_FILE:?Set PCBR_SOURCE_REGISTRY_FILE}
+        target: /app/config/source_registry.yaml
+        read_only: true
     command:
       [
         "dagster",
@@ -784,6 +806,8 @@ secrets:
     file: ${PCBR_MONITOR_PASSWORD_FILE:?Set PCBR_MONITOR_PASSWORD_FILE}
   api_admin_token:
     file: ${PCBR_API_ADMIN_TOKEN_FILE:?Set PCBR_API_ADMIN_TOKEN_FILE}
+  api_impression_signing_key:
+    file: ${PCBR_API_IMPRESSION_SIGNING_KEY_FILE:?Set PCBR_API_IMPRESSION_SIGNING_KEY_FILE}
 
 volumes:
   postgres-data:

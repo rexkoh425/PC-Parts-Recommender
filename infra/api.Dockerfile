@@ -21,9 +21,11 @@ RUN uv sync --locked --no-dev --no-install-project --extra serving
 
 COPY --chown=pcbr:pcbr services ./services
 COPY --chown=pcbr:pcbr db ./db
-COPY --chown=pcbr:pcbr scripts/import_processed_catalog.py ./scripts/import_processed_catalog.py
+COPY --chown=pcbr:pcbr pipelines ./pipelines
+COPY --chown=pcbr:pcbr scripts/__init__.py scripts/import_catalog_release.py scripts/import_processed_catalog.py ./scripts/
 COPY --chown=pcbr:pcbr infra/entrypoints/api.sh /usr/local/bin/pcbr-api-entrypoint
 RUN uv sync --locked --no-dev --extra serving
+RUN uv run --no-sync python -c "import yaml; from pipelines.source_release import verify_awin_production_batch_release"
 
 RUN chmod 0555 /usr/local/bin/pcbr-api-entrypoint
 
