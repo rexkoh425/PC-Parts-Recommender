@@ -44,7 +44,7 @@ PCI_IDS_LICENSE_NOTE = (
 )
 PCI_IDS_USER_AGENT = (
     "BuildSignal-PC-Build-Recommender/0.1 "
-    "(PCI-ID alias cache; https://buildsignal-pc-recommender.tendra425.chatgpt.site)"
+    "(PCI-ID alias cache; https://github.com/rexkoh425/PC-Parts-Recommender)"
 )
 
 DEFAULT_RECORD_LIMIT = 20_000

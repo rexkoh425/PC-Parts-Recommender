@@ -10,9 +10,8 @@ migration, ingestion adapters, training/evaluation harnesses, and optimiser exis
 does **not** yet claim production retailer coverage or production-promoted supervised-model
 quality. One real-data CPU development diagnostic exists, but it misses the promotion gates.
 
-Public demo: [BuildSignal PC Recommender](https://buildsignal-pc-recommender.tendra425.chatgpt.site).
-It serves the verified frontend and illustrative sample builds; live retailer stock and the
-production FastAPI release are not connected yet.
+No public demo is deployed. The web application runs locally against the controlled demo
+contract; live retailer stock and the production FastAPI release are not connected yet.
 
 ## What is implemented
 

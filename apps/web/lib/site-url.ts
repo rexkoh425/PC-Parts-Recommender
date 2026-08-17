@@ -1,4 +1,6 @@
-const productionSiteUrl = "https://buildsignal-pc-recommender.tendra425.chatgpt.site";
+// No deployment is pinned here. Set NEXT_PUBLIC_SITE_URL for a real origin;
+// without it both environments fall back to the local development server.
+const productionSiteUrl = "http://localhost:3000";
 const localSiteUrl = "http://localhost:3000";
 
 export function resolveSiteUrl(
