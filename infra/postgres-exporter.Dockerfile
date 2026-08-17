@@ -1,4 +1,4 @@
-FROM quay.io/prometheuscommunity/postgres-exporter:v0.17.1 AS exporter
+FROM quay.io/prometheuscommunity/postgres-exporter:v0.20.1 AS exporter
 
 FROM alpine:3.22
 
