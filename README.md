@@ -394,9 +394,12 @@ These tools create collection inputs only; they do not create human labels or qu
 
 After a human project freezes, `training.materialize_ranking_snapshot` verifies the complete
 content-addressed annotation release and copies each committed pre-label row unchanged while
-appending only its adjudicated grade. Human `training.train_ranking` and
-`training.evaluate_ranking` require that labeled dataset manifest; a manually authored human
-feature JSONL is rejected.
+appending only its adjudicated grade. Human `training.train_ranking`,
+`training.register_ranking_evaluation`, and `training.evaluate_ranking` require that labeled
+dataset manifest; a manually authored human feature JSONL is rejected. Training reports validation
+diagnostics only. The final test cohort is claimed by one preregistered model/policy intent, logged
+before access, and published to a content-addressed no-replace evaluation directory; only exact
+idempotent retries may reuse that cohort.
 
 When a qualifying ranking dataset eventually exists, `training.train_ranking` publishes
 `ranker-artifact/` through a verified hidden sibling stage and one no-replace directory rename.
