@@ -8,14 +8,18 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+import yaml
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from pipelines.source_release import AWIN_PARSER_VERSION, AWIN_SOURCE_TEMPLATE
 from pipelines.sources.signed_policy import (
     DETACHED_SIGNATURE_SCHEMA_VERSION,
     SIGNED_POLICY_SCHEMA_VERSION,
     TRUST_ROOT_SCHEMA_VERSION,
 )
 from scripts.fetch_open_data import main as fetch_open_data_main
+
+_SOURCE_REGISTRY = Path(__file__).resolve().parents[2] / "data" / "source_registry.yaml"
 
 
 def _json_bytes(value: object) -> bytes:
@@ -137,6 +141,39 @@ def _write_feed(path: Path) -> None:
         )
 
 
+def _write_source_registry(tmp_path: Path, *, policy: Path) -> Path:
+    """Admit the fixture feed the way an operator must before production release.
+
+    Publishing an authorized batch requires an explicit per-feed admission bound to
+    the exact signed policy, so the registry the CLI reads has to carry one. The
+    shipped registry deliberately admits no Awin merchant, so the fixture supplies
+    its own copy rather than weakening the real one.
+    """
+
+    registry = yaml.safe_load(_SOURCE_REGISTRY.read_text(encoding="utf-8"))
+    registry["sources"]["awin_12345_67890"] = {
+        "kind": "authorized_retailer_product_feed",
+        "template": AWIN_SOURCE_TEMPLATE,
+        "status": "active",
+        "source_url": "awin://advertisers/12345/feeds/67890",
+        "advertiser_id": "12345",
+        "feed_id": "67890",
+        "retailer": "Fixture Hardware",
+        "parser_version": AWIN_PARSER_VERSION,
+        "policy_id": "fixture-awin-cli-policy",
+        "policy_sha256": hashlib.sha256(policy.read_bytes()).hexdigest(),
+        "admitted_on": "2025-01-01",
+        "admission_expires_on": "2098-12-31",
+        "revoked_on": None,
+        "revocation_reason": None,
+        "production_catalog_eligible": True,
+        "access_note": "Synthetic fixture admission; not a real data grant.",
+    }
+    path = tmp_path / "source-registry.yaml"
+    path.write_text(yaml.safe_dump(registry, sort_keys=True), encoding="utf-8")
+    return path
+
+
 def _arguments(
     *,
     feed: Path,
@@ -146,8 +183,12 @@ def _arguments(
     trust_root_sha256: str,
     raw_root: Path,
     processed_root: Path,
+    source_registry: Path | None = None,
 ) -> list[str]:
-    return [
+    registry_arguments = (
+        ["--source-registry", str(source_registry)] if source_registry is not None else []
+    )
+    return registry_arguments + [
         "--source",
         "awin_feed",
         "--awin-feed",
@@ -184,6 +225,7 @@ def test_awin_cli_verifies_and_materialises_without_disclosing_input_paths(
             trust_root_sha256=trust_sha,
             raw_root=tmp_path / "raw",
             processed_root=tmp_path / "processed",
+            source_registry=_write_source_registry(tmp_path, policy=policy),
         )
     )
 
