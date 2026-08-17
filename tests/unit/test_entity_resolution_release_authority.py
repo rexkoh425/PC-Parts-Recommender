@@ -32,6 +32,7 @@ from pc_build_recommender.entity_resolution import (
     EntityResolutionArtifactError,
     EntityResolutionContractError,
     LightGBMEntityResolver,
+    ListingRecord,
     build_entity_resolution_serving_evidence,
     canonical_catalogue_sha256,
     entity_resolution_file_sha256,
@@ -47,7 +48,40 @@ from pc_build_recommender.entity_resolution import (
 from pc_build_recommender.evaluation.manifest import sha256_json
 
 _REVIEW_SHA = "a" * 64
-_LISTING_IDS = tuple(f"listing-{index:03d}" for index in range(100))
+
+# The release gates are production floors, not fixture knobs: the catalogue must
+# clear ER_MINIMUM_PRODUCTION_PRODUCTS (750), and a Wilson lower bound of 0.99 on a
+# perfect run needs n/(n+z**2) >= 0.99, i.e. at least 381 model-only automatic
+# matches. The fixture is sized above both rather than weakening the policy.
+_CATALOGUE_PRODUCT_COUNT = 780
+_IN_CATALOGUE_LISTING_COUNT = 400
+_UNMATCHED_LISTING_COUNT = 110
+_HARD_NEGATIVES_PER_LISTING = 6
+# Distinct brands keep blocking realistic and cheap: a listing only reaches its own
+# brand's products instead of scoring against the whole catalogue on every replay.
+_BRANDS = (
+    "Aster",
+    "Borealis",
+    "Cirrus",
+    "Dynamo",
+    "Equinox",
+    "Fathom",
+    "Gradient",
+    "Halcyon",
+    "Ionos",
+    "Juniper",
+)
+_MATCHER_KWARGS = {
+    "max_candidates": 50,
+    "minimum_text_score": 0.12,
+    "minimum_auto_margin": 0.02,
+    "evidence_candidate_limit": 5,
+}
+
+_LISTING_IDS = tuple(
+    f"listing-{index:04d}"
+    for index in range(_IN_CATALOGUE_LISTING_COUNT + _UNMATCHED_LISTING_COUNT)
+)
 _TEST_GROUP_SHA = hashlib.sha256("\n".join(_LISTING_IDS).encode("utf-8")).hexdigest()
 _AS_OF = datetime(2026, 7, 23, 12, tzinfo=UTC)
 
@@ -94,22 +128,46 @@ def _policy_payload(**updates: object) -> dict[str, Any]:
     return seal_entity_resolution_policy(payload)
 
 
+def _judgments(listing_id: str, product_id: str, label: str) -> dict[str, Any]:
+    return {
+        "product_id": product_id,
+        "judgments": [
+            {
+                "reviewer_id": "reviewer-a",
+                "assignment_id": f"{listing_id}-{product_id}-a",
+                "label": label,
+                "reviewed_at": "2026-07-20T12:00:00+00:00",
+                "evidence_reference": f"fixture://{listing_id}/{product_id}/a",
+            },
+            {
+                "reviewer_id": "reviewer-b",
+                "assignment_id": f"{listing_id}-{product_id}-b",
+                "label": label,
+                "reviewed_at": "2026-07-20T12:01:00+00:00",
+                "evidence_reference": f"fixture://{listing_id}/{product_id}/b",
+            },
+        ],
+        "adjudication": None,
+        "resolved_label": label,
+    }
+
+
 def _create_listing_evidence(root: Path) -> tuple[str, str, str]:
     products = [
         {
-            "product_id": f"gpu-{index:02d}",
+            "product_id": f"gpu-{index:03d}",
             "category": "gpu",
-            "brand": "Aster",
-            "model": f"Nova {index:02d}",
-            "canonical_name": f"Aster Nova {index:02d} 16GB",
-            "manufacturer_part_number": f"GPU-{index:02d}",
+            "brand": _BRANDS[index % len(_BRANDS)],
+            "model": f"Nova {index:03d}",
+            "canonical_name": f"{_BRANDS[index % len(_BRANDS)]} Nova {index:03d} 16GB",
+            "manufacturer_part_number": f"GPU-{index:03d}",
             "gtin": None,
             "attributes": {"vram_gb": 16},
             "price_sgd": None,
             "embedding": None,
             "is_synthetic": False,
         }
-        for index in range(25)
+        for index in range(_CATALOGUE_PRODUCT_COUNT)
     ]
     canonical_catalogue_version = "pc-er-canonical-fixture-v1"
     canonical_products = tuple(
@@ -128,52 +186,77 @@ def _create_listing_evidence(root: Path) -> tuple[str, str, str]:
             "catalogue_sha256": canonical_catalogue_digest,
         },
     )
+    # Blocking is model-independent, so the same candidate generator the replay uses
+    # decides which non-gold products are genuinely reachable hard negatives.
+    blocker = CatalogEntityMatcher(
+        canonical_products, runtime=None, **_MATCHER_KWARGS
+    ).blocker
+
     listing_groups: list[dict[str, Any]] = []
     for listing_index, listing_id in enumerate(_LISTING_IDS):
-        gold_product_id = f"gpu-{listing_index % 25:02d}"
-        pair_labels = []
-        for product in products:
-            product_id = str(product["product_id"])
-            label = "MATCH" if product_id == gold_product_id else "NON_MATCH"
-            pair_labels.append(
-                {
-                    "product_id": product_id,
-                    "judgments": [
-                        {
-                            "reviewer_id": "reviewer-a",
-                            "assignment_id": f"{listing_id}-{product_id}-a",
-                            "label": label,
-                            "reviewed_at": "2026-07-20T12:00:00+00:00",
-                            "evidence_reference": f"fixture://{listing_id}/{product_id}/a",
-                        },
-                        {
-                            "reviewer_id": "reviewer-b",
-                            "assignment_id": f"{listing_id}-{product_id}-b",
-                            "label": label,
-                            "reviewed_at": "2026-07-20T12:01:00+00:00",
-                            "evidence_reference": f"fixture://{listing_id}/{product_id}/b",
-                        },
-                    ],
-                    "adjudication": None,
-                    "resolved_label": label,
-                }
-            )
+        in_catalogue = listing_index < _IN_CATALOGUE_LISTING_COUNT
+        if in_catalogue:
+            # No MPN and no GTIN: the exact-identifier anchors must not fire, so the
+            # listing is resolved by the model and counts toward model-only support.
+            listing = {
+                "listing_id": listing_id,
+                "title": (
+                    f"{_BRANDS[listing_index % len(_BRANDS)]} Nova "
+                    f"{listing_index:03d} 16GB Graphics Card"
+                ),
+                "category": "gpu",
+                "brand": _BRANDS[listing_index % len(_BRANDS)],
+                "manufacturer_part_number": None,
+                "gtin": None,
+                "attributes": {},
+                "current_price_sgd": 799.0,
+                "embedding": None,
+                "retailer": "Approved Retailer",
+                "is_synthetic": False,
+            }
+            gold_product_id = f"gpu-{listing_index:03d}"
+            blocked = blocker.candidates(ListingRecord.from_dict(listing), canonical_products)
+            negatives = [
+                candidate.product.product_id
+                for candidate in blocked
+                if candidate.product.product_id != gold_product_id
+            ][:_HARD_NEGATIVES_PER_LISTING]
+            pair_labels = [
+                _judgments(
+                    listing_id,
+                    product_id,
+                    "MATCH" if product_id == gold_product_id else "NON_MATCH",
+                )
+                for product_id in sorted({gold_product_id, *negatives})
+            ]
+            disposition = "in_catalogue_match"
+        else:
+            # Off-catalogue brand: blocking returns nothing, so the model route
+            # correctly declines to match and the listing counts as unmatched.
+            listing = {
+                "listing_id": listing_id,
+                "title": f"Zephyr Vortex {listing_index:03d} 8GB Graphics Card",
+                "category": "gpu",
+                "brand": "Zephyr",
+                "manufacturer_part_number": None,
+                "gtin": None,
+                "attributes": {},
+                "current_price_sgd": 349.0,
+                "embedding": None,
+                "retailer": "Approved Retailer",
+                "is_synthetic": False,
+            }
+            # Reviewers still recorded that the nearest catalogue products were
+            # rejected; an unmatched group is evidence, not an absence of review.
+            pair_labels = [
+                _judgments(listing_id, f"gpu-{offset:03d}", "NON_MATCH")
+                for offset in range(3)
+            ]
+            disposition = "no_catalogue_match"
         listing_groups.append(
             {
-                "listing": {
-                    "listing_id": listing_id,
-                    "title": f"Aster Nova {listing_index % 25:02d} 16GB",
-                    "category": "gpu",
-                    "brand": "Aster",
-                    "manufacturer_part_number": f"GPU-{listing_index % 25:02d}",
-                    "gtin": None,
-                    "attributes": {},
-                    "current_price_sgd": 799.0,
-                    "embedding": None,
-                    "retailer": "Approved Retailer",
-                    "is_synthetic": False,
-                },
-                "match_disposition": "in_catalogue_match",
+                "listing": listing,
+                "match_disposition": disposition,
                 "pair_labels": pair_labels,
             }
         )
@@ -349,9 +432,11 @@ def _create_release(root: Path) -> tuple[Path, Path, Path, Path]:
     return model_dir, evaluation_path, policy_path, rights_path
 
 
-@pytest.fixture
-def release_paths(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
-    return _create_release(tmp_path)
+@pytest.fixture(scope="session")
+def release_paths(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Path, Path, Path]:
+    """Build the production-scale release once; tamper tests operate on copies."""
+
+    return _create_release(tmp_path_factory.mktemp("er-release"))
 
 
 def _copy_release(
