@@ -152,7 +152,7 @@ def _rename_directory_noreplace(source: Path, destination: Path) -> None:
 
 
 def _lock_descriptor(descriptor: int, *, blocking: bool) -> bool:
-    if os.name == "nt":
+    if sys.platform == "win32":
         import msvcrt
 
         os.lseek(descriptor, 0, os.SEEK_SET)
@@ -173,7 +173,7 @@ def _lock_descriptor(descriptor: int, *, blocking: bool) -> bool:
 
 
 def _unlock_descriptor(descriptor: int) -> None:
-    if os.name == "nt":
+    if sys.platform == "win32":
         import msvcrt
 
         os.lseek(descriptor, 0, os.SEEK_SET)
