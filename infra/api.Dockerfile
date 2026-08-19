@@ -1,5 +1,9 @@
 FROM python:3.12-slim AS runtime
 
+# Patch base-image OS packages. The published python:3.12-slim tag lags Debian
+# security updates, which trivy reports as fixed HIGH advisories.
+RUN apt-get update \n    && apt-get upgrade -y --no-install-recommends \n    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=ghcr.io/astral-sh/uv:0.9.16 /uv /uvx /bin/
 
 ENV PYTHONUNBUFFERED=1 \
@@ -32,6 +36,9 @@ RUN chmod 0555 /usr/local/bin/pcbr-api-entrypoint
 USER 10001:10001
 
 EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
+  CMD ["python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/live',timeout=4).status==200 else 1)"]
 
 ENTRYPOINT ["/usr/local/bin/pcbr-api-entrypoint"]
 CMD ["uvicorn", "services.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-server-header"]
