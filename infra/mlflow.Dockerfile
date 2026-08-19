@@ -25,7 +25,11 @@ RUN groupadd --gid 10003 pcbr \
 COPY --chown=pcbr:pcbr pyproject.toml uv.lock README.md ./
 COPY --chown=pcbr:pcbr packages/core ./packages/core
 COPY --chown=pcbr:pcbr infra/entrypoints/mlflow.sh /usr/local/bin/pcbr-mlflow-entrypoint
-RUN uv sync --locked --no-dev --extra mlops
+# MLflow is no longer a locked extra: every release caps cryptography below 50,
+# which would hold the project lock on a vulnerable version. The tracking server
+# installs it here instead, isolated from the API and pipeline images.
+RUN uv sync --locked --no-dev \
+    && uv pip install "mlflow>=2.19,<4"
 
 RUN chmod 0555 /usr/local/bin/pcbr-mlflow-entrypoint
 
