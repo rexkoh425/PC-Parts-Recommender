@@ -46,4 +46,5 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
   CMD ["python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/live',timeout=4).status==200 else 1)"]
 
 ENTRYPOINT ["/usr/local/bin/pcbr-api-entrypoint"]
-CMD ["uvicorn", "services.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-server-header"]
+# Managed hosts inject the listening port; default to 8000 for Compose and local runs.
+CMD ["sh", "-c", "exec uvicorn services.api.main:app --host 0.0.0.0 --port ${PORT:-8000} --no-server-header"]
