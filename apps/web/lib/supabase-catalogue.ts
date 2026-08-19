@@ -19,6 +19,19 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ?? "";
 /** Live retrieval is only possible when both halves of the credential exist. */
 export const SUPABASE_CATALOGUE_ENABLED = Boolean(supabaseUrl && supabaseKey);
 
+/**
+ * NEXT_PUBLIC_* values are inlined at build time, so a missing one is invisible
+ * at runtime: the page just quietly serves the fixture and looks healthy. Say
+ * which half is absent, once, so the cause is legible from the console instead
+ * of requiring a bundle grep.
+ */
+if (typeof window !== "undefined" && !SUPABASE_CATALOGUE_ENABLED) {
+  console.info(
+    "[catalogue] live retrieval disabled at build time -" +
+      ` url:${supabaseUrl ? "set" : "MISSING"} key:${supabaseKey ? "set" : "MISSING"}`,
+  );
+}
+
 /** Shape returned by both RPCs; search adds the two ranking columns. */
 interface RpcRow {
   product_id: string;
