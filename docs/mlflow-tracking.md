@@ -8,7 +8,7 @@ For a portable CPU environment, install the optional dependency without changing
 code:
 
 ```powershell
-uv sync --extra mlops
+uv pip install 'mlflow>=2.19,<4'
 ```
 
 On an already CUDA-configured workstation, preserve the verified PyTorch wheel by using

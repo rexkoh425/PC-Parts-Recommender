@@ -759,7 +759,7 @@ GPU-model promotion from an inadequate cohort, not as accuracy evidence.
 Tracking is off unless a training CLI receives `--track-mlflow`. For a portable CPU environment:
 
 ```powershell
-uv sync --locked --extra mlops
+uv pip install 'mlflow>=2.19,<4'
 ```
 
 If the verified CUDA override is already installed, avoid a synchronizing command that would
