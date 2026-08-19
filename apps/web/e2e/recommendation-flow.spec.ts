@@ -76,6 +76,10 @@ function build(profile: string, id: string, price: number, score: number) {
     data_version: "2026-07-22",
     ranking_model: "ltr_v1",
     rule_version: "compat_v1",
+    // Saving validates the full build contract; without the solver provenance
+    // isBuildSummary rejects the build and the shortlist silently stays empty.
+    solver_version: "cp-sat-v1",
+    solver_status: "optimal",
   };
 }
 
@@ -127,8 +131,11 @@ const sharedSnapshot = {
   solver_version: "solver_v1",
 };
 
+// The client sends credentialed fetches, so the browser rejects a wildcard origin.
+// Echo the page origin and allow credentials, exactly as the real API does.
 const corsHeaders = {
-  "access-control-allow-origin": "*",
+  "access-control-allow-origin": "http://127.0.0.1:3100",
+  "access-control-allow-credentials": "true",
   "access-control-allow-headers": "content-type,x-pcbr-admin-token",
   "access-control-allow-methods": "GET,POST,OPTIONS",
 };
@@ -279,8 +286,10 @@ test("generates, inspects, and saves a compatible recommendation", async ({ page
   await expect(page.getByText("3 compatible builds under")).toBeVisible();
   await expect(page.locator(".status-pill--pass").first()).toContainText("Compatible");
 
-  await page.getByRole("button", { name: "Save", exact: true }).first().click();
-  await page.getByRole("link", { name: "View build" }).first().click();
+  // The card labels each control with the build it belongs to, so match the
+  // accessible name the component actually exposes.
+  await page.getByRole("button", { name: /^Save / }).first().click();
+  await page.getByRole("link", { name: /^View .* build$/ }).first().click();
 
   await expect(page).toHaveURL(/\/builds\/build_1$/);
   await expect(page.getByTestId("budget-breakdown")).toBeVisible();
