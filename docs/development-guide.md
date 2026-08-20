@@ -26,7 +26,7 @@ newer host version happens to build successfully.
 Create the locked base environments:
 
 ```powershell
-uv sync --locked
+uv sync --locked --extra modeling
 npm install
 ```
 

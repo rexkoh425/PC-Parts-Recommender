@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import itertools
 from collections.abc import Mapping, Sequence
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from ortools.sat.python import cp_model
+if TYPE_CHECKING:
+    from ortools.sat.python import cp_model
+
 
 from pc_build_recommender.domain import BuildProfile, CompatibilityStatus, ComponentCategory
 
@@ -32,6 +34,8 @@ from .validation import (
 
 
 def _solver_status(status: cp_model.CpSolverStatus) -> OptimizationStatus:
+    from ortools.sat.python import cp_model
+
     if status == cp_model.OPTIMAL:
         return OptimizationStatus.OPTIMAL
     if status == cp_model.FEASIBLE:
@@ -98,6 +102,8 @@ class _CpModelState:
     ) -> None:
         self.problem = problem
         self.candidates = tuple(candidates)
+        from ortools.sat.python import cp_model
+
         self.model = cp_model.CpModel()
         self.variables = {
             candidate.product_id: self.model.new_bool_var(f"select_{candidate.product_id}")
@@ -290,6 +296,8 @@ class BuildOptimizer:
             final_wall_time = 0.0
             final_objective: int | None = None
             accepted: OptimizationSolution | None = None
+
+            from ortools.sat.python import cp_model
 
             for _ in range(self.max_validator_rejections + 1):
                 solver = cp_model.CpSolver()

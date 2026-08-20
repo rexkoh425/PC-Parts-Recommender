@@ -24,7 +24,7 @@ jobs:
         with:
           enable-cache: true
       - name: Install locked environment
-        run: uv sync --locked
+        run: uv sync --locked --extra modeling
       - name: Lint
         run: uv run ruff check packages/core/src services pipelines tests db
       - name: Type check
@@ -47,7 +47,7 @@ jobs:
         with:
           enable-cache: true
       - name: Install Dagster extra
-        run: uv sync --locked --extra pipeline
+        run: uv sync --locked --extra pipeline --extra modeling
       - name: Load Dagster definitions
         run: >-
           uv run python -c "from pipelines.definitions import defs;
@@ -100,7 +100,7 @@ jobs:
         with:
           enable-cache: true
       - name: Install locked environment
-        run: uv sync --locked
+        run: uv sync --locked --extra modeling
       - name: Upgrade, downgrade, and re-upgrade schema
         run: |
           uv run alembic -c db/alembic.ini upgrade head
@@ -128,7 +128,7 @@ jobs:
         with:
           enable-cache: true
       - name: Install locked environment
-        run: uv sync --locked
+        run: uv sync --locked --extra modeling
       - name: Prove the production template fails closed
         run: |
           if uv run python scripts/validate_production_env.py \
