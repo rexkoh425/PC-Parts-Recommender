@@ -19,8 +19,8 @@ export default function HomePage() {
             <span>Not the hype.</span>
           </h1>
           <p className="hero__lede">
-            Turn your budget, workload, and existing hardware into a ranked shortlist of complete,
-            compatible PCs—with the evidence behind every choice.
+            Tell us your budget and what you actually do. You get complete machines whose parts
+            are checked against each other, and you can see why each one was picked.
           </p>
           <div className="hero__actions">
             <a className="button button--primary button--large" href="#builder">

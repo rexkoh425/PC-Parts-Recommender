@@ -5,15 +5,18 @@ import type {
   WorkloadName,
 } from "./types";
 
-const sgdFormatter = new Intl.NumberFormat("en-SG", {
-  style: "currency",
-  currency: "SGD",
+/*
+ * en-SG renders SGD as a bare "$", which reads as US dollars to most visitors
+ * and left the page showing "$2,672" beside copy that said "S$0". The symbol
+ * is applied here rather than by Intl so every figure carries the same one.
+ */
+const sgdNumberFormatter = new Intl.NumberFormat("en-SG", {
   minimumFractionDigits: 0,
   maximumFractionDigits: 2,
 });
 
 export function formatSgd(value: number): string {
-  return sgdFormatter.format(Number.isFinite(value) ? value : 0);
+  return `S$${sgdNumberFormatter.format(Number.isFinite(value) ? value : 0)}`;
 }
 
 export function formatScore(value: number | null | undefined): string {
