@@ -59,21 +59,15 @@ export function BuildCard({
       )}
 
       {objectiveScores.length > 0 && (
-        <dl
+        <div
           className="build-card__objective-scores"
           aria-label="Build objective scores"
           data-testid="build-decision-scores"
         >
           {objectiveScores.map(([label, score]) => (
-            <div key={label}>
-              <dt>{label}</dt>
-              <dd aria-label={`${label} score ${formatScore(score)} out of 100`}>
-                {formatScore(score)}
-                <small>/100</small>
-              </dd>
-            </div>
+            <ScoreMeter key={label} compact label={label} value={score} />
           ))}
-        </dl>
+        </div>
       )}
 
       <ul className="component-preview">

@@ -54,8 +54,12 @@ describe("build presentation", () => {
     );
 
     expect(html).toContain("Build objective scores");
-    expect(html).toContain("Value score 89.0 out of 100");
-    expect(html).toContain("Upgradeability score 87.0 out of 100");
+    // Objective scores render as meters, so the value rides aria-valuetext on a
+    // role="meter" track rather than a combined label on a definition list.
+    expect(html).toContain('aria-label="Value score"');
+    expect(html).toContain('aria-label="Upgradeability score"');
+    expect(html).toContain('aria-valuetext="89.0 out of 100"');
+    expect(html).toContain('aria-valuetext="87.0 out of 100"');
   });
 
   it("does not manufacture absent objective scores", () => {

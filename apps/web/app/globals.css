@@ -1895,10 +1895,13 @@ svg {
   font-weight: 680;
 }
 
+/* Objective and workload scores are the same measure (0-100 against this
+   request), so they share one form. Two columns of meters, not a mix of a
+   definition list and bars. */
 .build-card__objective-scores {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 10px 16px;
   margin-top: 16px;
 }
 
@@ -1989,18 +1992,22 @@ svg {
   font-size: var(--text-xs);
 }
 
+/* Meter: the unfilled track is a lighter step of the same ramp so the state
+   reads across the whole bar, and the fill is solid — a gradient is decoration
+   that competes with the value. Rounded at the data end, square at the baseline. */
 .score-meter__track {
-  height: 7px;
+  height: 6px;
   overflow: hidden;
   border-radius: var(--radius-pill);
-  background: #e8e9e3;
+  background: var(--forest-100);
 }
 
 .score-meter__track > span {
   display: block;
   height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, var(--forest), #46a984);
+  border-radius: 0 4px 4px 0;
+  background: var(--forest-600);
+  transition: width 200ms ease;
 }
 
 .score-meter--compact .score-meter__track {
@@ -5834,4 +5841,15 @@ svg {
 .score-value,
 .tabs__hint {
   font-variant-numeric: tabular-nums;
+}
+
+
+/* A large standalone value uses the font's proportional figures — tabular-nums
+   gives every digit the width of a zero, which reads loose at display sizes. */
+.overall-score strong,
+.hero-figure {
+  font-variant-numeric: proportional-nums;
+  font-size: var(--text-3xl);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }
