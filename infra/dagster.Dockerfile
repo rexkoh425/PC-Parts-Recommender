@@ -1,4 +1,4 @@
-FROM python:3.12-slim AS runtime
+FROM python:3.14-slim AS runtime
 
 # Patch base-image OS packages. The published python:3.12-slim tag lags Debian
 # security updates, which the container scan reports as fixed HIGH advisories.
