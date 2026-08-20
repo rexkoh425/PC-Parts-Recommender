@@ -398,9 +398,12 @@ test("submits supported availability, build-count, and profile controls", async 
   });
 
   await page.goto("/");
+  // Build options live on the Tuning tab now that the form is tabbed.
+  await page.getByRole("tab", { name: /Tuning/ }).click();
   await page.getByLabel("Maximum build options").selectOption("3");
   await page.getByRole("checkbox", { name: "Best value" }).uncheck();
   await page.getByRole("checkbox", { name: "Lowest power" }).check();
+  await page.getByRole("tab", { name: /Requirements/ }).click();
   await page.getByRole("checkbox", { name: /In-stock offers only/ }).uncheck();
   await page.getByTestId("generate-builds").click();
 

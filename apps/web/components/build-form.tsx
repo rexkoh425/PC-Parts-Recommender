@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Tabs } from "@/components/tabs";
 import { generateBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
   defaultBuildFormValues,
@@ -53,6 +54,26 @@ function FieldError({ id, message }: { id: string; message?: string }) {
       {message}
     </p>
   );
+}
+
+/**
+ * Which fields belong to which tab, so a validation error surfaces as a count on
+ * the tab that owns it rather than hiding inside a collapsed panel.
+ */
+const STEP_FIELDS = {
+  budget: [
+    "budget_sgd",
+    "performance_target",
+    "secondary_workload",
+    "primary_weight_percent",
+  ],
+  requirements: ["minimum_gpu_vram_gb", "minimum_memory_gb", "storage_gb"],
+  tuning: ["max_builds", "requested_profiles"],
+} as const;
+
+function stepErrorCount(errors: BuildFormErrors, fields: readonly string[]): string {
+  const count = fields.filter((field) => Boolean(errors[field as keyof BuildFormErrors])).length;
+  return count ? String(count) : "";
 }
 
 export function BuildForm() {
@@ -150,6 +171,15 @@ export function BuildForm() {
 
       <div className="brief-layout">
         <div className="brief-layout__form">
+          <Tabs
+            label="Build request steps"
+            className="form-tabs"
+            items={[
+              {
+                id: "budget",
+                label: "Budget & workload",
+                hint: stepErrorCount(errors, STEP_FIELDS.budget) || undefined,
+                content: (
           <fieldset className="form-section" disabled={submitting}>
             <legend>
               <span>01</span>
@@ -291,7 +321,13 @@ export function BuildForm() {
               />
             </div>
           </fieldset>
-
+                ),
+              },
+              {
+                id: "requirements",
+                label: "Requirements",
+                hint: stepErrorCount(errors, STEP_FIELDS.requirements) || undefined,
+                content: (
           <fieldset className="form-section" disabled={submitting}>
             <legend>
               <span>02</span>
@@ -410,7 +446,13 @@ export function BuildForm() {
               disabled={submitting}
             />
           </fieldset>
-
+                ),
+              },
+              {
+                id: "tuning",
+                label: "Tuning",
+                hint: stepErrorCount(errors, STEP_FIELDS.tuning) || undefined,
+                content: (
           <fieldset className="form-section" disabled={submitting}>
             <legend>
               <span>03</span>
@@ -549,6 +591,10 @@ export function BuildForm() {
               <FieldError id="form-error" message={errors.form} />
             </details>
           </fieldset>
+                ),
+              },
+            ]}
+          />
         </div>
 
         <aside className="brief-summary" aria-label="Build brief summary">

@@ -13,6 +13,7 @@ import {
   trackInteraction,
   USING_DEMO_DATA,
 } from "@/lib/api";
+import { Tabs } from "@/components/tabs";
 import { formatSignedDelta, summarizeCompatibilityChecks } from "@/lib/catalogue";
 import {
   categoryLabels,
@@ -384,6 +385,15 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
         <div className="detail-main">
           <BuildBudgetBreakdown build={build} demo={USING_DEMO_DATA} />
 
+          <Tabs
+            label="Build detail"
+            className="detail-tabs"
+            items={[
+              {
+                id: "components",
+                label: "Components",
+                hint: String(build.components.length),
+                content: (
           <section className="detail-section" aria-labelledby="components-heading">
             <div className="section-heading">
               <div>
@@ -490,7 +500,12 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
               </table>
             </div>
           </section>
-
+                ),
+              },
+              {
+                id: "performance",
+                label: "Performance",
+                content: (
           <section className="detail-section" aria-labelledby="performance-heading">
             <div className="section-heading">
               <div>
@@ -546,7 +561,13 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
               </div>
             )}
           </section>
-
+                ),
+              },
+              {
+                id: "compatibility",
+                label: "Compatibility",
+                hint: String(checks.length),
+                content: (
           <section className="detail-section" aria-labelledby="compatibility-heading">
             <div className="section-heading">
               <div>
@@ -601,6 +622,10 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
               </div>
             )}
           </section>
+                ),
+              },
+            ]}
+          />
         </div>
 
         <aside className="build-summary-card" aria-label="Build summary">
