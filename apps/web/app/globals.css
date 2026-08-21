@@ -6441,3 +6441,18 @@ h1 {
 .field-grid > .field {
   margin-top: 0;
 }
+
+/* min-height alone could not shrink these: it is a floor, and the controls
+   were computing to 52-56px from padding plus a 1.6 body line-height. Setting
+   the padding and leading is what actually sizes a control. */
+.field input,
+.field select,
+.product-picker input[type="search"] {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 1.4;
+}
+
+.field select {
+  padding-right: 40px;
+}
