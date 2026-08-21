@@ -5983,3 +5983,7 @@ svg {
   line-height: 1.6;
   color: var(--forest-600);
 }
+
+.price-basis--manufacturer_list {
+  color: var(--state-pass);
+}
