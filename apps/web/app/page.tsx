@@ -54,7 +54,7 @@ export default function HomePage() {
         <div className="shell method-strip__inner">
           <div><span>01</span><strong>Search</strong><small>25,666 parts, by name and by meaning</small></div>
           <div><span>02</span><strong>Check</strong><small>Every part against every other</small></div>
-          <div><span>03</span><strong>Rank</strong><small>Scored on your work, not benchmarks</small></div>
+          <div><span>03</span><strong>Rank</strong><small>Scored against your workload</small></div>
           <div><span>04</span><strong>Optimise</strong><small>The best whole machine for the money</small></div>
         </div>
       </section>
@@ -74,10 +74,10 @@ export default function HomePage() {
         <div className="evidence-section__heading">
           <div>
             <p className="eyebrow">How it was built</p>
-            <h2 id="evidence-title">Real scale, not a toy project.</h2>
+            <h2 id="evidence-title">What it runs on.</h2>
           </div>
           <p>
-            Every number below is checked into the repository and can be opened.
+            Each figure comes from a file in the repository.
           </p>
         </div>
         <div className="evidence-stat-grid">

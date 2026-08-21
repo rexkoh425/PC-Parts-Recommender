@@ -183,7 +183,7 @@ export function SavedScreen() {
             ) : (
               <div className="saved-comparison__empty" role="status">
                 <strong>Select two builds below to reveal the comparison table.</strong>
-                <p>Selection never changes or re-ranks the saved generation-time snapshots.</p>
+                <p>Saved builds stay exactly as they were when you saved them.</p>
               </div>
             )}
 

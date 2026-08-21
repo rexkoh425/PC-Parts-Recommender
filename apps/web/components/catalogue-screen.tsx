@@ -119,7 +119,7 @@ function ProductResultCard({
       <p className="catalogue-card__boundary">
         {USING_DEMO_DATA
           ? "Illustrative demo record; no live retailer connection."
-          : "Availability and price are stored observations, not live retailer guarantees."}
+          : "Availability and price are recorded observations."}
       </p>
       <Link
         className="button button--secondary"
@@ -448,7 +448,7 @@ export function CatalogueScreen({
           />
           <span>
             <strong>{USING_DEMO_DATA ? "Stock filter unavailable in demo" : "Observed in stock only"}</strong>
-            <small>{USING_DEMO_DATA ? "No retailer stock feed is connected" : "Latest stored snapshot; never a live guarantee"}</small>
+            <small>{USING_DEMO_DATA ? "No retailer stock feed is connected" : "Last recorded price"}</small>
           </span>
         </label>
         <button className="button button--primary" type="submit">Search catalogue</button>

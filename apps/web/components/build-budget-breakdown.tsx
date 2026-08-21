@@ -27,7 +27,7 @@ export function BuildBudgetBreakdown({
         </div>
         <p>
           {demo
-            ? "Prices from August 2026, not a live retailer feed."
+            ? "Prices recorded August 2026."
             : "Generation-time listing observations; verify the retailer before purchase."}
         </p>
       </div>
@@ -78,7 +78,7 @@ export function BuildBudgetBreakdown({
       {hasDifference && (
         <p className="budget-breakdown__difference" role="note">
           The parts add up to {formatSgd(componentSubtotal)}, {formatSgd(Math.abs(reportedDifference))} away
-          from the build total shown. We show the difference rather than quietly assigning it to shipping.
+          from the build total shown.
         </p>
       )}
     </section>

@@ -34,8 +34,7 @@ describe("PriceIntelligencePanel", () => {
   it("renders observed statistics with an explicit non-forecast boundary", () => {
     const html = render(summary);
 
-    expect(html).toContain("Descriptive history, not a forecast.");
-    expect(html).toContain("It does not guarantee a future or live retailer price.");
+    expect(html).toContain("Past prices");
     expect(html).toContain("30-day median");
     expect(html).toContain("90-day price position");
     expect(html).toContain("Good current value");

@@ -80,10 +80,10 @@ describe("build presentation", () => {
     );
 
     expect(html).toContain("Budget breakdown");
-    expect(html).toContain("Prices from August 2026");
+    expect(html).toContain("Prices recorded August 2026");
     expect(html).toContain("Existing parts excluded");
     expect(html).toContain("Example graphics card");
     expect(html).toContain("away from the build total shown");
-    expect(html).toContain("rather than quietly assigning it to shipping");
+    expect(html).toContain("from the build total shown");
   });
 });

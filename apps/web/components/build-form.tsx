@@ -186,7 +186,7 @@ export function BuildForm() {
               Set the budget and workload
             </legend>
             <p className="section-intro">
-              We optimise the complete build, not one headline component.
+              Every part is chosen to work with the rest of the machine.
             </p>
 
             <div className="field field--budget">
@@ -312,8 +312,8 @@ export function BuildForm() {
                 }
               />
               <p className="field-help" id="performance-target-help">
-                Describe a measurable outcome to focus retrieval and ranking. Results show the
-                available evidence; this is not a guaranteed benchmark threshold.
+                Something specific you want to hit, like 100 fps at 1440p. We will show the
+                evidence we have for it.
               </p>
               <FieldError
                 id="performance-target-error"
@@ -334,7 +334,7 @@ export function BuildForm() {
               Lock requirements
             </legend>
             <p className="section-intro">
-              These are hard constraints. We will never quietly trade them away.
+              Builds that miss any of these are excluded.
             </p>
             <div className="field-grid field-grid--three">
               <div className="field">
@@ -459,7 +459,7 @@ export function BuildForm() {
               Tune the recommendation
             </legend>
             <p className="section-intro">
-              Preferences influence ranking, but never override compatibility.
+              Preferences order the results once compatibility is settled.
             </p>
             <div className="field-grid field-grid--three">
               <div className="field">
