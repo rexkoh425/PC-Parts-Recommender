@@ -1,49 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { getFreshness, USING_DEMO_DATA } from "@/lib/api";
-import { formatFreshnessSummary } from "@/lib/format";
-import type { FreshnessSummary } from "@/lib/types";
+import { USING_DEMO_DATA } from "@/lib/api";
 
 export function SiteHeader() {
-  const [freshness, setFreshness] = useState<FreshnessSummary | null>(null);
-  const [offline, setOffline] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    const controller = new AbortController();
-    getFreshness({ signal: controller.signal })
-      .then((result) => {
-        if (active) setFreshness(result);
-      })
-      .catch(() => {
-        if (active) setOffline(true);
-      });
-    return () => {
-      active = false;
-      controller.abort();
-    };
-  }, []);
-
-  const freshnessLabel = USING_DEMO_DATA
-    ? "Curated demo data"
-    : offline
-      ? "Data service offline"
-      : formatFreshnessSummary(freshness);
-  const freshnessState = USING_DEMO_DATA
-    ? "demo"
-    : offline
-      ? "offline"
-      : freshness?.status ?? "checking";
-
   return (
     <header className="site-header">
       {USING_DEMO_DATA && (
         <div className="demo-banner" role="status">
           <div className="shell demo-banner__inner">
-            <strong>Public portfolio demo</strong>
-            <span>Curated sample components and illustrative SGD prices. Live retailer stock is not connected.</span>
+            <strong>Portfolio demo</strong>
+            <span>Real parts, real prices from August 2026 — not live retailer stock.</span>
           </div>
         </div>
       )}
@@ -61,20 +28,15 @@ export function SiteHeader() {
         </Link>
 
         <nav className="header-nav" aria-label="Primary navigation">
-          <span className={`freshness-chip freshness-chip--${freshnessState}`}>
-            <span className="freshness-chip__dot" aria-hidden="true" />
-            {freshnessLabel}
-          </span>
           <Link className="header-nav__secondary" href="/#method">Method</Link>
           <Link className="header-nav__secondary header-nav__evidence" href="/#evidence">
             Evidence
           </Link>
-          <Link className="header-nav__secondary" href="/#data-status">Data status</Link>
           <Link href="/catalogue">Catalogue</Link>
           <Link className="header-nav__comparison" href="/compare">
             Compare
           </Link>
-          <Link href="/saved">Saved builds</Link>
+          <Link href="/saved">Saved</Link>
         </nav>
       </div>
     </header>

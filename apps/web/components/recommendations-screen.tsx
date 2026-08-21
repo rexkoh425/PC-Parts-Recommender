@@ -234,9 +234,7 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
         <span aria-hidden="true">i</span>
         <p>
           <strong>Scores are relative to this request.</strong>{" "}
-          They compare the compatible shortlist; they are not absolute product ratings.
-          {response.data_version.startsWith("portfolio-demo-") &&
-            " This public demo uses illustrative prices and deterministic sample scores."}
+          They compare the builds in this shortlist, not products in general.
         </p>
       </div>
 

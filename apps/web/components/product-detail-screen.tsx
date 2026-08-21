@@ -308,7 +308,7 @@ export function ProductDetailScreen({
                     <div className="benchmark-card__topline"><span className={`evidence-badge evidence-badge--${benchmark.basis}`}>{benchmark.basis === "observed" ? "Observed" : "Predicted"}</span><small>{humanizeAttributeKey(benchmark.workload)}</small></div>
                     <h3>{benchmark.benchmark_name}</h3>
                     <strong className="benchmark-card__score">{benchmark.score.toLocaleString("en-SG")} <small>{benchmark.unit}</small></strong>
-                    <dl><div><dt>Direction</dt><dd>{benchmark.higher_is_better ? "Higher is better" : "Lower is better"}</dd></div>{benchmark.model_version && <div><dt>Model</dt><dd>{benchmark.model_version}</dd></div>}</dl>
+                    <dl><div><dt>Direction</dt><dd>{benchmark.higher_is_better ? "Higher is better" : "Lower is better"}</dd></div></dl>
                     <footer><span>{formatEvidenceTimestamp(benchmark.observed_at)}</span>{benchmark.source_url && <a href={benchmark.source_url} target="_blank" rel="noreferrer" aria-label={`Open source for ${benchmark.benchmark_name}`}>Source ↗</a>}</footer>
                   </article>
                 ))}
@@ -350,16 +350,6 @@ export function ProductDetailScreen({
               <span className={`confidence-track--${confidence.tone}`} style={{ width: `${confidence.percent ?? 0}%` }} />
             </div>
             <p>Confidence reflects extraction and source support, not product quality.</p>
-          </div>
-
-          <div className="evidence-rail-card evidence-rail-card--versions">
-            <p className="profile-kicker">Evidence versions</p>
-            <dl>
-              <div><dt>Product data</dt><dd>{product.data_version}</dd></div>
-              <div><dt>Prices</dt><dd>{prices?.data_version ?? "Unavailable"}</dd></div>
-              <div><dt>Performance</dt><dd>{benchmarks?.performance_model_version ?? "Unavailable"}</dd></div>
-              <div><dt>Reviews</dt><dd>{reviews?.data_version ?? "Unavailable"}</dd></div>
-            </dl>
           </div>
 
           {(product.source_attributions?.length ?? 0) > 0 && (
