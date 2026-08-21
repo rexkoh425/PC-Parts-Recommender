@@ -5987,3 +5987,62 @@ svg {
 .price-basis--manufacturer_list {
   color: var(--state-pass);
 }
+
+/* ---------------------------------------------------------------------------
+   Provenance, folded away
+   The evidence ledger used to shout four full SHA-256 digests and raw repo
+   paths at every visitor. The rigour still matters for anyone who wants it, so
+   it stays on the page — collapsed, quiet, and opt-in.
+--------------------------------------------------------------------------- */
+
+details.evidence-ledger {
+  margin-top: 40px;
+  border-top: 1px solid var(--forest-100);
+  padding-top: 20px;
+}
+
+details.evidence-ledger > summary {
+  cursor: pointer;
+  width: fit-content;
+  font-size: var(--text-sm);
+  color: var(--forest-600);
+  list-style: none;
+}
+
+details.evidence-ledger > summary::-webkit-details-marker { display: none; }
+
+details.evidence-ledger > summary::before {
+  content: "+";
+  display: inline-block;
+  width: 1.1em;
+  color: var(--forest-400);
+}
+
+details.evidence-ledger[open] > summary::before { content: "−"; }
+
+details.evidence-ledger > summary:hover { color: var(--forest-800); }
+
+details.evidence-ledger > ol {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 16px;
+}
+
+details.evidence-ledger > ol > li {
+  display: grid;
+  gap: 2px;
+  max-width: var(--measure-wide);
+}
+
+details.evidence-ledger code {
+  font-size: var(--text-2xs);
+  color: var(--forest-600);
+  overflow-wrap: anywhere;
+}
+
+details.evidence-ledger small {
+  font-size: var(--text-2xs);
+  color: var(--forest-400);
+}

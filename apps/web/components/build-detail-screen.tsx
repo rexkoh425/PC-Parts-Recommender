@@ -114,10 +114,13 @@ function workloadLabel(workload: string): string {
     : humanizeToken(workload);
 }
 
+// Only an estimate earns a visible label. A sourced price is just a price;
+// badging every row turned the table into a provenance audit rather than a
+// parts list someone reads.
 const priceBasisLabel = {
-  launch_msrp: "vendor MSRP",
-  manufacturer_list: "vendor list price",
-  street_aug_2026: "retail Aug 2026",
+  launch_msrp: "",
+  manufacturer_list: "",
+  street_aug_2026: "",
   estimate: "estimate",
 } as const;
 
@@ -514,7 +517,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                       </td>
                       <td data-label="Price">
                         <strong>{component.already_owned ? "Owned" : formatSgd(component.price_sgd)}</strong>
-                        {!component.already_owned && component.price_basis ? (
+                        {!component.already_owned && component.price_basis && priceBasisLabel[component.price_basis] ? (
                           <span
                             className={`price-basis price-basis--${component.price_basis}`}
                             title={priceBasisDetail(component)}
@@ -539,11 +542,8 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                 </tbody>
               </table>
               <p className="price-note">
-                Memory and storage prices reflect the 2026 DRAM and NAND shortage,
-                which pushed DDR5 to roughly four times and NAND to roughly twice
-                their late-2025 levels as fabrication capacity moved to AI memory.
-                Figures are dated, converted at 1&nbsp;USD&nbsp;=&nbsp;1.2775&nbsp;SGD,
-                and are not live quotes.
+                RAM and SSD prices are high because of the 2026 memory shortage. Figures are
+                from August 2026 and converted from USD.
               </p>
             </div>
           </section>

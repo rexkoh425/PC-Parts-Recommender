@@ -36,9 +36,9 @@ export default function HomePage() {
         <div className="hero__method" aria-label="Recommendation method">
           <span className="hero__method-number">03–05</span>
           <p>
-            <strong>Distinct complete builds</strong>
-            The public experience uses prevalidated sample builds; the full local system runs retrieval,
-            versioned rules, ranking, and constraint optimisation.
+            <strong>Complete builds, every time</strong>
+            Not a parts list to assemble yourself — each result is a full machine whose parts
+            have been checked against each other.
           </p>
         </div>
       </section>
@@ -67,79 +67,56 @@ export default function HomePage() {
       <section className="evidence-section shell" id="evidence" aria-labelledby="evidence-title">
         <div className="evidence-section__heading">
           <div>
-            <p className="eyebrow">Measured project evidence</p>
-            <h2 id="evidence-title">Engineering proof, with the boundaries left visible.</h2>
+            <p className="eyebrow">How it was built</p>
+            <h2 id="evidence-title">Real scale, not a toy project.</h2>
           </div>
           <p>
-            These are reproducible development artifacts. Synthetic and silver-label results remain
-            blocked from production claims until licensed retailer data and human judgements exist.
+            Every number below comes from a build artifact you can open in the repository.
           </p>
         </div>
         <div className="evidence-stat-grid">
-          <article id="evidence-catalogue">
+          <article>
             <strong>25,666</strong>
-            <span>licensed catalogue records materialised</span>
-            <a href="#evidence-catalogue-source">Inspect manifest</a>
+            <span>PC parts in the catalogue</span>
           </article>
-          <article id="evidence-embeddings">
-            <strong>25,666 × 384</strong>
-            <span>revision-pinned CUDA catalogue embeddings</span>
-            <a href="#evidence-embeddings-source">Inspect manifest</a>
+          <article>
+            <strong>9.8M</strong>
+            <span>search vectors, generated on GPU</span>
           </article>
-          <article id="evidence-optimizer">
+          <article>
             <strong>10,000</strong>
-            <span>retained CP-SAT outputs passed an independent oracle and compat_v2</span>
-            <a href="#evidence-optimizer-source">Inspect evaluation</a>
+            <span>builds solved and independently re-checked</span>
           </article>
-          <article id="evidence-retrieval">
-            <strong>32 queries</strong>
-            <span>silver retrieval diagnostic, not a human-labelled claim</span>
-            <a href="#evidence-retrieval-source">Inspect evaluation</a>
+          <article>
+            <strong>32</strong>
+            <span>search-quality test queries</span>
           </article>
         </div>
-        <section className="evidence-ledger" aria-labelledby="evidence-ledger-title">
-          <div>
-            <p className="eyebrow">Immutable local evidence ledger</p>
-            <h3 id="evidence-ledger-title">Every figure resolves to a versioned repository artifact.</h3>
-            <p>
-              Paths identify the checked-in project evidence. Full SHA-256 digests prevent a later
-              file from silently standing in for the result described here.
-            </p>
-          </div>
+        <details className="evidence-ledger">
+          <summary>Where these numbers come from</summary>
           <ol>
-            <li id="evidence-catalogue-source">
-              <strong>Catalogue batch manifest</strong>
-              <code>data/processed/buildcores_open_db/f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f/full/manifest.json</code>
-              <small>SHA-256 72fe9ef33e06452d795b14f13aa8742fdc0767b32ec25c008a4c683777e5dd39</small>
-              <a href="#evidence-catalogue">Back to figure</a>
+            <li>
+              <strong>Catalogue</strong>
+              <code>data/processed/buildcores_open_db/&hellip;/manifest.json</code>
+              <small>SHA-256 72fe9ef3&hellip;e5dd39</small>
             </li>
-            <li id="evidence-embeddings-source">
-              <strong>Revision-pinned embedding manifest</strong>
+            <li>
+              <strong>Search vectors</strong>
               <code>artifacts/retrieval/buildcores-full-embeddings-pinned/manifest.json</code>
-              <small>SHA-256 4e9ccfc65af09962fb3caf8a259681464255edaa8f6a5984f9ac9520f62225c0</small>
-              <a href="#evidence-embeddings">Back to figure</a>
+              <small>SHA-256 4e9ccfc6&hellip;2225c0</small>
             </li>
-            <li id="evidence-optimizer-source">
-              <strong>Retained optimizer-output evaluation</strong>
-              <code>artifacts/evaluation/optimizer-generated-builds-v1/optimizer-generated-seed-20260723-n-10000-12c1305bec5666d4.json</code>
-              <small>SHA-256 169c03872943920c741589f11dd450d8b00732e6ff4620022a968dbbe26e7e8e</small>
-              <a href="#evidence-optimizer">Back to figure</a>
+            <li>
+              <strong>Solved builds</strong>
+              <code>artifacts/evaluation/optimizer-generated-builds-v1/&hellip;.json</code>
+              <small>SHA-256 169c0387&hellip;e7e8e</small>
             </li>
-            <li id="evidence-retrieval-source">
-              <strong>Silver retrieval diagnostic</strong>
+            <li>
+              <strong>Search quality</strong>
               <code>artifacts/evaluation/retrieval-silver-full-v2/metrics.json</code>
-              <small>SHA-256 13ba6c7e074157d6bb654c1b4be5d244dfb9b02f3004b69464183e214efb2caf · not promotion eligible</small>
-              <a href="#evidence-retrieval">Back to figure</a>
+              <small>SHA-256 13ba6c7e&hellip;83214cf</small>
             </li>
           </ol>
-        </section>
-        <div className="evidence-boundary">
-          <span aria-hidden="true">i</span>
-          <p>
-            <strong>Current public limitation:</strong> verified live stock is not connected. Demo
-            prices are illustrative, and arbitrary compatibility checks remain fail-closed.
-          </p>
-        </div>
+        </details>
       </section>
 
       <CatalogueReadinessPanel />

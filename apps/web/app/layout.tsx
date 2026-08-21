@@ -52,7 +52,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
             <p>
               <strong>BuildSignal</strong> ranks complete systems, not sponsored parts.
             </p>
-            <p>Public demo prices are illustrative · Compatibility remains fail-closed · Predictions are labelled</p>
+            <p>A portfolio demo. Prices are real but dated, not live retailer quotes.</p>
           </div>
         </footer>
       </body>
