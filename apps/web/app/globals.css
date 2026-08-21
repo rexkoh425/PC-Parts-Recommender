@@ -5927,3 +5927,27 @@ svg {
 .eyebrow {
   max-width: var(--measure-wide);
 }
+
+/* An MPN is the one string that identifies a part unambiguously across
+   retailers, so it is set in a mono face and made selectable rather than
+   buried in the attribute table. */
+.record-mpn {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.record-mpn > span {
+  font-size: var(--text-2xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--forest-600);
+}
+
+.record-mpn > code {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: var(--text-xs);
+  color: var(--forest-800);
+  user-select: all;
+}
