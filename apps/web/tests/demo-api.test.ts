@@ -9,7 +9,7 @@ import type { BuildRequest } from "../lib/types";
 
 function request(overrides: Partial<BuildRequest> = {}): BuildRequest {
   return {
-    budget_sgd: 2500,
+    budget_sgd: 3500,
     workloads: [
       { name: "local_ai", weight: 0.6 },
       { name: "gaming_1440p", weight: 0.4 },
@@ -41,7 +41,7 @@ describe("public demo engine", () => {
     expect(new Set(response.builds.map((build) => build.profile)).size).toBe(5);
     for (const build of response.builds) {
       expect(build.components).toHaveLength(8);
-      expect(build.total_price_sgd).toBeLessThanOrEqual(2500);
+      expect(build.total_price_sgd).toBeLessThanOrEqual(3500);
       expect(build.compatibility_status).toBe("pass");
     }
   });

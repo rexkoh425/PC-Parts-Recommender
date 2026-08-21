@@ -32,7 +32,10 @@ export interface BuildFormValues {
 export type BuildFormErrors = Partial<Record<keyof BuildFormValues | "form", string>>;
 
 export const defaultBuildFormValues: BuildFormValues = {
-  budget_sgd: 2500,
+  // Raised from 2500 in Aug 2026: the DRAM/NAND shortage put roughly S$500
+  // of memory and S$470 of storage into a mid-range build, so 2500 no longer
+  // clears a complete one in this catalogue.
+  budget_sgd: 3500,
   performance_target: "",
   primary_workload: "local_ai",
   secondary_workload: "gaming_1440p",
