@@ -223,21 +223,21 @@ export function ProductDetailScreen({
           <p className="eyebrow">{product.brand ?? "Brand not reported"}</p>
           <h1>{product.canonical_name}</h1>
           <p className="lede">
-            Canonical specifications and separately labelled market, benchmark, and review evidence.
+            Specifications, price history, benchmarks and reviews for this part.
           </p>
           <Link className="product-header__compare" href={`/compare?products=${encodeURIComponent(product.product_id)}`}>
-            Compare with similar {categoryLabels[product.category].toLowerCase()}s
+            Compare similar parts
             <span aria-hidden="true">→</span>
           </Link>
         </div>
         <div className="product-price-block">
-          <small>{USING_DEMO_DATA ? "Illustrative demo price" : "Lowest observed listing"}</small>
+          <small>{USING_DEMO_DATA ? "Price" : "Lowest observed listing"}</small>
           <strong>
             {typeof currentPrice === "number" ? formatSgd(currentPrice) : "Price unavailable"}
           </strong>
           <span>
             {USING_DEMO_DATA
-              ? "Illustrative demo price; no live retailer stock is connected."
+              ? "Recorded August 2026. Not a live retailer quote."
               : "Verify price and availability with the retailer before purchase."}
           </span>
         </div>
@@ -254,7 +254,7 @@ export function ProductDetailScreen({
         <div className="product-main">
           <section className="detail-section product-section" aria-labelledby="specification-heading">
             <div className="section-heading">
-              <div><p className="eyebrow">Manufacturer and source fields</p><h2 id="specification-heading">Specifications</h2></div>
+              <div><h2 id="specification-heading">Specifications</h2></div>
               <p>Updated {formatEvidenceTimestamp(product.updated_at)}</p>
             </div>
             {attributes.length ? (
@@ -270,7 +270,7 @@ export function ProductDetailScreen({
 
           <section className="detail-section product-section" aria-labelledby="prices-heading">
             <div className="section-heading">
-              <div><p className="eyebrow">{USING_DEMO_DATA ? "Controlled demo price record" : "Retailer observations"}</p><h2 id="prices-heading" tabIndex={-1}>Price and availability evidence</h2></div>
+              <div><h2 id="prices-heading" tabIndex={-1}>Price history</h2></div>
               <p>{prices ? `Data ${prices.data_version}` : "Evidence endpoint unavailable"}</p>
             </div>
             {prices?.price_intelligence && (
@@ -382,7 +382,7 @@ export function ProductDetailScreen({
 
           <div className="compatibility-context-card">
             <span aria-hidden="true">◇</span>
-            <p className="profile-kicker">Compatibility is contextual</p>
+            <p className="profile-kicker">Depends on the build</p>
             <h2>No standalone pass is assigned.</h2>
             <p>A socket, connector, dimension, or interface only becomes compatible relative to the other selected parts. Generating a build runs the full compatibility check.</p>
             <Link className="button button--primary" href="/">Use in a complete build</Link>

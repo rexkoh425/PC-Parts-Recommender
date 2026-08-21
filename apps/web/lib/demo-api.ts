@@ -893,7 +893,7 @@ export function searchDemoProducts(request: ProductSearchRequest): ProductSearch
       source_count: null,
       category_count: new Set(products.map((product) => product.category)).size,
         as_of: "2026-07-22T00:00:00.000Z",
-        scope_label: "Controlled illustrative demo",
+        scope_label: "Parts in this demo",
         source_attributions: [],
     },
   };

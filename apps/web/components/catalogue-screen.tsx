@@ -105,7 +105,7 @@ function ProductResultCard({
         {product.model && <p>{product.model}</p>}
       </div>
       <div className="catalogue-card__price">
-        <small>{USING_DEMO_DATA ? "Illustrative demo price" : "Lowest observed listing"}</small>
+        <small>{USING_DEMO_DATA ? "Price" : "Lowest observed listing"}</small>
         <strong>{priceKnown ? formatSgd(product.lowest_price_sgd as number) : "Price unavailable"}</strong>
       </div>
       {product.compatibility_status && (
@@ -382,11 +382,11 @@ export function CatalogueScreen({
     <main className="shell catalogue-page">
       <header className="catalogue-header">
         <div>
-          <p className="eyebrow">Canonical product catalogue</p>
-          <h1>Inspect the market evidence.</h1>
+          <p className="eyebrow">All parts</p>
+          <h1>Browse the catalogue.</h1>
           <p className="lede">
-            Search canonical components across retailer observations, then inspect specifications,
-            price history, benchmarks, and review evidence before using them in a build.
+            Every part we can recommend, with its specifications, price history, benchmarks
+            and reviews.
           </p>
         </div>
         <div className="catalogue-header__mark" aria-hidden="true">

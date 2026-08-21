@@ -65,7 +65,7 @@ describe("catalogue evidence presentation", () => {
     expect(second.products).toHaveLength(1);
     expect(second.products[0]?.product_id).not.toBe(first.products[0]?.product_id);
     expect(first.pagination).toMatchObject({ page: 1, page_size: 1, has_next: true });
-    expect(first.coverage?.scope_label).toBe("Controlled illustrative demo");
+    expect(first.coverage?.scope_label).toBe("Parts in this demo");
     expect(first.coverage?.canonical_products).toBeGreaterThan(1);
   });
 
