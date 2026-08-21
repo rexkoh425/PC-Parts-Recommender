@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { categoryLabels, formatFreshness, formatScore, formatSgd, profileLabels } from "../lib/format";
+import { categoryLabels, formatScore, formatSgd, profileLabels } from "../lib/format";
 import type { BuildSummary, ComponentCategory } from "../lib/types";
 import { ScoreMeter } from "./score-meter";
 import { StatusPill } from "./status-pill";
@@ -87,11 +87,6 @@ export function BuildCard({
         )}
       </div>
 
-
-      <div className="build-card__meta">
-        <span>Generated {formatFreshness(build.generated_at).replace("Updated ", "")}</span>
-        <span>{build.data_version ? `Data ${build.data_version}` : "Versioned evidence"}</span>
-      </div>
 
       <div className="build-card__actions">
         <Link
