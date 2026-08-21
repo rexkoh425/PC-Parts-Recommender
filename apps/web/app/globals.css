@@ -5916,6 +5916,7 @@ svg {
   max-width: var(--measure);
 }
 
+.evidence-ledger li,
 .evidence-section li,
 .catalogue-readiness li {
   max-width: var(--measure-wide);
