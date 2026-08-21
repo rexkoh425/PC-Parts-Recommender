@@ -7310,3 +7310,27 @@ dd,
 .overall-score strong {
   text-wrap: nowrap;
 }
+
+/* Catalogue card rhythm.
+   Product names run from 31 to 122 characters, so cards were coming out at
+   360, 374 and 398px in the same grid. Clamping the name to two lines gives
+   every card one shape; the full name stays in the title attribute and in the
+   record page. */
+.catalogue-card__identity h2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Absence should recede, not occupy the figure slot. */
+.catalogue-card__price--absent {
+  border-top-color: color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+.catalogue-card__price--absent small {
+  color: var(--ink-faint);
+  font-style: italic;
+  letter-spacing: 0;
+  text-transform: none;
+}

@@ -103,14 +103,23 @@ function ProductResultCard({
       </div>
       <div className="catalogue-card__identity">
         <small>{product.brand ?? "Brand not reported"}</small>
-        <h2>{product.canonical_name}</h2>
+        <h2 title={product.canonical_name}>{product.canonical_name}</h2>
         {product.model && !product.canonical_name.includes(product.model) && (
           <p>{product.model}</p>
         )}
       </div>
-      <div className="catalogue-card__price">
-        <small>{USING_DEMO_DATA ? "Price" : "Lowest observed listing"}</small>
-        <strong>{priceKnown ? formatSgd(product.lowest_price_sgd as number) : "Price unavailable"}</strong>
+      {/* A figure slot filled with "Price unavailable" on every card is dead
+          weight where the eye expects information. When there is no price,
+          say so once and quietly instead of shouting absence 24 times. */}
+      <div className={`catalogue-card__price${priceKnown ? "" : " catalogue-card__price--absent"}`}>
+        {priceKnown ? (
+          <>
+            <small>{USING_DEMO_DATA ? "Price" : "Lowest observed listing"}</small>
+            <strong>{formatSgd(product.lowest_price_sgd as number)}</strong>
+          </>
+        ) : (
+          <small>No price recorded</small>
+        )}
       </div>
       {product.compatibility_status && (
         <div className="catalogue-card__compatibility">
