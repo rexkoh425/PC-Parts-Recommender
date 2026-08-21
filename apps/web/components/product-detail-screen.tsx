@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import {
   getProduct,
@@ -41,6 +40,16 @@ export interface ProductEvidenceState {
   reviewsError?: string;
 }
 
+// Read the impression context straight off the URL rather than through
+// useSearchParams(). The value only ever feeds analytics, never markup, and
+// useSearchParams() opts its subtree out of static prerendering — which would
+// push these records back to client-only rendering, the exact problem the
+// server-side load above exists to fix.
+function readImpressionContext(): string | null {
+  if (typeof window === "undefined") return null;
+  return new URLSearchParams(window.location.search).get("impression");
+}
+
 function reasonFor(result: PromiseSettledResult<unknown>): string | undefined {
   if (result.status === "fulfilled") return undefined;
   return result.reason instanceof Error ? result.reason.message : "This evidence is unavailable.";
@@ -67,8 +76,6 @@ export function ProductDetailScreen({
    */
   initialState?: ProductEvidenceState | null;
 }) {
-  const searchParams = useSearchParams();
-  const impressionContext = searchParams.get("impression");
   const [state, setState] = useState<ProductEvidenceState | null>(initialState);
   const [error, setError] = useState("");
   const [retryKey, setRetryKey] = useState(0);
@@ -110,7 +117,7 @@ export function ProductDetailScreen({
       active = false;
       controller.abort();
     };
-  }, [impressionContext, initialState, productId, retryKey]);
+  }, [initialState, productId, retryKey]);
 
   const viewedProductId = state?.product.product_id;
   const viewedCategory = state?.product.category;
@@ -119,10 +126,10 @@ export function ProductDetailScreen({
     void trackInteraction({
       event_type: "component_viewed",
       session_id: getSessionId(),
-      impression_token: readProductImpression(viewedProductId, impressionContext),
+      impression_token: readProductImpression(viewedProductId, readImpressionContext()),
       metadata: { category: viewedCategory, surface: "catalogue_detail" },
     });
-  }, [impressionContext, viewedProductId, viewedCategory]);
+  }, [viewedProductId, viewedCategory]);
 
   const dataVersions = useMemo(() => {
     if (!state) return [];

@@ -32,6 +32,7 @@ import {
   getDemoReviews,
   replaceDemoComponent,
   searchDemoProducts,
+  demoProductIds,
 } from "./demo-api";
 import { apiBaseUrl, apiRequestTimeoutMs, usingDemoData } from "./runtime";
 import { readSavedBuilds } from "./saved-builds";
@@ -464,6 +465,16 @@ export async function searchProducts(
     },
     options,
   );
+}
+
+/**
+ * Product IDs that can be prerendered at build time.
+ *
+ * Empty against the live API: the catalogue is not known at build time there,
+ * so those routes stay server-rendered on demand.
+ */
+export function prerenderableProductIds(): string[] {
+  return USING_DEMO_DATA ? demoProductIds : [];
 }
 
 export function getProduct(
