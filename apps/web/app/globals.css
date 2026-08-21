@@ -6456,3 +6456,15 @@ h1 {
 .field select {
   padding-right: 40px;
 }
+
+/* The budget field carried `font-size: var(--text-lg) !important`, so it stayed
+   at 19px and 53px tall while every other control settled at 16px/44px. It is
+   the primary input and can sit a step above the rest, but not two. */
+.money-input input,
+.unit-input input {
+  font-size: var(--text-md) !important;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 1.4;
+  min-height: 44px;
+}
