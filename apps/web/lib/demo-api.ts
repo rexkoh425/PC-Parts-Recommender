@@ -93,9 +93,9 @@ const specUrls: Record<string, string> = {
   "gpu-rtx-4070tis-16":
     "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/",
   "mb-b650m-wifi":
-    "https://www.asus.com/us/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b650m-plus-wifi/",
+    "https://www.gigabyte.com/us/Motherboard/B650M-GAMING-PLUS-WIFI-rev-1x",
   "mb-b650-atx-wifi":
-    "https://www.asus.com/us/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b650-plus-wifi/",
+    "https://www.gigabyte.com/us/Motherboard/B650-EAGLE-AX-rev-10-11",
   "mb-x670-atx-wifi":
     "https://rog.asus.com/motherboards/rog-strix/rog-strix-x670e-a-gaming-wifi-model/",
   "mem-ddr5-32-5600":
@@ -215,11 +215,11 @@ const products: DemoProduct[] = [
   {
     product_id: "mb-b650m-wifi",
     category: "motherboard",
-    canonical_name: "ASUS TUF Gaming B650M-PLUS WiFi",
-    brand: "ASUS",
-    model: "TUF Gaming B650M-PLUS WiFi",
-    price_sgd: 280,
-    price_usd: 219.41,
+    canonical_name: "GIGABYTE B650M GAMING PLUS WIFI",
+    brand: "GIGABYTE",
+    model: "B650M GAMING PLUS WIFI",
+    price_sgd: 144,
+    price_usd: 112.99,
     price_basis: "street_aug_2026",
     price_source: "Newegg",
     performance: 72,
@@ -229,16 +229,16 @@ const products: DemoProduct[] = [
   {
     product_id: "mb-b650-atx-wifi",
     category: "motherboard",
-    canonical_name: "ASUS TUF Gaming B650-PLUS WiFi",
-    brand: "ASUS",
-    model: "TUF Gaming B650-PLUS WiFi",
-    price_sgd: 422,
-    price_usd: 329.98,
+    canonical_name: "GIGABYTE B650 EAGLE AX",
+    brand: "GIGABYTE",
+    model: "B650 EAGLE AX",
+    price_sgd: 258,
+    price_usd: 202.0,
     price_basis: "street_aug_2026",
     price_source: "Newegg",
     performance: 82,
     power_w: 50,
-    attributes: { socket: "AM5", chipset: "B650", memory_type: "DDR5", wifi: true, form_factor: "ATX", lan: "2.5 GbE", m2_slots: 3 },
+    attributes: { socket: "AM5", chipset: "B650", memory_type: "DDR5", wifi: true, form_factor: "ATX", lan: "2.5 GbE", m2_slots: 3, pcie_5_m2: true },
   },
   {
     product_id: "mb-x670-atx-wifi",
