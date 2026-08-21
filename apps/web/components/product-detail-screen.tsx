@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getProduct,
   getProductBenchmarks,
@@ -131,16 +131,6 @@ export function ProductDetailScreen({
     });
   }, [viewedProductId, viewedCategory]);
 
-  const dataVersions = useMemo(() => {
-    if (!state) return [];
-    return [...new Set([
-      state.product.data_version,
-      state.prices?.data_version,
-      state.benchmarks?.data_version,
-      state.reviews?.data_version,
-    ].filter((value): value is string => Boolean(value)))];
-  }, [state]);
-
   useEffect(() => {
     if (!state || typeof window === "undefined") return;
     const evidenceTarget = window.location.hash.slice(1);
@@ -195,7 +185,6 @@ export function ProductDetailScreen({
   }
 
   const { product, prices, benchmarks, reviews } = state;
-  const confidence = confidencePresentation(product.source_confidence);
   const currentPrice = prices?.current_lowest_price_sgd ?? product.lowest_price_sgd;
   const attributes = Object.entries(product.attributes).sort(([left], [right]) =>
     left.localeCompare(right),
@@ -243,13 +232,6 @@ export function ProductDetailScreen({
         </div>
       </header>
 
-      {dataVersions.length > 1 && (
-        <div className="notice-banner" role="status">
-          <span aria-hidden="true">i</span>
-          <p><strong>Evidence snapshots differ.</strong> Panels show their own data version so changes are not hidden.</p>
-        </div>
-      )}
-
       <div className="product-layout">
         <div className="product-main">
           <section className="detail-section product-section" aria-labelledby="specification-heading">
@@ -271,7 +253,7 @@ export function ProductDetailScreen({
           <section className="detail-section product-section" aria-labelledby="prices-heading">
             <div className="section-heading">
               <div><h2 id="prices-heading" tabIndex={-1}>Price history</h2></div>
-              <p>{prices ? `Data ${prices.data_version}` : "Evidence endpoint unavailable"}</p>
+              <p>{prices ? "" : "Price history is unavailable."}</p>
             </div>
             {prices?.price_intelligence && (
               <PriceIntelligencePanel intelligence={prices.price_intelligence} />
@@ -321,7 +303,7 @@ export function ProductDetailScreen({
           <section className="detail-section product-section" aria-labelledby="reviews-heading">
             <div className="section-heading">
               <div><p className="eyebrow">Permitted cited sources</p><h2 id="reviews-heading" tabIndex={-1}>Review evidence</h2></div>
-              <p>{reviews ? `Data ${reviews.data_version}` : "Evidence endpoint unavailable"}</p>
+              <p>{reviews ? "" : "Reviews are unavailable."}</p>
             </div>
             {state.reviewsError ? <EvidencePanelError title="Review evidence could not be loaded" message={state.reviewsError} /> : reviews?.evidence.length ? (
               <div className="review-evidence-list">
@@ -343,15 +325,6 @@ export function ProductDetailScreen({
         </div>
 
         <aside className="product-evidence-rail" aria-label="Product evidence summary">
-          <div className="evidence-rail-card">
-            <p className="profile-kicker">Source confidence</p>
-            <strong>{confidence.label}</strong>
-            <div className="confidence-track" role="meter" aria-label="Source confidence" aria-valuemin={0} aria-valuemax={100} aria-valuenow={confidence.percent} aria-valuetext={confidence.label}>
-              <span className={`confidence-track--${confidence.tone}`} style={{ width: `${confidence.percent ?? 0}%` }} />
-            </div>
-            <p>Confidence reflects extraction and source support, not product quality.</p>
-          </div>
-
           {(product.source_attributions?.length ?? 0) > 0 && (
             <section className="evidence-rail-card evidence-rail-card--attribution" aria-labelledby="source-attribution-heading">
               <p className="profile-kicker">Source and licence</p>
@@ -383,7 +356,7 @@ export function ProductDetailScreen({
           <div className="compatibility-context-card">
             <span aria-hidden="true">◇</span>
             <p className="profile-kicker">Depends on the build</p>
-            <h2>No standalone pass is assigned.</h2>
+            <h2>Whether this fits depends on your other parts.</h2>
             <p>A socket, connector, dimension, or interface only becomes compatible relative to the other selected parts. Generating a build runs the full compatibility check.</p>
             <Link className="button button--primary" href="/">Use in a complete build</Link>
           </div>

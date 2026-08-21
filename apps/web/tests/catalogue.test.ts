@@ -14,7 +14,7 @@ describe("catalogue evidence presentation", () => {
   it("describes availability as an observation, never a live claim", () => {
     expect(observedStockLabel("in_stock")).toBe("Observed in stock");
     expect(observedStockLabel("out-of-stock")).toBe("Observed out of stock");
-    expect(observedStockLabel("demo_only")).toBe("Controlled demo record");
+    expect(observedStockLabel("demo_only")).toBe("Demo catalogue");
     expect(observedStockLabel(null)).toBe("Availability not reported");
   });
 

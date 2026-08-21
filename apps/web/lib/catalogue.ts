@@ -10,7 +10,7 @@ export function observedStockLabel(status?: string | null): string {
   if (!status) return "Availability not reported";
   const normalized = status.trim().toLowerCase().replaceAll("-", "_").replaceAll(" ", "_");
   const labels: Record<string, string> = {
-    demo_only: "Controlled demo record",
+    demo_only: "Demo catalogue",
     in_stock: "Observed in stock",
     available: "Observed available",
     low_stock: "Observed low stock",
