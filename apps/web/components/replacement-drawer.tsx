@@ -184,8 +184,8 @@ export function ReplacementDrawer({
               <strong>Re-optimise supporting parts</strong>
               <small id="reoptimize-capability-note">
                 {runtimeCapabilities.reoptimizeUnlockedReplacement
-                  ? "Allow the optimiser to change other unlocked parts to preserve compatibility and value."
-                  : "Unavailable in the controlled demo. Connect the catalogue-backed API to use this mode."}
+                  ? "Let other unlocked parts change too, so the build stays compatible and good value."
+                  : "Not available in this demo."}
               </small>
             </span>
           </label>

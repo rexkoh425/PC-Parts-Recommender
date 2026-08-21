@@ -27,7 +27,7 @@ export function BuildBudgetBreakdown({
         </div>
         <p>
           {demo
-            ? "Illustrative SGD values from the controlled demo; no live retailer feed is connected."
+            ? "Prices from August 2026, not a live retailer feed."
             : "Generation-time listing observations; verify the retailer before purchase."}
         </p>
       </div>
@@ -77,9 +77,8 @@ export function BuildBudgetBreakdown({
 
       {hasDifference && (
         <p className="budget-breakdown__difference" role="note">
-          The component rows total {formatSgd(componentSubtotal)}, which differs from the recorded
-          build total by {formatSgd(Math.abs(reportedDifference))}. The API build total remains
-          authoritative; no missing amount is assigned to shipping or fees without evidence.
+          The parts add up to {formatSgd(componentSubtotal)}, {formatSgd(Math.abs(reportedDifference))} away
+          from the build total shown. We show the difference rather than quietly assigning it to shipping.
         </p>
       )}
     </section>

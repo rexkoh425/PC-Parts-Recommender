@@ -433,7 +433,7 @@ test("submits unlocked re-optimisation and renders every reported build delta", 
   await expect(page.getByRole("radio", { name: /Swap this part only/ })).toBeChecked();
   const unlockedMode = page.getByRole("radio", { name: /Re-optimise supporting parts/ });
   await expect(unlockedMode).toBeEnabled();
-  await expect(page.getByText(/Allow the optimiser to change other unlocked parts/)).toBeVisible();
+  await expect(page.getByText(/Let other unlocked parts change too/)).toBeVisible();
   await unlockedMode.check();
 
   await page.getByRole("button", { name: "Apply replacement" }).click();

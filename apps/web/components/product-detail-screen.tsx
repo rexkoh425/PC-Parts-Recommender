@@ -384,7 +384,7 @@ export function ProductDetailScreen({
             <span aria-hidden="true">◇</span>
             <p className="profile-kicker">Compatibility is contextual</p>
             <h2>No standalone pass is assigned.</h2>
-            <p>A socket, connector, dimension, or interface only becomes compatible relative to the other selected parts. Build generation runs the full versioned rule set.</p>
+            <p>A socket, connector, dimension, or interface only becomes compatible relative to the other selected parts. Generating a build runs the full compatibility check.</p>
             <Link className="button button--primary" href="/">Use in a complete build</Link>
           </div>
 

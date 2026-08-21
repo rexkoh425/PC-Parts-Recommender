@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { BuildForm } from "@/components/build-form";
-import { CatalogueReadinessPanel } from "@/components/catalogue-readiness-panel";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -13,7 +12,7 @@ export default function HomePage() {
         <div className="hero__copy">
           <p className="eyebrow">
             <span aria-hidden="true">●</span>
-            Singapore-focused recommendation system
+            Built for Singapore prices
           </p>
           <h1 id="hero-title">
             Build for the work.
@@ -25,11 +24,11 @@ export default function HomePage() {
           </p>
           <div className="hero__actions">
             <a className="button button--primary button--large" href="#builder">
-              Try the interactive demo
+              Build my PC
               <span aria-hidden="true">↓</span>
             </a>
             <a className="button button--secondary button--large" href="#evidence">
-              Inspect the evidence
+              See how it works
             </a>
           </div>
         </div>
@@ -53,20 +52,19 @@ export default function HomePage() {
 
       <section className="method-strip" id="method" aria-label="How recommendations are generated">
         <div className="shell method-strip__inner">
-          <div><span>01</span><strong>Retrieve</strong><small>Keyword + semantic search</small></div>
-          <div><span>02</span><strong>Verify</strong><small>Versioned compatibility rules</small></div>
-          <div><span>03</span><strong>Rank</strong><small>Workload and value model</small></div>
-          <div><span>04</span><strong>Optimise</strong><small>Complete-build constraint solver</small></div>
+          <div><span>01</span><strong>Search</strong><small>25,666 parts, by name and by meaning</small></div>
+          <div><span>02</span><strong>Check</strong><small>Every part against every other</small></div>
+          <div><span>03</span><strong>Rank</strong><small>Scored on your work, not benchmarks</small></div>
+          <div><span>04</span><strong>Optimise</strong><small>The best whole machine for the money</small></div>
         </div>
       </section>
 
       <section className="builder-section shell" id="builder" aria-labelledby="builder-title">
         <div className="builder-section__heading">
-          <p className="eyebrow">Your requirements are authoritative</p>
+          <p className="eyebrow">Start here</p>
           <h2 id="builder-title">Describe the system you need</h2>
           <p>
-            Set hard limits first. Preferences shape the ranking only after every compatible candidate
-            has passed.
+            Your must-haves come first. Preferences only break ties between builds that already fit.
           </p>
         </div>
         <BuildForm />
@@ -79,7 +77,7 @@ export default function HomePage() {
             <h2 id="evidence-title">Real scale, not a toy project.</h2>
           </div>
           <p>
-            Every number below comes from a build artifact you can open in the repository.
+            Every number below is checked into the repository and can be opened.
           </p>
         </div>
         <div className="evidence-stat-grid">
@@ -127,28 +125,26 @@ export default function HomePage() {
         </details>
       </section>
 
-      <CatalogueReadinessPanel />
-
       <section className="trust-section shell" id="guardrails" aria-labelledby="trust-title">
         <div>
-          <p className="eyebrow">Built for scrutiny</p>
-          <h2 id="trust-title">You can inspect every recommendation.</h2>
+          <p className="eyebrow">Why you can trust it</p>
+          <h2 id="trust-title">Every recommendation shows its working.</h2>
         </div>
         <div className="trust-grid">
           <article>
             <span aria-hidden="true">◇</span>
-            <h3>Compatibility before scores</h3>
-            <p>A ranked part cannot enter a build until sockets, dimensions, connectors, and power pass.</p>
+            <h3>Nothing is ranked until it fits</h3>
+            <p>Sockets, clearances, connectors and power draw are checked before a part can appear in a build at all.</p>
           </article>
           <article>
             <span aria-hidden="true">◌</span>
-            <h3>Evidence stays labelled</h3>
-            <p>Direct measurements, model estimates, and missing evidence never blur into one number.</p>
+            <h3>We say where numbers come from</h3>
+            <p>Measured results, estimates and gaps stay separate. Nothing is averaged into a single figure that hides what it is.</p>
           </article>
           <article>
             <span aria-hidden="true">↗</span>
-            <h3>Market context contract</h3>
-            <p>Rights-cleared releases carry seller, stock, price freshness, and value context; demo values stay labelled.</p>
+            <h3>Prices carry a date</h3>
+            <p>Every price says when it was recorded and where it came from, so you can tell a current figure from a stale one.</p>
           </article>
         </div>
       </section>

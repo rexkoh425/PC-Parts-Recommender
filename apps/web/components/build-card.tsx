@@ -44,7 +44,7 @@ export function BuildCard({
         </div>
         <div className="overall-score" aria-label={`Relative fit score ${formatScore(build.overall_score)} out of 100 for this request`}>
           <strong>{formatScore(build.overall_score)}</strong>
-          <small>relative fit</small>
+          <small>fit</small>
         </div>
       </div>
       {typeof budgetSgd === "number" && (
