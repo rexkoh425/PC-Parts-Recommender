@@ -55,11 +55,10 @@ interface DemoTemplate {
 }
 
 // First-party manufacturer pages, checked by hand rather than harvested: the
-// demo catalogue is a fixture, so only the parts that name a real SKU get a
-// link. The generic archetypes ("32 GB DDR5-5600 Memory Kit") deliberately get
-// none, because pointing them at a specific retailer product would invent a
-// match the recommender never made. Manufacturer pages are used instead of
-// retailer offers so nothing here implies a live price.
+// demo catalogue is a fixture, but every part in it now names a real SKU, so
+// each one resolves to its manufacturer page. Manufacturer pages are used
+// rather than retailer offers so nothing here implies a live price: these
+// URLs describe the part, they do not quote it.
 const specUrls: Record<string, string> = {
   "cpu-amd-7600":
     "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-5-7600.html",
@@ -73,6 +72,36 @@ const specUrls: Record<string, string> = {
     "https://www.amd.com/en/products/graphics/desktops/radeon/7000-series/amd-radeon-rx-7800-xt.html",
   "gpu-rtx-4070tis-16":
     "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/",
+  "mb-b650m-wifi":
+    "https://www.asus.com/us/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b650m-plus-wifi/",
+  "mb-b650-atx-wifi":
+    "https://www.asus.com/us/motherboards-components/motherboards/tuf-gaming/tuf-gaming-b650-plus-wifi/",
+  "mb-x670-atx-wifi":
+    "https://rog.asus.com/motherboards/rog-strix/rog-strix-x670e-a-gaming-wifi-model/",
+  "mem-ddr5-32-5600":
+    "https://www.corsair.com/us/en/p/memory/cmk32gx5m2b5600z36/vengeance-32gb-2x16gb-ddr5-dram-5600mt-s-c36-amd-expo-memory-kit-cmk32gx5m2b5600z36",
+  "mem-ddr5-32-6000":
+    "https://www.gskill.com/product/165/390/1692584545/F5-6000J3036F16GX2-TZ5NRW",
+  "mem-ddr5-64-6000":
+    "https://www.gskill.com/product/165/390/1665020865/F5-6000J3040G32GX2-TZ5NR",
+  "ssd-nvme-2tb-value":
+    "https://www.samsung.com/sg/memory-storage/nvme-ssd/990-pro-2tb-nvme-pcie-gen-4-mz-v9p2t0bw/",
+  "ssd-nvme-2tb-fast":
+    "https://www.westerndigital.com/en-us/products/internal-drives/wd-black-sn850x-nvme-ssd?sku=WDS200T2X0E",
+  "psu-750-gold":
+    "https://www.corsair.com/us/en/p/psu/cp-9020248-na/rme-series-rm750e-fully-modular-low-noise-atx-power-supply-cp-9020248-na",
+  "psu-850-gold":
+    "https://www.corsair.com/us/en/p/psu/cp-9020270-na/rmx-series-rm850x-fully-modular-power-supply-cp-9020270-na",
+  "cooler-single-tower":
+    "https://www.deepcool.com/products/Cooling/cpuaircoolers/AK400-Performance-CPU-Cooler-1700-AM5/2021/15222.shtml",
+  "cooler-dual-tower":
+    "https://www.deepcool.com/products/Cooling/cpuaircoolers/AK620-High-Performance-CPU-Cooler-1700-AM5/2021/13067.shtml",
+  "case-matx-air":
+    "https://www.fractal-design.com/products/cases/pop/pop-mini-air/rgb-black-tg-clear/",
+  "case-atx-air":
+    "https://lian-li.com/product/lancool-216/",
+  "case-atx-quiet":
+    "https://www.fractal-design.com/products/cases/define/define-7/black-tg-dark-tint/",
 };
 
 const products: DemoProduct[] = [
@@ -148,9 +177,9 @@ const products: DemoProduct[] = [
   {
     product_id: "mb-b650m-wifi",
     category: "motherboard",
-    canonical_name: "B650M Wi-Fi DDR5 Motherboard",
-    brand: "DemoBoard",
-    model: "B650M Wi-Fi",
+    canonical_name: "ASUS TUF Gaming B650M-PLUS WiFi",
+    brand: "ASUS",
+    model: "TUF Gaming B650M-PLUS WiFi",
     price_sgd: 219,
     performance: 72,
     power_w: 45,
@@ -159,9 +188,9 @@ const products: DemoProduct[] = [
   {
     product_id: "mb-b650-atx-wifi",
     category: "motherboard",
-    canonical_name: "B650 ATX Wi-Fi DDR5 Motherboard",
-    brand: "DemoBoard",
-    model: "B650 ATX Wi-Fi",
+    canonical_name: "ASUS TUF Gaming B650-PLUS WiFi",
+    brand: "ASUS",
+    model: "TUF Gaming B650-PLUS WiFi",
     price_sgd: 279,
     performance: 82,
     power_w: 50,
@@ -170,9 +199,9 @@ const products: DemoProduct[] = [
   {
     product_id: "mb-x670-atx-wifi",
     category: "motherboard",
-    canonical_name: "X670 ATX Wi-Fi DDR5 Motherboard",
-    brand: "DemoBoard",
-    model: "X670 ATX Wi-Fi",
+    canonical_name: "ASUS ROG Strix X670E-A Gaming WiFi",
+    brand: "ASUS",
+    model: "ROG Strix X670E-A Gaming WiFi",
     price_sgd: 389,
     performance: 92,
     power_w: 55,
@@ -181,9 +210,9 @@ const products: DemoProduct[] = [
   {
     product_id: "mem-ddr5-32-5600",
     category: "memory",
-    canonical_name: "32 GB DDR5-5600 Memory Kit",
-    brand: "DemoMemory",
-    model: "32 GB DDR5-5600",
+    canonical_name: "Corsair Vengeance 32 GB DDR5-5600 CL36 EXPO",
+    brand: "Corsair",
+    model: "CMK32GX5M2B5600Z36",
     price_sgd: 129,
     performance: 74,
     power_w: 8,
@@ -193,9 +222,9 @@ const products: DemoProduct[] = [
   {
     product_id: "mem-ddr5-32-6000",
     category: "memory",
-    canonical_name: "32 GB DDR5-6000 Low-Latency Memory Kit",
-    brand: "DemoMemory",
-    model: "32 GB DDR5-6000",
+    canonical_name: "G.Skill Trident Z5 Neo RGB 32 GB DDR5-6000 CL30",
+    brand: "G.Skill",
+    model: "F5-6000J3036F16GX2-TZ5NRW",
     price_sgd: 149,
     performance: 82,
     power_w: 9,
@@ -205,9 +234,9 @@ const products: DemoProduct[] = [
   {
     product_id: "mem-ddr5-64-6000",
     category: "memory",
-    canonical_name: "64 GB DDR5-6000 Memory Kit",
-    brand: "DemoMemory",
-    model: "64 GB DDR5-6000",
+    canonical_name: "G.Skill Trident Z5 Neo RGB 64 GB DDR5-6000 CL30",
+    brand: "G.Skill",
+    model: "F5-6000J3040G32GX2-TZ5NR",
     price_sgd: 269,
     performance: 94,
     power_w: 12,
@@ -217,9 +246,9 @@ const products: DemoProduct[] = [
   {
     product_id: "ssd-nvme-2tb-value",
     category: "storage",
-    canonical_name: "2 TB PCIe 4.0 NVMe SSD",
-    brand: "DemoStorage",
-    model: "2 TB NVMe Value",
+    canonical_name: "Samsung 990 PRO 2 TB PCIe 4.0 NVMe SSD",
+    brand: "Samsung",
+    model: "MZ-V9P2T0BW",
     price_sgd: 139,
     performance: 76,
     power_w: 6,
@@ -229,9 +258,9 @@ const products: DemoProduct[] = [
   {
     product_id: "ssd-nvme-2tb-fast",
     category: "storage",
-    canonical_name: "2 TB High-Performance PCIe 4.0 NVMe SSD",
-    brand: "DemoStorage",
-    model: "2 TB NVMe Performance",
+    canonical_name: "WD_BLACK SN850X 2 TB PCIe 4.0 NVMe SSD",
+    brand: "Western Digital",
+    model: "WDS200T2X0E",
     price_sgd: 169,
     performance: 91,
     power_w: 7,
@@ -241,9 +270,9 @@ const products: DemoProduct[] = [
   {
     product_id: "psu-750-gold",
     category: "psu",
-    canonical_name: "750 W 80 Plus Gold Modular PSU",
-    brand: "DemoPower",
-    model: "750 W Gold",
+    canonical_name: "Corsair RM750e 750 W 80 Plus Gold Modular PSU",
+    brand: "Corsair",
+    model: "CP-9020248-NA",
     price_sgd: 159,
     performance: 81,
     power_w: 0,
@@ -252,9 +281,9 @@ const products: DemoProduct[] = [
   {
     product_id: "psu-850-gold",
     category: "psu",
-    canonical_name: "850 W 80 Plus Gold ATX 3.0 Modular PSU",
-    brand: "DemoPower",
-    model: "850 W Gold ATX 3.0",
+    canonical_name: "Corsair RM850x 850 W 80 Plus Gold Modular PSU",
+    brand: "Corsair",
+    model: "CP-9020270-NA",
     price_sgd: 189,
     performance: 90,
     power_w: 0,
@@ -263,9 +292,9 @@ const products: DemoProduct[] = [
   {
     product_id: "cooler-single-tower",
     category: "cooler",
-    canonical_name: "120 mm Single-Tower CPU Cooler",
-    brand: "DemoCooling",
-    model: "Single Tower 120",
+    canonical_name: "DeepCool AK400 Single-Tower CPU Cooler",
+    brand: "DeepCool",
+    model: "AK400",
     price_sgd: 59,
     performance: 73,
     power_w: 4,
@@ -274,9 +303,9 @@ const products: DemoProduct[] = [
   {
     product_id: "cooler-dual-tower",
     category: "cooler",
-    canonical_name: "120 mm Dual-Tower CPU Cooler",
-    brand: "DemoCooling",
-    model: "Dual Tower 120",
+    canonical_name: "DeepCool AK620 Dual-Tower CPU Cooler",
+    brand: "DeepCool",
+    model: "AK620",
     price_sgd: 79,
     performance: 88,
     power_w: 6,
@@ -285,9 +314,9 @@ const products: DemoProduct[] = [
   {
     product_id: "case-matx-air",
     category: "case",
-    canonical_name: "Airflow Micro-ATX Mini Tower Case",
-    brand: "DemoCase",
-    model: "mATX Air",
+    canonical_name: "Fractal Design Pop Mini Air Micro-ATX Case",
+    brand: "Fractal Design",
+    model: "Pop Mini Air",
     price_sgd: 99,
     performance: 75,
     power_w: 0,
@@ -297,9 +326,9 @@ const products: DemoProduct[] = [
   {
     product_id: "case-atx-air",
     category: "case",
-    canonical_name: "Airflow ATX Mid-Tower Case",
-    brand: "DemoCase",
-    model: "ATX Air",
+    canonical_name: "Lian Li LANCOOL 216 ATX Mid-Tower Case",
+    brand: "Lian Li",
+    model: "LANCOOL 216",
     price_sgd: 139,
     performance: 84,
     power_w: 0,
@@ -309,9 +338,9 @@ const products: DemoProduct[] = [
   {
     product_id: "case-atx-quiet",
     category: "case",
-    canonical_name: "Dampened ATX Quiet Mid-Tower Case",
-    brand: "DemoCase",
-    model: "ATX Quiet",
+    canonical_name: "Fractal Design Define 7 ATX Mid-Tower Case",
+    brand: "Fractal Design",
+    model: "Define 7",
     price_sgd: 159,
     performance: 82,
     power_w: 0,
