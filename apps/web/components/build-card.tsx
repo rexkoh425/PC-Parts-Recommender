@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { categoryLabels, formatFreshness, formatScore, formatSgd, humanizeToken, profileLabels } from "../lib/format";
+import { categoryLabels, formatFreshness, formatScore, formatSgd, profileLabels } from "../lib/format";
 import type { BuildSummary, ComponentCategory } from "../lib/types";
 import { ScoreMeter } from "./score-meter";
 import { StatusPill } from "./status-pill";
@@ -22,10 +22,7 @@ export function BuildCard({
   onToggleSaved(build: BuildSummary): void;
 }) {
   const featured = build.profile === "best_overall";
-  const explanation = build.explanation?.[0];
-  const explanationText = typeof explanation === "string" ? explanation : explanation?.text;
-  const keyCategories: ComponentCategory[] = ["cpu", "gpu", "memory", "storage"];
-  const scoreEntries = Object.entries(build.workload_scores ?? {}).slice(0, 2);
+  const keyCategories: ComponentCategory[] = ["cpu", "gpu"];
   const objectiveScores = [
     ["Value", build.value_score],
     ["Upgradeability", build.upgradeability_score],
@@ -83,12 +80,6 @@ export function BuildCard({
         })}
       </ul>
 
-      <div className="build-card__scores">
-        {scoreEntries.map(([workload, score]) => (
-          <ScoreMeter key={workload} compact label={humanizeToken(workload)} value={score} />
-        ))}
-      </div>
-
       <div className="build-card__facts">
         <StatusPill status={build.compatibility_status} />
         {typeof build.estimated_peak_power_w === "number" && (
@@ -96,7 +87,6 @@ export function BuildCard({
         )}
       </div>
 
-      {explanationText && <p className="build-card__reason">{explanationText}</p>}
 
       <div className="build-card__meta">
         <span>Generated {formatFreshness(build.generated_at).replace("Updated ", "")}</span>

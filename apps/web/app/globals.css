@@ -6187,3 +6187,122 @@ h3 {
   border-radius: var(--radius-md);
   box-shadow: none;
 }
+
+/* ===========================================================================
+   Hero composition
+   The right-hand column used to be a transparent, borderless block headed
+   "03–05" — a number with no referent, floating opposite an 823px column of
+   copy, so the hero read as lopsided and described the product instead of
+   showing it. It now carries a real result: the actual build the demo returns.
+   =========================================================================== */
+
+.hero {
+  gap: 64px;
+  align-items: center;
+}
+
+.hero__preview {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--elevation-3);
+  display: grid;
+  gap: 12px;
+}
+
+.hero__preview-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hero__preview-price {
+  margin: 0;
+  font-size: var(--text-3xl);
+  font-weight: 620;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: var(--numeric);
+}
+
+.hero__preview-sub {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  font-variant-numeric: var(--numeric);
+}
+
+.hero__preview-parts {
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.hero__preview-parts li {
+  display: grid;
+  gap: 2px;
+}
+
+.hero__preview-parts span {
+  font-size: var(--text-2xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.hero__preview-parts strong {
+  font-size: var(--text-sm);
+  font-weight: 550;
+}
+
+.hero__preview-foot {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--ink-faint);
+}
+
+/* ===========================================================================
+   Results grid
+   Cards were 873px tall — taller than the viewport — so five builds could not
+   be compared without scrolling each one past the fold. Trimmed to the figures
+   that separate the options, with the full parts list one tap away.
+   =========================================================================== */
+
+.results-grid {
+  gap: 20px;
+}
+
+.build-card {
+  padding: 20px;
+  gap: 14px;
+  align-content: start;
+}
+
+.build-card .component-preview {
+  gap: 10px;
+}
+
+/* The recommended build leads, so it gets the width to say so. */
+@media (min-width: 1000px) {
+  .results-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .results-grid > * {
+    grid-column: span 2;
+  }
+
+  .results-grid > *:first-child {
+    grid-column: span 3;
+  }
+
+  .results-grid > *:nth-child(2) {
+    grid-column: span 3;
+  }
+}

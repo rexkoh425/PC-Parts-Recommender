@@ -33,14 +33,22 @@ export default function HomePage() {
             </a>
           </div>
         </div>
-        <div className="hero__method" aria-label="Recommendation method">
-          <span className="hero__method-number">03–05</span>
-          <p>
-            <strong>Complete builds, every time</strong>
-            Not a parts list to assemble yourself — each result is a full machine whose parts
-            have been checked against each other.
-          </p>
-        </div>
+        {/* Show the output, not a description of it. These are the real figures
+            the demo returns for a S$3,500 gaming + local-AI brief. */}
+        <aside className="hero__preview" aria-label="Example result">
+          <div className="hero__preview-head">
+            <span className="profile-kicker">Best overall</span>
+            <span className="recommended-chip">Recommended</span>
+          </div>
+          <p className="hero__preview-price">$2,672</p>
+          <p className="hero__preview-sub">88 / 100 fit · $828 under budget</p>
+          <ul className="hero__preview-parts">
+            <li><span>Processor</span><strong>AMD Ryzen 7 7700</strong></li>
+            <li><span>Graphics</span><strong>GeForce RTX 5060 Ti 16 GB</strong></li>
+            <li><span>Memory</span><strong>32 GB DDR5-6000 CL30</strong></li>
+          </ul>
+          <p className="hero__preview-foot">+ 5 more parts, all checked against each other</p>
+        </aside>
       </section>
 
       <section className="method-strip" id="method" aria-label="How recommendations are generated">
