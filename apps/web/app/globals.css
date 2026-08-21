@@ -6367,3 +6367,23 @@ h1 {
   letter-spacing: -0.022em;
   line-height: 1.08;
 }
+
+/* The dark sidebar card kept a 13px body from the old 14px-base scale, so it
+   ran three steps below the surrounding text in the narrowest column on the
+   page. Contrast was already fine (~6.9:1 once the 66% alpha is composited);
+   size and leading were the problem. */
+.compatibility-context-card p:not(.profile-kicker) {
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: rgb(255 255 255 / 78%);
+}
+
+.compatibility-context-card h2 {
+  font-size: var(--text-lg);
+  line-height: 1.3;
+  letter-spacing: -0.012em;
+}
+
+.compatibility-context-card {
+  padding: 20px;
+}
