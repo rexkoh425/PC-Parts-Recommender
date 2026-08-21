@@ -54,6 +54,27 @@ interface DemoTemplate {
   efficiency_score: number;
 }
 
+// First-party manufacturer pages, checked by hand rather than harvested: the
+// demo catalogue is a fixture, so only the parts that name a real SKU get a
+// link. The generic archetypes ("32 GB DDR5-5600 Memory Kit") deliberately get
+// none, because pointing them at a specific retailer product would invent a
+// match the recommender never made. Manufacturer pages are used instead of
+// retailer offers so nothing here implies a live price.
+const specUrls: Record<string, string> = {
+  "cpu-amd-7600":
+    "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-5-7600.html",
+  "cpu-amd-7700":
+    "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-7-7700.html",
+  "cpu-amd-7900":
+    "https://www.amd.com/en/products/processors/desktops/ryzen/7000-series/amd-ryzen-9-7900.html",
+  "gpu-rtx-5060ti-16":
+    "https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5060-family/",
+  "gpu-rx-7800xt-16":
+    "https://www.amd.com/en/products/graphics/desktops/radeon/7000-series/amd-radeon-rx-7800-xt.html",
+  "gpu-rtx-4070tis-16":
+    "https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-family/",
+};
+
 const products: DemoProduct[] = [
   {
     product_id: "cpu-amd-7600",
@@ -521,6 +542,7 @@ function componentFromProduct(
     canonical_name: product.canonical_name,
     brand: product.brand,
     retailer: "Controlled demo catalogue",
+    ...(specUrls[product.product_id] ? { spec_url: specUrls[product.product_id] } : {}),
     price_sgd: alreadyOwned ? 0 : product.price_sgd,
     already_owned: alreadyOwned,
     component_score: product.performance,
