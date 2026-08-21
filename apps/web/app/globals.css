@@ -6430,3 +6430,14 @@ h1 {
 .build-brief__list {
   gap: 14px;
 }
+
+/* `.field + .field { margin-top: 24px }` is right for fields stacked in a
+   column and wrong for fields sitting side by side in a grid row: it indents
+   the second column by 24px, which is the stagger between "Primary workload"
+   and "Secondary workload". A correction existed but lived inside the mobile
+   media query, so it only ever applied at narrow widths — the defect was
+   desktop-only, which is why it survived. The grid owns spacing here. */
+.field-grid .field + .field,
+.field-grid > .field {
+  margin-top: 0;
+}
