@@ -31,7 +31,7 @@ import type {
 } from "@/lib/types";
 import { PriceIntelligencePanel } from "./price-intelligence-panel";
 
-interface ProductEvidenceState {
+export interface ProductEvidenceState {
   product: ProductDetail;
   prices?: ProductPricesResponse;
   pricesError?: string;
@@ -55,14 +55,27 @@ function EvidencePanelError({ title, message }: { title: string; message?: strin
   );
 }
 
-export function ProductDetailScreen({ productId }: { productId: string }) {
+export function ProductDetailScreen({
+  productId,
+  initialState = null,
+}: {
+  productId: string;
+  /**
+   * Evidence resolved on the server. When present the screen renders complete
+   * markup on the first pass, which is what a crawler and a slow connection
+   * see; the fetch effect below then has nothing left to do.
+   */
+  initialState?: ProductEvidenceState | null;
+}) {
   const searchParams = useSearchParams();
   const impressionContext = searchParams.get("impression");
-  const [state, setState] = useState<ProductEvidenceState | null>(null);
+  const [state, setState] = useState<ProductEvidenceState | null>(initialState);
   const [error, setError] = useState("");
   const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
+    // Already served from the server, and not a retry: nothing to fetch.
+    if (initialState && retryKey === 0) return;
     let active = true;
     const controller = new AbortController();
     const requestOptions = { signal: controller.signal };
@@ -92,21 +105,24 @@ export function ProductDetailScreen({ productId }: { productId: string }) {
         reviewsError: reasonFor(reviewsResult),
       };
       setState(next);
-      void trackInteraction({
-        event_type: "component_viewed",
-        session_id: getSessionId(),
-        impression_token: readProductImpression(
-          productResult.value.product_id,
-          impressionContext,
-        ),
-        metadata: { category: productResult.value.category, surface: "catalogue_detail" },
-      });
     });
     return () => {
       active = false;
       controller.abort();
     };
-  }, [impressionContext, productId, retryKey]);
+  }, [impressionContext, initialState, productId, retryKey]);
+
+  const viewedProductId = state?.product.product_id;
+  const viewedCategory = state?.product.category;
+  useEffect(() => {
+    if (!viewedProductId || !viewedCategory) return;
+    void trackInteraction({
+      event_type: "component_viewed",
+      session_id: getSessionId(),
+      impression_token: readProductImpression(viewedProductId, impressionContext),
+      metadata: { category: viewedCategory, surface: "catalogue_detail" },
+    });
+  }, [impressionContext, viewedProductId, viewedCategory]);
 
   const dataVersions = useMemo(() => {
     if (!state) return [];
