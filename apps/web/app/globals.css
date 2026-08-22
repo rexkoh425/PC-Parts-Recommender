@@ -6518,3 +6518,46 @@ small {
 .comparison-table th {
   font-size: var(--text-sm);
 }
+
+/* ===========================================================================
+   Buttons and focus
+   Controls came down to 44px in the pass above, but buttons kept their 52px
+   floor — so a form's submit button stood taller than the fields it submits.
+   One control height across the app.
+   =========================================================================== */
+
+.button {
+  min-height: 44px;
+  padding: 10px 20px;
+}
+
+.button--large {
+  min-height: 48px;
+  padding: 12px 24px;
+  font-size: var(--text-base);
+}
+
+/* Only three focus-visible rules existed for the whole app, so most controls
+   fell back to the UA default — which is invisible against a dark button and
+   inconsistent everywhere else. One ring, drawn outside the element so it
+   never shifts layout, on everything a keyboard can reach. */
+a:focus-visible,
+button:focus-visible,
+[role="tab"]:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--forest-600);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* On the dark strips the forest ring disappears into the background. */
+.method-strip a:focus-visible,
+.demo-banner a:focus-visible,
+.site-footer a:focus-visible,
+.compatibility-context-card a:focus-visible,
+.brief-summary a:focus-visible {
+  outline-color: var(--mint);
+}
