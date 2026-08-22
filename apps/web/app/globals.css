@@ -6468,3 +6468,33 @@ h1 {
   line-height: 1.4;
   min-height: 44px;
 }
+
+/* ===========================================================================
+   Heading hierarchy
+   Section headings ran clamp(2rem, 4vw, 3.5rem) — 51px at a 1280 viewport,
+   against an h1 of 62px. Nine pixels between a page title and a section title
+   is not a hierarchy; the eye cannot tell which is which. Sections now sit a
+   clear step below.
+   =========================================================================== */
+
+.builder-section__heading h2,
+.evidence-section__heading h2,
+.trust-section h2 {
+  font-size: clamp(1.75rem, 2.7vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  line-height: 1.18;
+}
+
+/* Bare <small> was falling through to the browser default (13.33px), the only
+   size on the page not coming from the scale. */
+small {
+  font-size: var(--text-xs);
+}
+
+/* The brief panel's gap rule named a class that does not exist in the markup
+   (.build-brief); the element is .brief-layout, so the earlier fix silently
+   did nothing and the panel kept a 24px gap between single-line rows. */
+.brief-layout {
+  gap: 16px;
+}
