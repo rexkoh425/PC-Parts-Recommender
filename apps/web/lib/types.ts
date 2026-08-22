@@ -262,6 +262,8 @@ export interface ProductSearchItem {
   lowest_price_sgd?: number | null;
   stock_status?: string | null;
   compatibility_status?: CompatibilityStatus | null;
+  /** One differentiating spec, so a grid of cards can be scanned. */
+  headline_spec?: string;
   impression_token?: string | null;
 }
 

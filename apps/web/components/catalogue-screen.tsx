@@ -104,8 +104,11 @@ function ProductResultCard({
       <div className="catalogue-card__identity">
         <small>{product.brand ?? "Brand not reported"}</small>
         <h2 title={product.canonical_name}>{product.canonical_name}</h2>
-        {product.model && !product.canonical_name.includes(product.model) && (
-          <p>{product.model}</p>
+        {product.headline_spec ? (
+          <p className="catalogue-card__spec">{product.headline_spec}</p>
+        ) : (
+          product.model &&
+          !product.canonical_name.includes(product.model) && <p>{product.model}</p>
         )}
       </div>
       {/* A figure slot filled with "Price unavailable" on every card is dead
