@@ -6579,3 +6579,51 @@ textarea:focus-visible {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+/* ===========================================================================
+   Narrow viewports
+   The page scrolled sideways on a 375px screen: 406px of content in a 375px
+   window. Three separate causes, one of them introduced by the desktop nav fix
+   above.
+   =========================================================================== */
+
+/* Grid and flex items default to min-width:auto, so they refuse to shrink below
+   their content. .brief-layout__form was 391px inside a 347px parent, which
+   also stopped the tab strip's own overflow-x from ever engaging. */
+.brief-layout,
+.brief-layout__form,
+.tabs,
+.tabs__panel,
+.build-form {
+  min-width: 0;
+}
+
+/* `flex-wrap: nowrap` fixed the nav breaking mid-item on desktop, but on a
+   phone it forces the nav past the edge instead. Hold the single line only
+   where there is room for one. */
+.header-nav {
+  flex-wrap: wrap;
+}
+
+@media (min-width: 721px) {
+  .header-nav {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 720px) {
+  /* Nav links were 22px and the ratio buttons 35px — under the 44px a finger
+     reliably hits. Excludes the comparison link, which is deliberately
+     display:none at this width; setting display on every link un-hid it. */
+  .header-nav a:not(.header-nav__comparison) {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .ratio-option,
+  .segmented button,
+  .tabs__tab {
+    min-height: 44px;
+  }
+}
