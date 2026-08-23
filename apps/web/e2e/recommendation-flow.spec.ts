@@ -316,7 +316,7 @@ test("keeps the evidence destination available in the mobile header", async ({ p
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/builds/build_1");
 
-  await expect(page.getByRole("link", { name: "Evidence", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "How it works", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Compare", exact: true })).toBeHidden();
 });
 

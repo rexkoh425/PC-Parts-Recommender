@@ -27,7 +27,7 @@ export default function HomePage() {
               Build my PC
               <span aria-hidden="true">↓</span>
             </a>
-            <a className="button button--secondary button--large" href="#evidence">
+            <a className="button button--secondary button--large" href="/how-it-works">
               See how it works
             </a>
           </div>
@@ -70,84 +70,6 @@ export default function HomePage() {
         <BuildForm />
       </section>
 
-      <section className="evidence-section shell" id="evidence" aria-labelledby="evidence-title">
-        <div className="evidence-section__heading">
-          <div>
-            <p className="eyebrow">How it was built</p>
-            <h2 id="evidence-title">What it runs on.</h2>
-          </div>
-          <p>
-            Each figure comes from a file in the repository.
-          </p>
-        </div>
-        <div className="evidence-stat-grid">
-          <article>
-            <strong>25,666</strong>
-            <span>PC parts in the catalogue</span>
-          </article>
-          <article>
-            <strong>9.8M</strong>
-            <span>search vectors, generated on GPU</span>
-          </article>
-          <article>
-            <strong>10,000</strong>
-            <span>builds solved and independently re-checked</span>
-          </article>
-          <article>
-            <strong>32</strong>
-            <span>search-quality test queries</span>
-          </article>
-        </div>
-        <details className="evidence-ledger">
-          <summary>Where these numbers come from</summary>
-          <ol>
-            <li>
-              <strong>Catalogue</strong>
-              <code>data/processed/buildcores_open_db/&hellip;/manifest.json</code>
-              <small>SHA-256 72fe9ef3&hellip;e5dd39</small>
-            </li>
-            <li>
-              <strong>Search vectors</strong>
-              <code>artifacts/retrieval/buildcores-full-embeddings-pinned/manifest.json</code>
-              <small>SHA-256 4e9ccfc6&hellip;2225c0</small>
-            </li>
-            <li>
-              <strong>Solved builds</strong>
-              <code>artifacts/evaluation/optimizer-generated-builds-v1/&hellip;.json</code>
-              <small>SHA-256 169c0387&hellip;e7e8e</small>
-            </li>
-            <li>
-              <strong>Search quality</strong>
-              <code>artifacts/evaluation/retrieval-silver-full-v2/metrics.json</code>
-              <small>SHA-256 13ba6c7e&hellip;83214cf</small>
-            </li>
-          </ol>
-        </details>
-      </section>
-
-      <section className="trust-section shell" id="guardrails" aria-labelledby="trust-title">
-        <div>
-          <p className="eyebrow">Why you can trust it</p>
-          <h2 id="trust-title">Every recommendation shows its working.</h2>
-        </div>
-        <div className="trust-grid">
-          <article>
-            <span aria-hidden="true">◇</span>
-            <h3>Nothing is ranked until it fits</h3>
-            <p>Sockets, clearances, connectors and power draw are checked before a part can appear in a build at all.</p>
-          </article>
-          <article>
-            <span aria-hidden="true">◌</span>
-            <h3>We say where numbers come from</h3>
-            <p>Measured results, estimates and gaps stay separate. Nothing is averaged into a single figure that hides what it is.</p>
-          </article>
-          <article>
-            <span aria-hidden="true">↗</span>
-            <h3>Prices carry a date</h3>
-            <p>Every price says when it was recorded and where it came from, so you can tell a current figure from a stale one.</p>
-          </article>
-        </div>
-      </section>
     </main>
   );
 }
