@@ -6834,3 +6834,120 @@ textarea:focus-visible {
     bottom: 2px;
   }
 }
+
+/* ===========================================================================
+   Typeface
+   Inter is now actually loaded rather than merely named, and headings get a
+   display serif so the page has a voice instead of defaulting to whatever the
+   operating system supplies.
+   =========================================================================== */
+
+body {
+  font-family: var(--font-sans), Inter, ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+  /* Inter's own figures are handsome but drift in tables; contextual
+     alternates keep the shaping without losing column alignment. */
+  font-feature-settings: "cv05" 1, "cv08" 1, "ss03" 1;
+}
+
+.hero h1,
+h1,
+h2,
+.hero__preview-price,
+.evidence-stat-grid strong {
+  font-family: var(--font-display), Georgia, "Times New Roman", serif;
+  /* Fraunces ships soft and wonky by default; dialled down it reads as a
+     considered serif rather than a novelty. */
+  font-variation-settings: "SOFT" 20, "WONK" 0, "opsz" 40;
+  font-weight: 500;
+}
+
+/* A serif carries more colour per character, so the tight tracking that suited
+   a grotesque now closes the counters up. */
+.hero h1 {
+  letter-spacing: -0.015em;
+  font-weight: 500;
+}
+
+h1,
+h2 {
+  letter-spacing: -0.012em;
+  font-weight: 500;
+}
+
+/* Figures stay on the display face for warmth but keep tabular alignment. */
+.hero__preview-price,
+.evidence-stat-grid strong,
+.brief-summary__budget strong {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ===========================================================================
+   Surfaces
+   Every card was pure white on near-white with a grey hairline and no shadow —
+   correct, and completely flat. Shadows tinted with the brand hue instead of
+   neutral grey sit in the palette rather than on top of it, and a warmer paper
+   tone gives the white cards something to lift off.
+   =========================================================================== */
+
+:root {
+  --canvas: #f4f3ee;
+  --elevation-1: 0 1px 2px rgb(20 48 38 / 5%);
+  --elevation-2: 0 1px 2px rgb(20 48 38 / 4%), 0 6px 16px -4px rgb(20 48 38 / 8%);
+  --elevation-3: 0 2px 4px rgb(20 48 38 / 4%), 0 12px 28px -8px rgb(20 48 38 / 12%);
+  --elevation-4: 0 4px 8px rgb(20 48 38 / 5%), 0 24px 56px -16px rgb(20 48 38 / 18%);
+  --line: #e2e0d7;
+}
+
+/* Cards read as paper: a hairline for definition, a soft shadow for lift. */
+.evidence-stat-grid article,
+.trust-card,
+.trust-grid article,
+.build-card,
+.hero__preview,
+.brief-summary,
+.state-card {
+  border: 1px solid var(--line);
+  box-shadow: var(--elevation-2);
+}
+
+/* A card that responds to the cursor feels like an object rather than a
+   rectangle. Transform only — animating shadow alone repaints the whole box. */
+.build-card,
+.evidence-stat-grid article {
+  transition: transform 180ms cubic-bezier(0.2, 0, 0, 1),
+    box-shadow 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.build-card:hover,
+.evidence-stat-grid article:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--elevation-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .build-card,
+  .evidence-stat-grid article {
+    transition: none;
+  }
+
+  .build-card:hover,
+  .evidence-stat-grid article:hover {
+    transform: none;
+  }
+}
+
+/* The recommended build should look chosen, not merely first. */
+.build-card--featured {
+  border-color: var(--forest-200);
+  box-shadow: var(--elevation-3);
+}
+
+/* Hairline rules were the same weight as card borders, so tables and cards
+   competed. Dividers sit back; edges hold. */
+.comparison-table td,
+.comparison-table th,
+.faq-item,
+.faq-list {
+  border-color: color-mix(in srgb, var(--line) 70%, transparent);
+}

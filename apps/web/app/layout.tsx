@@ -1,8 +1,34 @@
 import type { Metadata, Viewport } from "next";
+import { Fraunces, Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { siteUrl } from "@/lib/site-url";
 import "./globals.css";
+
+/*
+ * The stylesheet named Inter but nothing ever loaded it, so the whole site had
+ * been rendering in the system fallback — Segoe UI on Windows. Both faces are
+ * self-hosted by next/font at build time, so no request leaves the page and
+ * the CSP stays untouched.
+ */
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
+});
+
+/*
+ * A display face so headings have a voice of their own. Fraunces is a variable
+ * serif with optical sizing; at low softness and wonk it reads as considered
+ * rather than decorative, and gives the page the editorial weight the
+ * all-Inter setting never had.
+ */
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  axes: ["SOFT", "WONK", "opsz"],
+});
 
 export function generateMetadata(): Metadata {
   const metadataBase = siteUrl;
@@ -41,7 +67,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en-SG" data-scroll-behavior="smooth">
-      <body>
+      <body className={`${inter.variable} ${fraunces.variable}`}>
         <a className="skip-link" href="#main-content">
           Skip to main content
         </a>
