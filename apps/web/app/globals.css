@@ -6711,3 +6711,80 @@ textarea:focus-visible {
 .faq-cta {
   margin-top: 40px;
 }
+
+/* ===========================================================================
+   Builder layout and weight
+   The form column ran to 879px while its widest field is ~350px, so half the
+   card was empty and the fields read as scattered rather than placed. And the
+   brief panel was a full-height slab of --forest-deep, which — stacked with a
+   dark banner, a dark method strip and dark buttons — left the page with one
+   heavy colour and nowhere to rest.
+   =========================================================================== */
+
+@media (min-width: 1000px) {
+  .brief-layout {
+    grid-template-columns: minmax(0, 660px) 340px;
+    justify-content: space-between;
+    gap: 48px;
+  }
+}
+
+/* Light card instead of a dark slab: the panel is a running summary of what
+   you typed, not a second hero. The budget figure keeps the brand colour so
+   the eye still lands on it. */
+.brief-summary {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: var(--elevation-2);
+}
+
+.brief-summary__eyebrow {
+  margin-bottom: 20px;
+  color: var(--ink-faint);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+}
+
+.brief-summary__budget small {
+  color: var(--ink-faint);
+}
+
+.brief-summary__budget strong {
+  color: var(--forest-600);
+  letter-spacing: -0.025em;
+}
+
+.brief-summary dl,
+.brief-summary dl > div {
+  border-color: var(--line);
+}
+
+.brief-summary dt {
+  color: var(--ink-faint);
+  letter-spacing: 0.07em;
+}
+
+.brief-summary dd {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.brief-summary .button {
+  border-color: var(--forest-600);
+  background: var(--forest-600);
+  color: #fff;
+}
+
+.brief-summary .button:hover {
+  border-color: var(--forest-800);
+  background: var(--forest-800);
+}
+
+.brief-summary__note {
+  color: var(--ink-faint);
+}
+
+.brief-summary a:focus-visible {
+  outline-color: var(--forest-600);
+}
