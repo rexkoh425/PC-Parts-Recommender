@@ -6792,3 +6792,45 @@ textarea:focus-visible {
 .brief-summary a:focus-visible {
   outline-color: var(--forest-600);
 }
+
+/* ===========================================================================
+   Current page
+   The nav gave no sense of place — four links, none of which told you where
+   you were. The marker is an underline sitting on the header's own baseline
+   rather than a filled pill, so it reads as a position indicator instead of
+   competing with the primary button.
+   =========================================================================== */
+
+.header-nav a {
+  position: relative;
+  color: var(--ink-soft);
+  transition: color 140ms ease;
+}
+
+.header-nav a:hover {
+  color: var(--ink);
+}
+
+.header-nav a.is-current {
+  color: var(--forest-600);
+  font-weight: 600;
+}
+
+.header-nav a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--forest-600);
+}
+
+/* On a phone the links wrap onto their own line, where an underline hugging
+   the baseline collides with the row beneath. */
+@media (max-width: 720px) {
+  .header-nav a.is-current::after {
+    bottom: 2px;
+  }
+}
