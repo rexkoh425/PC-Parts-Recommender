@@ -8,11 +8,15 @@ interface NavItem {
   href: string;
   label: string;
   className?: string;
+  /** Extra path roots that belong to this section but do not sit under href. */
+  owns?: readonly string[];
 }
 
 const navItems: readonly NavItem[] = [
   { href: "/how-it-works", label: "How it works", className: "header-nav__secondary header-nav__evidence" },
-  { href: "/catalogue", label: "Catalogue" },
+  // A product record is a catalogue page even though it lives at /products/*,
+  // so without this the nav goes blank on all of them.
+  { href: "/catalogue", label: "Catalogue", owns: ["/products"] },
   { href: "/compare", label: "Compare", className: "header-nav__comparison" },
   { href: "/saved", label: "Saved" },
 ];
@@ -22,8 +26,9 @@ const navItems: readonly NavItem[] = [
  * product record still marks Catalogue and a saved build still marks Saved.
  * Exact-match alone would leave the nav blank on most pages.
  */
-function isCurrent(pathname: string, href: string): boolean {
-  return pathname === href || pathname.startsWith(`${href}/`);
+function isCurrent(pathname: string, item: NavItem): boolean {
+  const roots = [item.href, ...(item.owns ?? [])];
+  return roots.some((root) => pathname === root || pathname.startsWith(`${root}/`));
 }
 
 export function SiteHeader() {
@@ -53,7 +58,7 @@ export function SiteHeader() {
 
         <nav className="header-nav" aria-label="Primary navigation">
           {navItems.map((item) => {
-            const current = isCurrent(pathname, item.href);
+            const current = isCurrent(pathname, item);
             return (
               <Link
                 key={item.href}
