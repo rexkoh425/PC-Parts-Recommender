@@ -664,7 +664,7 @@ function componentFromProduct(
     selection_reasons: reasons,
     performance_signals: request.workloads.map((workload) => ({
       workload: workload.name,
-      metric: "deterministic relative component score",
+      metric: "relative component score",
       value: product.performance,
       unit: "relative index",
       basis: "relative",
