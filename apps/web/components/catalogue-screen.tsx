@@ -94,10 +94,12 @@ function ProductResultCard({
         <span className={`category-chip category-chip--${product.category}`}>
           {categoryLabels[product.category]}
         </span>
-        <span className={`observed-stock observed-stock--${stockTone(product.stock_status)}`}>
-          <span aria-hidden="true" />
-          {observedStockLabel(product.stock_status)}
-        </span>
+        {!USING_DEMO_DATA && (
+          <span className={`observed-stock observed-stock--${stockTone(product.stock_status)}`}>
+            <span aria-hidden="true" />
+            {observedStockLabel(product.stock_status)}
+          </span>
+        )}
       </div>
       <div className="catalogue-card__identity">
         <small>{product.brand ?? "Brand not reported"}</small>
@@ -435,19 +437,20 @@ export function CatalogueScreen({
             {[12, 24, 48].map((size) => <option key={size} value={size}>{size}</option>)}
           </select>
         </div>
-        <label className="catalogue-stock-filter" htmlFor="catalogue-in-stock">
-          <input
-            id="catalogue-in-stock"
-            name="in_stock_only"
-            type="checkbox"
-            defaultChecked={effectiveInStockOnly}
-            disabled={USING_DEMO_DATA}
-          />
-          <span>
-            <strong>{USING_DEMO_DATA ? "Stock filter unavailable in demo" : "Observed in stock only"}</strong>
-            <small>{USING_DEMO_DATA ? "No retailer stock feed is connected" : "Last recorded price"}</small>
-          </span>
-        </label>
+        {!USING_DEMO_DATA && (
+          <label className="catalogue-stock-filter" htmlFor="catalogue-in-stock">
+            <input
+              id="catalogue-in-stock"
+              name="in_stock_only"
+              type="checkbox"
+              defaultChecked={effectiveInStockOnly}
+            />
+            <span>
+              <strong>Observed in stock only</strong>
+              <small>Last recorded price</small>
+            </span>
+          </label>
+        )}
         <button className="button button--primary" type="submit">Search catalogue</button>
       </form>
 
