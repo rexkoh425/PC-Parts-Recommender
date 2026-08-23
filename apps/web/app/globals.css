@@ -6724,8 +6724,12 @@ textarea:focus-visible {
 @media (min-width: 1000px) {
   .brief-layout {
     grid-template-columns: minmax(0, 660px) 340px;
-    justify-content: space-between;
+    /* space-between dumped all 225px of leftover width into the gap and left
+       the two panels floating apart. Centre the pair instead. */
+    justify-content: center;
     gap: 48px;
+    max-width: 1048px;
+    margin-inline: auto;
   }
 }
 
