@@ -7107,3 +7107,52 @@ body {
     transition: none;
   }
 }
+
+/* ===========================================================================
+   Catalogue search
+   Six controls were forced into one row with 130px minimums, so "All
+   categories" rendered as "All categori" and "Any brand" as "Any bran". A
+   truncated label is not a filter anyone can use. The query gets its own line;
+   the filters share the next.
+   =========================================================================== */
+
+@media (min-width: 860px) {
+  .catalogue-search {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+    gap: 16px 20px;
+  }
+
+  /* The query is the primary control and spans the row above the filters. */
+  .catalogue-search__query {
+    grid-column: 1 / -1;
+  }
+
+  .catalogue-search > button[type="submit"] {
+    align-self: end;
+  }
+}
+
+/* The stock note wrapped to three lines inside a box sized for one. */
+.catalogue-search label:has(input[type="checkbox"]),
+.catalogue-search .field:has(input[type="checkbox"]) {
+  align-self: end;
+  min-height: 44px;
+}
+
+/* ===========================================================================
+   Evidence ledger
+   The container kept `display: grid` with two columns from when it was a
+   <section> holding a heading beside a list. As a <details>, the <summary>
+   became column one and stretched to the full row height — the tall empty box
+   with the list stranded beside it.
+   =========================================================================== */
+
+details.evidence-ledger {
+  display: block;
+  grid-template-columns: none;
+  gap: 0;
+}
+
+details.evidence-ledger > summary {
+  width: fit-content;
+}

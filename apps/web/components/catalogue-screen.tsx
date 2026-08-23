@@ -102,7 +102,9 @@ function ProductResultCard({
       <div className="catalogue-card__identity">
         <small>{product.brand ?? "Brand not reported"}</small>
         <h2>{product.canonical_name}</h2>
-        {product.model && <p>{product.model}</p>}
+        {product.model && !product.canonical_name.includes(product.model) && (
+          <p>{product.model}</p>
+        )}
       </div>
       <div className="catalogue-card__price">
         <small>{USING_DEMO_DATA ? "Price" : "Lowest observed listing"}</small>
@@ -116,11 +118,6 @@ function ProductResultCard({
           />
         </div>
       )}
-      <p className="catalogue-card__boundary">
-        {USING_DEMO_DATA
-          ? "Illustrative demo record; no live retailer connection."
-          : "Availability and price are recorded observations."}
-      </p>
       <Link
         className="button button--secondary"
         href={productHref}
