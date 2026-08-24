@@ -299,18 +299,6 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
       </section>
 
       <footer className="evidence-footer">
-        <div>
-          <span>Data version</span>
-          <strong>{response.data_version}</strong>
-        </div>
-        <div>
-          <span>Ranking model</span>
-          <strong>{response.ranking_model}</strong>
-        </div>
-        <div>
-          <span>Compatibility rules</span>
-          <strong>{response.rule_version}</strong>
-        </div>
         <p>
           {categoryLabels.gpu} and workload scores distinguish direct benchmark observations from model estimates in build details.
         </p>
