@@ -22,17 +22,27 @@ returns table (
 language sql
 stable
 security definer
-set search_path = public
+-- Supabase installs pgvector into the extensions schema, so a search_path of
+-- public alone hides the <=> operator and the function fails to compile. The
+-- path is still pinned (never left to the caller) - it just has to name both.
+set search_path = public, extensions
 as $$
     with semantic as (
-        select
-            e.product_id,
-            -- pgvector's <=> is cosine DISTANCE; similarity is its complement,
-            -- so a higher number means a closer match.
-            (1 - (e.embedding <=> query_embedding))::real as similarity
-        from public.product_embeddings e
-        order by e.embedding <=> query_embedding
-        limit greatest(match_count * 4, 96)
+        select * from (
+            select
+                e.product_id,
+                -- pgvector's <=> is cosine DISTANCE; similarity is its
+                -- complement, so a higher number means a closer match.
+                (1 - (e.embedding <=> query_embedding))::real as similarity
+            from public.product_embeddings e
+            order by e.embedding <=> query_embedding
+            limit greatest(match_count * 4, 96)
+        ) ranked
+        -- Cosine distance against a zero or degenerate vector is NaN, and
+        -- Postgres sorts NaN ABOVE every real number - so without this the
+        -- worst possible matches would rank first. Dropping them lets the
+        -- keyword half answer alone instead of returning noise.
+        where ranked.similarity <> 'NaN'::real
     ),
     keyword as (
         select
