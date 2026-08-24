@@ -35,6 +35,7 @@ import {
   demoProductIds,
 } from "./demo-api";
 import { apiBaseUrl, apiRequestTimeoutMs, usingDemoData } from "./runtime";
+import { SUPABASE_CATALOGUE_ENABLED, searchSupabaseCatalogue } from "./supabase-catalogue";
 import { readSavedBuilds } from "./saved-builds";
 
 export const API_BASE_URL = apiBaseUrl;
@@ -456,6 +457,17 @@ export async function searchProducts(
   request: ProductSearchRequest,
   options: ApiRequestOptions = {},
 ): Promise<ProductSearchResponse> {
+  // Prefer the live catalogue when it is configured: 25,666 real parts rather
+  // than the 21-part fixture. If it is slow or unreachable the fixture still
+  // answers, so an outage degrades the result instead of breaking the page.
+  if (SUPABASE_CATALOGUE_ENABLED) {
+    try {
+      return await searchSupabaseCatalogue(request, { signal: options.signal });
+    } catch (error) {
+      if (options.signal?.aborted) throw error;
+      console.warn("Live catalogue unavailable, using the bundled fixture.", error);
+    }
+  }
   if (USING_DEMO_DATA) return searchDemoProducts(request);
   return apiRequest<ProductSearchResponse>(
     "/v1/products/search",
