@@ -157,7 +157,7 @@ function CoverageSummary({ response }: { response: ProductSearchResponse }) {
   if (!coverage) return null;
   const attributions = coverage.source_attributions ?? [];
   const metrics = [
-    ["Canonical products", coverage.canonical_products],
+    ["Parts", coverage.canonical_products],
     ["Retailer listings", coverage.retailer_listings],
     ["Permitted sources", coverage.source_count],
     ["Categories", coverage.category_count],

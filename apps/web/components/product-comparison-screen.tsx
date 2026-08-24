@@ -197,12 +197,12 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
     return (
       <main className="shell comparison-page">
         <section className="catalogue-state comparison-empty" role={error ? "alert" : undefined}>
-          <p className="eyebrow">Same-category comparison</p>
+          <p className="eyebrow">Compare parts</p>
           <h1>{error ? "This comparison cannot be shown." : "Choose a component to compare."}</h1>
           <p>
             {error
               ? error
-              : "Start from a product record, then add up to two alternatives from the same category."}
+              : "Pick a part from the catalogue, then add up to two alternatives to see them side by side."}
           </p>
           <Link className="button button--primary" href="/catalogue">Browse the catalogue</Link>
         </section>
@@ -220,7 +220,7 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
 
       <header className="comparison-header">
         <div>
-          <p className="eyebrow">Same-category comparison</p>
+          <p className="eyebrow">Compare parts</p>
           <h1>Compare parts side by side.</h1>
           <p className="lede">
             {category ? `${categoryLabels[category]}s` : "Products"} are compared only on reported catalogue fields.
