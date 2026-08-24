@@ -78,7 +78,7 @@ export function sharedBuildRecordMetadata(
   const gpu = snapshot.components.find((component) => component.category === "gpu")?.canonical_name;
   const componentSummary = [cpu, gpu].filter(Boolean).join(" + ");
   const description = boundedDescription(
-    `${verified ? "Server-recorded" : "Unverified browser-provided"} generation-time ${profileLabels[snapshot.profile].toLowerCase()} PC build${componentSummary ? ` with ${componentSummary}` : ""}: ${formatSgd(snapshot.total_price_sgd)} for new parts and ${formatScore(snapshot.overall_score)} relative fit. Re-run before buying.`,
+    `${verified ? "Verified" : "Unverified"} ${profileLabels[snapshot.profile].toLowerCase()} PC build${componentSummary ? ` with ${componentSummary}` : ""}: ${formatSgd(snapshot.total_price_sgd)} for new parts and ${formatScore(snapshot.overall_score)} relative fit. Re-run before buying.`,
   );
   return recordMetadata({
     title: `${profileLabels[snapshot.profile]} PC build`,

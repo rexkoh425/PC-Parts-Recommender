@@ -192,7 +192,7 @@ export function SavedScreen() {
                 <strong>Need current prices?</strong>
                 <p id="saved-rerun-explanation">
                   {rerunState === "failed"
-                    ? "The rerun could not be completed. The saved snapshot is unchanged; start a fresh brief or try again."
+                    ? "The re-run did not finish. Your saved build is unchanged - try again, or start a new brief."
                     : rerunExplanation}
                 </p>
               </div>
