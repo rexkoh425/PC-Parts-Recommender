@@ -465,7 +465,7 @@ export async function searchProducts(
       return await searchSupabaseCatalogue(request, { signal: options.signal });
     } catch (error) {
       if (options.signal?.aborted) throw error;
-      console.warn("Live catalogue unavailable, using the bundled fixture.", error);
+      console.warn("[catalogue] live retrieval failed, serving the fixture instead.", error);
     }
   }
   if (USING_DEMO_DATA) return searchDemoProducts(request);
