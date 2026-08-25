@@ -35,7 +35,11 @@ import {
   demoProductIds,
 } from "./demo-api";
 import { apiBaseUrl, apiRequestTimeoutMs, usingDemoData } from "./runtime";
-import { SUPABASE_CATALOGUE_ENABLED, searchSupabaseCatalogue } from "./supabase-catalogue";
+import {
+  SUPABASE_CATALOGUE_ENABLED,
+  getSupabaseProduct,
+  searchSupabaseCatalogue,
+} from "./supabase-catalogue";
 import { readSavedBuilds } from "./saved-builds";
 
 export const API_BASE_URL = apiBaseUrl;
@@ -493,6 +497,18 @@ export function getProduct(
   productId: string,
   options: ApiRequestOptions = {},
 ): Promise<ProductDetail> {
+  // The catalogue lists live records, so their detail pages have to resolve
+  // against the same source. Falling straight through to the fixture made
+  // every one of the 25,666 products render "evidence unavailable".
+  if (SUPABASE_CATALOGUE_ENABLED) {
+    return getSupabaseProduct(productId, { signal: options.signal }).catch((error) => {
+      if (options.signal?.aborted) throw error;
+      // A fixture id (the demo builds still use them) is not in the live
+      // catalogue, so fall back rather than failing the page.
+      if (USING_DEMO_DATA) return getDemoProduct(productId);
+      throw error;
+    });
+  }
   // Defer controlled-demo lookup so an invalid shared product ID rejects the
   // promise just like an API 404 instead of escaping synchronously in React.
   if (USING_DEMO_DATA) return Promise.resolve().then(() => getDemoProduct(productId));

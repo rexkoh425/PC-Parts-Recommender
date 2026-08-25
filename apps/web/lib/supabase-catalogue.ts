@@ -11,7 +11,13 @@
  * behind them, which is why the tables have RLS enabled.
  */
 
-import type { ComponentCategory, ProductSearchItem, ProductSearchRequest, ProductSearchResponse } from "./types";
+import type {
+  ComponentCategory,
+  ProductDetail,
+  ProductSearchItem,
+  ProductSearchRequest,
+  ProductSearchResponse,
+} from "./types";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() ?? "";
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ?? "";
@@ -198,4 +204,94 @@ export async function searchSupabaseCatalogue(
       source_attributions: [],
     },
   };
+}
+
+/**
+ * One catalogue row, read straight from PostgREST.
+ *
+ * Without this, every one of the 25,666 live products rendered "Product
+ * evidence unavailable": the search was wired to Supabase but the record
+ * lookup still went to the 21-part fixture, so the primary action on every
+ * card was dead.
+ */
+interface ProductRow {
+  product_id: string;
+  category: string;
+  brand: string | null;
+  model: string | null;
+  canonical_name: string;
+  manufacturer_part_number: string | null;
+  common_attributes: Record<string, unknown> | null;
+  category_attributes: Record<string, unknown> | null;
+  source_confidence: number | null;
+  data_version: string | null;
+  updated_at: string | null;
+}
+
+export async function getSupabaseProduct(
+  productId: string,
+  options: { signal?: AbortSignal } = {},
+): Promise<ProductDetail> {
+  if (!SUPABASE_CATALOGUE_ENABLED) {
+    throw new Error("Supabase catalogue is not configured.");
+  }
+
+  const timeout = new AbortController();
+  const timer = setTimeout(() => timeout.abort(), DEFAULT_TIMEOUT_MS);
+  const signal = options.signal
+    ? AbortSignal.any([options.signal, timeout.signal])
+    : timeout.signal;
+
+  try {
+    const query = new URLSearchParams({
+      product_id: `eq.${productId}`,
+      select:
+        "product_id,category,brand,model,canonical_name,manufacturer_part_number," +
+        "common_attributes,category_attributes,source_confidence,data_version,updated_at",
+      limit: "1",
+    });
+    const response = await fetch(`${supabaseUrl}/rest/v1/canonical_products?${query}`, {
+      headers: {
+        apikey: supabaseKey,
+        Authorization: `Bearer ${supabaseKey}`,
+      },
+      signal,
+      credentials: "omit",
+    });
+    if (!response.ok) {
+      throw new Error(`Supabase product lookup responded ${response.status}`);
+    }
+    const rows = (await response.json()) as ProductRow[];
+    const row = rows[0];
+    if (!row) {
+      throw new Error("This product is not in the catalogue.");
+    }
+
+    const category = normaliseCategory(row.category);
+    if (!category) {
+      throw new Error(`Unsupported category "${row.category}".`);
+    }
+
+    return {
+      product_id: row.product_id,
+      category,
+      canonical_name: row.canonical_name,
+      brand: row.brand ?? undefined,
+      model: row.model ?? undefined,
+      // No retailer feed is connected, so there is no price to report. Null
+      // renders as "Price unavailable" rather than implying a figure exists.
+      lowest_price_sgd: null,
+      stock_status: null,
+      compatibility_status: null,
+      manufacturer_part_number: row.manufacturer_part_number,
+      attributes: { ...(row.common_attributes ?? {}), ...(row.category_attributes ?? {}) },
+      source_confidence: row.source_confidence,
+      source_url: null,
+      source_attributions: [],
+      updated_at: row.updated_at ?? new Date().toISOString(),
+      data_version: row.data_version ?? "buildcores-full-25666-8c738c513661",
+    };
+  } finally {
+    clearTimeout(timer);
+  }
 }

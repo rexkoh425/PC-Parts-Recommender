@@ -34,6 +34,19 @@ describe("catalogue evidence presentation", () => {
     expect(humanizeAttributeKey("maximum_gpu_length_mm")).toBe("Maximum GPU Length mm");
     expect(formatAttributeValue(true)).toBe("Yes");
     expect(formatAttributeValue(["ATX", "mATX"])).toBe("ATX, mATX");
+  });
+
+  it("humanises the machine tokens the live catalogue stores", () => {
+    // The fixture only ever held prose, so these arrived on screen raw once
+    // real records were served: "80_plus_gold", "atx".
+    expect(formatAttributeValue("80_plus_gold")).toBe("80 Plus Gold");
+    expect(formatAttributeValue("atx")).toBe("ATX");
+    expect(formatAttributeValue("mid_tower")).toBe("Mid Tower");
+    expect(formatAttributeValue("nvme")).toBe("NVMe");
+    expect(formatAttributeValue("ddr5")).toBe("DDR5");
+    // Free text must survive untouched - product names are not tokens.
+    expect(formatAttributeValue("Fractal Design Meshify C")).toBe("Fractal Design Meshify C");
+    expect(formatAttributeValue("80+ Gold Certified")).toBe("80+ Gold Certified");
     expect(formatAttributeValue(null)).toBe("Not reported");
   });
 

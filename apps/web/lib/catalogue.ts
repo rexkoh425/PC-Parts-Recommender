@@ -72,7 +72,46 @@ export function formatAttributeValue(value: unknown): string {
       .map(([key, nested]) => `${humanizeAttributeKey(key)}: ${formatAttributeValue(nested)}`)
       .join(" · ");
   }
-  return String(value);
+  return humanizeAttributeToken(String(value));
+}
+
+/**
+ * Enumerated attribute values arrive as machine tokens: the live catalogue
+ * stores "80_plus_gold" and "atx", which the fixture never exercised because
+ * its values were already prose. Anything that looks like a token is spaced
+ * and capitalised; free text is returned untouched so product names and
+ * descriptions are not mangled.
+ */
+function humanizeAttributeToken(value: string): string {
+  const token = value.trim();
+  if (!token) return "Not reported";
+
+  // Free text: leave alone. A token has no spaces and is not mixed case.
+  const looksLikeToken = /^[a-z0-9]+(?:[_-][a-z0-9]+)*$/.test(token);
+  if (!looksLikeToken) return token;
+
+  const spaced = token.replaceAll("_", " ").replaceAll("-", " ");
+
+  // Capitalise the first letter of each word, not every letter.
+  const titled = spaced.replace(
+    /(^|\s)(\w)/g,
+    (_match, lead: string, first: string) => `${lead}${first.toUpperCase()}`,
+  );
+
+  // Units and standards read wrong in plain title case. Whole words only,
+  // so a fragment inside a longer word is not rewritten.
+  return titled
+    .replace(/\bAtx\b/g, "ATX")
+    .replace(/\bMatx\b/g, "mATX")
+    .replace(/\bItx\b/g, "ITX")
+    .replace(/\bDdr(\d)\b/g, "DDR$1")
+    .replace(/\bPcie\b/g, "PCIe")
+    .replace(/\bNvme\b/g, "NVMe")
+    .replace(/\bSsd\b/g, "SSD")
+    .replace(/\bHdd\b/g, "HDD")
+    .replace(/\bRgb\b/g, "RGB")
+    .replace(/\bWifi\b/g, "Wi-Fi")
+    .replace(/\bUsb\b/g, "USB");
 }
 
 export function confidencePresentation(confidence?: number | null): {
