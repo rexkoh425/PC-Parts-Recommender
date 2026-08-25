@@ -264,6 +264,8 @@ export interface ProductSearchItem {
   compatibility_status?: CompatibilityStatus | null;
   /** One differentiating spec, so a grid of cards can be scanned. */
   headline_spec?: string;
+  /** The manufacturer page for this part, where one is known. */
+  source_url?: string | null;
   impression_token?: string | null;
 }
 

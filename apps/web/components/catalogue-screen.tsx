@@ -132,6 +132,17 @@ function ProductResultCard({
           />
         </div>
       )}
+      {product.source_url && (
+        <a
+          className="catalogue-card__source"
+          href={product.source_url}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Open the manufacturer page for ${product.canonical_name}`}
+        >
+          Manufacturer page
+        </a>
+      )}
       <Link
         className="button button--secondary"
         href={productHref}
