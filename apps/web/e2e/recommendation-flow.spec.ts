@@ -443,7 +443,7 @@ test("submits unlocked re-optimisation and renders every reported build delta", 
   const impact = page.getByTestId("replacement-result");
   await expect(impact).toBeVisible();
   await expect(impact).toContainText("Graphics, Power supply, Case");
-  await expect(impact).toContainText("+$142");
+  await expect(impact).toContainText("+S$142");
   await expect(impact).toContainText("-28 W");
   await expect(impact).toContainText("Local AI");
   await expect(impact).toContainText("+2.4 points");

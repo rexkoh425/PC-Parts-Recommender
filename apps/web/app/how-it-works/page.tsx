@@ -27,11 +27,11 @@ const faqs = [
   },
   {
     q: "What does the score out of 100 mean?",
-    a: "It compares the builds in your shortlist against each other for the workload you gave. It is not a rating of the products in general — the same part will score differently under a different brief.",
+    a: "It compares the builds in your shortlist against each other for the workload you gave. It is not a rating of the product in general: the same part scores differently under a different brief.",
   },
   {
     q: "Is this a real shop?",
-    a: "It is a portfolio demo built on a fixed catalogue of real parts. The recommendation engine, compatibility rules and optimiser are real; the storefront is not.",
+    a: "It is a portfolio demo. The catalogue, compatibility rules and optimiser are real; the storefront is not, and nothing here is for sale.",
   },
 ];
 

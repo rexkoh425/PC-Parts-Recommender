@@ -207,7 +207,7 @@ export function BuildForm() {
                 />
               </div>
               <p className="field-help" id="budget-help">
-                Prices include the selected listing and shipping when available.
+                Prices include shipping.
               </p>
               <FieldError id="budget-error" message={errors.budget_sgd} />
             </div>
@@ -312,8 +312,8 @@ export function BuildForm() {
                 }
               />
               <p className="field-help" id="performance-target-help">
-                Something specific you want to hit, like 100 fps at 1440p. We will show the
-                evidence we have for it.
+                Something specific you want to hit, like 100 fps at 1440p. We&apos;ll show
+                whatever evidence we have for it.
               </p>
               <FieldError
                 id="performance-target-error"
@@ -643,15 +643,14 @@ export function BuildForm() {
             <div>
               <dt>Build options</dt>
               <dd>
-                {values.requested_profiles.length} profile{values.requested_profiles.length === 1 ? "" : "s"}
-                {` / up to ${values.max_builds}`}
+                {`Up to ${values.max_builds}`}
               </dd>
             </div>
             <div>
               <dt>Availability</dt>
               <dd>
                 {USING_DEMO_DATA
-                  ? "Controlled demo catalogue"
+                  ? "Demo catalogue"
                   : values.in_stock_only
                     ? "Observed in-stock only"
                     : "Include unavailable listings"}

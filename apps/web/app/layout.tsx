@@ -36,7 +36,7 @@ export function generateMetadata(): Metadata {
   return {
     metadataBase,
     title: {
-      default: "BuildSignal — Evidence-backed PC builds",
+      default: "BuildSignal · PC builds that fit together",
       template: "%s · BuildSignal",
     },
     description:
@@ -44,7 +44,7 @@ export function generateMetadata(): Metadata {
     applicationName: "BuildSignal",
     keywords: ["PC build recommender", "compatibility", "recommendation system", "Singapore"],
     openGraph: {
-      title: "BuildSignal — Build for the work, not the hype",
+      title: "BuildSignal · Build for the work",
       description:
         "Explore an evidence-backed PC build recommendation system with compatibility-first constraints.",
       type: "website",
@@ -52,7 +52,7 @@ export function generateMetadata(): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      title: "BuildSignal — Evidence-backed PC builds",
+      title: "BuildSignal · PC builds that fit together",
       description: "Compatibility-first PC build recommendations with visible evidence boundaries.",
       images: [socialImage],
     },
@@ -76,7 +76,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         <footer className="site-footer">
           <div className="shell site-footer__inner">
             <p>
-              <strong>BuildSignal</strong> — complete PC builds, ranked for the work you do.
+              <strong>BuildSignal</strong> · complete PC builds, ranked for the work you do.
             </p>
             <p>A portfolio demo. Prices recorded August 2026.</p>
           </div>
