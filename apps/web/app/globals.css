@@ -7418,3 +7418,31 @@ dd,
     max-width: 720px;
   }
 }
+
+/* Optical sizing.
+   Fraunces carries an opsz axis, and pinning it at 40 for everything is what
+   that axis exists to avoid: a face cut for a 62px headline has thinner strokes
+   and tighter spacing than one cut for a 26px figure, and using display cuts at
+   small sizes makes text look frail. Each tier gets the cut it was drawn for. */
+
+/* Page titles, 52-62px. */
+.hero h1,
+h1 {
+  font-variation-settings: "SOFT" 20, "WONK" 0, "opsz" 120;
+}
+
+/* Section headings, roughly 35px. */
+h2 {
+  font-variation-settings: "SOFT" 22, "WONK" 0, "opsz" 60;
+}
+
+/* Figures and prices sit between 26 and 40px and are read as data, so they
+   take a text-weight cut with slightly firmer stems. */
+.hero__preview-price,
+.evidence-stat-grid strong,
+.brief-summary__budget strong,
+.catalogue-card__price strong,
+.overall-score strong,
+.catalogue-header__mark > strong {
+  font-variation-settings: "SOFT" 26, "WONK" 0, "opsz" 24;
+}
