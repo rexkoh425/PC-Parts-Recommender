@@ -7491,3 +7491,33 @@ h2 {
     margin-block: -13px;
   }
 }
+
+/* Build detail on a phone.
+   The evidence links sit at 19px inside their cell, same problem the
+   comparison table had but a different table, so the earlier rule missed them.
+   Replace is a real button and simply undersized. */
+@media (pointer: coarse) {
+  .component-evidence-links a,
+  .detail-section table a {
+    display: inline-block;
+    padding-block: 13px;
+    margin-block: -13px;
+  }
+
+  .text-button {
+    min-height: 44px;
+  }
+}
+
+/* Three tabs plus their count hints do not fit 375px, so the third scrolled
+   out of sight with nothing to suggest it was there. Dropping the hint - a
+   number the panel repeats anyway - lets all three fit. */
+@media (max-width: 460px) {
+  .tabs__hint {
+    display: none;
+  }
+
+  .tabs__tab {
+    padding-inline: 12px;
+  }
+}
