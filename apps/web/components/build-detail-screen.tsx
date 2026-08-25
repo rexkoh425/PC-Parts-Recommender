@@ -581,7 +581,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                       <strong>
                         {signal.value === null ? "Not enough evidence" : `${formatScore(signal.value)}${signal.unit ? ` ${signal.unit}` : ""}`}
                       </strong>
-                      {signal.model_version && <small>Model {signal.model_version}</small>}
+
                     </div>
                     {(signal.sources ?? []).length > 0 && (
                       <div className="evidence-list__sources">
@@ -745,10 +745,6 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
           </p>
           <div className="summary-provenance">
             <div><span>Generated</span><strong>{formatFreshness(build.generated_at).replace("Updated ", "")}</strong></div>
-            <div><span>Data</span><strong>{build.data_version ?? "Versioned"}</strong></div>
-            <div><span>Ranker</span><strong>{build.ranking_model ?? "Recorded by API"}</strong></div>
-            <div><span>Rules</span><strong>{build.rule_version ?? "Recorded by API"}</strong></div>
-            <div><span>Solver</span><strong>{build.solver_version}</strong></div>
           </div>
         </aside>
       </div>
