@@ -56,7 +56,7 @@ export function SharedBuildScreen() {
           <span className="state-card__icon" aria-hidden="true">?</span>
           <p className="eyebrow">Shared snapshot unavailable</p>
           <h1>This build link is invalid or incomplete.</h1>
-          <p>{effectiveServerError || "Shared links contain a bounded build snapshot. They do not expose a saved account, retailer checkout, or current market data."}</p>
+          <p>{effectiveServerError || "A shared link carries the build itself and nothing else - no account, no checkout, no live prices."}</p>
           <Link className="button button--primary" href="/">
             Generate a build
           </Link>

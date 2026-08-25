@@ -13,16 +13,16 @@ describe("controlled demo API contract", () => {
     const productPromise = api.getProduct("not-a-demo-product");
     expect(productPromise).toBeInstanceOf(Promise);
     await expect(productPromise).rejects.toThrow(
-      "This product is not present in the controlled public demo.",
+      "We do not have that part in the catalogue.",
     );
     await expect(api.getProductPrices("not-a-demo-product")).rejects.toThrow(
-      "This product is not present in the controlled public demo.",
+      "We do not have that part in the catalogue.",
     );
     await expect(api.getProductBenchmarks("not-a-demo-product")).rejects.toThrow(
-      "This product is not present in the controlled public demo.",
+      "We do not have that part in the catalogue.",
     );
     await expect(api.getProductReviews("not-a-demo-product")).rejects.toThrow(
-      "This product is not present in the controlled public demo.",
+      "We do not have that part in the catalogue.",
     );
   });
 });

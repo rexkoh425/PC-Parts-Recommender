@@ -45,11 +45,11 @@ import { ScoreMeter } from "./score-meter";
 import { StatusPill } from "./status-pill";
 
 const profileHeadings: Record<BuildSummary["profile"], string> = {
-  best_overall: "The strongest balance across workload fit, value, and flexibility.",
-  best_value: "The most workload value inside this compatible shortlist.",
-  highest_performance: "The highest relative workload performance that fits the brief.",
-  most_upgradeable: "A compatible foundation with more room for future upgrades.",
-  lowest_power: "The lowest estimated peak load among the compatible options.",
+  best_overall: "The best all-round balance of speed, price and flexibility.",
+  best_value: "The most performance for the money in this shortlist.",
+  highest_performance: "The fastest build that still fits the brief.",
+  most_upgradeable: "The most room to add and upgrade parts later.",
+  lowest_power: "The lowest power draw of the builds that fit.",
 };
 
 function relativeDecisionLabel(signal: PerformanceSignal): string {

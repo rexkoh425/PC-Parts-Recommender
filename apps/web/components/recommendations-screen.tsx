@@ -44,7 +44,7 @@ function NoFeasibleBuild({
   const reasons = response.infeasibility?.reasons ?? [
     {
       code: "no_feasible_build",
-      message: "No in-stock combination satisfies every hard requirement at the current budget.",
+      message: "Nothing in stock meets every requirement at this budget.",
     },
   ];
   const relaxations = response.infeasibility?.suggested_relaxations ?? [];

@@ -523,11 +523,11 @@ const templates: DemoTemplate[] = [
 ];
 
 const profileExplanation: Record<BuildProfile, string> = {
-  best_overall: "Balances workload fit, value, efficiency, and future flexibility.",
-  best_value: "Keeps the strongest workload-per-dollar trade-off in this controlled catalogue.",
-  highest_performance: "Allocates more of the budget to the highest relative CPU and GPU scores.",
-  most_upgradeable: "Prioritises motherboard expansion and power headroom for later upgrades.",
-  lowest_power: "Favours the lowest estimated peak load while preserving the hard requirements.",
+  best_overall: "Balances speed, price, running costs and room to upgrade.",
+  best_value: "Gets the most performance per dollar of anything in the catalogue.",
+  highest_performance: "Puts as much of the budget as possible into the processor and graphics card.",
+  most_upgradeable: "Leaves the most room to add memory, storage and a bigger graphics card later.",
+  lowest_power: "Draws the least power under load while still meeting everything you asked for.",
 };
 
 const categoryOrder: ComponentCategory[] = [
@@ -748,11 +748,11 @@ function buildFromTemplate(
       { kind: "performance", text: profileExplanation[template.profile] },
       {
         kind: "compatibility",
-        text: "Every displayed hard rule passed against the controlled demo attributes.",
+        text: "Every part here fits the others - socket, memory type, power draw and case clearance all check out.",
       },
       {
         kind: "price",
-        text: "Prices are illustrative SGD demo values, not live retailer quotes.",
+        text: "Prices are what these parts cost in August 2026.",
       },
     ],
     generated_at: generatedAt,
@@ -794,7 +794,7 @@ export function generateDemoBuilds(request: BuildRequest): GenerateBuildsRespons
           {
             code: "demo_catalogue_exhausted",
             message:
-              "No controlled demo template satisfies the budget, memory, storage, brand, and case constraints together.",
+              "No build meets your budget, memory, storage, brand and case choices all at once.",
           },
         ],
         suggested_relaxations: [
@@ -901,7 +901,7 @@ export function searchDemoProducts(request: ProductSearchRequest): ProductSearch
 
 function requireDemoProduct(productId: string): DemoProduct {
   const product = byId.get(productId);
-  if (!product) throw new Error("This product is not present in the controlled public demo.");
+  if (!product) throw new Error("We do not have that part in the catalogue.");
   return product;
 }
 
@@ -1009,7 +1009,7 @@ export function checkDemoCompatibility(
         rule_id: "compat.demo.not_authoritative.v1",
         status: "unknown",
         message:
-          "Arbitrary compatibility checks require the full rule service; the public demo does not manufacture a pass.",
+          "We cannot check that particular combination here.",
       },
     ],
     rule_version: DEMO_RULE_VERSION,

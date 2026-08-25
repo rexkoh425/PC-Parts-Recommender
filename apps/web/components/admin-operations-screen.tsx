@@ -69,7 +69,7 @@ function PipelineOperations({
       <p className="operations-note">
         Last {data.event_window_hours} hours. {data.invalid_receipt_count > 0
           ? `${count(data.invalid_receipt_count)} invalid receipt${data.invalid_receipt_count === 1 ? "" : "s"} excluded. `
-          : ""}{data.truncated ? "Bounded history was truncated." : ""}
+          : ""}{data.truncated ? "Older entries were dropped." : ""}
       </p>
     </section>
   );

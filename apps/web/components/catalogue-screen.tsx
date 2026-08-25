@@ -485,7 +485,7 @@ export function CatalogueScreen({
           <strong>{USING_DEMO_DATA ? "Public portfolio demo." : "What this shows."}</strong>{" "}
           {USING_DEMO_DATA
             ? "A fixed set of real parts with prices from August 2026. Not connected to live retailer stock."
-            : "Prices and stock are recorded observations, not a live checkout quote."}
+            : "Prices and stock were recorded earlier, not checked just now."}
         </p>
       </div>
 
