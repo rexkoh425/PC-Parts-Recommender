@@ -48,6 +48,7 @@ interface RpcRow {
   similarity?: number;
   keyword_rank?: number;
   attributes?: Record<string, unknown> | null;
+  source_url?: string | null;
 }
 
 const DEFAULT_TIMEOUT_MS = 8000;
@@ -151,6 +152,7 @@ function toSearchItem(row: RpcRow): ProductSearchItem | null {
     stock_status: null,
     compatibility_status: null,
     headline_spec: headlineSpec(category, row.attributes ?? null),
+    source_url: row.source_url ?? undefined,
   };
 }
 
@@ -275,6 +277,7 @@ interface ProductRow {
   source_confidence: number | null;
   data_version: string | null;
   updated_at: string | null;
+  source_url: string | null;
 }
 
 export async function getSupabaseProduct(
@@ -296,7 +299,7 @@ export async function getSupabaseProduct(
       product_id: `eq.${productId}`,
       select:
         "product_id,category,brand,model,canonical_name,manufacturer_part_number," +
-        "common_attributes,category_attributes,source_confidence,data_version,updated_at",
+        "common_attributes,category_attributes,source_confidence,data_version,updated_at,source_url",
       limit: "1",
     });
     const response = await fetch(`${supabaseUrl}/rest/v1/canonical_products?${query}`, {
@@ -335,7 +338,7 @@ export async function getSupabaseProduct(
       manufacturer_part_number: row.manufacturer_part_number,
       attributes: { ...(row.common_attributes ?? {}), ...(row.category_attributes ?? {}) },
       source_confidence: row.source_confidence,
-      source_url: null,
+      source_url: row.source_url,
       source_attributions: [],
       updated_at: row.updated_at ?? new Date().toISOString(),
       data_version: row.data_version ?? "buildcores-full-25666-8c738c513661",
