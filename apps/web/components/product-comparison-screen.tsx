@@ -24,7 +24,7 @@ import {
   maximumComparedProducts,
   parseComparedProductIds,
 } from "@/lib/product-comparison";
-import { categoryLabels, formatSgd } from "@/lib/format";
+import { categoryLabels, categoryPluralLabels, formatSgd } from "@/lib/format";
 import type { ProductDetail, ProductSearchItem } from "@/lib/types";
 
 interface ProductComparisonScreenProps {
@@ -52,11 +52,21 @@ function CandidateCard({
       <div>
         <small>{product.brand ?? "Brand not reported"}</small>
         <h3>{product.canonical_name}</h3>
-        <p>
-          {priceKnown ? formatSgd(product.lowest_price_sgd as number) : "Price unavailable"}
-          <span aria-hidden="true"> · </span>
-          {observedStockLabel(product.stock_status)}
-        </p>
+        {/*
+          Every live catalogue record has a null price and a null stock status,
+          so this line rendered "Price unavailable · Availability not reported"
+          identically on all 24 candidates - a wall of text that said nothing
+          and hid the one field that tells the parts apart.
+        */}
+        {priceKnown ? (
+          <p>
+            {formatSgd(product.lowest_price_sgd as number)}
+            <span aria-hidden="true"> · </span>
+            {observedStockLabel(product.stock_status)}
+          </p>
+        ) : (
+          product.headline_spec && <p className="comparison-candidate__spec">{product.headline_spec}</p>
+        )}
       </div>
       <button
         className="button button--secondary"
@@ -223,7 +233,7 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
           <p className="eyebrow">Compare parts</p>
           <h1>Compare parts side by side.</h1>
           <p className="lede">
-            {category ? `${categoryLabels[category]}s` : "Products"} are compared only on reported catalogue fields.
+            {category ? categoryPluralLabels[category] : "Products"} are compared only on reported catalogue fields.
             Missing values remain visible as not reported.
           </p>
         </div>
@@ -261,14 +271,18 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
                 </span>
                 <p>{product.brand ?? "Brand not reported"}</p>
                 <h3>{product.canonical_name}</h3>
-                <small>
-                  {typeof product.lowest_price_sgd === "number" ? formatSgd(product.lowest_price_sgd) : "Price unavailable"}
-                  <span aria-hidden="true"> · </span>
-                  <span className={`observed-stock observed-stock--${stockTone(product.stock_status)}`}>
-                    <span aria-hidden="true" />
-                    {observedStockLabel(product.stock_status)}
-                  </span>
-                </small>
+                {typeof product.lowest_price_sgd === "number" ? (
+                  <small>
+                    {formatSgd(product.lowest_price_sgd)}
+                    <span aria-hidden="true"> · </span>
+                    <span className={`observed-stock observed-stock--${stockTone(product.stock_status)}`}>
+                      <span aria-hidden="true" />
+                      {observedStockLabel(product.stock_status)}
+                    </span>
+                  </small>
+                ) : (
+                  product.headline_spec && <small>{product.headline_spec}</small>
+                )}
               </div>
               <div className="comparison-selected__actions">
                 <Link className="button button--secondary" href={`/products/${encodeURIComponent(product.product_id)}`}>

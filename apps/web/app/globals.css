@@ -7347,6 +7347,16 @@ dd,
   letter-spacing: 0;
 }
 
+/* The same differentiating spec on a comparison candidate. Shares the
+   catalogue card's treatment so a part reads identically in both places. */
+.comparison-candidate__spec {
+  font-size: var(--text-sm);
+  font-weight: 550;
+  color: var(--forest-600);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0;
+}
+
 /* The manufacturer page for a part. A quiet outbound link rather than a second
    button, so it never competes with the card's own action. */
 .catalogue-card__source {
