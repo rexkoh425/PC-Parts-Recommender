@@ -75,7 +75,7 @@ export function SharedBuildScreen() {
 
       <header className="detail-header">
         <div>
-          <p className="eyebrow">{verifiedServerRecord ? "Server-recorded build snapshot" : "Unsigned browser snapshot"}</p>
+          <p className="eyebrow">{verifiedServerRecord ? "Verified build" : "Unverified build"}</p>
           <h1>{profileLabels[snapshot.profile]}</h1>
           <p className="lede">
             {verifiedServerRecord
@@ -85,7 +85,7 @@ export function SharedBuildScreen() {
         </div>
         <StatusPill
           status={verifiedServerRecord ? snapshot.compatibility_status : "unknown"}
-          label={verifiedServerRecord ? undefined : "Unverified snapshot"}
+          label={verifiedServerRecord ? undefined : "Unverified build"}
         />
       </header>
 
@@ -112,7 +112,7 @@ export function SharedBuildScreen() {
                         <strong>{component.canonical_name}</strong>
                         {component.brand && <span>{component.brand}</span>}
                       </td>
-                      <td data-label="Selection basis">{component.selection_reason ?? "Not included in shared snapshot"}</td>
+                      <td data-label="Selection basis">{component.selection_reason ?? "Not included in the shared link"}</td>
                       <td data-label="Snapshot price"><strong>{component.price_sgd === null ? "Not included" : formatSgd(component.price_sgd)}</strong></td>
                     </tr>
                   ))}
