@@ -4,7 +4,7 @@ import { componentCategories, type ComponentCategory } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Component catalogue",
-  description: "Search PC parts with prices, benchmarks, and the evidence records.",
+  description: "Search PC parts by price, specification and benchmark, with the source for every figure.",
   alternates: { canonical: "/catalogue" },
 };
 

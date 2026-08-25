@@ -4,7 +4,7 @@ import { parseComparedProductIds } from "@/lib/product-comparison";
 
 export const metadata: Metadata = {
   title: "Compare components",
-  description: "Compare reported fields, observed price, and availability for up to three PC components in one category.",
+  description: "Put up to three parts side by side and see exactly where their specifications differ.",
   alternates: { canonical: "/compare" },
 };
 
