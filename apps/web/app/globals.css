@@ -5757,11 +5757,10 @@ svg {
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Tabs
+/* Tabs
    Segmented control on a rule, so switching views reads as one surface rather
    than another stacked card. The active tab carries the only filled weight.
---------------------------------------------------------------------------- */
+ */
 
 .tabs__list {
   display: flex;
@@ -5854,13 +5853,12 @@ svg {
   letter-spacing: -0.02em;
 }
 
-/* ---------------------------------------------------------------------------
-   Section rhythm
+/* Section rhythm
    Top-level sections previously ran 128/0/115/24/10/40px of leading padding, so
    the page read as a stack of unrelated blocks. Three deliberate steps instead:
    the hero opens wide, ordinary sections share one measure, and the full-bleed
    strip stays flush.
---------------------------------------------------------------------------- */
+ */
 
 :root {
   --section-y: 96px;
@@ -5892,13 +5890,12 @@ svg {
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Measure
+/* Measure
    Prose was running the full container width — up to 169 characters per line
    against a comfortable 45-75. Long lines are what made the page read as
    "clustered": the eye loses the return sweep and paragraphs turn into slabs.
    Capping the measure, not the container, keeps the layout width intact.
---------------------------------------------------------------------------- */
+ */
 
 :root {
   --measure: 68ch;
@@ -5988,12 +5985,11 @@ svg {
   color: var(--state-pass);
 }
 
-/* ---------------------------------------------------------------------------
-   Provenance, folded away
+/* Provenance, folded away
    The evidence ledger used to shout four full SHA-256 digests and raw repo
    paths at every visitor. The rigour still matters for anyone who wants it, so
    it stays on the page — collapsed, quiet, and opt-in.
---------------------------------------------------------------------------- */
+ */
 
 details.evidence-ledger {
   margin-top: 40px;
@@ -6047,15 +6043,14 @@ details.evidence-ledger small {
   color: var(--forest-400);
 }
 
-/* ===========================================================================
-   Design pass
+/* Design pass
    Measured against how comparable product sites actually set type and colour
    (Stripe: 16px body, 43px h1 at weight 300; Linear: 16px body, 64px h1 at
    weight 510 — both with line-height at or above 1). This site was running a
    14px body under a 115px hero at weight 760 with line-height 0.86, which is
    the "generated landing page" signature: display type so large and so tightly
    tracked that the lines collide, over body copy too small to read.
-   =========================================================================== */
+ */
 
 :root {
   /* Every step moves up one notch so body copy lands at 16px. */
@@ -6188,13 +6183,12 @@ h3 {
   box-shadow: none;
 }
 
-/* ===========================================================================
-   Hero composition
+/* Hero composition
    The right-hand column used to be a transparent, borderless block headed
    "03–05" — a number with no referent, floating opposite an 823px column of
    copy, so the hero read as lopsided and described the product instead of
    showing it. It now carries a real result: the actual build the demo returns.
-   =========================================================================== */
+ */
 
 .hero {
   gap: 64px;
@@ -6267,12 +6261,11 @@ h3 {
   color: var(--ink-faint);
 }
 
-/* ===========================================================================
-   Results grid
+/* Results grid
    Cards were 873px tall — taller than the viewport — so five builds could not
    be compared without scrolling each one past the fold. Trimmed to the figures
    that separate the options, with the full parts list one tap away.
-   =========================================================================== */
+ */
 
 .results-grid {
   gap: 20px;
@@ -6316,9 +6309,8 @@ h3 {
   margin: 0;
 }
 
-/* ===========================================================================
-   Header and hero, seen rather than measured
-   =========================================================================== */
+/* Header and hero, seen rather than measured
+ */
 
 /* Nav items were breaking mid-item ("Data / status", "Saved / builds"), which
    reads as a broken page. Two internal links have gone, and what remains is
@@ -6388,14 +6380,13 @@ h1 {
   padding: 20px;
 }
 
-/* ===========================================================================
-   Form controls
+/* Form controls
    Measured before this pass: budget input 56px tall at 19px, selects 52px,
    both floored by min-height 48px, labels at weight 720. That is dialog-sized
    furniture for a form with eleven fields, and it is what made the page read
    as oversized. Controls now sit at 44px — still a comfortable touch target —
    with labels that support the field instead of competing with it.
-   =========================================================================== */
+ */
 
 .field label {
   font-size: var(--text-xs);
@@ -6469,13 +6460,12 @@ h1 {
   min-height: 44px;
 }
 
-/* ===========================================================================
-   Heading hierarchy
+/* Heading hierarchy
    Section headings ran clamp(2rem, 4vw, 3.5rem) — 51px at a 1280 viewport,
    against an h1 of 62px. Nine pixels between a page title and a section title
    is not a hierarchy; the eye cannot tell which is which. Sections now sit a
    clear step below.
-   =========================================================================== */
+ */
 
 .builder-section__heading h2,
 .evidence-section__heading h2,
@@ -6519,12 +6509,11 @@ small {
   font-size: var(--text-sm);
 }
 
-/* ===========================================================================
-   Buttons and focus
+/* Buttons and focus
    Controls came down to 44px in the pass above, but buttons kept their 52px
    floor — so a form's submit button stood taller than the fields it submits.
    One control height across the app.
-   =========================================================================== */
+ */
 
 .button {
   min-height: 44px;
@@ -6580,12 +6569,11 @@ textarea:focus-visible {
   padding-bottom: 10px;
 }
 
-/* ===========================================================================
-   Narrow viewports
+/* Narrow viewports
    The page scrolled sideways on a 375px screen: 406px of content in a 375px
    window. Three separate causes, one of them introduced by the desktop nav fix
    above.
-   =========================================================================== */
+ */
 
 /* Grid and flex items default to min-width:auto, so they refuse to shrink below
    their content. .brief-layout__form was 391px inside a 347px parent, which
@@ -6628,12 +6616,11 @@ textarea:focus-visible {
   }
 }
 
-/* ===========================================================================
-   How it works
+/* How it works
    The homepage was 3.7 screens, 38% of it explaining the project rather than
    helping anyone build a PC. That material lives here now, so the homepage
    does one job and this page answers the questions it used to interrupt with.
-   =========================================================================== */
+ */
 
 .page-intro {
   padding-top: var(--section-y-lead);
@@ -6712,14 +6699,13 @@ textarea:focus-visible {
   margin-top: 40px;
 }
 
-/* ===========================================================================
-   Builder layout and weight
+/* Builder layout and weight
    The form column ran to 879px while its widest field is ~350px, so half the
    card was empty and the fields read as scattered rather than placed. And the
    brief panel was a full-height slab of --forest-deep, which — stacked with a
    dark banner, a dark method strip and dark buttons — left the page with one
    heavy colour and nowhere to rest.
-   =========================================================================== */
+ */
 
 @media (min-width: 1000px) {
   .brief-layout {
@@ -6793,13 +6779,12 @@ textarea:focus-visible {
   outline-color: var(--forest-600);
 }
 
-/* ===========================================================================
-   Current page
+/* Current page
    The nav gave no sense of place — four links, none of which told you where
    you were. The marker is an underline sitting on the header's own baseline
    rather than a filled pill, so it reads as a position indicator instead of
    competing with the primary button.
-   =========================================================================== */
+ */
 
 .header-nav a {
   position: relative;
@@ -6835,12 +6820,11 @@ textarea:focus-visible {
   }
 }
 
-/* ===========================================================================
-   Typeface
+/* Typeface
    Inter is now actually loaded rather than merely named, and headings get a
    display serif so the page has a voice instead of defaulting to whatever the
    operating system supplies.
-   =========================================================================== */
+ */
 
 body {
   font-family: var(--font-sans), Inter, ui-sans-serif, system-ui, -apple-system,
@@ -6882,13 +6866,12 @@ h2 {
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-/* ===========================================================================
-   Surfaces
+/* Surfaces
    Every card was pure white on near-white with a grey hairline and no shadow —
    correct, and completely flat. Shadows tinted with the brand hue instead of
    neutral grey sit in the palette rather than on top of it, and a warmer paper
    tone gives the white cards something to lift off.
-   =========================================================================== */
+ */
 
 :root {
   --canvas: #f4f3ee;
@@ -6952,13 +6935,12 @@ h2 {
   border-color: color-mix(in srgb, var(--line) 70%, transparent);
 }
 
-/* ===========================================================================
-   Atmosphere
+/* Atmosphere
    The page was a stack of flat bands: one canvas tone, one dark strip, no
    depth between them. These are quiet moves — a wash behind the hero, real
    dividers in the dark strip, buttons that respond — but they are what
    separates a designed page from a correct one.
-   =========================================================================== */
+ */
 
 body {
   /* Two soft washes rather than one mint blob: a cool tint behind the hero and
@@ -7041,13 +7023,12 @@ body {
   overflow: hidden;
 }
 
-/* ===========================================================================
-   Figures
+/* Figures
    The overall score sat in a 57px grey disc with a hairline — a badge, not a
    figure. It is the number that separates one build from another, so it should
    read as data. A conic ring shows the value as well as stating it, which the
    plain disc never did.
-   =========================================================================== */
+ */
 
 .overall-score {
   position: relative;
@@ -7108,13 +7089,12 @@ body {
   }
 }
 
-/* ===========================================================================
-   Catalogue search
+/* Catalogue search
    Six controls were forced into one row with 130px minimums, so "All
    categories" rendered as "All categori" and "Any brand" as "Any bran". A
    truncated label is not a filter anyone can use. The query gets its own line;
    the filters share the next.
-   =========================================================================== */
+ */
 
 @media (min-width: 860px) {
   .catalogue-search {
@@ -7139,13 +7119,12 @@ body {
   min-height: 44px;
 }
 
-/* ===========================================================================
-   Evidence ledger
+/* Evidence ledger
    The container kept `display: grid` with two columns from when it was a
    <section> holding a heading beside a list. As a <details>, the <summary>
    became column one and stretched to the full row height — the tall empty box
    with the list stranded beside it.
-   =========================================================================== */
+ */
 
 details.evidence-ledger {
   display: block;
@@ -7157,12 +7136,11 @@ details.evidence-ledger > summary {
   width: fit-content;
 }
 
-/* ===========================================================================
-   Components
+/* Components
    Chips, cards and badges had each been styled where they were first needed,
    so they shared no shape language: different radii, different label casing,
    different weights. These give them one voice.
-   =========================================================================== */
+ */
 
 /* Chips read as labels, not buttons: soft tint, no shadow, one radius. */
 .category-chip,
@@ -7300,13 +7278,12 @@ details.evidence-ledger > summary {
   }
 }
 
-/* ===========================================================================
-   Line breaking
+/* Line breaking
    Headings were dropping a single short word onto its own line - "working.",
    "fits", "from" - which reads as a mistake rather than a break. `balance`
    evens the lines across the block; `pretty` stops body copy ending on an
    orphan. Both degrade to normal wrapping where unsupported.
-   =========================================================================== */
+ */
 
 h1,
 h2,
