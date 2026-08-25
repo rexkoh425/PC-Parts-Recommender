@@ -11,6 +11,7 @@
  * behind them, which is why the tables have RLS enabled.
  */
 
+import { formatAttributeValue } from "./catalogue";
 import type {
   ComponentCategory,
   ProductDetail,
@@ -193,7 +194,7 @@ function headlineSpec(
     const value = attributes[key];
     if (value === null || value === undefined || value === "") continue;
     if (Array.isArray(value) || typeof value === "object") continue;
-    parts.push(`${value}${SPEC_UNITS[key] ?? ""}`);
+    parts.push(`${formatAttributeValue(value)}${SPEC_UNITS[key] ?? ""}`);
     if (parts.length === 2) break;
   }
   return parts.length ? parts.join(" · ") : undefined;
