@@ -59,6 +59,24 @@ export const categoryLabels: Record<ComponentCategory, string> = {
  * English pluralisation of these terms has no rule worth encoding, so each
  * form is spelled out and the naming stays in one place.
  */
+/*
+ * The mid-sentence form.
+ *
+ * Call sites were lowercasing the display label to drop it into a sentence,
+ * which is right for seven categories and wrong for the cooler: "CPU" is an
+ * acronym, so the replacement drawer offered to "Replace cpu cooler".
+ */
+export const categoryInlineLabels: Record<ComponentCategory, string> = {
+  cpu: "processor",
+  gpu: "graphics card",
+  motherboard: "motherboard",
+  memory: "memory",
+  storage: "storage",
+  psu: "power supply",
+  cooler: "CPU cooler",
+  case: "case",
+};
+
 export const categoryPluralLabels: Record<ComponentCategory, string> = {
   cpu: "Processors",
   gpu: "Graphics cards",

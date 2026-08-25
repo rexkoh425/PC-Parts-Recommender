@@ -24,7 +24,7 @@ import {
   maximumComparedProducts,
   parseComparedProductIds,
 } from "@/lib/product-comparison";
-import { categoryLabels, categoryPluralLabels, formatSgd } from "@/lib/format";
+import { categoryInlineLabels, categoryLabels, categoryPluralLabels, formatSgd } from "@/lib/format";
 import type { ProductDetail, ProductSearchItem } from "@/lib/types";
 
 interface ProductComparisonScreenProps {
@@ -341,7 +341,7 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
           <div className="section-heading">
             <div>
               <p className="eyebrow">Catalogue alternatives</p>
-              <h2 id="comparison-picker-title">Add {products.length === 1 ? "one or two" : "one"} {category ? categoryLabels[category].toLowerCase() : "product"} alternative{products.length === 1 ? "s" : ""}</h2>
+              <h2 id="comparison-picker-title">Add {products.length === 1 ? "one or two" : "one"} {category ? categoryInlineLabels[category] : "product"} alternative{products.length === 1 ? "s" : ""}</h2>
             </div>
             <p>Showing up to 24 results from the current category. Add at most three products total.</p>
           </div>
