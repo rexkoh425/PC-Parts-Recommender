@@ -333,7 +333,7 @@ test("shares a safe generation-time snapshot without retailer or ownership data"
   await page.goto("/builds/build_1");
 
   await page.getByRole("button", { name: "Share snapshot" }).click();
-  await expect(page.getByText(/public snapshot was shared or copied/i)).toBeVisible();
+  await expect(page.getByText(/link was shared/i)).toBeVisible();
   const sharedUrl = await page.evaluate(() => window.localStorage.getItem("shared-build-url"));
   expect(sharedUrl).toContain("/share?share=share_e2e");
 

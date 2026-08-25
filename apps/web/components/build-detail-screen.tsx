@@ -222,10 +222,10 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
     setShareState("revoking");
     if (await revokeCreatedShare(activeShare)) {
       setShareState("revoked");
-      setAnnouncement("The public build snapshot has been revoked.");
+      setAnnouncement("The share link has been turned off.");
     } else {
       setShareState("failed");
-      setAnnouncement("The public snapshot could not be revoked. The revoke control remains available so you can try again.");
+      setAnnouncement("The share link could not be turned off. Try again.");
     }
   }
 
@@ -234,7 +234,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
     let url = new URL(sharedBuildHref(build), window.location.origin).toString();
     const shareData = {
       title: `${profileLabels[build.profile]} PC build`,
-      text: "A generation-time BuildSignal PC build snapshot.",
+      text: "A shared BuildSignal PC build.",
       url,
     };
     let createdShare: BuildShareCreated | undefined;
@@ -260,7 +260,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
         setActiveShare(createdShare);
       }
       setShareState("copied");
-      setAnnouncement("A shareable build snapshot is ready. Re-run it before buying to check current data.");
+      setAnnouncement("Your share link is ready. Re-run the build before buying so the prices are current.");
       void trackInteraction({
         event_type: "build_shared",
         session_id: getSessionId(),
@@ -272,7 +272,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
       const revoked = createdShare ? await revokeCreatedShare(createdShare) : true;
       if (!revoked) {
         setShareState("failed");
-        setAnnouncement("Sharing did not finish and automatic cleanup failed. Use Revoke public snapshot to remove the created link.");
+        setAnnouncement("Sharing did not finish. Use Turn off share link to remove it.");
         return;
       }
       if (wasCancelled) {
@@ -729,19 +729,19 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
               onClick={() => void revokeActiveShare()}
               disabled={shareState === "revoking"}
             >
-              {shareState === "revoking" ? "Revoking public snapshot…" : "Revoke public snapshot"}
+              {shareState === "revoking" ? "Revoking public snapshot…" : "Turn off share link"}
             </button>
           )}
           <p className={`share-status share-status--${shareState}`} role="status">
             {shareState === "copied"
-              ? "A public snapshot was shared or copied. It excludes your request, saved builds, and retailer links."
+              ? "The link was shared. It does not include your requirements, saved builds, or retailer links."
               : shareState === "revoked"
-                ? "The previously created public snapshot has been revoked."
+                ? "That share link has been turned off."
               : shareState === "failed"
                 ? activeShare
-                  ? "A public snapshot exists but sharing or automatic cleanup failed. Use the revoke control above."
+                  ? "A share link exists but sharing did not finish. Turn it off above."
                   : "Sharing is unavailable in this browser."
-                : "Creates a public link to this build as it stands now."}
+                : "Creates a link to this build as it stands now."}
           </p>
           <div className="summary-provenance">
             <div><span>Generated</span><strong>{formatFreshness(build.generated_at).replace("Updated ", "")}</strong></div>
