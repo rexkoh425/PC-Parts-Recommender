@@ -46,6 +46,7 @@ interface RpcRow {
   category: string;
   similarity?: number;
   keyword_rank?: number;
+  attributes?: Record<string, unknown> | null;
 }
 
 const DEFAULT_TIMEOUT_MS = 8000;
@@ -148,7 +149,54 @@ function toSearchItem(row: RpcRow): ProductSearchItem | null {
     lowest_price_sgd: null,
     stock_status: null,
     compatibility_status: null,
+    headline_spec: headlineSpec(category, row.attributes ?? null),
   };
+}
+
+/*
+ * The one spec that tells parts in a category apart.
+ *
+ * A card showing only a name and a brand gives nothing to scan by: 24 power
+ * supplies look identical until you open each one. These are the attributes
+ * that actually differentiate, chosen per category from what the catalogue
+ * populates most reliably.
+ */
+const HEADLINE_KEYS: Record<string, readonly string[]> = {
+  gpu: ["vram_gb", "vram_type"],
+  cpu: ["core_count", "socket"],
+  psu: ["wattage", "form_factor"],
+  memory: ["capacity_gb", "speed_mt_s"],
+  storage: ["capacity_gb", "interface"],
+  motherboard: ["chipset", "socket"],
+  cooler: ["cooler_type", "height_mm"],
+  case: ["case_size", "maximum_gpu_length_mm"],
+};
+
+/* Units belong with the number, and only where the raw value omits them. */
+const SPEC_UNITS: Record<string, string> = {
+  vram_gb: " GB",
+  capacity_gb: " GB",
+  wattage: " W",
+  speed_mt_s: " MT/s",
+  height_mm: " mm",
+  maximum_gpu_length_mm: " mm",
+  core_count: " cores",
+};
+
+function headlineSpec(
+  category: ComponentCategory,
+  attributes: Record<string, unknown> | null,
+): string | undefined {
+  if (!attributes) return undefined;
+  const parts: string[] = [];
+  for (const key of HEADLINE_KEYS[category] ?? []) {
+    const value = attributes[key];
+    if (value === null || value === undefined || value === "") continue;
+    if (Array.isArray(value) || typeof value === "object") continue;
+    parts.push(`${value}${SPEC_UNITS[key] ?? ""}`);
+    if (parts.length === 2) break;
+  }
+  return parts.length ? parts.join(" · ") : undefined;
 }
 
 export async function searchSupabaseCatalogue(

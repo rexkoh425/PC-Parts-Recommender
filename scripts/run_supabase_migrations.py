@@ -86,16 +86,44 @@ def main() -> int:
                         "  Enable it by hand: Dashboard > Database > Extensions > vector"
                     ) from error
 
+            # Replaying every file on each run is not idempotent once a
+            # signature evolves: Postgres refuses to drop parameter defaults
+            # through CREATE OR REPLACE, so an early migration that predates
+            # a later one starts failing. Record what has already run.
+            cur.execute(
+                """
+                create table if not exists public.schema_migrations (
+                    filename    text primary key,
+                    applied_at  timestamptz not null default now()
+                )
+                """
+            )
+            conn.commit()
+            cur.execute("select filename from public.schema_migrations")
+            already = {row[0] for row in cur.fetchall()}
+
             files = sorted(MIGRATIONS.glob("*.sql"))
             if not files:
                 raise SystemExit(f"no .sql files in {MIGRATIONS}")
 
-            print(f"\nApplying {len(files)} migration(s)")
-            for path in files:
+            pending = [path for path in files if path.name not in already]
+            if already:
+                print()
+                print(f"{len(already)} migration(s) already applied")
+            if not pending:
+                print("Nothing new to apply.")
+            else:
+                print()
+                print(f"Applying {len(pending)} migration(s)")
+            for path in pending:
                 sql = path.read_text(encoding="utf-8")
                 print(f"  {path.name} ... ", end="", flush=True)
                 try:
                     cur.execute(sql)
+                    cur.execute(
+                        "insert into public.schema_migrations (filename) values (%s)",
+                        (path.name,),
+                    )
                     conn.commit()
                     print("ok")
                 except psycopg.Error as error:

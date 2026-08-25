@@ -7334,3 +7334,13 @@ dd,
   letter-spacing: 0;
   text-transform: none;
 }
+
+/* The differentiating spec. Set in the numeric face and given its own weight
+   so a column of cards can be compared at a glance rather than read. */
+.catalogue-card__spec {
+  font-size: var(--text-sm);
+  font-weight: 550;
+  color: var(--forest-600);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: 0;
+}
