@@ -102,7 +102,7 @@ export function SharedBuildScreen() {
             <div className="component-table-wrap">
               <table className="component-table">
                 <thead>
-                  <tr><th>Category</th><th>Product</th><th>Selection basis</th><th>Snapshot price</th></tr>
+                  <tr><th>Category</th><th>Product</th><th>Selection basis</th><th>Price when saved</th></tr>
                 </thead>
                 <tbody>
                   {snapshot.components.map((component) => (
@@ -113,7 +113,7 @@ export function SharedBuildScreen() {
                         {component.brand && <span>{component.brand}</span>}
                       </td>
                       <td data-label="Selection basis">{component.selection_reason ?? "Not included in the shared link"}</td>
-                      <td data-label="Snapshot price"><strong>{component.price_sgd === null ? "Not included" : formatSgd(component.price_sgd)}</strong></td>
+                      <td data-label="Price when saved"><strong>{component.price_sgd === null ? "Not included" : formatSgd(component.price_sgd)}</strong></td>
                     </tr>
                   ))}
                 </tbody>
