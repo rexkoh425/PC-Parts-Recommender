@@ -281,7 +281,7 @@ export function ProductDetailScreen({
                 })}
               </div>
             ) : (
-              <div className="empty-evidence"><strong>No price observations are available.</strong><p>This product is not assigned a zero price and cannot be treated as free.</p></div>
+              <div className="empty-evidence"><strong>No price recorded</strong><p>Prices come from a separate retailer dataset that does not cover this part.</p></div>
             )}
           </section>
 
@@ -303,7 +303,7 @@ export function ProductDetailScreen({
                 ))}
               </div>
             ) : (
-              <div className="empty-evidence"><strong>No comparable benchmark observations are available.</strong><p>The interface does not turn missing performance evidence into a precise score.</p></div>
+              <div className="empty-evidence"><strong>No benchmarks for this part</strong><p>We would rather show nothing than estimate a score we cannot support.</p></div>
             )}
           </section>
 
@@ -326,7 +326,7 @@ export function ProductDetailScreen({
                 })}
               </div>
             ) : (
-              <div className="empty-evidence"><strong>No permitted review evidence is stored.</strong><p>We do not generate a sentiment summary without cited evidence.</p></div>
+              <div className="empty-evidence"><strong>No reviews for this part</strong><p>We only summarise reviews we can cite.</p></div>
             )}
           </section>
         </div>
