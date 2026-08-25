@@ -169,10 +169,6 @@ export function SharedBuildScreen() {
           <Link className="button button--primary button--large" href="/">Re-run with current data</Link>
           <div className="summary-provenance">
             <div><span>Generated</span><strong>{formatFreshness(snapshot.generated_at).replace("Updated ", "")}</strong></div>
-            <div><span>Data</span><strong>{snapshot.data_version}</strong></div>
-            <div><span>Ranker</span><strong>{snapshot.ranking_model}</strong></div>
-            <div><span>Rules</span><strong>{snapshot.rule_version}</strong></div>
-            <div><span>Solver</span><strong>{snapshot.solver_version}</strong></div>
           </div>
         </aside>
       </div>

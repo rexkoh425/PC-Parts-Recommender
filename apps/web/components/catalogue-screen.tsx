@@ -511,8 +511,6 @@ export function CatalogueScreen({
               </p>
             </div>
             <dl>
-              <div><dt>Data snapshot</dt><dd>{response.data_version}</dd></div>
-              <div><dt>Retrieval</dt><dd>{response.retrieval_model}</dd></div>
               <div><dt>Filtered incompatible</dt><dd>{response.filtered_incompatible}</dd></div>
               <div><dt>Missing compatibility data</dt><dd>{response.filtered_unknown}</dd></div>
             </dl>
