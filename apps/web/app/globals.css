@@ -7299,3 +7299,37 @@ details.evidence-ledger > summary {
     transform: none;
   }
 }
+
+/* ===========================================================================
+   Line breaking
+   Headings were dropping a single short word onto its own line - "working.",
+   "fits", "from" - which reads as a mistake rather than a break. `balance`
+   evens the lines across the block; `pretty` stops body copy ending on an
+   orphan. Both degrade to normal wrapping where unsupported.
+   =========================================================================== */
+
+h1,
+h2,
+h3,
+.hero__lede,
+.eyebrow,
+.faq-item > summary {
+  text-wrap: balance;
+}
+
+p,
+li,
+dd,
+.field-help,
+.lede {
+  text-wrap: pretty;
+}
+
+/* A price or score must never break across lines. */
+.hero__preview-price,
+.catalogue-card__price strong,
+.brief-summary__budget strong,
+.evidence-stat-grid strong,
+.overall-score strong {
+  text-wrap: nowrap;
+}
