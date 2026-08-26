@@ -44,6 +44,7 @@ import { readSavedBuilds } from "./saved-builds";
 
 export const API_BASE_URL = apiBaseUrl;
 export const USING_DEMO_DATA = usingDemoData;
+const LIVE_DATA_VERSION = "buildcores-full-25666-8c738c513661";
 
 export interface ApiRequestOptions {
   signal?: AbortSignal;
@@ -493,6 +494,17 @@ export function prerenderableProductIds(): string[] {
   return USING_DEMO_DATA ? demoProductIds : [];
 }
 
+/*
+ * A live catalogue product has no price history, benchmarks or reviews: those
+ * datasets cover the 21 curated parts only. Falling through to the fixture made
+ * each one throw, and the record page rendered three red "could not be loaded"
+ * panels for data that was never missing - it simply does not exist for that
+ * part. Absence is not an error, so return empty evidence instead.
+ */
+function isLiveCatalogueId(productId: string): boolean {
+  return SUPABASE_CATALOGUE_ENABLED && productId.startsWith("prod_");
+}
+
 export function getProduct(
   productId: string,
   options: ApiRequestOptions = {},
@@ -523,6 +535,14 @@ export function getProductPrices(
   productId: string,
   options: ApiRequestOptions = {},
 ): Promise<ProductPricesResponse> {
+  if (isLiveCatalogueId(productId)) {
+    return Promise.resolve({
+      product_id: productId,
+      observations: [],
+      current_lowest_price_sgd: null,
+      data_version: LIVE_DATA_VERSION,
+    } as ProductPricesResponse);
+  }
   if (USING_DEMO_DATA) return Promise.resolve().then(() => getDemoPrices(productId));
   return apiRequest<ProductPricesResponse>(
     `/v1/products/${encodeURIComponent(productId)}/prices`,
@@ -535,6 +555,14 @@ export function getProductBenchmarks(
   productId: string,
   options: ApiRequestOptions = {},
 ): Promise<ProductBenchmarksResponse> {
+  if (isLiveCatalogueId(productId)) {
+    return Promise.resolve({
+      product_id: productId,
+      benchmarks: [],
+      data_version: LIVE_DATA_VERSION,
+      performance_model_version: "",
+    } as ProductBenchmarksResponse);
+  }
   if (USING_DEMO_DATA) return Promise.resolve().then(() => getDemoBenchmarks(productId));
   return apiRequest<ProductBenchmarksResponse>(
     `/v1/products/${encodeURIComponent(productId)}/benchmarks`,
@@ -547,6 +575,13 @@ export function getProductReviews(
   productId: string,
   options: ApiRequestOptions = {},
 ): Promise<ProductReviewsResponse> {
+  if (isLiveCatalogueId(productId)) {
+    return Promise.resolve({
+      product_id: productId,
+      evidence: [],
+      data_version: LIVE_DATA_VERSION,
+    } as ProductReviewsResponse);
+  }
   if (USING_DEMO_DATA) return Promise.resolve().then(() => getDemoReviews(productId));
   return apiRequest<ProductReviewsResponse>(
     `/v1/products/${encodeURIComponent(productId)}/reviews`,

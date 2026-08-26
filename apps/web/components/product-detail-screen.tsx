@@ -186,9 +186,16 @@ export function ProductDetailScreen({
 
   const { product, prices, benchmarks, reviews } = state;
   const currentPrice = prices?.current_lowest_price_sgd ?? product.lowest_price_sgd;
-  const attributes = Object.entries(product.attributes).sort(([left], [right]) =>
-    left.localeCompare(right),
-  );
+  /*
+   * Live records populate roughly half their attribute slots, so listing every
+   * key gave a table where seven of fourteen rows read "Not reported" - noise
+   * that buries the specs that do exist. An absent value tells the reader
+   * nothing, so it is left out rather than printed.
+   */
+  const attributes = Object.entries(product.attributes)
+    .filter(([, value]) => value !== null && value !== undefined && value !== "")
+    .filter(([, value]) => !(Array.isArray(value) && value.length === 0))
+    .sort(([left], [right]) => left.localeCompare(right));
 
   return (
     <main className="shell product-page">
