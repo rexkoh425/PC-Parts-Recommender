@@ -20,6 +20,7 @@ import type {
   ProductSearchItem,
   ProductSearchResponse,
 } from "@/lib/types";
+import { CategoryIcon } from "./category-icon";
 import { StatusPill } from "./status-pill";
 
 const categoryOptions = Object.entries(categoryLabels) as Array<[ComponentCategory, string]>;
@@ -92,6 +93,7 @@ function ProductResultCard({
     <article className="catalogue-card">
       <div className="catalogue-card__topline">
         <span className={`category-chip category-chip--${product.category}`}>
+          <CategoryIcon category={product.category} />
           {categoryLabels[product.category]}
         </span>
         {!USING_DEMO_DATA && (

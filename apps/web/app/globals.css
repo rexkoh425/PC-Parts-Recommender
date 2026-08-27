@@ -7361,3 +7361,12 @@ dd,
   color: var(--forest-600);
   text-decoration-color: currentColor;
 }
+
+/* Category marks. Sized to the chip's cap height so the glyph sits on the same
+   optical line as the label rather than floating above it. */
+.category-icon {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  opacity: 0.85;
+}
