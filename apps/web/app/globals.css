@@ -204,7 +204,9 @@ svg {
   position: relative;
   z-index: 20;
   border-bottom: 1px solid rgb(23 79 62 / 14%);
-  background: rgb(244 241 232 / 83%);
+  /* Derived from the token: hard-coding the cream left the header painting the
+     old, yellower canvas over the new one - a visible seam along the masthead. */
+  background: color-mix(in srgb, var(--canvas) 83%, transparent);
   backdrop-filter: blur(18px);
 }
 
@@ -717,7 +719,7 @@ svg {
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
   outline: none;
-  background: #fffefa;
+  background: var(--surface);
   transition:
     border-color 120ms ease,
     box-shadow 120ms ease;
@@ -3428,7 +3430,7 @@ svg {
   padding: 8px 12px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  background: #fffefa;
+  background: var(--surface);
 }
 
 .catalogue-stock-filter {
@@ -5436,7 +5438,7 @@ svg {
   padding: 8px 12px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-sm);
-  background: #fffefa;
+  background: var(--surface);
 }
 
 .operations-access small {
