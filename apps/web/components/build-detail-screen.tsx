@@ -720,7 +720,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
             onClick={() => void shareBuildSnapshot()}
             disabled={shareState === "revoking"}
           >
-            {shareState === "copied" ? "Share link ready" : "Share snapshot"}
+            {shareState === "copied" ? "Share link ready" : "Share build"}
           </button>
           {activeShare && !USING_DEMO_DATA && (
             <button

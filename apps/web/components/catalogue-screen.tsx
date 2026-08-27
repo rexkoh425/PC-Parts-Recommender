@@ -170,7 +170,7 @@ function CoverageSummary({ response }: { response: ProductSearchResponse }) {
   const metrics = [
     ["Parts", coverage.canonical_products],
     ["Retailer listings", coverage.retailer_listings],
-    ["Permitted sources", coverage.source_count],
+    ["Sources", coverage.source_count],
     ["Categories", coverage.category_count],
   ] as const;
   return (
@@ -480,7 +480,7 @@ export function CatalogueScreen({
       <div className="public-demo-boundary" role="note">
         <span aria-hidden="true">◎</span>
         <p>
-          <strong>{USING_DEMO_DATA ? "Public portfolio demo." : "Evidence boundary."}</strong>{" "}
+          <strong>{USING_DEMO_DATA ? "Public portfolio demo." : "What this shows."}</strong>{" "}
           {USING_DEMO_DATA
             ? "A fixed set of real parts with prices from August 2026. Not connected to live retailer stock."
             : "Prices and stock are recorded observations, not a live checkout quote."}
