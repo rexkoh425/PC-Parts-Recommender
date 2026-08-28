@@ -7370,3 +7370,34 @@ dd,
   flex: none;
   opacity: 0.85;
 }
+
+/* Loading states.
+   The skeleton card stood at 390px where a real build card settles at 433px,
+   so content jumped 43px as it arrived. Matching the height means the page
+   holds still. */
+.skeleton-card {
+  min-height: 433px;
+}
+
+/* Four infinite animations - three shimmers and two spinners - ran regardless
+   of the reduced-motion preference. An indefinite loop is exactly what that
+   setting exists to stop. */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after,
+  .skeleton-card::after {
+    animation: none;
+    opacity: 0.5;
+  }
+
+  .drawer,
+  [class*="drawer"] {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="spinner"],
+  .button [aria-hidden="true"] {
+    animation: none !important;
+  }
+}
