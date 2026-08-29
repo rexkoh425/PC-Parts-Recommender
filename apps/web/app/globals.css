@@ -7401,3 +7401,20 @@ dd,
     animation: none !important;
   }
 }
+
+/* Hero balance.
+   The split was 74/26 - 876px of copy against a 300px card - so the panel
+   showing the actual product read as an afterthought, and its parts list
+   wrapped for want of room. Widening it to 380 brings the split to roughly
+   67/33 and gives the product the weight it earns. The copy is capped so it
+   stops sprawling as the viewport grows. */
+@media (min-width: 1000px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: clamp(40px, 5vw, 72px);
+  }
+
+  .hero__copy {
+    max-width: 720px;
+  }
+}
