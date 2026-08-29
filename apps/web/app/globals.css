@@ -7446,3 +7446,24 @@ h2 {
 .catalogue-header__mark > strong {
   font-variation-settings: "SOFT" 26, "WONK" 0, "opsz" 24;
 }
+
+/* Touch targets.
+   The earlier fix was scoped to max-width 720px, so a 768px tablet fell into a
+   gap: a touch device with nav links at 26px and ratio buttons at 35px. Width
+   was the wrong signal - what matters is whether the pointer is a finger, so
+   this keys off pointer: coarse and covers every touch device at any width. */
+@media (pointer: coarse) {
+  .header-nav a:not(.header-nav__comparison),
+  .ratio-option,
+  .segmented button,
+  .tabs__tab,
+  .brand {
+    min-height: 44px;
+  }
+
+  .header-nav a:not(.header-nav__comparison),
+  .brand {
+    display: inline-flex;
+    align-items: center;
+  }
+}
