@@ -7467,3 +7467,11 @@ h2 {
     align-items: center;
   }
 }
+
+/* The class is .segmented-control, not .segmented - my earlier selector matched
+   nothing, so these stayed at their 35px min-height on touch devices. */
+@media (pointer: coarse) {
+  .segmented-control button {
+    min-height: 44px;
+  }
+}
