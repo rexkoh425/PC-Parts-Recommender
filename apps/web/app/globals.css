@@ -7475,3 +7475,19 @@ h2 {
     min-height: 44px;
   }
 }
+
+/* Tap targets for links that sit alone in a cell.
+   The profile links occupy 17px of hit area inside a 70px cell, so on a phone
+   you aim at a name and miss. Padding grows the target and an equal negative
+   margin cancels the layout shift, so nothing moves visually. Inline links
+   inside a sentence are deliberately excluded - WCAG exempts them, and
+   blocking them out would break the text they sit in. */
+@media (pointer: coarse) {
+  .comparison-table th a,
+  .comparison-table td a,
+  .breadcrumbs a {
+    display: inline-block;
+    padding-block: 13px;
+    margin-block: -13px;
+  }
+}
