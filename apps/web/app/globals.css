@@ -7521,3 +7521,17 @@ h2 {
     padding-inline: 12px;
   }
 }
+
+/* Hiding the count hints got the tab strip from far too wide to 378px against
+   347px available - still 31px short of fitting, so the third tab stayed off
+   screen. Tightening the padding and gap closes it, and all three labels stay
+   full words rather than being abbreviated. */
+@media (max-width: 460px) {
+  .tabs__tab {
+    padding-inline: 6px;
+  }
+
+  .tabs__list {
+    gap: 2px;
+  }
+}
