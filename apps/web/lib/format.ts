@@ -47,6 +47,29 @@ export const categoryLabels: Record<ComponentCategory, string> = {
   case: "Case",
 };
 
+/*
+ * Plural forms, written out rather than derived.
+ *
+ * The comparison heading built its plural by appending "s" to the singular
+ * label, which is right for four of the eight categories and wrong for the
+ * other four: "Graphics" is already plural, and "Memory", "Storage" and
+ * "Power supply" are mass nouns or take an irregular ending. The page read
+ * "Graphicss are compared only on reported catalogue fields."
+ *
+ * English pluralisation of these terms has no rule worth encoding, so each
+ * form is spelled out and the naming stays in one place.
+ */
+export const categoryPluralLabels: Record<ComponentCategory, string> = {
+  cpu: "Processors",
+  gpu: "Graphics cards",
+  motherboard: "Motherboards",
+  memory: "Memory kits",
+  storage: "Storage drives",
+  psu: "Power supplies",
+  cooler: "CPU coolers",
+  case: "Cases",
+};
+
 export const workloadLabels: Record<WorkloadName, string> = {
   gaming_1080p: "1080p gaming",
   gaming_1440p: "1440p gaming",

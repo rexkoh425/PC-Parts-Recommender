@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  categoryLabels,
+  categoryPluralLabels,
   clampScore,
   formatFreshnessSummary,
   formatScore,
@@ -44,5 +46,29 @@ describe("presentation formatters", () => {
 
     expect(formatFreshnessSummary(freshness)).toContain("Catalogue stale");
     expect(formatFreshnessSummary(freshness)).not.toContain("Prices stale");
+  });
+});
+
+describe("category naming", () => {
+  // Four of these are the singular plus "s"; four are not. The heading used
+  // to append "s" to all eight and rendered "Graphicss are compared only on
+  // reported catalogue fields." Spelled out, so the wrong four stay right.
+  it("spells the irregular plurals correctly", () => {
+    expect(categoryPluralLabels.gpu).toBe("Graphics cards");
+    expect(categoryPluralLabels.memory).toBe("Memory kits");
+    expect(categoryPluralLabels.storage).toBe("Storage drives");
+    expect(categoryPluralLabels.psu).toBe("Power supplies");
+  });
+
+  it("never emits a doubled or mis-stemmed ending", () => {
+    for (const plural of Object.values(categoryPluralLabels)) {
+      expect(plural).not.toMatch(/ss$/);
+      expect(plural).not.toMatch(/[^aeiou]ys$/);
+      expect(plural).not.toMatch(/(Storages|Memorys|Graphicss)/);
+    }
+  });
+
+  it("covers exactly the categories that have singular labels", () => {
+    expect(Object.keys(categoryPluralLabels).sort()).toEqual(Object.keys(categoryLabels).sort());
   });
 });

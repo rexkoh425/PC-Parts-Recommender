@@ -335,6 +335,9 @@ export async function getSupabaseProduct(
       lowest_price_sgd: null,
       stock_status: null,
       compatibility_status: null,
+      // The search mapper derives this, but the detail lookup did not, so a
+      // product opened directly had no distinguishing spec to show.
+      headline_spec: headlineSpec(category, row.category_attributes ?? null),
       manufacturer_part_number: row.manufacturer_part_number,
       attributes: { ...(row.common_attributes ?? {}), ...(row.category_attributes ?? {}) },
       source_confidence: row.source_confidence,
