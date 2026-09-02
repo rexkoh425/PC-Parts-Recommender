@@ -38,14 +38,14 @@ export function SavedScreen() {
       : undefined;
 
   const rerunExplanation = USING_DEMO_DATA
-    ? "Current-price reruns are unavailable in the public demo because no live retailer feed is connected. Generate a new controlled-demo shortlist instead."
+    ? "Re-pricing needs a live retailer feed, which is not connected. Build a new shortlist instead."
     : selectedEntries.length === 0
-      ? "Select one saved build to check whether its original structured brief is still available in this browser session."
+      ? "Select one saved build to see whether we still have the brief behind it."
       : selectedEntries.length > 1
-        ? "Select exactly one saved build to rerun its original brief."
+        ? "Select just one saved build to run its brief again."
         : !rerunRequest
-          ? "The original brief is no longer available in this browser session. Start a new brief to query current stored observations."
-          : "Uses the original structured brief to query current stored observations and re-check every compatibility rule.";
+          ? "This browser no longer has the brief behind that build. Start a new one to get current prices."
+          : "Runs the original brief again at current prices, re-checking that every part still fits.";
 
   function toggleComparison(buildId: string) {
     setSelectedBuildIds((current) => {

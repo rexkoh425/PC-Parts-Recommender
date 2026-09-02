@@ -259,7 +259,7 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
           <p>
             {USING_DEMO_DATA
               ? "Demo catalogue — prices from August 2026."
-              : "Prices and availability are recorded observations."}
+              : "Prices and availability were recorded earlier."}
           </p>
         </div>
         <div className="comparison-selected__cards">

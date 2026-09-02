@@ -28,7 +28,7 @@ export function BuildBudgetBreakdown({
         <p>
           {demo
             ? "Prices recorded August 2026."
-            : "Generation-time listing observations; verify the retailer before purchase."}
+            : "Prices from when this build was put together - check with the retailer before you buy."}
         </p>
       </div>
 
