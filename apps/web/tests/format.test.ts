@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  categoryInlineLabels,
   categoryLabels,
   categoryPluralLabels,
   clampScore,
@@ -68,7 +69,18 @@ describe("category naming", () => {
     }
   });
 
+  it("keeps acronyms capitalised in mid-sentence labels", () => {
+    // Call sites lowercased the display label to drop it into a sentence,
+    // which turned "CPU cooler" into "Replace cpu cooler".
+    expect(categoryInlineLabels.cooler).toBe("CPU cooler");
+    for (const inline of Object.values(categoryInlineLabels)) {
+      expect(inline).not.toMatch(/cpu/);
+      expect(inline).not.toMatch(/gpu/);
+    }
+  });
+
   it("covers exactly the categories that have singular labels", () => {
     expect(Object.keys(categoryPluralLabels).sort()).toEqual(Object.keys(categoryLabels).sort());
+    expect(Object.keys(categoryInlineLabels).sort()).toEqual(Object.keys(categoryLabels).sort());
   });
 });

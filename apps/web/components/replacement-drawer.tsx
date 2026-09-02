@@ -7,7 +7,7 @@ import {
   replaceComponent,
   searchProducts,
 } from "@/lib/api";
-import { categoryLabels, formatSgd } from "@/lib/format";
+import { categoryInlineLabels, formatSgd } from "@/lib/format";
 import { formatSignedDelta } from "@/lib/catalogue";
 import {
   canApplyReplacementCandidate,
@@ -136,7 +136,7 @@ export function ReplacementDrawer({
       <div className="replacement-dialog__header">
         <div>
           <p className="eyebrow">Compatible alternatives</p>
-          <h2 id="replacement-title">Replace {categoryLabels[category].toLowerCase()}</h2>
+          <h2 id="replacement-title">Replace {categoryInlineLabels[category]}</h2>
           <p>
             Current: <strong>{current?.canonical_name ?? "Unknown component"}</strong>
             {current && !current.already_owned && <> · {formatSgd(current.price_sgd)}</>}

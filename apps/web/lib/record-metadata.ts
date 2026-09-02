@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { categoryLabels, formatScore, formatSgd, profileLabels } from "./format";
+import { categoryInlineLabels, formatScore, formatSgd, profileLabels } from "./format";
 import type { ProductDetail } from "./types";
 import type { SharedBuildSnapshot } from "./shared-build";
 
@@ -48,7 +48,7 @@ function recordMetadata({
 export function productRecordMetadata(product: ProductDetail): Metadata {
   const brand = product.brand ? `${product.brand} ` : "";
   const description = boundedDescription(
-    `${brand}${categoryLabels[product.category].toLowerCase()} record for ${product.canonical_name}. Inspect reported specifications, price observations, benchmarks, and cited review evidence.`,
+    `${brand}${categoryInlineLabels[product.category]} record for ${product.canonical_name}. Inspect reported specifications, price observations, benchmarks, and cited review evidence.`,
   );
   const canonical = `/products/${encodeURIComponent(product.product_id)}`;
   return recordMetadata({
