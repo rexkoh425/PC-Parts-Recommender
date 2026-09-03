@@ -87,12 +87,19 @@ export function SavedScreen() {
           <p className="eyebrow">Stored on this browser</p>
           <h1>Saved builds</h1>
           <p className="lede">
-            Keep a shortlist without creating an account. Prices are snapshots from generation time.
+            Keep a shortlist without creating an account. Prices are from when each build was put together.
           </p>
         </div>
-        <Link className="button button--primary" href="/">
-          Generate another build
-        </Link>
+        {/*
+          Hidden while the list is empty: it said "another" on a page whose
+          own heading read "No saved builds yet", and it was a second primary
+          button pointing at the same page as the empty state's.
+        */}
+        {entries.length > 0 && (
+          <Link className="button button--primary" href="/">
+            Generate another build
+          </Link>
+        )}
       </header>
 
       {entries.length === 0 ? (
@@ -102,9 +109,9 @@ export function SavedScreen() {
             <span />
             <span />
           </div>
-          <p className="eyebrow">Your shortlist is clear</p>
+          <p className="eyebrow">Shortlist</p>
           <h2 id="empty-saved-title">No saved builds yet</h2>
-          <p>Generate a recommendation set and save the builds you want to compare later.</p>
+          <p>Build a shortlist and save the ones you want to come back to.</p>
           <Link className="button button--primary" href="/">
             Start a build brief
           </Link>
