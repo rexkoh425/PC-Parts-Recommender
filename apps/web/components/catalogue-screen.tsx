@@ -183,7 +183,7 @@ function CoverageSummary({ response }: { response: ProductSearchResponse }) {
         <p>
           {USING_DEMO_DATA
             ? "Counts for the parts included in this demo."
-            : "Coverage is reported by the connected catalogue provider and is separate from the current search result count."}
+            : "How much of the catalogue is covered, which is not the same as how many results your search returned."}
         </p>
         {coverage.as_of && <small>Reported {formatEvidenceTimestamp(coverage.as_of)}</small>}
         {attributions.length > 0 && (

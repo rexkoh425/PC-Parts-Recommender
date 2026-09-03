@@ -40,20 +40,20 @@ export function generateMetadata(): Metadata {
       template: "%s · BuildSignal",
     },
     description:
-      "An interactive portfolio demo for compatible PC builds ranked by workload, budget, existing hardware, and explicit evidence boundaries.",
+      "Tell it your budget and what you do. It picks parts that fit together, shows what each one costs, and says why it chose them.",
     applicationName: "BuildSignal",
     keywords: ["PC build recommender", "compatibility", "recommendation system", "Singapore"],
     openGraph: {
       title: "BuildSignal · Build for the work",
       description:
-        "Explore an evidence-backed PC build recommendation system with compatibility-first constraints.",
+        "Tell it your budget and what you do. It picks parts that fit together and shows why.",
       type: "website",
-      images: [{ url: socialImage, width: 1731, height: 909, alt: "BuildSignal recommendation system" }],
+      images: [{ url: socialImage, width: 1731, height: 909, alt: "BuildSignal - PC builds that fit together" }],
     },
     twitter: {
       card: "summary_large_image",
       title: "BuildSignal · PC builds that fit together",
-      description: "Compatibility-first PC build recommendations with visible evidence boundaries.",
+      description: "PC builds where every part fits, with the reasoning shown.",
       images: [socialImage],
     },
   };

@@ -128,7 +128,7 @@ function OperationsData({ data }: { data: AdminOperationsResponse }) {
         <p>
           {data.pipeline_failure_events_available
             ? "This response includes instrumented pipeline-operation outcomes. Scheduler, queue, and worker-control failures remain in Dagster."
-            : "Pipeline-operation receipts are unavailable for this serving response; inspect the authenticated pipeline run store separately."}
+            : "This response does not carry pipeline run records. They are kept separately."}
         </p>
         {data.notes.length > 0 && <ul>{data.notes.map((note) => <li key={note}>{note}</li>)}</ul>}
       </section>
@@ -147,7 +147,7 @@ export function AdminOperationsScreen() {
     event.preventDefault();
     const suppliedToken = token.trim();
     if (!suppliedToken) {
-      setError("Enter an administrator token to load restricted operational counters.");
+      setError("Enter an administrator token to load these figures.");
       window.requestAnimationFrame(() => errorRef.current?.focus());
       return;
     }
