@@ -90,11 +90,7 @@ export function SavedScreen() {
             Keep a shortlist without creating an account. Prices are from when each build was put together.
           </p>
         </div>
-        {/*
-          Hidden while the list is empty: it said "another" on a page whose
-          own heading read "No saved builds yet", and it was a second primary
-          button pointing at the same page as the empty state's.
-        */}
+
         {entries.length > 0 && (
           <Link className="button button--primary" href="/">
             Generate another build

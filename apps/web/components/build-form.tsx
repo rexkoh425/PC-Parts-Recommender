@@ -56,10 +56,6 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
-/**
- * Which fields belong to which tab, so a validation error surfaces as a count on
- * the tab that owns it rather than hiding inside a collapsed panel.
- */
 const STEP_FIELDS = {
   budget: [
     "budget_sgd",

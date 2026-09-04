@@ -5,16 +5,11 @@ import { useId, useRef, useState } from "react";
 export interface TabItem {
   id: string;
   label: string;
-  /** Optional short count or status shown after the label. */
+
   hint?: string;
   content: React.ReactNode;
 }
 
-/**
- * Accessible tab set following the WAI-ARIA authoring pattern: arrow keys move
- * between tabs, Home/End jump to the ends, and only the active tab is tabbable.
- * Panels stay mounted so form state and in-page anchors survive switching.
- */
 export function Tabs({
   items,
   initialId,

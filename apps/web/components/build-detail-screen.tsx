@@ -114,9 +114,6 @@ function workloadLabel(workload: string): string {
     : humanizeToken(workload);
 }
 
-// Only an estimate earns a visible label. A sourced price is just a price;
-// badging every row turned the table into a provenance audit rather than a
-// parts list someone reads.
 const priceBasisLabel = {
   launch_msrp: "",
   manufacturer_list: "",
@@ -124,8 +121,6 @@ const priceBasisLabel = {
   estimate: "estimate",
 } as const;
 
-// The tooltip carries the detail the badge has no room for: where the number
-// came from and when, so a reader can judge it rather than just trust it.
 function priceBasisDetail(component: BuildComponent): string {
   const asOf = component.price_as_of ? ` as of ${component.price_as_of}` : "";
   if (component.price_basis === "manufacturer_list") {

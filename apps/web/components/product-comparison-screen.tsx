@@ -52,12 +52,7 @@ function CandidateCard({
       <div>
         <small>{product.brand ?? "Brand not reported"}</small>
         <h3>{product.canonical_name}</h3>
-        {/*
-          Every live catalogue record has a null price and a null stock status,
-          so this line rendered "Price unavailable · Availability not reported"
-          identically on all 24 candidates - a wall of text that said nothing
-          and hid the one field that tells the parts apart.
-        */}
+        {}
         {priceKnown ? (
           <p>
             {formatSgd(product.lowest_price_sgd as number)}

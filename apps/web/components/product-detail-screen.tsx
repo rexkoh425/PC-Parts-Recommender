@@ -40,11 +40,6 @@ export interface ProductEvidenceState {
   reviewsError?: string;
 }
 
-// Read the impression context straight off the URL rather than through
-// useSearchParams(). The value only ever feeds analytics, never markup, and
-// useSearchParams() opts its subtree out of static prerendering — which would
-// push these records back to client-only rendering, the exact problem the
-// server-side load above exists to fix.
 function readImpressionContext(): string | null {
   if (typeof window === "undefined") return null;
   return new URLSearchParams(window.location.search).get("impression");
@@ -69,11 +64,7 @@ export function ProductDetailScreen({
   initialState = null,
 }: {
   productId: string;
-  /**
-   * Evidence resolved on the server. When present the screen renders complete
-   * markup on the first pass, which is what a crawler and a slow connection
-   * see; the fetch effect below then has nothing left to do.
-   */
+
   initialState?: ProductEvidenceState | null;
 }) {
   const [state, setState] = useState<ProductEvidenceState | null>(initialState);
@@ -81,7 +72,7 @@ export function ProductDetailScreen({
   const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
-    // Already served from the server, and not a retry: nothing to fetch.
+
     if (initialState && retryKey === 0) return;
     let active = true;
     const controller = new AbortController();
@@ -186,12 +177,7 @@ export function ProductDetailScreen({
 
   const { product, prices, benchmarks, reviews } = state;
   const currentPrice = prices?.current_lowest_price_sgd ?? product.lowest_price_sgd;
-  /*
-   * Live records populate roughly half their attribute slots, so listing every
-   * key gave a table where seven of fourteen rows read "Not reported" - noise
-   * that buries the specs that do exist. An absent value tells the reader
-   * nothing, so it is left out rather than printed.
-   */
+
   const attributes = Object.entries(product.attributes)
     .filter(([, value]) => value !== null && value !== undefined && value !== "")
     .filter(([, value]) => !(Array.isArray(value) && value.length === 0))

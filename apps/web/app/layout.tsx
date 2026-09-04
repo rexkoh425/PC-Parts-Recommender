@@ -5,24 +5,12 @@ import { SiteHeader } from "@/components/site-header";
 import { siteUrl } from "@/lib/site-url";
 import "./globals.css";
 
-/*
- * The stylesheet named Inter but nothing ever loaded it, so the whole site had
- * been rendering in the system fallback — Segoe UI on Windows. Both faces are
- * self-hosted by next/font at build time, so no request leaves the page and
- * the CSP stays untouched.
- */
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
 });
 
-/*
- * A display face so headings have a voice of their own. Fraunces is a variable
- * serif with optical sizing; at low softness and wonk it reads as considered
- * rather than decorative, and gives the page the editorial weight the
- * all-Inter setting never had.
- */
 const fraunces = Fraunces({
   subsets: ["latin"],
   display: "swap",

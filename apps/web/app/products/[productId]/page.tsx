@@ -10,11 +10,6 @@ import {
 } from "@/lib/api";
 import { productRecordMetadata, unavailableProductMetadata } from "@/lib/record-metadata";
 
-/**
- * Prerender the controlled demo's records at build time. The catalogue is a
- * fixed set of 21, so there is nothing to resolve per request. Unknown IDs
- * still render on demand, which keeps the not-found path working.
- */
 export function generateStaticParams(): { productId: string }[] {
   return prerenderableProductIds().map((productId) => ({ productId }));
 }
@@ -37,14 +32,6 @@ function reasonFor(result: PromiseSettledResult<unknown>): string | undefined {
   return result.reason instanceof Error ? result.reason.message : "This evidence is unavailable.";
 }
 
-/**
- * Resolve the record on the server so the page ships complete markup.
- *
- * Only the controlled demo is prefetched. The live API path authenticates with
- * browser credentials, which the server does not hold, so fetching it here
- * would either fail or silently return a less-privileged view — the client
- * keeps that case, exactly as before.
- */
 async function loadEvidence(productId: string): Promise<ProductEvidenceState | null> {
   if (!USING_DEMO_DATA) return null;
   const [product, prices, benchmarks, reviews] = await Promise.allSettled([
@@ -53,7 +40,7 @@ async function loadEvidence(productId: string): Promise<ProductEvidenceState | n
     getProductBenchmarks(productId),
     getProductReviews(productId),
   ]);
-  // A missing product is the client's error state to render, not a crash here.
+
   if (product.status === "rejected") return null;
   return {
     product: product.value,

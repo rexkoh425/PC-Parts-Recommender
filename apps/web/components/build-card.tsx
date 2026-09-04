@@ -45,8 +45,6 @@ export function BuildCard({
         </div>
         <div
           className="overall-score"
-          // The ring reads the value from a custom property so the figure and
-          // the arc can never disagree.
           style={{ "--score": build.overall_score } as React.CSSProperties}
           aria-label={`Relative fit score ${formatScore(build.overall_score)} out of 100 for this request`}
         >
@@ -93,7 +91,6 @@ export function BuildCard({
           <span>{Math.round(build.estimated_peak_power_w)} W peak estimate</span>
         )}
       </div>
-
 
       <div className="build-card__actions">
         <Link

@@ -8,24 +8,18 @@ interface NavItem {
   href: string;
   label: string;
   className?: string;
-  /** Extra path roots that belong to this section but do not sit under href. */
+
   owns?: readonly string[];
 }
 
 const navItems: readonly NavItem[] = [
   { href: "/how-it-works", label: "How it works", className: "header-nav__secondary header-nav__evidence" },
-  // A product record is a catalogue page even though it lives at /products/*,
-  // so without this the nav goes blank on all of them.
+
   { href: "/catalogue", label: "Catalogue", owns: ["/products"] },
   { href: "/compare", label: "Compare", className: "header-nav__comparison" },
   { href: "/saved", label: "Saved" },
 ];
 
-/**
- * A section is current when the path is the link or sits beneath it, so a
- * product record still marks Catalogue and a saved build still marks Saved.
- * Exact-match alone would leave the nav blank on most pages.
- */
 function isCurrent(pathname: string, item: NavItem): boolean {
   const roots = [item.href, ...(item.owns ?? [])];
   return roots.some((root) => pathname === root || pathname.startsWith(`${root}/`));
@@ -64,8 +58,6 @@ export function SiteHeader() {
                 key={item.href}
                 href={item.href}
                 className={[item.className, current ? "is-current" : ""].filter(Boolean).join(" ")}
-                // aria-current carries this to a screen reader, which cannot
-                // see the underline.
                 aria-current={current ? "page" : undefined}
               >
                 {item.label}

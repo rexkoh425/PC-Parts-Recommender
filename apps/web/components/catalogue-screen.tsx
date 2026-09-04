@@ -113,9 +113,7 @@ function ProductResultCard({
           !product.canonical_name.includes(product.model) && <p>{product.model}</p>
         )}
       </div>
-      {/* A figure slot filled with "Price unavailable" on every card is dead
-          weight where the eye expects information. When there is no price,
-          say so once and quietly instead of shouting absence 24 times. */}
+
       <div className={`catalogue-card__price${priceKnown ? "" : " catalogue-card__price--absent"}`}>
         {priceKnown ? (
           <>

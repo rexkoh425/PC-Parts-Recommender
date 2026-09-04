@@ -32,8 +32,7 @@ export default function HomePage() {
             </a>
           </div>
         </div>
-        {/* Show the output, not a description of it. These are the real figures
-            the demo returns for a S$3,500 gaming + local-AI brief. */}
+        {}
         <aside className="hero__preview" aria-label="Example result">
           <div className="hero__preview-head">
             <span className="profile-kicker">Best overall</span>
