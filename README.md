@@ -10,7 +10,8 @@ migration, ingestion adapters, training/evaluation harnesses, and optimiser exis
 does **not** yet claim production retailer coverage or production-promoted supervised-model
 quality. One real-data CPU development diagnostic exists, but it misses the promotion gates.
 
-No public demo is deployed. The web application runs locally against the controlled demo
+A public portfolio demo is deployed at
+https://pc-parts-recommender-web-lgei.vercel.app/. It runs against the controlled demo
 contract; live retailer stock and the production FastAPI release are not connected yet.
 
 ## What is implemented
