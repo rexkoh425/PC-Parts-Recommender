@@ -28,8 +28,6 @@
   --radius-pill: 999px;
   --shell: 1240px;
 
-  /* Modular type scale. Every font-size resolves to one of these ten steps so
-     headings, labels and data share a rhythm instead of drifting per element. */
   --text-2xs: 0.6875rem;
   --text-xs: 0.75rem;
   --text-sm: 0.8125rem;
@@ -41,8 +39,6 @@
   --text-3xl: 2.25rem;
   --text-4xl: 2.875rem;
 
-  /* Tonal steps for the primary. Previously only two greens existed, so every
-     surface reached for the same value and the palette read as flat. */
   --forest-50: #eef5f1;
   --forest-100: #d7e8df;
   --forest-200: #a9cdbc;
@@ -50,7 +46,6 @@
   --forest-600: #174f3e;
   --forest-800: #0f3a2d;
 
-  /* Semantic colours share one lightness band so states read as a family. */
   --state-pass: #1f6b4f;
   --state-pass-soft: #e6f2ec;
   --state-warn: #8a5d12;
@@ -60,13 +55,11 @@
   --state-info: #2b5687;
   --state-info-soft: #e9f0f8;
 
-  /* Elevation: four deliberate steps rather than fifteen one-off shadows. */
   --elevation-1: 0 1px 2px rgb(20 35 30 / 6%);
   --elevation-2: 0 2px 4px rgb(20 35 30 / 6%), 0 8px 20px rgb(20 35 30 / 6%);
   --elevation-3: 0 8px 24px rgb(20 35 30 / 10%);
   --elevation-4: 0 24px 64px rgb(20 35 30 / 16%);
 
-  /* Numeric readouts align column-to-column instead of jittering. */
   --numeric: "tnum" 1, "lnum" 1;
 }
 
@@ -204,8 +197,6 @@ svg {
   position: relative;
   z-index: 20;
   border-bottom: 1px solid rgb(23 79 62 / 14%);
-  /* Derived from the token: hard-coding the cream left the header painting the
-     old, yellower canvas over the new one - a visible seam along the masthead. */
   background: color-mix(in srgb, var(--canvas) 83%, transparent);
   backdrop-filter: blur(18px);
 }
@@ -1897,9 +1888,6 @@ svg {
   font-weight: 680;
 }
 
-/* Objective and workload scores are the same measure (0-100 against this
-   request), so they share one form. Two columns of meters, not a mix of a
-   definition list and bars. */
 .build-card__objective-scores {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1994,9 +1982,6 @@ svg {
   font-size: var(--text-xs);
 }
 
-/* Meter: the unfilled track is a lighter step of the same ramp so the state
-   reads across the whole bar, and the fill is solid — a gradient is decoration
-   that competes with the value. Rounded at the data end, square at the baseline. */
 .score-meter__track {
   height: 6px;
   overflow: hidden;
@@ -5759,11 +5744,6 @@ svg {
   }
 }
 
-/* Tabs
-   Segmented control on a rule, so switching views reads as one surface rather
-   than another stacked card. The active tab carries the only filled weight.
- */
-
 .tabs__list {
   display: flex;
   gap: 0.25rem;
@@ -5836,7 +5816,6 @@ svg {
   display: none;
 }
 
-/* Numeric readouts line up column to column. */
 .metric-value,
 .component-table td,
 .score-value,
@@ -5845,8 +5824,6 @@ svg {
 }
 
 
-/* A large standalone value uses the font's proportional figures — tabular-nums
-   gives every digit the width of a zero, which reads loose at display sizes. */
 .overall-score strong,
 .hero-figure {
   font-variant-numeric: proportional-nums;
@@ -5854,13 +5831,6 @@ svg {
   line-height: 1.05;
   letter-spacing: -0.02em;
 }
-
-/* Section rhythm
-   Top-level sections previously ran 128/0/115/24/10/40px of leading padding, so
-   the page read as a stack of unrelated blocks. Three deliberate steps instead:
-   the hero opens wide, ordinary sections share one measure, and the full-bleed
-   strip stays flush.
- */
 
 :root {
   --section-y: 96px;
@@ -5892,13 +5862,6 @@ svg {
   }
 }
 
-/* Measure
-   Prose was running the full container width — up to 169 characters per line
-   against a comfortable 45-75. Long lines are what made the page read as
-   "clustered": the eye loses the return sweep and paragraphs turn into slabs.
-   Capping the measure, not the container, keeps the layout width intact.
- */
-
 :root {
   --measure: 68ch;
   --measure-wide: 80ch;
@@ -5921,15 +5884,10 @@ svg {
   max-width: var(--measure-wide);
 }
 
-/* Eyebrows are short labels, so the cap is about stopping the box from
-   spanning the full column rather than about line length. */
 .eyebrow {
   max-width: var(--measure-wide);
 }
 
-/* An MPN is the one string that identifies a part unambiguously across
-   retailers, so it is set in a mono face and made selectable rather than
-   buried in the attribute table. */
 .record-mpn {
   display: flex;
   flex-direction: column;
@@ -5951,10 +5909,6 @@ svg {
   user-select: all;
 }
 
-/* A price is only as good as its provenance, so the badge sits with the number
-   rather than in a footnote. Estimates are muted and MSRP is stated plainly —
-   the intent is that a reader can tell them apart at a glance without the
-   estimate looking like a warning. */
 .price-basis {
   display: block;
   margin-top: 2px;
@@ -5973,8 +5927,6 @@ svg {
   font-style: italic;
 }
 
-/* Context for the price column. Sits under the table rather than in a tooltip
-   because it explains every row at once, not one figure. */
 .price-note {
   max-width: var(--measure);
   margin-top: 16px;
@@ -5986,12 +5938,6 @@ svg {
 .price-basis--manufacturer_list {
   color: var(--state-pass);
 }
-
-/* Provenance, folded away
-   The evidence ledger used to shout four full SHA-256 digests and raw repo
-   paths at every visitor. The rigour still matters for anyone who wants it, so
-   it stays on the page — collapsed, quiet, and opt-in.
- */
 
 details.evidence-ledger {
   margin-top: 40px;
@@ -6045,17 +5991,7 @@ details.evidence-ledger small {
   color: var(--forest-400);
 }
 
-/* Design pass
-   Measured against how comparable product sites actually set type and colour
-   (Stripe: 16px body, 43px h1 at weight 300; Linear: 16px body, 64px h1 at
-   weight 510 — both with line-height at or above 1). This site was running a
-   14px body under a 115px hero at weight 760 with line-height 0.86, which is
-   the "generated landing page" signature: display type so large and so tightly
-   tracked that the lines collide, over body copy too small to read.
- */
-
 :root {
-  /* Every step moves up one notch so body copy lands at 16px. */
   --text-2xs: 0.75rem;
   --text-xs: 0.8125rem;
   --text-sm: 0.875rem;
@@ -6068,9 +6004,6 @@ details.evidence-ledger small {
   --text-4xl: 2.5rem;
   --text-5xl: 3.25rem;
 
-  /* The canvas was #f4f1e8 — a distinctly yellow cream that fought the cool
-     green sitting on it. Pulling the yellow out lets the brand colour read as
-     deliberate rather than muddy, and lifts card contrast. */
   --canvas: #f6f5f1;
   --canvas-deep: #eceae2;
   --surface: #ffffff;
@@ -6078,24 +6011,17 @@ details.evidence-ledger small {
   --line: #e4e2da;
   --line-strong: #c9c6bb;
 
-  /* A second hue, so the palette has somewhere to go. Copper against forest
-     is warm/cool rather than another tint of the same green, which is what
-     made the old palette read as one flat colour. Reserved for figures and
-     accents — never for body text. */
   --accent: #b0521d;
   --accent-soft: #fbeee5;
 }
 
 body {
-  /* Was a mint radial wash across the corner; at 38% it read as a stain. */
   background:
     radial-gradient(circle at 92% -4%, rgb(188 231 209 / 20%), transparent 26rem),
     var(--canvas);
   font-size: var(--text-base);
   line-height: 1.6;
 }
-
-/* --- Headings ------------------------------------------------------------ */
 
 .hero h1 {
   margin: 0 0 24px;
@@ -6125,8 +6051,6 @@ h3 {
   line-height: 1.3;
 }
 
-/* Eyebrows were full-caps at near-body size, competing with the headings they
-   introduce. Smaller, wider, and quieter puts them back in a supporting role. */
 .eyebrow {
   font-size: var(--text-2xs);
   font-weight: 600;
@@ -6134,11 +6058,6 @@ h3 {
   color: var(--ink-faint);
 }
 
-/* --- Figures -------------------------------------------------------------- */
-
-/* The four headline numbers are the one place the second hue earns its keep:
-   they are the reason the section exists, so they should not be the same
-   colour as every border and label around them. */
 .evidence-stat-grid strong {
   font-size: var(--text-4xl);
   font-weight: 620;
@@ -6153,8 +6072,6 @@ h3 {
   line-height: 1.5;
   color: var(--ink-soft);
 }
-
-/* --- Controls ------------------------------------------------------------- */
 
 .button {
   font-size: var(--text-sm);
@@ -6174,8 +6091,6 @@ h3 {
   border-color: var(--forest-800);
 }
 
-/* Cards sat on a cream surface barely distinct from the canvas. Pure white
-   plus a real border gives them an edge to read against. */
 .evidence-stat-grid article,
 .trust-card,
 .state-card {
@@ -6184,13 +6099,6 @@ h3 {
   border-radius: var(--radius-md);
   box-shadow: none;
 }
-
-/* Hero composition
-   The right-hand column used to be a transparent, borderless block headed
-   "03–05" — a number with no referent, floating opposite an 823px column of
-   copy, so the hero read as lopsided and described the product instead of
-   showing it. It now carries a real result: the actual build the demo returns.
- */
 
 .hero {
   gap: 64px;
@@ -6263,12 +6171,6 @@ h3 {
   color: var(--ink-faint);
 }
 
-/* Results grid
-   Cards were 873px tall — taller than the viewport — so five builds could not
-   be compared without scrolling each one past the fold. Trimmed to the figures
-   that separate the options, with the full parts list one tap away.
- */
-
 .results-grid {
   gap: 20px;
 }
@@ -6283,7 +6185,6 @@ h3 {
   gap: 10px;
 }
 
-/* The recommended build leads, so it gets the width to say so. */
 @media (min-width: 1000px) {
   .results-grid {
     grid-template-columns: repeat(6, 1fr);
@@ -6302,21 +6203,10 @@ h3 {
   }
 }
 
-/* The card is a flex column with a 14px gap, but its children kept their own
-   margins, which stack on top of that gap: measured spacing came out at
-   38/46/30/54/54/30/30px — 282px of air against the 98px the gap asks for, and
-   the single largest reason these cards ran past the fold. Let the container
-   own the spacing. */
 .build-card > * {
   margin: 0;
 }
 
-/* Header and hero, seen rather than measured
- */
-
-/* Nav items were breaking mid-item ("Data / status", "Saved / builds"), which
-   reads as a broken page. Two internal links have gone, and what remains is
-   held on one line. */
 .header-nav a,
 .header-nav__secondary {
   white-space: nowrap;
@@ -6327,15 +6217,10 @@ h3 {
   flex-wrap: nowrap;
 }
 
-/* 128px of lead under a banner and a masthead left the hero floating with a
-   visible dead band above the eyebrow. */
 :root {
   --section-y-lead: 80px;
 }
 
-/* The second hue existed only on the evidence figures, three screens down, so
-   the palette a visitor actually sees was still one green. These are the two
-   accents in the opening view. */
 .hero .eyebrow > span[aria-hidden="true"] {
   color: var(--accent);
 }
@@ -6346,15 +6231,10 @@ h3 {
   border-color: color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
-/* The demo banner is a footnote, not an announcement. */
 .demo-banner__inner {
   font-size: var(--text-xs);
 }
 
-/* The heading treatment was scoped to `.hero h1`, so every other page kept the
-   old 700-weight, -0.065em setting: the catalogue title rendered at 57.7px with
-   -3.7px tracking while the homepage sat at 62px/600/-0.023em. One rule for all
-   of them, so a visitor moving between pages sees one voice. */
 h1 {
   font-size: clamp(2.25rem, 4.4vw, 3.25rem);
   font-weight: 600;
@@ -6362,10 +6242,6 @@ h1 {
   line-height: 1.08;
 }
 
-/* The dark sidebar card kept a 13px body from the old 14px-base scale, so it
-   ran three steps below the surrounding text in the narrowest column on the
-   page. Contrast was already fine (~6.9:1 once the 66% alpha is composited);
-   size and leading were the problem. */
 .compatibility-context-card p:not(.profile-kicker) {
   font-size: var(--text-sm);
   line-height: 1.65;
@@ -6381,14 +6257,6 @@ h1 {
 .compatibility-context-card {
   padding: 20px;
 }
-
-/* Form controls
-   Measured before this pass: budget input 56px tall at 19px, selects 52px,
-   both floored by min-height 48px, labels at weight 720. That is dialog-sized
-   furniture for a form with eleven fields, and it is what made the page read
-   as oversized. Controls now sit at 44px — still a comfortable touch target —
-   with labels that support the field instead of competing with it.
- */
 
 .field label {
   font-size: var(--text-xs);
@@ -6409,35 +6277,20 @@ h1 {
   font-size: var(--text-base);
 }
 
-/* Fields in a row were sharing a bottom edge rather than a top one, so a
-   shorter field sat 24px lower than its neighbour — the visible stagger
-   between "Primary workload" and "Secondary workload". Form fields align to
-   their labels, always. */
 .field-grid {
   align-items: start;
 }
 
-/* The brief panel ran a 24px gap between eight single-line rows, which pushed
-   it well past the form it summarises. */
 .build-brief,
 .build-brief__list {
   gap: 14px;
 }
 
-/* `.field + .field { margin-top: 24px }` is right for fields stacked in a
-   column and wrong for fields sitting side by side in a grid row: it indents
-   the second column by 24px, which is the stagger between "Primary workload"
-   and "Secondary workload". A correction existed but lived inside the mobile
-   media query, so it only ever applied at narrow widths — the defect was
-   desktop-only, which is why it survived. The grid owns spacing here. */
 .field-grid .field + .field,
 .field-grid > .field {
   margin-top: 0;
 }
 
-/* min-height alone could not shrink these: it is a floor, and the controls
-   were computing to 52-56px from padding plus a 1.6 body line-height. Setting
-   the padding and leading is what actually sizes a control. */
 .field input,
 .field select,
 .product-picker input[type="search"] {
@@ -6450,9 +6303,6 @@ h1 {
   padding-right: 40px;
 }
 
-/* The budget field carried `font-size: var(--text-lg) !important`, so it stayed
-   at 19px and 53px tall while every other control settled at 16px/44px. It is
-   the primary input and can sit a step above the rest, but not two. */
 .money-input input,
 .unit-input input {
   font-size: var(--text-md) !important;
@@ -6461,13 +6311,6 @@ h1 {
   line-height: 1.4;
   min-height: 44px;
 }
-
-/* Heading hierarchy
-   Section headings ran clamp(2rem, 4vw, 3.5rem) — 51px at a 1280 viewport,
-   against an h1 of 62px. Nine pixels between a page title and a section title
-   is not a hierarchy; the eye cannot tell which is which. Sections now sit a
-   clear step below.
- */
 
 .builder-section__heading h2,
 .evidence-section__heading h2,
@@ -6478,23 +6321,14 @@ h1 {
   line-height: 1.18;
 }
 
-/* Bare <small> was falling through to the browser default (13.33px), the only
-   size on the page not coming from the scale. */
 small {
   font-size: var(--text-xs);
 }
 
-/* The brief panel's gap rule named a class that does not exist in the markup
-   (.build-brief); the element is .brief-layout, so the earlier fix silently
-   did nothing and the panel kept a 24px gap between single-line rows. */
 .brief-layout {
   gap: 16px;
 }
 
-/* Results, build detail and saved kept their own title rule at
-   clamp(2.35rem, 5vw, 4.8rem) — up to 77px — which outranked the global h1 by
-   specificity, so those three pages stayed oversized after the earlier pass.
-   Same scale as every other page title now. */
 .results-header h1,
 .detail-header h1,
 .saved-header h1 {
@@ -6504,18 +6338,10 @@ small {
   line-height: 1.08;
 }
 
-/* Comparison tables carried the whole shortlist at 13px, three steps under the
-   body scale, in the one place a reader is comparing numbers closely. */
 .comparison-table td,
 .comparison-table th {
   font-size: var(--text-sm);
 }
-
-/* Buttons and focus
-   Controls came down to 44px in the pass above, but buttons kept their 52px
-   floor — so a form's submit button stood taller than the fields it submits.
-   One control height across the app.
- */
 
 .button {
   min-height: 44px;
@@ -6528,10 +6354,6 @@ small {
   font-size: var(--text-base);
 }
 
-/* Only three focus-visible rules existed for the whole app, so most controls
-   fell back to the UA default — which is invisible against a dark button and
-   inconsistent everywhere else. One ring, drawn outside the element so it
-   never shifts layout, on everything a keyboard can reach. */
 a:focus-visible,
 button:focus-visible,
 [role="tab"]:focus-visible,
@@ -6544,7 +6366,6 @@ textarea:focus-visible {
   border-radius: var(--radius-sm);
 }
 
-/* On the dark strips the forest ring disappears into the background. */
 .method-strip a:focus-visible,
 .demo-banner a:focus-visible,
 .site-footer a:focus-visible,
@@ -6553,10 +6374,6 @@ textarea:focus-visible {
   outline-color: var(--mint);
 }
 
-/* `.field input:not([type="range"])` carries an attribute selector, so it sits
-   at (0,3,1) and outranked both `.field input` and `.money-input input` at
-   (0,2,1) — which is why text and money inputs stayed at 12px padding / 48px
-   while selects came down to 44px. Matching that specificity is what it takes. */
 .field input:not([type="range"]) {
   min-height: 44px;
   padding-top: 10px;
@@ -6571,15 +6388,6 @@ textarea:focus-visible {
   padding-bottom: 10px;
 }
 
-/* Narrow viewports
-   The page scrolled sideways on a 375px screen: 406px of content in a 375px
-   window. Three separate causes, one of them introduced by the desktop nav fix
-   above.
- */
-
-/* Grid and flex items default to min-width:auto, so they refuse to shrink below
-   their content. .brief-layout__form was 391px inside a 347px parent, which
-   also stopped the tab strip's own overflow-x from ever engaging. */
 .brief-layout,
 .brief-layout__form,
 .tabs,
@@ -6588,9 +6396,6 @@ textarea:focus-visible {
   min-width: 0;
 }
 
-/* `flex-wrap: nowrap` fixed the nav breaking mid-item on desktop, but on a
-   phone it forces the nav past the edge instead. Hold the single line only
-   where there is room for one. */
 .header-nav {
   flex-wrap: wrap;
 }
@@ -6602,9 +6407,41 @@ textarea:focus-visible {
 }
 
 @media (max-width: 720px) {
-  /* Nav links were 22px and the ratio buttons 35px — under the 44px a finger
-     reliably hits. Excludes the comparison link, which is deliberately
-     display:none at this width; setting display on every link un-hid it. */
+  .catalogue-header h1,
+  .product-header h1,
+  .comparison-header h1,
+  .operations-header h1 {
+    font-size: clamp(2.25rem, 9.4vw, 2.75rem);
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+  }
+
+  .site-header__inner {
+    display: grid;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    justify-content: normal;
+    gap: 0;
+    padding-block: 8px;
+  }
+
+  .brand {
+    width: fit-content;
+  }
+
+  .header-nav {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid rgb(23 79 62 / 12%);
+  }
+
+  .header-nav a:not(.header-nav__comparison) {
+    justify-content: center;
+    padding-inline: 4px;
+  }
+
   .header-nav a:not(.header-nav__comparison) {
     min-height: 44px;
     display: inline-flex;
@@ -6617,12 +6454,6 @@ textarea:focus-visible {
     min-height: 44px;
   }
 }
-
-/* How it works
-   The homepage was 3.7 screens, 38% of it explaining the project rather than
-   helping anyone build a PC. That material lives here now, so the homepage
-   does one job and this page answers the questions it used to interrupt with.
- */
 
 .page-intro {
   padding-top: var(--section-y-lead);
@@ -6666,8 +6497,6 @@ textarea:focus-visible {
 
 .faq-item > summary::-webkit-details-marker { display: none; }
 
-/* A rotating caret rather than a swapped glyph, so open and closed read as one
-   control moving instead of two different marks. */
 .faq-item > summary::after {
   content: "";
   position: absolute;
@@ -6701,19 +6530,9 @@ textarea:focus-visible {
   margin-top: 40px;
 }
 
-/* Builder layout and weight
-   The form column ran to 879px while its widest field is ~350px, so half the
-   card was empty and the fields read as scattered rather than placed. And the
-   brief panel was a full-height slab of --forest-deep, which — stacked with a
-   dark banner, a dark method strip and dark buttons — left the page with one
-   heavy colour and nowhere to rest.
- */
-
 @media (min-width: 1000px) {
   .brief-layout {
     grid-template-columns: minmax(0, 660px) 340px;
-    /* space-between dumped all 225px of leftover width into the gap and left
-       the two panels floating apart. Centre the pair instead. */
     justify-content: center;
     gap: 48px;
     max-width: 1048px;
@@ -6721,9 +6540,6 @@ textarea:focus-visible {
   }
 }
 
-/* Light card instead of a dark slab: the panel is a running summary of what
-   you typed, not a second hero. The budget figure keeps the brand colour so
-   the eye still lands on it. */
 .brief-summary {
   background: var(--surface);
   color: var(--ink);
@@ -6781,13 +6597,6 @@ textarea:focus-visible {
   outline-color: var(--forest-600);
 }
 
-/* Current page
-   The nav gave no sense of place — four links, none of which told you where
-   you were. The marker is an underline sitting on the header's own baseline
-   rather than a filled pill, so it reads as a position indicator instead of
-   competing with the primary button.
- */
-
 .header-nav a {
   position: relative;
   color: var(--ink-soft);
@@ -6814,25 +6623,15 @@ textarea:focus-visible {
   background: var(--forest-600);
 }
 
-/* On a phone the links wrap onto their own line, where an underline hugging
-   the baseline collides with the row beneath. */
 @media (max-width: 720px) {
   .header-nav a.is-current::after {
     bottom: 2px;
   }
 }
 
-/* Typeface
-   Inter is now actually loaded rather than merely named, and headings get a
-   display serif so the page has a voice instead of defaulting to whatever the
-   operating system supplies.
- */
-
 body {
   font-family: var(--font-sans), Inter, ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
-  /* Inter's own figures are handsome but drift in tables; contextual
-     alternates keep the shaping without losing column alignment. */
   font-feature-settings: "cv05" 1, "cv08" 1, "ss03" 1;
 }
 
@@ -6842,14 +6641,10 @@ h2,
 .hero__preview-price,
 .evidence-stat-grid strong {
   font-family: var(--font-display), Georgia, "Times New Roman", serif;
-  /* Fraunces ships soft and wonky by default; dialled down it reads as a
-     considered serif rather than a novelty. */
   font-variation-settings: "SOFT" 20, "WONK" 0, "opsz" 40;
   font-weight: 500;
 }
 
-/* A serif carries more colour per character, so the tight tracking that suited
-   a grotesque now closes the counters up. */
 .hero h1 {
   letter-spacing: -0.015em;
   font-weight: 500;
@@ -6861,19 +6656,11 @@ h2 {
   font-weight: 500;
 }
 
-/* Figures stay on the display face for warmth but keep tabular alignment. */
 .hero__preview-price,
 .evidence-stat-grid strong,
 .brief-summary__budget strong {
   font-variant-numeric: tabular-nums lining-nums;
 }
-
-/* Surfaces
-   Every card was pure white on near-white with a grey hairline and no shadow —
-   correct, and completely flat. Shadows tinted with the brand hue instead of
-   neutral grey sit in the palette rather than on top of it, and a warmer paper
-   tone gives the white cards something to lift off.
- */
 
 :root {
   --canvas: #f4f3ee;
@@ -6884,7 +6671,6 @@ h2 {
   --line: #e2e0d7;
 }
 
-/* Cards read as paper: a hairline for definition, a soft shadow for lift. */
 .evidence-stat-grid article,
 .trust-card,
 .trust-grid article,
@@ -6896,8 +6682,6 @@ h2 {
   box-shadow: var(--elevation-2);
 }
 
-/* A card that responds to the cursor feels like an object rather than a
-   rectangle. Transform only — animating shadow alone repaints the whole box. */
 .build-card,
 .evidence-stat-grid article {
   transition: transform 180ms cubic-bezier(0.2, 0, 0, 1),
@@ -6922,14 +6706,11 @@ h2 {
   }
 }
 
-/* The recommended build should look chosen, not merely first. */
 .build-card--featured {
   border-color: var(--forest-200);
   box-shadow: var(--elevation-3);
 }
 
-/* Hairline rules were the same weight as card borders, so tables and cards
-   competed. Dividers sit back; edges hold. */
 .comparison-table td,
 .comparison-table th,
 .faq-item,
@@ -6937,16 +6718,7 @@ h2 {
   border-color: color-mix(in srgb, var(--line) 70%, transparent);
 }
 
-/* Atmosphere
-   The page was a stack of flat bands: one canvas tone, one dark strip, no
-   depth between them. These are quiet moves — a wash behind the hero, real
-   dividers in the dark strip, buttons that respond — but they are what
-   separates a designed page from a correct one.
- */
-
 body {
-  /* Two soft washes rather than one mint blob: a cool tint behind the hero and
-     a warm one low and left, so the ground has a gradient instead of a stain. */
   background:
     radial-gradient(60rem 32rem at 88% -8%, rgb(58 122 99 / 9%), transparent 62%),
     radial-gradient(48rem 30rem at -10% 18%, rgb(176 82 29 / 5%), transparent 60%),
@@ -6954,8 +6726,6 @@ body {
   background-attachment: fixed;
 }
 
-/* The strip carried four steps with nothing between them. Hairlines in a
-   lighter tint of its own ground read as structure, not decoration. */
 .method-strip {
   background: linear-gradient(180deg, var(--forest-800) 0%, var(--forest-deep) 100%);
 }
@@ -6970,8 +6740,6 @@ body {
   opacity: 0.75;
 }
 
-/* Buttons had no depth and no travel. A hairline highlight along the top edge
-   catches light the way a raised surface would. */
 .button--primary {
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 12%),
@@ -7013,7 +6781,6 @@ body {
   }
 }
 
-/* The eyebrow dot was a bare bullet; a small filled disc reads as a mark. */
 .hero .eyebrow > span[aria-hidden="true"] {
   display: inline-block;
   width: 6px;
@@ -7025,21 +6792,12 @@ body {
   overflow: hidden;
 }
 
-/* Figures
-   The overall score sat in a 57px grey disc with a hairline — a badge, not a
-   figure. It is the number that separates one build from another, so it should
-   read as data. A conic ring shows the value as well as stating it, which the
-   plain disc never did.
- */
-
 .overall-score {
   position: relative;
   width: 64px;
   height: 64px;
   border: none;
   background: none;
-  /* --score is set inline per card; the fallback keeps the ring sane if a
-     build ever renders without one. */
   --score: 0;
 }
 
@@ -7068,8 +6826,6 @@ body {
   letter-spacing: 0.04em;
 }
 
-/* Meters were a flat bar. A rounded cap and an eased fill make the value feel
-   measured rather than drawn. */
 .score-meter__track {
   background: var(--forest-100);
   overflow: hidden;
@@ -7091,20 +6847,12 @@ body {
   }
 }
 
-/* Catalogue search
-   Six controls were forced into one row with 130px minimums, so "All
-   categories" rendered as "All categori" and "Any brand" as "Any bran". A
-   truncated label is not a filter anyone can use. The query gets its own line;
-   the filters share the next.
- */
-
 @media (min-width: 860px) {
   .catalogue-search {
     grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
     gap: 16px 20px;
   }
 
-  /* The query is the primary control and spans the row above the filters. */
   .catalogue-search__query {
     grid-column: 1 / -1;
   }
@@ -7114,19 +6862,11 @@ body {
   }
 }
 
-/* The stock note wrapped to three lines inside a box sized for one. */
 .catalogue-search label:has(input[type="checkbox"]),
 .catalogue-search .field:has(input[type="checkbox"]) {
   align-self: end;
   min-height: 44px;
 }
-
-/* Evidence ledger
-   The container kept `display: grid` with two columns from when it was a
-   <section> holding a heading beside a list. As a <details>, the <summary>
-   became column one and stretched to the full row height — the tall empty box
-   with the list stranded beside it.
- */
 
 details.evidence-ledger {
   display: block;
@@ -7138,13 +6878,6 @@ details.evidence-ledger > summary {
   width: fit-content;
 }
 
-/* Components
-   Chips, cards and badges had each been styled where they were first needed,
-   so they shared no shape language: different radii, different label casing,
-   different weights. These give them one voice.
- */
-
-/* Chips read as labels, not buttons: soft tint, no shadow, one radius. */
 .category-chip,
 .recommended-chip,
 .demo-chip,
@@ -7172,8 +6905,6 @@ details.evidence-ledger > summary {
   padding: 6px 10px;
 }
 
-/* Catalogue cards were a stack of loosely related blocks. A consistent rhythm
-   and a rule above the price separate identity from commerce. */
 .catalogue-card {
   display: flex;
   flex-direction: column;
@@ -7232,14 +6963,10 @@ details.evidence-ledger > summary {
   letter-spacing: -0.02em;
 }
 
-/* The action sits at the card's foot whatever the name length, so a grid of
-   cards has one baseline instead of a ragged one. */
 .catalogue-card .button {
   margin-top: auto;
 }
 
-/* The coverage mark was a heavy dark slab for a single number. Lighter, with
-   the figure carrying the weight instead of the box. */
 .catalogue-header__mark {
   display: grid;
   gap: 2px;
@@ -7280,13 +7007,6 @@ details.evidence-ledger > summary {
   }
 }
 
-/* Line breaking
-   Headings were dropping a single short word onto its own line - "working.",
-   "fits", "from" - which reads as a mistake rather than a break. `balance`
-   evens the lines across the block; `pretty` stops body copy ending on an
-   orphan. Both degrade to normal wrapping where unsupported.
- */
-
 h1,
 h2,
 h3,
@@ -7304,7 +7024,6 @@ dd,
   text-wrap: pretty;
 }
 
-/* A price or score must never break across lines. */
 .hero__preview-price,
 .catalogue-card__price strong,
 .brief-summary__budget strong,
@@ -7313,11 +7032,6 @@ dd,
   text-wrap: nowrap;
 }
 
-/* Catalogue card rhythm.
-   Product names run from 31 to 122 characters, so cards were coming out at
-   360, 374 and 398px in the same grid. Clamping the name to two lines gives
-   every card one shape; the full name stays in the title attribute and in the
-   record page. */
 .catalogue-card__identity h2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -7325,7 +7039,6 @@ dd,
   overflow: hidden;
 }
 
-/* Absence should recede, not occupy the figure slot. */
 .catalogue-card__price--absent {
   border-top-color: color-mix(in srgb, var(--line) 60%, transparent);
 }
@@ -7337,8 +7050,6 @@ dd,
   text-transform: none;
 }
 
-/* The differentiating spec. Set in the numeric face and given its own weight
-   so a column of cards can be compared at a glance rather than read. */
 .catalogue-card__spec {
   font-size: var(--text-sm);
   font-weight: 550;
@@ -7347,8 +7058,6 @@ dd,
   letter-spacing: 0;
 }
 
-/* The same differentiating spec on a comparison candidate. Shares the
-   catalogue card's treatment so a part reads identically in both places. */
 .comparison-candidate__spec {
   font-size: var(--text-sm);
   font-weight: 550;
@@ -7357,8 +7066,6 @@ dd,
   letter-spacing: 0;
 }
 
-/* The manufacturer page for a part. A quiet outbound link rather than a second
-   button, so it never competes with the card's own action. */
 .catalogue-card__source {
   font-size: var(--text-xs);
   color: var(--ink-soft);
@@ -7372,8 +7079,6 @@ dd,
   text-decoration-color: currentColor;
 }
 
-/* Category marks. Sized to the chip's cap height so the glyph sits on the same
-   optical line as the label rather than floating above it. */
 .category-icon {
   width: 13px;
   height: 13px;
@@ -7381,17 +7086,10 @@ dd,
   opacity: 0.85;
 }
 
-/* Loading states.
-   The skeleton card stood at 390px where a real build card settles at 433px,
-   so content jumped 43px as it arrived. Matching the height means the page
-   holds still. */
 .skeleton-card {
   min-height: 433px;
 }
 
-/* Four infinite animations - three shimmers and two spinners - ran regardless
-   of the reduced-motion preference. An indefinite loop is exactly what that
-   setting exists to stop. */
 @media (prefers-reduced-motion: reduce) {
   .skeleton::after,
   .skeleton-card::after {
@@ -7412,12 +7110,6 @@ dd,
   }
 }
 
-/* Hero balance.
-   The split was 74/26 - 876px of copy against a 300px card - so the panel
-   showing the actual product read as an afterthought, and its parts list
-   wrapped for want of room. Widening it to 380 brings the split to roughly
-   67/33 and gives the product the weight it earns. The copy is capped so it
-   stops sprawling as the viewport grows. */
 @media (min-width: 1000px) {
   .hero {
     grid-template-columns: minmax(0, 1fr) 380px;
@@ -7429,25 +7121,15 @@ dd,
   }
 }
 
-/* Optical sizing.
-   Fraunces carries an opsz axis, and pinning it at 40 for everything is what
-   that axis exists to avoid: a face cut for a 62px headline has thinner strokes
-   and tighter spacing than one cut for a 26px figure, and using display cuts at
-   small sizes makes text look frail. Each tier gets the cut it was drawn for. */
-
-/* Page titles, 52-62px. */
 .hero h1,
 h1 {
   font-variation-settings: "SOFT" 20, "WONK" 0, "opsz" 120;
 }
 
-/* Section headings, roughly 35px. */
 h2 {
   font-variation-settings: "SOFT" 22, "WONK" 0, "opsz" 60;
 }
 
-/* Figures and prices sit between 26 and 40px and are read as data, so they
-   take a text-weight cut with slightly firmer stems. */
 .hero__preview-price,
 .evidence-stat-grid strong,
 .brief-summary__budget strong,
@@ -7457,11 +7139,6 @@ h2 {
   font-variation-settings: "SOFT" 26, "WONK" 0, "opsz" 24;
 }
 
-/* Touch targets.
-   The earlier fix was scoped to max-width 720px, so a 768px tablet fell into a
-   gap: a touch device with nav links at 26px and ratio buttons at 35px. Width
-   was the wrong signal - what matters is whether the pointer is a finger, so
-   this keys off pointer: coarse and covers every touch device at any width. */
 @media (pointer: coarse) {
   .header-nav a:not(.header-nav__comparison),
   .ratio-option,
@@ -7478,20 +7155,12 @@ h2 {
   }
 }
 
-/* The class is .segmented-control, not .segmented - my earlier selector matched
-   nothing, so these stayed at their 35px min-height on touch devices. */
 @media (pointer: coarse) {
   .segmented-control button {
     min-height: 44px;
   }
 }
 
-/* Tap targets for links that sit alone in a cell.
-   The profile links occupy 17px of hit area inside a 70px cell, so on a phone
-   you aim at a name and miss. Padding grows the target and an equal negative
-   margin cancels the layout shift, so nothing moves visually. Inline links
-   inside a sentence are deliberately excluded - WCAG exempts them, and
-   blocking them out would break the text they sit in. */
 @media (pointer: coarse) {
   .comparison-table th a,
   .comparison-table td a,
@@ -7502,10 +7171,6 @@ h2 {
   }
 }
 
-/* Build detail on a phone.
-   The evidence links sit at 19px inside their cell, same problem the
-   comparison table had but a different table, so the earlier rule missed them.
-   Replace is a real button and simply undersized. */
 @media (pointer: coarse) {
   .component-evidence-links a,
   .detail-section table a {
@@ -7519,9 +7184,6 @@ h2 {
   }
 }
 
-/* Three tabs plus their count hints do not fit 375px, so the third scrolled
-   out of sight with nothing to suggest it was there. Dropping the hint - a
-   number the panel repeats anyway - lets all three fit. */
 @media (max-width: 460px) {
   .tabs__hint {
     display: none;
@@ -7532,10 +7194,6 @@ h2 {
   }
 }
 
-/* Hiding the count hints got the tab strip from far too wide to 378px against
-   347px available - still 31px short of fitting, so the third tab stayed off
-   screen. Tightening the padding and gap closes it, and all three labels stay
-   full words rather than being abbreviated. */
 @media (max-width: 460px) {
   .tabs__tab {
     padding-inline: 6px;
