@@ -297,6 +297,7 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
             <div><p className="eyebrow">Reported specifications</p><h2 id="comparison-table-title">Field-by-field</h2></div>
             <p>Only fields present in at least one selected record are shown.</p>
           </div>
+          <p className="table-scroll-hint">Swipe horizontally to compare every column <span aria-hidden="true">→</span></p>
           <div className="comparison-table-scroll" tabIndex={0} aria-label="Scrollable product comparison table">
             <table className="comparison-table">
               <thead>

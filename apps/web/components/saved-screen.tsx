@@ -144,8 +144,10 @@ export function SavedScreen() {
             </div>
 
             {selectedEntries.length >= 2 ? (
-              <div className="table-scroll" tabIndex={0} aria-label="Scrollable saved build comparison">
-                <table className="comparison-table saved-comparison__table" data-testid="saved-build-comparison">
+              <>
+                <p className="table-scroll-hint">Swipe horizontally to compare every column <span aria-hidden="true">→</span></p>
+                <div className="table-scroll" tabIndex={0} aria-label="Scrollable saved build comparison">
+                  <table className="comparison-table saved-comparison__table" data-testid="saved-build-comparison">
                   <caption className="sr-only">
                     Recorded fields for the selected saved PC build snapshots
                   </caption>
@@ -181,8 +183,9 @@ export function SavedScreen() {
                       </tr>
                     ))}
                   </tbody>
-                </table>
-              </div>
+                  </table>
+                </div>
+              </>
             ) : (
               <div className="saved-comparison__empty" role="status">
                 <strong>Select two builds below to reveal the comparison table.</strong>

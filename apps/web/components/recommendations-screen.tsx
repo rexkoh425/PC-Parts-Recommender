@@ -257,7 +257,8 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
             <h2 id="comparison-heading">Compare the trade-offs</h2>
           </div>
           <p>All scores are normalised within the current compatible candidate set.</p>
-        </div>
+          </div>
+        <p className="table-scroll-hint">Swipe horizontally to compare every column <span aria-hidden="true">→</span></p>
         <div className="table-scroll" tabIndex={0} aria-label="Scrollable build comparison">
           <table className="comparison-table">
             <thead>
