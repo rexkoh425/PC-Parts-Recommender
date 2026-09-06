@@ -52,7 +52,6 @@ function CandidateCard({
       <div>
         <small>{product.brand ?? "Brand not reported"}</small>
         <h3>{product.canonical_name}</h3>
-        {}
         {priceKnown ? (
           <p>
             {formatSgd(product.lowest_price_sgd as number)}

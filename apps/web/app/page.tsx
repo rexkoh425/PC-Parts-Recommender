@@ -32,7 +32,6 @@ export default function HomePage() {
             </a>
           </div>
         </div>
-        {}
         <aside className="hero__preview" aria-label="Example result">
           <div className="hero__preview-head">
             <span className="profile-kicker">Best overall</span>
