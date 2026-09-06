@@ -7216,4 +7216,18 @@ h2 {
   .tabs__list {
     gap: 2px;
   }
+
+  .form-tabs .tabs__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: visible;
+  }
+
+  .form-tabs .tabs__tab {
+    min-height: 52px;
+    justify-content: center;
+    padding: 8px 4px;
+    text-align: center;
+    white-space: normal;
+  }
 }
