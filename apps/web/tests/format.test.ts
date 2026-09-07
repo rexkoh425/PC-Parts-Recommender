@@ -51,9 +51,6 @@ describe("presentation formatters", () => {
 });
 
 describe("category naming", () => {
-  // Four of these are the singular plus "s"; four are not. The heading used
-  // to append "s" to all eight and rendered "Graphicss are compared only on
-  // reported catalogue fields." Spelled out, so the wrong four stay right.
   it("spells the irregular plurals correctly", () => {
     expect(categoryPluralLabels.gpu).toBe("Graphics cards");
     expect(categoryPluralLabels.memory).toBe("Memory kits");
@@ -70,8 +67,6 @@ describe("category naming", () => {
   });
 
   it("keeps acronyms capitalised in mid-sentence labels", () => {
-    // Call sites lowercased the display label to drop it into a sentence,
-    // which turned "CPU cooler" into "Replace cpu cooler".
     expect(categoryInlineLabels.cooler).toBe("CPU cooler");
     for (const inline of Object.values(categoryInlineLabels)) {
       expect(inline).not.toMatch(/cpu/);

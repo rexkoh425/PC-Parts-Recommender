@@ -5,11 +5,6 @@ import type {
   WorkloadName,
 } from "./types";
 
-/*
- * en-SG renders SGD as a bare "$", which reads as US dollars to most visitors
- * and left the page showing "$2,672" beside copy that said "S$0". The symbol
- * is applied here rather than by Intl so every figure carries the same one.
- */
 const sgdNumberFormatter = new Intl.NumberFormat("en-SG", {
   minimumFractionDigits: 0,
   maximumFractionDigits: 2,
@@ -47,25 +42,6 @@ export const categoryLabels: Record<ComponentCategory, string> = {
   case: "Case",
 };
 
-/*
- * Plural forms, written out rather than derived.
- *
- * The comparison heading built its plural by appending "s" to the singular
- * label, which is right for four of the eight categories and wrong for the
- * other four: "Graphics" is already plural, and "Memory", "Storage" and
- * "Power supply" are mass nouns or take an irregular ending. The page read
- * "Graphicss are compared only on reported catalogue fields."
- *
- * English pluralisation of these terms has no rule worth encoding, so each
- * form is spelled out and the naming stays in one place.
- */
-/*
- * The mid-sentence form.
- *
- * Call sites were lowercasing the display label to drop it into a sentence,
- * which is right for seven categories and wrong for the cooler: "CPU" is an
- * acronym, so the replacement drawer offered to "Replace cpu cooler".
- */
 export const categoryInlineLabels: Record<ComponentCategory, string> = {
   cpu: "processor",
   gpu: "graphics card",

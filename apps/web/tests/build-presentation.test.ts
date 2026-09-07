@@ -54,8 +54,6 @@ describe("build presentation", () => {
     );
 
     expect(html).toContain("Build objective scores");
-    // Objective scores render as meters, so the value rides aria-valuetext on a
-    // role="meter" track rather than a combined label on a definition list.
     expect(html).toContain('aria-label="Value score"');
     expect(html).toContain('aria-label="Upgradeability score"');
     expect(html).toContain('aria-valuetext="89.0 out of 100"');
