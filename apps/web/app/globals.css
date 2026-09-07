@@ -7217,16 +7217,20 @@ h2 {
     gap: 2px;
   }
 
-  .form-tabs .tabs__list {
+  .form-tabs .tabs__list,
+  .detail-tabs .tabs__list {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
     overflow: visible;
   }
 
-  .form-tabs .tabs__tab {
+  .form-tabs .tabs__tab,
+  .detail-tabs .tabs__tab {
     min-height: 52px;
     justify-content: center;
     padding: 8px 4px;
+    font-size: var(--text-xs);
     text-align: center;
     white-space: normal;
   }
