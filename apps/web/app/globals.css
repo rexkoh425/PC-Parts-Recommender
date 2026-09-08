@@ -6436,20 +6436,28 @@ textarea:focus-visible {
   .header-nav {
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0;
     border-top: 1px solid rgb(23 79 62 / 12%);
   }
 
-  .header-nav a:not(.header-nav__comparison) {
-    justify-content: center;
-    padding-inline: 4px;
+  .header-nav__comparison {
+    display: inline-flex;
   }
 
-  .header-nav a:not(.header-nav__comparison) {
+  .header-nav a {
+    justify-content: center;
+    padding-inline: 3px;
+  }
+
+  .header-nav a {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+    font-size: var(--text-xs);
+    line-height: 1.1;
+    text-align: center;
+    white-space: normal;
   }
 
   .table-scroll-hint {
