@@ -63,7 +63,7 @@ export default function HowItWorksPage() {
             <h2 id="evidence-title">What it runs on.</h2>
           </div>
           <p>
-            Each figure comes from a file in the repository.
+            These figures describe the controlled demo’s data and test coverage.
           </p>
         </div>
         <div className="evidence-stat-grid">
