@@ -4216,9 +4216,17 @@ svg {
 }
 
 .price-intelligence__boundary p,
+.price-intelligence__availability p,
 .price-intelligence__notice {
   margin: 0.25rem 0 0;
   color: var(--ink-soft);
+}
+
+.price-intelligence__availability {
+  border-left: 3px solid color-mix(in srgb, var(--forest) 48%, var(--line));
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: color-mix(in srgb, var(--forest) 5%, transparent);
+  padding: 0.75rem 1rem;
 }
 
 .price-intelligence__metrics {

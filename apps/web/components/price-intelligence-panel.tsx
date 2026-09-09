@@ -25,6 +25,13 @@ export function PriceIntelligencePanel({
 }: {
   intelligence: PriceIntelligenceSummary;
 }) {
+  const unavailableHistoryMetrics = [
+    intelligence.percentile_90d === null ? "90-day price position" : null,
+    intelligence.volatility_90d_pct === null ? "90-day volatility" : null,
+    intelligence.stock_trend === "insufficient_history" ? "observed stock trend" : null,
+    intelligence.seller_trend === "insufficient_history" ? "observed seller trend" : null,
+  ].filter((metric): metric is string => metric !== null);
+
   return (
     <div className="price-intelligence" aria-label="Descriptive price history summary">
       <div className="price-intelligence__boundary" role="note">
@@ -39,13 +46,21 @@ export function PriceIntelligencePanel({
         <div><dt>30-day median</dt><dd>{price(intelligence.median_30d_sgd)}</dd></div>
         <div><dt>90-day median</dt><dd>{price(intelligence.median_90d_sgd)}</dd></div>
         <div><dt>Recent observed low</dt><dd>{price(intelligence.recent_low_90d_sgd)}</dd></div>
-        <div><dt>90-day price position</dt><dd>{percentile(intelligence.percentile_90d)}</dd></div>
-        <div><dt>90-day volatility</dt><dd>{percentage(intelligence.volatility_90d_pct, "coefficient of variation")}</dd></div>
+        {intelligence.percentile_90d !== null && <div><dt>90-day price position</dt><dd>{percentile(intelligence.percentile_90d)}</dd></div>}
+        {intelligence.volatility_90d_pct !== null && <div><dt>90-day volatility</dt><dd>{percentage(intelligence.volatility_90d_pct, "coefficient of variation")}</dd></div>}
         <div><dt>Current observed sellers</dt><dd>{intelligence.current_seller_count.toLocaleString("en-SG")}</dd></div>
-        <div><dt>Observed stock trend</dt><dd>{trend(intelligence.stock_trend)}</dd></div>
-        <div><dt>Observed seller trend</dt><dd>{trend(intelligence.seller_trend)}</dd></div>
+        {intelligence.stock_trend !== "insufficient_history" && <div><dt>Observed stock trend</dt><dd>{trend(intelligence.stock_trend)}</dd></div>}
+        {intelligence.seller_trend !== "insufficient_history" && <div><dt>Observed seller trend</dt><dd>{trend(intelligence.seller_trend)}</dd></div>}
         <div><dt>History coverage</dt><dd>{intelligence.history_days_90d} observed days / 90</dd></div>
       </dl>
+      {unavailableHistoryMetrics.length > 0 && (
+        <div className="price-intelligence__availability" role="note">
+          <strong>Longer history needed</strong>
+          <p>
+            We will show {unavailableHistoryMetrics.join(", ")} once more observations are recorded. These values are not estimated.
+          </p>
+        </div>
+      )}
       <div className="price-intelligence__labels" aria-label="Descriptive price labels">
         {intelligence.labels.map((label) => <span key={label}>{label}</span>)}
       </div>

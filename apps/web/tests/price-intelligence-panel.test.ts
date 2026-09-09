@@ -40,7 +40,7 @@ describe("PriceIntelligencePanel", () => {
     expect(html).toContain("Good current value");
   });
 
-  it("does not invent percentile or volatility for sparse history", () => {
+  it("groups unavailable sparse-history indicators without estimating them", () => {
     const html = render({
       ...summary,
       percentile_90d: null,
@@ -50,7 +50,9 @@ describe("PriceIntelligencePanel", () => {
       labels: ["Insufficient price history"],
     });
 
-    expect(html.match(/Insufficient history/g)?.length).toBeGreaterThanOrEqual(2);
+    expect(html).toContain("Longer history needed");
+    expect(html).toContain("90-day price position, 90-day volatility");
+    expect(html).not.toContain(">Insufficient history<");
     expect(html).toContain("Insufficient price history");
   });
 });
