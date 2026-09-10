@@ -167,23 +167,28 @@ function CoverageSummary({ response }: { response: ProductSearchResponse }) {
   const coverage = response.coverage;
   if (!coverage) return null;
   const attributions = coverage.source_attributions ?? [];
-  const metrics = [
-    ["Parts", coverage.canonical_products],
-    ["Retailer listings", coverage.retailer_listings],
-    ["Sources", coverage.source_count],
-    ["Categories", coverage.category_count],
-  ] as const;
+  const metrics = USING_DEMO_DATA
+    ? [
+        ["Parts", coverage.canonical_products],
+        ["Categories", coverage.category_count],
+      ] as const
+    : [
+        ["Parts", coverage.canonical_products],
+        ["Retailer listings", coverage.retailer_listings],
+        ["Sources", coverage.source_count],
+        ["Categories", coverage.category_count],
+      ] as const;
   return (
     <section className="catalogue-coverage" aria-labelledby="catalogue-coverage-title">
       <div>
-        <p className="eyebrow">Provider-reported coverage</p>
+        <p className="eyebrow">{USING_DEMO_DATA ? "Controlled demo coverage" : "Provider-reported coverage"}</p>
         <h2 id="catalogue-coverage-title">{coverage.scope_label}</h2>
         <p>
           {USING_DEMO_DATA
-            ? "Counts for the parts included in this demo."
+            ? "The parts and categories available in this fixed, dated demo."
             : "How much of the catalogue is covered, which is not the same as how many results your search returned."}
         </p>
-        {coverage.as_of && <small>Reported {formatEvidenceTimestamp(coverage.as_of)}</small>}
+        {coverage.as_of && <small>{USING_DEMO_DATA ? "Recorded" : "Reported"} {formatEvidenceTimestamp(coverage.as_of)}</small>}
         {attributions.length > 0 && (
           <ul className="catalogue-attribution" aria-label="Catalogue source attribution">
             {attributions.map((attribution) => (
