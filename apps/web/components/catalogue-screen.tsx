@@ -511,7 +511,7 @@ export function CatalogueScreen({
         <CatalogueSkeleton />
       ) : (
         <>
-          <CoverageSummary response={response} />
+          {!USING_DEMO_DATA && <CoverageSummary response={response} />}
           <CategoryFacets response={response} location={location} />
           <section className="catalogue-results-heading" aria-live="polite">
             <div>
