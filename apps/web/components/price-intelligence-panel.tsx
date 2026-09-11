@@ -31,6 +31,9 @@ export function PriceIntelligencePanel({
     intelligence.stock_trend === "insufficient_history" ? "observed stock trend" : null,
     intelligence.seller_trend === "insufficient_history" ? "observed seller trend" : null,
   ].filter((metric): metric is string => metric !== null);
+  const visibleLabels = intelligence.labels.filter(
+    (label) => label !== "Insufficient price history" || unavailableHistoryMetrics.length === 0,
+  );
 
   return (
     <div className="price-intelligence" aria-label="Descriptive price history summary">
@@ -61,9 +64,11 @@ export function PriceIntelligencePanel({
           </p>
         </div>
       )}
-      <div className="price-intelligence__labels" aria-label="Descriptive price labels">
-        {intelligence.labels.map((label) => <span key={label}>{label}</span>)}
-      </div>
+      {visibleLabels.length > 0 && (
+        <div className="price-intelligence__labels" aria-label="Descriptive price labels">
+          {visibleLabels.map((label) => <span key={label}>{label}</span>)}
+        </div>
+      )}
       {intelligence.analysis_truncated && (
         <p className="price-intelligence__notice">
           The calculation used the newest {intelligence.observations_analyzed.toLocaleString("en-SG")} observations under the service safety limit.

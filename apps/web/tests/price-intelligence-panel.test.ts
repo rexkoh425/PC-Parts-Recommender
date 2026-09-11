@@ -53,6 +53,6 @@ describe("PriceIntelligencePanel", () => {
     expect(html).toContain("Longer history needed");
     expect(html).toContain("90-day price position, 90-day volatility");
     expect(html).not.toContain(">Insufficient history<");
-    expect(html).toContain("Insufficient price history");
+    expect(html).not.toContain("Insufficient price history");
   });
 });
