@@ -133,7 +133,7 @@ export function ExistingProductPicker({
           value={query}
           onChange={(event) => updateQuery(event.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Search model or part number"
+          placeholder="Search a model or part"
           role="combobox"
           aria-autocomplete="list"
           aria-expanded={open}
