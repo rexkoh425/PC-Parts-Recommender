@@ -40,6 +40,7 @@ import type {
 import { useSavedBuilds } from "@/lib/use-saved-builds";
 import { sharedBuildHref } from "@/lib/shared-build";
 import { BuildBudgetBreakdown } from "./build-budget-breakdown";
+import { CategoryIcon } from "./category-icon";
 import { ReplacementDrawer } from "./replacement-drawer";
 import { ScoreMeter } from "./score-meter";
 import { StatusPill } from "./status-pill";
@@ -445,9 +446,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                     return (
                     <tr key={`${component.category}-${component.product_id}`} data-testid="component-row">
                       <th scope="row" data-label="Category">
-                        <span className={`category-icon category-icon--${component.category}`} aria-hidden="true">
-                          {component.category.slice(0, 2).toUpperCase()}
-                        </span>
+                        <CategoryIcon category={component.category} />
                         {categoryLabels[component.category]}
                       </th>
                       <td data-label="Product">
