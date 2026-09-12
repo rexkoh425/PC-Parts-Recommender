@@ -284,7 +284,12 @@ export function ProductDetailScreen({
                     <h3>{benchmark.benchmark_name}</h3>
                     <strong className="benchmark-card__score">{benchmark.score.toLocaleString("en-SG")} <small>{benchmark.unit}</small></strong>
                     <dl><div><dt>Direction</dt><dd>{benchmark.higher_is_better ? "Higher is better" : "Lower is better"}</dd></div></dl>
-                    <footer><span>{formatEvidenceTimestamp(benchmark.observed_at)}</span>{benchmark.source_url && <a href={benchmark.source_url} target="_blank" rel="noreferrer" aria-label={`Open source for ${benchmark.benchmark_name}`}>Source ↗</a>}</footer>
+                    {(benchmark.observed_at || benchmark.source_url) && (
+                      <footer>
+                        {benchmark.observed_at && <span>{formatEvidenceTimestamp(benchmark.observed_at)}</span>}
+                        {benchmark.source_url && <a href={benchmark.source_url} target="_blank" rel="noreferrer" aria-label={`Open source for ${benchmark.benchmark_name}`}>Source ↗</a>}
+                      </footer>
+                    )}
                   </article>
                 ))}
               </div>
