@@ -319,6 +319,16 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
   const saved = savedIds.has(build.build_id);
   const observedCount = performanceSignals.filter((signal) => signal.basis === "observed").length;
   const predictedCount = performanceSignals.filter((signal) => signal.basis === "predicted").length;
+  const relativeCount = performanceSignals.filter((signal) => signal.basis === "relative").length;
+  const performanceSummary = performanceSignals.length === 0
+    ? "No component-level signals reported."
+    : observedCount === 0 && predictedCount === 0 && relativeCount === performanceSignals.length
+      ? "Relative scores for this brief"
+      : `${[
+          observedCount > 0 ? `${observedCount} observed` : null,
+          predictedCount > 0 ? `${predictedCount} predicted` : null,
+          relativeCount > 0 ? `${relativeCount} relative` : null,
+        ].filter(Boolean).join(" · ")} signals`;
 
   return (
     <main className="shell detail-page">
@@ -553,7 +563,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                 <p className="eyebrow">Workload fit</p>
                 <h2 id="performance-heading">Performance basis</h2>
               </div>
-              <p>{observedCount} observed · {predictedCount} predicted signals</p>
+              <p>{performanceSummary}</p>
             </div>
             <div className="performance-grid">
               {Object.entries(build.workload_scores ?? {}).map(([workload, score]) => (
