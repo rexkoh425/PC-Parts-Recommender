@@ -7,6 +7,7 @@ import {
   formatFreshnessSummary,
   formatScore,
   formatSgd,
+  formatSuggestedRelaxation,
   humanizeToken,
 } from "../lib/format";
 import type { FreshnessSummary } from "../lib/types";
@@ -25,6 +26,19 @@ describe("presentation formatters", () => {
 
   it("turns API tokens into readable labels", () => {
     expect(humanizeToken("gaming_1440p")).toBe("Gaming 1440p");
+  });
+
+  it("turns suggested-relaxation fields and values into readable actions", () => {
+    expect(formatSuggestedRelaxation("budget_sgd", 2200)).toBe("Set new-parts budget to S$2,200");
+    expect(formatSuggestedRelaxation("requirements.minimum_gpu_vram_gb", 16)).toBe(
+      "Set minimum GPU memory to 16 GB",
+    );
+    expect(formatSuggestedRelaxation("requirements.case_size", "mini_tower")).toBe(
+      "Set case size to Mini tower",
+    );
+    expect(formatSuggestedRelaxation("requirements.wifi_required", false)).toBe(
+      "Allow builds without Wi-Fi",
+    );
   });
 
   it("does not label fresh prices as stale when only the catalogue is stale", () => {

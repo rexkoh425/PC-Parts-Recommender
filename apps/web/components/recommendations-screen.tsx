@@ -4,7 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { getRequestBuilds, getSessionId, trackInteraction } from "@/lib/api";
-import { categoryLabels, formatScore, formatSgd, profileLabels } from "@/lib/format";
+import {
+  categoryLabels,
+  formatScore,
+  formatSgd,
+  formatSuggestedRelaxation,
+  profileLabels,
+} from "@/lib/format";
 import { useSavedBuilds } from "@/lib/use-saved-builds";
 import type {
   BuildSummary,
@@ -77,10 +83,7 @@ function NoFeasibleBuild({
                   onClick={() => onRelax(relaxation)}
                 >
                   <strong>{relaxation.expected_effect}</strong>
-                  <span>
-                    Change {relaxation.field_path.split(".").at(-1)?.replaceAll("_", " ")} to{" "}
-                    {String(relaxation.proposed_value)}
-                  </span>
+                  <span>{formatSuggestedRelaxation(relaxation.field_path, relaxation.proposed_value)}</span>
                 </button>
               ))}
             </div>

@@ -79,6 +79,54 @@ export function humanizeToken(value: string): string {
     .replace(/\b\w/g, (character) => character.toUpperCase());
 }
 
+const relaxationFieldLabels: Record<string, string> = {
+  budget_sgd: "new-parts budget",
+  "requirements.minimum_gpu_vram_gb": "minimum GPU memory",
+  "requirements.minimum_memory_gb": "system memory",
+  "requirements.storage_gb": "total storage",
+  "requirements.wifi_required": "Wi-Fi requirement",
+  "requirements.case_size": "case size",
+};
+
+const caseSizeLabels: Record<string, string> = {
+  small_form_factor: "Small form factor",
+  mini_tower: "Mini tower",
+  mid_tower: "Mid tower",
+  full_tower: "Full tower",
+};
+
+export function formatSuggestedRelaxation(fieldPath: string, proposedValue: unknown): string {
+  if (fieldPath === "requirements.wifi_required" && typeof proposedValue === "boolean") {
+    return proposedValue ? "Require Wi-Fi" : "Allow builds without Wi-Fi";
+  }
+
+  const fieldLabel =
+    relaxationFieldLabels[fieldPath] ??
+    humanizeToken(fieldPath.split(".").at(-1) ?? fieldPath);
+  let value: string;
+
+  if (fieldPath === "budget_sgd" && typeof proposedValue === "number") {
+    value = formatSgd(proposedValue);
+  } else if (
+    [
+      "requirements.minimum_gpu_vram_gb",
+      "requirements.minimum_memory_gb",
+      "requirements.storage_gb",
+    ].includes(fieldPath) &&
+    typeof proposedValue === "number"
+  ) {
+    value = `${proposedValue.toLocaleString("en-SG")} GB`;
+  } else if (fieldPath === "requirements.case_size" && typeof proposedValue === "string") {
+    value = caseSizeLabels[proposedValue] ?? humanizeToken(proposedValue);
+  } else if (typeof proposedValue === "boolean") {
+    value = proposedValue ? "Yes" : "No";
+  } else {
+    value = String(proposedValue);
+  }
+
+  return `Set ${fieldLabel} to ${value}`;
+}
+
 export function formatFreshness(value?: string | null): string {
   if (!value) return "Freshness unavailable";
   const date = new Date(value);
