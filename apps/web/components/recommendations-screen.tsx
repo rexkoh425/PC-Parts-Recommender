@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { CircleAlert, RefreshCw } from "lucide-react";
-import { getRequestBuilds, getSessionId, trackInteraction } from "@/lib/api";
+import { getRequestBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
   categoryLabels,
   formatScore,
@@ -157,28 +157,46 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
   }
 
   if (error) {
+    const isUnavailableDemoRecommendation =
+      USING_DEMO_DATA && error.includes("not available in this browser session");
+
     return (
       <main className="shell state-page">
         <div className="state-card" role="alert">
           <span className="state-card__icon" aria-hidden="true">
             <RefreshCw size={22} strokeWidth={1.8} />
           </span>
-          <p className="eyebrow">Connection interrupted</p>
-          <h1>We could not load this recommendation set.</h1>
-          <p>{error}</p>
+          <p className="eyebrow">
+            {isUnavailableDemoRecommendation ? "Demo session ended" : "Connection interrupted"}
+          </p>
+          <h1>
+            {isUnavailableDemoRecommendation
+              ? "This recommendation is no longer available."
+              : "We could not load this recommendation set."}
+          </h1>
+          <p>
+            {isUnavailableDemoRecommendation
+              ? "Demo recommendations stay in the browser session where they were generated. Start a new build to continue."
+              : error}
+          </p>
           <div className="button-row">
-            <button
-              className="button button--primary"
-              type="button"
-              onClick={() => {
-                setError("");
-                setResponse(null);
-                setRetryKey((key) => key + 1);
-              }}
+            {!isUnavailableDemoRecommendation && (
+              <button
+                className="button button--primary"
+                type="button"
+                onClick={() => {
+                  setError("");
+                  setResponse(null);
+                  setRetryKey((key) => key + 1);
+                }}
+              >
+                Try again
+              </button>
+            )}
+            <Link
+              className={`button ${isUnavailableDemoRecommendation ? "button--primary" : "button--secondary"}`}
+              href="/"
             >
-              Try again
-            </button>
-            <Link className="button button--secondary" href="/">
               Start a new build
             </Link>
           </div>
