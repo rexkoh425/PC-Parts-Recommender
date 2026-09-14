@@ -802,7 +802,7 @@ export function generateDemoBuilds(request: BuildRequest): GenerateBuildsRespons
             field_path: "budget_sgd",
             current_value: request.budget_sgd,
             proposed_value: Math.max(2200, request.budget_sgd + 400),
-            expected_effect: "Expands the illustrative demo template set.",
+            expected_effect: "Finds compatible demo builds.",
           },
         ],
       },

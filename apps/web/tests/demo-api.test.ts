@@ -67,6 +67,12 @@ describe("public demo engine", () => {
     expect(response.status).toBe("infeasible");
     expect(response.builds).toEqual([]);
     expect(response.infeasibility?.reasons).toHaveLength(1);
+    expect(response.infeasibility?.suggested_relaxations).toContainEqual(
+      expect.objectContaining({
+        field_path: "budget_sgd",
+        expected_effect: "Finds compatible demo builds.",
+      }),
+    );
   });
 
   it("searches retained products without making a live-stock claim", () => {
