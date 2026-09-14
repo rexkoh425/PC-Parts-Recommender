@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { CircleAlert, RefreshCw } from "lucide-react";
 import { getRequestBuilds, getSessionId, trackInteraction } from "@/lib/api";
 import {
   categoryLabels,
@@ -58,7 +59,7 @@ function NoFeasibleBuild({
   return (
     <section className="infeasible-panel" aria-labelledby="infeasible-title">
       <div className="infeasible-panel__icon" aria-hidden="true">
-        ↗
+        <CircleAlert size={30} strokeWidth={1.8} />
       </div>
       <div>
         <p className="eyebrow">Constraint result</p>
@@ -160,7 +161,7 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
       <main className="shell state-page">
         <div className="state-card" role="alert">
           <span className="state-card__icon" aria-hidden="true">
-            ⟳
+            <RefreshCw size={22} strokeWidth={1.8} />
           </span>
           <p className="eyebrow">Connection interrupted</p>
           <h1>We could not load this recommendation set.</h1>
