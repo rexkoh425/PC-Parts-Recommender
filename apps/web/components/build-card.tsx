@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type React from "react";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 import { categoryLabels, formatScore, formatSgd, profileLabels } from "../lib/format";
 import type { BuildSummary, ComponentCategory } from "../lib/types";
 import { ScoreMeter } from "./score-meter";
@@ -107,7 +108,11 @@ export function BuildCard({
           aria-label={`${saved ? "Remove" : "Save"} ${profileLabels[build.profile]} build${saved ? " from saved builds" : ""}`}
           onClick={() => onToggleSaved(build)}
         >
-          <span aria-hidden="true">{saved ? "◆" : "◇"}</span>
+          {saved ? (
+            <BookmarkCheck aria-hidden="true" size={16} strokeWidth={1.8} />
+          ) : (
+            <Bookmark aria-hidden="true" size={16} strokeWidth={1.8} />
+          )}
           {saved ? "Saved" : "Save"}
         </button>
       </div>

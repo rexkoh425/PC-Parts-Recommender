@@ -72,6 +72,21 @@ describe("build presentation", () => {
     expect(html).not.toContain("Build objective scores");
   });
 
+  it("uses labelled bookmark icons for saved-build actions", () => {
+    const savedHtml = renderToStaticMarkup(
+      createElement(BuildCard, {
+        build,
+        saved: true,
+        onToggleSaved: () => undefined,
+      }),
+    );
+
+    expect(savedHtml).toContain('aria-label="Remove Best overall build from saved builds"');
+    expect(savedHtml).toContain("lucide-bookmark-check");
+    expect(savedHtml).not.toContain("◆");
+    expect(savedHtml).not.toContain("◇");
+  });
+
   it("breaks down recorded component spend and discloses both demo and total differences", () => {
     const html = renderToStaticMarkup(
       createElement(BuildBudgetBreakdown, { build, demo: true }),
