@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CalendarClock, Database, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "How it works",
@@ -118,17 +119,23 @@ export default function HowItWorksPage() {
         </div>
         <div className="trust-grid">
           <article>
-            <span aria-hidden="true">◇</span>
+            <span aria-hidden="true">
+              <ShieldCheck size={24} strokeWidth={1.8} />
+            </span>
             <h3>Nothing is ranked until it fits</h3>
             <p>Sockets, clearances, connectors and power draw are checked before a part can appear in a build at all.</p>
           </article>
           <article>
-            <span aria-hidden="true">◌</span>
+            <span aria-hidden="true">
+              <Database size={24} strokeWidth={1.8} />
+            </span>
             <h3>We say where numbers come from</h3>
             <p>Measured results, estimates and gaps stay separate. Nothing is averaged into a single figure that hides what it is.</p>
           </article>
           <article>
-            <span aria-hidden="true">↗</span>
+            <span aria-hidden="true">
+              <CalendarClock size={24} strokeWidth={1.8} />
+            </span>
             <h3>Prices carry a date</h3>
             <p>Every price says when it was recorded and where it came from, so you can tell a current figure from a stale one.</p>
           </article>
