@@ -3888,6 +3888,7 @@ svg {
 
 .product-header__compare {
   display: inline-flex;
+  align-items: center;
   gap: 8px;
   margin-top: 20px;
   color: var(--forest);
@@ -4326,6 +4327,12 @@ svg {
   color: var(--forest);
 }
 
+.external-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .benchmark-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4597,6 +4604,7 @@ svg {
 }
 
 .compatibility-context-card > span {
+  display: block;
   color: var(--mint);
   font-size: var(--text-xl);
 }
@@ -4625,7 +4633,10 @@ svg {
 }
 
 .source-record-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   padding: 8px;
   color: var(--forest);
   font-size: var(--text-2xs);

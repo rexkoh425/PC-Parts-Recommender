@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ArrowRight, CircleAlert, ExternalLink, Network } from "lucide-react";
 import {
   getProduct,
   getProductBenchmarks,
@@ -53,7 +54,9 @@ function reasonFor(result: PromiseSettledResult<unknown>): string | undefined {
 function EvidencePanelError({ title, message }: { title: string; message?: string }) {
   return (
     <div className="evidence-panel-error" role="status">
-      <span aria-hidden="true">!</span>
+      <span aria-hidden="true">
+        <CircleAlert size={14} strokeWidth={1.9} />
+      </span>
       <div><strong>{title}</strong><p>{message ?? "This evidence is unavailable."}</p></div>
     </div>
   );
@@ -209,7 +212,7 @@ export function ProductDetailScreen({
           </p>
           <Link className="product-header__compare" href={`/compare?products=${encodeURIComponent(product.product_id)}`}>
             Compare similar parts
-            <span aria-hidden="true">→</span>
+            <ArrowRight aria-hidden="true" size={16} strokeWidth={1.8} />
           </Link>
         </div>
         <div className="product-price-block">
@@ -261,7 +264,7 @@ export function ProductDetailScreen({
                       <div><strong>{observation.retailer}</strong><span>{offer.conditionLabel}</span></div>
                       <div><strong>{formatSgd(delivered)}</strong><small>{observation.shipping_price_sgd ? `${formatSgd(observation.shipping_price_sgd)} shipping included` : "No shipping charge recorded"}</small></div>
                       <div><span>{observedStockLabel(observation.stock_status)}</span><small>{offer.eligibilityLabel}</small></div>
-                      <div><span>{formatEvidenceTimestamp(observation.observed_at)}</span>{observation.listing_url && <a href={observation.listing_url} target="_blank" rel="noreferrer" aria-label={`Open ${observation.retailer} retailer observation`}>Open retailer ↗</a>}</div>
+                      <div><span>{formatEvidenceTimestamp(observation.observed_at)}</span>{observation.listing_url && <a className="external-link" href={observation.listing_url} target="_blank" rel="noreferrer" aria-label={`Open ${observation.retailer} retailer observation`}>Open retailer <ExternalLink aria-hidden="true" size={12} strokeWidth={1.8} /></a>}</div>
                     </article>
                   );
                 })}
@@ -287,7 +290,7 @@ export function ProductDetailScreen({
                     {(benchmark.observed_at || benchmark.source_url) && (
                       <footer>
                         {benchmark.observed_at && <span>{formatEvidenceTimestamp(benchmark.observed_at)}</span>}
-                        {benchmark.source_url && <a href={benchmark.source_url} target="_blank" rel="noreferrer" aria-label={`Open source for ${benchmark.benchmark_name}`}>Source ↗</a>}
+                        {benchmark.source_url && <a className="external-link" href={benchmark.source_url} target="_blank" rel="noreferrer" aria-label={`Open source for ${benchmark.benchmark_name}`}>Source <ExternalLink aria-hidden="true" size={12} strokeWidth={1.8} /></a>}
                       </footer>
                     )}
                   </article>
@@ -311,7 +314,7 @@ export function ProductDetailScreen({
                     <article key={`${evidence.aspect}-${index}`}>
                       <div><span className={`sentiment-chip sentiment-chip--${evidence.sentiment}`}>{evidence.sentiment}</span><strong>{humanizeAttributeKey(evidence.aspect)}</strong></div>
                       <p>{evidence.evidence_text}</p>
-                      <footer><span>{evidenceConfidence.label}</span><span>{formatEvidenceTimestamp(evidence.published_at)}</span>{evidence.source_url && <a href={evidence.source_url} target="_blank" rel="noreferrer" aria-label={`Open ${humanizeAttributeKey(evidence.aspect)} review evidence source`}>Evidence source ↗</a>}</footer>
+                      <footer><span>{evidenceConfidence.label}</span><span>{formatEvidenceTimestamp(evidence.published_at)}</span>{evidence.source_url && <a className="external-link" href={evidence.source_url} target="_blank" rel="noreferrer" aria-label={`Open ${humanizeAttributeKey(evidence.aspect)} review evidence source`}>Evidence source <ExternalLink aria-hidden="true" size={12} strokeWidth={1.8} /></a>}</footer>
                     </article>
                   );
                 })}
@@ -352,7 +355,9 @@ export function ProductDetailScreen({
           )}
 
           <div className="compatibility-context-card">
-            <span aria-hidden="true">◇</span>
+            <span aria-hidden="true">
+              <Network size={22} strokeWidth={1.8} />
+            </span>
             <p className="profile-kicker">Depends on the build</p>
             <h2>Whether this fits depends on your other parts.</h2>
             <p>A socket, connector, dimension, or interface only becomes compatible relative to the other selected parts. Generating a build runs the full compatibility check.</p>
@@ -366,7 +371,7 @@ export function ProductDetailScreen({
             </p>
           )}
 
-          {product.source_url && <a className="source-record-link" href={product.source_url} target="_blank" rel="noreferrer">Open primary product source ↗</a>}
+          {product.source_url && <a className="source-record-link" href={product.source_url} target="_blank" rel="noreferrer">Open primary product source <ExternalLink aria-hidden="true" size={12} strokeWidth={1.8} /></a>}
         </aside>
       </div>
     </main>
