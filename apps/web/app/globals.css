@@ -7220,6 +7220,11 @@ h2 {
     margin-block: -13px;
   }
 
+  .component-evidence-links .external-link {
+    display: inline-flex;
+    align-items: center;
+  }
+
   .text-button {
     min-height: 44px;
   }

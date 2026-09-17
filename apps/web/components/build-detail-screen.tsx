@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { ExternalLink } from "lucide-react";
 import {
   createBuildShare,
   getBuild,
@@ -487,6 +488,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                           </Link>
                           {component.listing_url ? (
                             <a
+                              className="external-link"
                               href={component.listing_url}
                               target="_blank"
                               rel="noreferrer"
@@ -499,16 +501,17 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                                 })
                               }
                             >
-                              Retailer price ↗
+                              Retailer price <ExternalLink aria-hidden="true" size={12} strokeWidth={1.8} />
                             </a>
                           ) : component.spec_url ? (
                             <a
+                              className="external-link"
                               href={component.spec_url}
                               target="_blank"
                               rel="noreferrer"
                               aria-label={`Open the manufacturer specification page for ${component.canonical_name}`}
                             >
-                              Manufacturer spec ↗
+                              Manufacturer spec <ExternalLink aria-hidden="true" size={12} strokeWidth={1.8} />
                             </a>
                           ) : (
                             <small>
@@ -591,13 +594,14 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                       <div className="evidence-list__sources">
                         {(signal.sources ?? []).map((source) => (
                           <a
+                            className="external-link"
                             key={source.url}
                             href={source.url}
                             target="_blank"
                             rel="noreferrer"
                             aria-label={`Open ${source.label} source for ${signal.metric}`}
                           >
-                            {source.label} ↗
+                            {source.label} <ExternalLink aria-hidden="true" size={12} strokeWidth={1.8} />
                           </a>
                         ))}
                       </div>
