@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { CircleAlert, RefreshCw } from "lucide-react";
+import { ArrowRight, CircleAlert, RefreshCw } from "lucide-react";
 import { getRequestBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
   categoryLabels,
@@ -280,7 +280,10 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
           </div>
           <p>All scores are normalised within the current compatible candidate set.</p>
           </div>
-        <p className="table-scroll-hint">Swipe horizontally to compare every column <span aria-hidden="true">→</span></p>
+        <p className="table-scroll-hint">
+          Swipe horizontally to compare every column
+          <ArrowRight aria-hidden="true" size={14} strokeWidth={1.8} />
+        </p>
         <div className="table-scroll" tabIndex={0} aria-label="Scrollable build comparison">
           <table className="comparison-table">
             <thead>

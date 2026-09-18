@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import {
   getProduct,
   getSessionId,
@@ -297,7 +298,10 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
             <div><p className="eyebrow">Reported specifications</p><h2 id="comparison-table-title">Field-by-field</h2></div>
             <p>Only fields present in at least one selected record are shown.</p>
           </div>
-          <p className="table-scroll-hint">Swipe horizontally to compare every column <span aria-hidden="true">→</span></p>
+          <p className="table-scroll-hint">
+            Swipe horizontally to compare every column
+            <ArrowRight aria-hidden="true" size={14} strokeWidth={1.8} />
+          </p>
           <div className="comparison-table-scroll" tabIndex={0} aria-label="Scrollable product comparison table">
             <table className="comparison-table">
               <thead>

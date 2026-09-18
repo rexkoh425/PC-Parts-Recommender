@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { BuildCard } from "./build-card";
 import {
   generateBuilds,
@@ -145,7 +146,10 @@ export function SavedScreen() {
 
             {selectedEntries.length >= 2 ? (
               <>
-                <p className="table-scroll-hint">Swipe horizontally to compare every column <span aria-hidden="true">→</span></p>
+                <p className="table-scroll-hint">
+                  Swipe horizontally to compare every column
+                  <ArrowRight aria-hidden="true" size={14} strokeWidth={1.8} />
+                </p>
                 <div className="table-scroll" tabIndex={0} aria-label="Scrollable saved build comparison">
                   <table className="comparison-table saved-comparison__table" data-testid="saved-build-comparison">
                   <caption className="sr-only">

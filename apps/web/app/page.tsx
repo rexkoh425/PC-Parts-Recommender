@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ArrowDown } from "lucide-react";
 import { BuildForm } from "@/components/build-form";
 import { formatSgd } from "@/lib/format";
 
@@ -26,7 +27,7 @@ export default function HomePage() {
           <div className="hero__actions">
             <a className="button button--primary button--large" href="#builder">
               Build my PC
-              <span aria-hidden="true">↓</span>
+              <ArrowDown aria-hidden="true" size={16} strokeWidth={1.8} />
             </a>
             <a className="button button--secondary button--large" href="/how-it-works">
               See how it works

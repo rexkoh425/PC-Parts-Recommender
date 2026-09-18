@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import {
   productImpressionContext,
   rememberProductImpression,
@@ -150,7 +151,7 @@ function ProductResultCard({
         onClick={() => rememberProductImpression(product, impressionContext)}
       >
         Inspect evidence
-        <span aria-hidden="true">→</span>
+        <ArrowRight aria-hidden="true" size={16} strokeWidth={1.8} />
       </Link>
       <Link
         className="catalogue-card__compare"
@@ -295,7 +296,8 @@ function CataloguePagination({
             cursor: pagination.previous_cursor ?? undefined,
           })}
         >
-          ← Previous
+          <ArrowLeft aria-hidden="true" size={16} strokeWidth={1.8} />
+          Previous
         </Link>
       ) : <span aria-hidden="true" />}
       <p>
@@ -312,7 +314,8 @@ function CataloguePagination({
             cursor: pagination.next_cursor ?? undefined,
           })}
         >
-          Next →
+          Next
+          <ArrowRight aria-hidden="true" size={16} strokeWidth={1.8} />
         </Link>
       ) : <span aria-hidden="true" />}
     </nav>

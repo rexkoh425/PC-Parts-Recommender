@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 import { Tabs } from "@/components/tabs";
 import { generateBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
@@ -667,7 +668,7 @@ export function BuildForm() {
             ) : (
               <>
                 Generate ranked builds
-                <span aria-hidden="true">→</span>
+                <ArrowRight aria-hidden="true" size={16} strokeWidth={1.8} />
               </>
             )}
           </button>
