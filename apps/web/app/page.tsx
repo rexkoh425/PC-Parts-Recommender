@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BuildForm } from "@/components/build-form";
+import { formatSgd } from "@/lib/format";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -37,8 +38,8 @@ export default function HomePage() {
             <span className="profile-kicker">Best overall</span>
             <span className="recommended-chip">Recommended</span>
           </div>
-          <p className="hero__preview-price">$2,672</p>
-          <p className="hero__preview-sub">88 / 100 fit · $828 under budget</p>
+          <p className="hero__preview-price">{formatSgd(2672)}</p>
+          <p className="hero__preview-sub">88 / 100 fit · {formatSgd(828)} under budget</p>
           <ul className="hero__preview-parts">
             <li><span>Processor</span><strong>AMD Ryzen 7 7700</strong></li>
             <li><span>Graphics</span><strong>GeForce RTX 5060 Ti 16 GB</strong></li>
