@@ -283,28 +283,46 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
   }
 
   if (error) {
+    const isUnavailableDemoBuild =
+      USING_DEMO_DATA && error.includes("not available in this browser session");
+
     return (
       <main className="shell state-page">
         <div className="state-card" role="alert">
           <span className="state-card__icon" aria-hidden="true">
             <PackageX size={24} strokeWidth={1.8} />
           </span>
-          <p className="eyebrow">Build unavailable</p>
-          <h1>We could not load this build.</h1>
-          <p>{error}</p>
+          <p className="eyebrow">
+            {isUnavailableDemoBuild ? "Demo session ended" : "Build unavailable"}
+          </p>
+          <h1>
+            {isUnavailableDemoBuild
+              ? "This build is no longer available."
+              : "We could not load this build."}
+          </h1>
+          <p>
+            {isUnavailableDemoBuild
+              ? "Demo builds stay in the browser session where they were generated. Start a new build to continue."
+              : error}
+          </p>
           <div className="button-row">
-            <button
-              className="button button--primary"
-              type="button"
-              onClick={() => {
-                setError("");
-                setBuild(null);
-                setRetryKey((key) => key + 1);
-              }}
+            {!isUnavailableDemoBuild && (
+              <button
+                className="button button--primary"
+                type="button"
+                onClick={() => {
+                  setError("");
+                  setBuild(null);
+                  setRetryKey((key) => key + 1);
+                }}
+              >
+                Try again
+              </button>
+            )}
+            <Link
+              className={`button ${isUnavailableDemoBuild ? "button--primary" : "button--secondary"}`}
+              href="/"
             >
-              Try again
-            </button>
-            <Link className="button button--secondary" href="/">
               Start a new build
             </Link>
           </div>
