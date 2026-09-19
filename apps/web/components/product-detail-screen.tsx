@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight, CircleAlert, ExternalLink, Network } from "lucide-react";
+import { ArrowRight, CircleAlert, ExternalLink, Network, SearchX } from "lucide-react";
 import {
   getProduct,
   getProductBenchmarks,
@@ -143,7 +143,9 @@ export function ProductDetailScreen({
     return (
       <main className="shell state-page">
         <div className="state-card" role="alert">
-          <span className="state-card__icon" aria-hidden="true">?</span>
+          <span className="state-card__icon" aria-hidden="true">
+            <SearchX size={24} strokeWidth={1.8} />
+          </span>
           <p className="eyebrow">Product evidence unavailable</p>
           <h1>We could not load this catalogue product.</h1>
           <p>{error}</p>

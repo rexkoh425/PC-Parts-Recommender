@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { Link2Off } from "lucide-react";
 import { getBuildShare } from "@/lib/api";
 import { categoryLabels, formatFreshness, formatScore, formatSgd, profileLabels } from "@/lib/format";
 import { decodeSharedBuild, sharedSnapshotFromApi, type SharedBuildSnapshot } from "@/lib/shared-build";
@@ -53,7 +54,9 @@ export function SharedBuildScreen() {
     return (
       <main className="shell state-page shared-page">
         <div className="state-card" role="alert">
-          <span className="state-card__icon" aria-hidden="true">?</span>
+          <span className="state-card__icon" aria-hidden="true">
+            <Link2Off size={24} strokeWidth={1.8} />
+          </span>
           <p className="eyebrow">Shared snapshot unavailable</p>
           <h1>This build link is invalid or incomplete.</h1>
           <p>{effectiveServerError || "A shared link carries the build itself and nothing else — no account, no checkout, no live prices."}</p>

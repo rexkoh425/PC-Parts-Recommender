@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, PackageX } from "lucide-react";
 import {
   createBuildShare,
   getBuild,
@@ -286,7 +286,9 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
     return (
       <main className="shell state-page">
         <div className="state-card" role="alert">
-          <span className="state-card__icon" aria-hidden="true">?</span>
+          <span className="state-card__icon" aria-hidden="true">
+            <PackageX size={24} strokeWidth={1.8} />
+          </span>
           <p className="eyebrow">Build unavailable</p>
           <h1>We could not load this build.</h1>
           <p>{error}</p>
