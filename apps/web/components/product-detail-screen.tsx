@@ -51,6 +51,13 @@ function reasonFor(result: PromiseSettledResult<unknown>): string | undefined {
   return result.reason instanceof Error ? result.reason.message : "This evidence is unavailable.";
 }
 
+export function isMissingCatalogueProductError(error: string): boolean {
+  return [
+    "We do not have that part in the catalogue.",
+    "This product is not in the catalogue.",
+  ].includes(error);
+}
+
 function EvidencePanelError({ title, message }: { title: string; message?: string }) {
   return (
     <div className="evidence-panel-error" role="status">
@@ -140,26 +147,47 @@ export function ProductDetailScreen({
   }, [state]);
 
   if (error) {
+    const isMissingCatalogueProduct = isMissingCatalogueProductError(error);
+
     return (
       <main className="shell state-page">
         <div className="state-card" role="alert">
           <span className="state-card__icon" aria-hidden="true">
             <SearchX size={24} strokeWidth={1.8} />
           </span>
-          <p className="eyebrow">Product evidence unavailable</p>
-          <h1>We could not load this catalogue product.</h1>
-          <p>{error}</p>
+          <p className="eyebrow">
+            {isMissingCatalogueProduct ? "Product unavailable" : "Product evidence unavailable"}
+          </p>
+          <h1>
+            {isMissingCatalogueProduct
+              ? "This product is not in the catalogue."
+              : "We could not load this catalogue product."}
+          </h1>
+          <p>
+            {isMissingCatalogueProduct
+              ? "Browse the catalogue to choose another part."
+              : error}
+          </p>
           <div className="button-row">
-            <button
-              className="button button--primary"
-              type="button"
-              onClick={() => {
-                setError("");
-                setState(null);
-                setRetryKey((key) => key + 1);
-              }}
-            >Try again</button>
-            <Link className="button button--secondary" href="/catalogue">Back to catalogue</Link>
+            {!isMissingCatalogueProduct && (
+              <button
+                className="button button--primary"
+                type="button"
+                onClick={() => {
+                  setError("");
+                  setState(null);
+                  setRetryKey((key) => key + 1);
+                }}
+              >
+                Try again
+              </button>
+            )}
+            <Link
+              className={`button ${isMissingCatalogueProduct ? "button--primary" : "button--secondary"}`}
+              href="/catalogue"
+            >
+              {isMissingCatalogueProduct ? "Browse catalogue" : "Back to catalogue"}
+            </Link>
           </div>
         </div>
       </main>
