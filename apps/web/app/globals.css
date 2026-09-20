@@ -3470,9 +3470,10 @@ svg {
   color: var(--ink-soft);
 }
 
-.public-demo-boundary > span {
+.public-demo-boundary > svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
   color: var(--signal);
-  font-weight: 800;
 }
 
 .public-demo-boundary p {

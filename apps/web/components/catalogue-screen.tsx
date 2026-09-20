@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Info } from "lucide-react";
 import {
   productImpressionContext,
   rememberProductImpression,
@@ -486,7 +486,7 @@ export function CatalogueScreen({
       </form>
 
       <div className="public-demo-boundary" role="note">
-        <span aria-hidden="true">◎</span>
+        <Info aria-hidden="true" size={16} strokeWidth={1.8} />
         <p>
           <strong>{USING_DEMO_DATA ? "Public portfolio demo." : "What this shows."}</strong>{" "}
           {USING_DEMO_DATA
