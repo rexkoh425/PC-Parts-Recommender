@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ClipboardList } from "lucide-react";
+import { ArrowRight, Check, CircleAlert, ClipboardList } from "lucide-react";
 import { Tabs } from "@/components/tabs";
 import { generateBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
@@ -51,7 +51,9 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
   return (
     <p className="field-error" id={id}>
-      <span aria-hidden="true">!</span>
+      <span aria-hidden="true">
+        <CircleAlert size={13} strokeWidth={2} />
+      </span>
       {message}
     </p>
   );
@@ -414,7 +416,9 @@ export function BuildForm() {
                   checked={values.wifi_required}
                   onChange={(event) => setField("wifi_required", event.target.checked)}
                 />
-                <span className="check-card__mark" aria-hidden="true" />
+                <span className="check-card__mark" aria-hidden="true">
+                  <Check size={15} strokeWidth={2.6} />
+                </span>
                 <span>
                   <strong>Wi-Fi required</strong>
                   <small>Motherboard or included adapter</small>
@@ -427,7 +431,9 @@ export function BuildForm() {
                   checked={values.in_stock_only}
                   onChange={(event) => setField("in_stock_only", event.target.checked)}
                 />
-                <span className="check-card__mark" aria-hidden="true" />
+                <span className="check-card__mark" aria-hidden="true">
+                  <Check size={15} strokeWidth={2.6} />
+                </span>
                 <span>
                   <strong>In-stock offers only</strong>
                   <small>Exclude listings last observed unavailable</small>

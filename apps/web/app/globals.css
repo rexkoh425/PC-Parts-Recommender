@@ -913,11 +913,13 @@ svg {
   background: var(--forest);
 }
 
-.check-card input:checked + .check-card__mark::after {
+.check-card__mark > svg {
   color: white;
-  content: "✓";
-  font-size: var(--text-sm);
-  font-weight: 800;
+  opacity: 0;
+}
+
+.check-card input:checked + .check-card__mark > svg {
+  opacity: 1;
 }
 
 .check-card input:focus-visible + .check-card__mark {
