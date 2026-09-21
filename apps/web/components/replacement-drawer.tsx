@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { X } from "lucide-react";
 import {
   apiErrorEvidence,
   apiErrorRequestId,
@@ -152,7 +153,7 @@ export function ReplacementDrawer({
           }}
           aria-label="Close replacement panel"
         >
-          ×
+          <X aria-hidden="true" size={20} strokeWidth={1.9} />
         </button>
       </div>
 
