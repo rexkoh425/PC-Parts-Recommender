@@ -45,6 +45,7 @@ import { readSavedBuilds } from "./saved-builds";
 export const API_BASE_URL = apiBaseUrl;
 export const USING_DEMO_DATA = usingDemoData;
 const LIVE_DATA_VERSION = "buildcores-full-25666-8c738c513661";
+const PUBLIC_DEMO_BUILD_SHARING_MESSAGE = "Build sharing is not available in the public demo.";
 
 export interface ApiRequestOptions {
   signal?: AbortSignal;
@@ -412,7 +413,7 @@ export function createBuildShare(
 ): Promise<BuildShareCreated> {
   if (USING_DEMO_DATA) {
     return Promise.reject(
-      new ApiError("Durable build sharing is not available in the public demo.", 503),
+      new ApiError(PUBLIC_DEMO_BUILD_SHARING_MESSAGE, 503),
     );
   }
   return apiRequest<BuildShareCreated>(
@@ -428,7 +429,7 @@ export function getBuildShare(
 ): Promise<PublicBuildShare> {
   if (USING_DEMO_DATA) {
     return Promise.reject(
-      new ApiError("Durable build sharing is not available in the public demo.", 503),
+      new ApiError(PUBLIC_DEMO_BUILD_SHARING_MESSAGE, 503),
     );
   }
   return apiRequest<PublicBuildShare>(
@@ -445,7 +446,7 @@ export function revokeBuildShare(
 ): Promise<BuildShareRevoked> {
   if (USING_DEMO_DATA) {
     return Promise.reject(
-      new ApiError("Durable build sharing is not available in the public demo.", 503),
+      new ApiError(PUBLIC_DEMO_BUILD_SHARING_MESSAGE, 503),
     );
   }
   return apiRequest<BuildShareRevoked>(

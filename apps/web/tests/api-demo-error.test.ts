@@ -25,4 +25,14 @@ describe("controlled demo API contract", () => {
       "We do not have that part in the catalogue.",
     );
   });
+
+  it("explains that persistent sharing is unavailable in the public demo", async () => {
+    vi.stubEnv("NEXT_PUBLIC_DATA_MODE", "demo");
+    const api = await import("../lib/api");
+
+    const message = "Build sharing is not available in the public demo.";
+    await expect(api.createBuildShare("demo-build")).rejects.toThrow(message);
+    await expect(api.getBuildShare("demo-share")).rejects.toThrow(message);
+    await expect(api.revokeBuildShare("demo-share", "revocation-token")).rejects.toThrow(message);
+  });
 });
