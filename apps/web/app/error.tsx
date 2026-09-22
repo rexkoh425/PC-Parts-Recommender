@@ -9,9 +9,9 @@ export default function ErrorPage({ reset }: { error: Error & { digest?: string 
         <span className="state-card__icon" aria-hidden="true">
           <TriangleAlert size={24} strokeWidth={1.8} />
         </span>
-        <p className="eyebrow">Unexpected interface error</p>
+        <p className="eyebrow">Something went wrong</p>
         <h1>This page needs another attempt.</h1>
-        <p>Your saved builds and build brief have not been cleared.</p>
+        <p>Your saved builds and build brief are still here.</p>
         <button className="button button--primary" type="button" onClick={reset}>Try again</button>
       </div>
     </main>
