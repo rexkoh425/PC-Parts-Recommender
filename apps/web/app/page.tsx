@@ -13,7 +13,7 @@ export default function HomePage() {
       <section className="hero shell" aria-labelledby="hero-title">
         <div className="hero__copy">
           <p className="eyebrow">
-            <span aria-hidden="true">●</span>
+            <span className="hero__eyebrow-dot" aria-hidden="true" />
             Built for Singapore prices
           </p>
           <h1 id="hero-title">
