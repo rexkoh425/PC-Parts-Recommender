@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Link2Off } from "lucide-react";
+import { Link2Off, LoaderCircle } from "lucide-react";
 import { getBuildShare } from "@/lib/api";
 import { categoryLabels, formatFreshness, formatScore, formatSgd, profileLabels } from "@/lib/format";
 import { decodeSharedBuild, sharedSnapshotFromApi, type SharedBuildSnapshot } from "@/lib/shared-build";
@@ -47,7 +47,14 @@ export function SharedBuildScreen() {
   if (shareIdIsValid && !serverSnapshot && !serverError) {
     return (
       <main className="shell state-page shared-page" aria-busy="true">
-        <p>Loading shared build snapshot…</p>
+        <div className="state-card" role="status">
+          <span className="state-card__icon" aria-hidden="true">
+            <LoaderCircle className="state-card__spinner" size={24} strokeWidth={1.8} />
+          </span>
+          <p className="eyebrow">Opening shared build</p>
+          <h1>Loading the shared snapshot.</h1>
+          <p>Checking the saved build details.</p>
+        </div>
       </main>
     );
   }

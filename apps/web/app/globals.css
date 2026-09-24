@@ -439,6 +439,10 @@ svg {
   to { transform: rotate(360deg); }
 }
 
+.state-card__spinner {
+  animation: spin 0.9s linear infinite;
+}
+
 .eyebrow {
   margin-bottom: 12px;
   color: var(--forest);
