@@ -11,9 +11,11 @@ import { StatusPill } from "./status-pill";
 
 export function SharedBuildScreen() {
   const searchParams = useSearchParams();
-  const localSnapshot = useMemo(() => decodeSharedBuild(searchParams.get("build")), [searchParams]);
+  const sharedBuildValue = searchParams.get("build");
+  const localSnapshot = useMemo(() => decodeSharedBuild(sharedBuildValue), [sharedBuildValue]);
   const shareId = searchParams.get("share");
   const shareIdIsValid = Boolean(shareId && /^[A-Za-z0-9_-]{1,80}$/.test(shareId));
+  const hasSharedBuildInput = Boolean(shareId || sharedBuildValue);
   const [serverSnapshot, setServerSnapshot] = useState<SharedBuildSnapshot | null>(null);
   const [serverError, setServerError] = useState("");
 
@@ -58,8 +60,16 @@ export function SharedBuildScreen() {
             <Link2Off size={24} strokeWidth={1.8} />
           </span>
           <p className="eyebrow">Shared snapshot unavailable</p>
-          <h1>This build link is invalid or incomplete.</h1>
-          <p>{effectiveServerError || "A shared link carries the build itself and nothing else — no account, no checkout, no live prices."}</p>
+          <h1>
+            {hasSharedBuildInput
+              ? "This build link is invalid or incomplete."
+              : "No shared build was provided."}
+          </h1>
+          <p>
+            {effectiveServerError || (hasSharedBuildInput
+              ? "This shared link does not contain a usable build."
+              : "Open a shared build link, or generate a build of your own.")}
+          </p>
           <Link className="button button--primary" href="/">
             Generate a build
           </Link>
