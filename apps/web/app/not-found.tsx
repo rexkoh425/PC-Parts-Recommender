@@ -13,7 +13,7 @@ export default function NotFound() {
         <span className="state-card__icon" aria-hidden="true">404</span>
         <p className="eyebrow">Page not found</p>
         <h1>We could not find that page.</h1>
-        <p>It may have moved, or the link may be wrong. Here is the way back.</p>
+        <p>It may have moved, or the link may be wrong. Choose where to go next.</p>
         <div className="button-row">
           <Link className="button button--primary" href="/">Build a PC</Link>
           <Link className="button button--secondary" href="/catalogue">Browse parts</Link>
