@@ -134,7 +134,7 @@ function priceBasisDetail(component: BuildComponent): string {
   if (component.price_basis === "street_aug_2026") {
     return `Retail price${component.price_source ? ` from ${component.price_source}` : ""}${asOf}, converted at 1 USD = 1.2775 SGD. Not a live quote.`;
   }
-  return `Fixture estimate. Public sources disagreed too widely to cite one${asOf}.`;
+  return `Estimated price${asOf}. Available public sources differed too much to name one as the reference.`;
 }
 
 export function BuildDetailScreen({ buildId }: { buildId: string }) {
@@ -646,7 +646,7 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
           <section className="detail-section" aria-labelledby="compatibility-heading">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">Versioned rule engine</p>
+                <p className="eyebrow">Compatibility evidence</p>
                 <h2 id="compatibility-heading">Compatibility checks</h2>
               </div>
               <StatusPill status={build.compatibility_status} />
@@ -689,10 +689,10 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
               </>
             ) : (
               <div className="empty-evidence">
-                <strong>Detailed rule outcomes were not returned.</strong>
+                <strong>Detailed compatibility outcomes were not returned.</strong>
                 <p>
                   The build status is {build.compatibility_status}. We cannot show the individual
-                  checks behind it here.
+                  checks because they were not included in this result.
                 </p>
               </div>
             )}

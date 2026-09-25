@@ -680,7 +680,7 @@ export function BuildForm() {
           </button>
           <p className="brief-summary__note">
             {USING_DEMO_DATA
-              ? "Prices are real but dated — this demo isn't wired to live retailer stock."
+              ? "Prices are real but dated — this demo does not use live retailer stock."
               : "Compatibility is checked before anything is ranked."}
           </p>
           <div className="generation-status" aria-live="polite">
