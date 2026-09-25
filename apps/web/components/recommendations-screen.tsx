@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, CircleAlert, RefreshCw } from "lucide-react";
+import { ArrowRight, CircleAlert, Info, RefreshCw } from "lucide-react";
 import { getRequestBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
   categoryLabels,
@@ -244,7 +244,9 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
 
       {isPartial && (
         <div className="notice-banner" role="status">
-          <span aria-hidden="true">i</span>
+          <span aria-hidden="true">
+            <Info size={14} strokeWidth={2} />
+          </span>
           <p>
             <strong>Only {builds.length} meaningfully distinct build{builds.length === 1 ? " was" : "s were"} feasible.</strong>{" "}
             We avoid returning near-duplicates just to fill the page.
@@ -253,7 +255,9 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
       )}
 
       <div className="notice-banner notice-banner--score" role="note">
-        <span aria-hidden="true">i</span>
+        <span aria-hidden="true">
+          <Info size={14} strokeWidth={2} />
+        </span>
         <p>
           <strong>Scores are relative to this request.</strong>{" "}
           They compare the builds in this shortlist, not products in general.

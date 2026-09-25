@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, TriangleAlert } from "lucide-react";
 import {
   getProduct,
   getSessionId,
@@ -240,7 +240,9 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
 
       {error && (
         <div className="notice-banner" role="alert">
-          <span aria-hidden="true">!</span>
+          <span aria-hidden="true">
+            <TriangleAlert size={14} strokeWidth={2} />
+          </span>
           <p>{error}</p>
         </div>
       )}

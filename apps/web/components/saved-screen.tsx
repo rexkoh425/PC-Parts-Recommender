@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Info } from "lucide-react";
 import { BuildCard } from "./build-card";
 import {
   generateBuilds,
@@ -116,7 +116,9 @@ export function SavedScreen() {
       ) : (
         <>
           <div className="saved-note" role="note">
-            <span aria-hidden="true">i</span>
+            <span aria-hidden="true">
+              <Info size={14} strokeWidth={2} />
+            </span>
             <p>
               <strong>Recheck before buying.</strong> Stock and prices may have changed since these
               builds were saved.
