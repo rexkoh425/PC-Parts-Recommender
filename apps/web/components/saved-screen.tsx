@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { ArrowRight, Info } from "lucide-react";
+import { ArrowRight, Bookmark, Info } from "lucide-react";
 import { BuildCard } from "./build-card";
 import {
   generateBuilds,
@@ -102,9 +102,7 @@ export function SavedScreen() {
       {entries.length === 0 ? (
         <section className="empty-saved" aria-labelledby="empty-saved-title">
           <div className="empty-saved__graphic" aria-hidden="true">
-            <span />
-            <span />
-            <span />
+            <Bookmark size={36} strokeWidth={1.8} />
           </div>
           <p className="eyebrow">Shortlist</p>
           <h2 id="empty-saved-title">No saved builds yet</h2>

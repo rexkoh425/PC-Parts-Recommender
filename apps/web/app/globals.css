@@ -3301,37 +3301,15 @@ svg {
 }
 
 .empty-saved__graphic {
-  position: relative;
-  width: 100px;
-  height: 82px;
+  display: grid;
+  width: 80px;
+  height: 80px;
+  place-items: center;
   margin-bottom: 24px;
-}
-
-.empty-saved__graphic span {
-  position: absolute;
-  width: 62px;
-  height: 45px;
   border: 1px solid var(--forest);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-}
-
-.empty-saved__graphic span:nth-child(1) {
-  top: 0;
-  left: 0;
-  transform: rotate(-8deg);
-}
-
-.empty-saved__graphic span:nth-child(2) {
-  top: 12px;
-  right: 0;
-  transform: rotate(8deg);
-}
-
-.empty-saved__graphic span:nth-child(3) {
-  bottom: 0;
-  left: 19px;
+  border-radius: var(--radius-md);
   background: var(--mint-soft);
+  color: var(--forest);
 }
 
 .empty-saved h2 {
