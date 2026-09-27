@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     q: "Why is the memory so expensive?",
-    a: "Memory makers moved production capacity to HBM for AI datacentres through 2025 and 2026. DDR5 is up roughly four times on late-2025 prices and NAND storage roughly double. A 32 GB kit that cost under $90 now runs closer to $390, which is why RAM and storage can exceed the cost of the processor.",
+    a: "This public demo uses a fixed August 2026 price snapshot, when memory and storage were unusually expensive. That is why RAM and storage can cost more than the processor in some sample builds.",
   },
   {
     q: "Can I buy a build from here?",
@@ -50,7 +50,7 @@ export default function HowItWorksPage() {
 
       <section className="method-strip" aria-label="How recommendations are generated">
         <div className="shell method-strip__inner">
-          <div><span>01</span><strong>Search</strong><small>25,666 parts, by name and by meaning</small></div>
+          <div><span>01</span><strong>Search</strong><small>25,666 parts, matched to your needs</small></div>
           <div><span>02</span><strong>Check</strong><small>Every part against every other</small></div>
           <div><span>03</span><strong>Rank</strong><small>Scored against your workload</small></div>
           <div><span>04</span><strong>Optimise</strong><small>The best whole machine for the money</small></div>
@@ -61,10 +61,10 @@ export default function HowItWorksPage() {
         <div className="evidence-section__heading">
           <div>
             <p className="eyebrow">How it was built</p>
-            <h2 id="evidence-title">What it runs on.</h2>
+            <h2 id="evidence-title">What powers the recommendations.</h2>
           </div>
           <p>
-            These figures describe the controlled demo’s data and test coverage.
+            These figures describe the public demo’s data and test coverage.
           </p>
         </div>
         <div className="evidence-stat-grid">
@@ -74,7 +74,7 @@ export default function HowItWorksPage() {
           </article>
           <article>
             <strong>9.8M</strong>
-            <span>search vectors, generated on GPU</span>
+            <span>search vectors for matching parts</span>
           </article>
           <article>
             <strong>10,000</strong>
