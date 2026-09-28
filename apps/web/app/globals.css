@@ -5908,6 +5908,9 @@ details.evidence-ledger {
 }
 
 details.evidence-ledger > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
   width: fit-content;
   font-size: var(--text-sm);
@@ -5917,14 +5920,12 @@ details.evidence-ledger > summary {
 
 details.evidence-ledger > summary::-webkit-details-marker { display: none; }
 
-details.evidence-ledger > summary::before {
-  content: "+";
-  display: inline-block;
-  width: 1.1em;
+.evidence-ledger__chevron {
   color: var(--forest-400);
+  transition: transform 140ms ease;
 }
 
-details.evidence-ledger[open] > summary::before { content: "−"; }
+details.evidence-ledger[open] > summary .evidence-ledger__chevron { transform: rotate(180deg); }
 
 details.evidence-ledger > summary:hover { color: var(--forest-800); }
 

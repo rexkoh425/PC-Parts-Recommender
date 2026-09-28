@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CalendarClock, Database, ShieldCheck } from "lucide-react";
+import { CalendarClock, ChevronDown, Database, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "How it works",
@@ -86,7 +86,10 @@ export default function HowItWorksPage() {
           </article>
         </div>
         <details className="evidence-ledger">
-          <summary>Where these numbers come from</summary>
+          <summary>
+            <ChevronDown className="evidence-ledger__chevron" aria-hidden="true" size={16} strokeWidth={1.8} />
+            Where these numbers come from
+          </summary>
           <ol>
             <li>
               <strong>Catalogue</strong>
