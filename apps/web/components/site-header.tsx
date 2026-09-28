@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Cpu } from "lucide-react";
 import { USING_DEMO_DATA } from "@/lib/api";
 
 interface NavItem {
@@ -40,9 +41,7 @@ export function SiteHeader() {
       <div className="site-header__inner shell">
         <Link className="brand" href="/" aria-label="PC Build Recommender home">
           <span className="brand__mark" aria-hidden="true">
-            <span />
-            <span />
-            <span />
+            <Cpu size={21} strokeWidth={1.8} />
           </span>
           <span>
             <strong>BuildSignal</strong>

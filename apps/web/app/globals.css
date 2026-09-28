@@ -243,60 +243,14 @@ svg {
 }
 
 .brand__mark {
-  position: relative;
   display: grid;
   width: 38px;
   height: 38px;
   place-items: center;
-  overflow: hidden;
   border-radius: var(--radius-sm);
   background: var(--forest);
+  color: var(--mint);
   box-shadow: var(--elevation-1);
-}
-
-.brand__mark::before,
-.brand__mark::after {
-  position: absolute;
-  content: "";
-  background: var(--mint);
-}
-
-.brand__mark::before {
-  width: 19px;
-  height: 2px;
-  transform: rotate(-45deg);
-}
-
-.brand__mark::after {
-  width: 2px;
-  height: 19px;
-  transform: rotate(45deg);
-}
-
-.brand__mark span {
-  position: absolute;
-  z-index: 1;
-  width: 5px;
-  height: 5px;
-  border: 1px solid var(--mint);
-  border-radius: 50%;
-  background: var(--forest);
-}
-
-.brand__mark span:nth-child(1) {
-  top: 8px;
-  right: 8px;
-}
-
-.brand__mark span:nth-child(2) {
-  bottom: 8px;
-  left: 8px;
-}
-
-.brand__mark span:nth-child(3) {
-  top: 17px;
-  left: 17px;
-  background: var(--mint);
 }
 
 .brand > span:last-child {
