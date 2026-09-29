@@ -65,8 +65,8 @@ function NoFeasibleBuild({
         <p className="eyebrow">Constraint result</p>
         <h1 id="infeasible-title">No compatible build yet</h1>
         <p className="lede">
-          We did not substitute an incompatible part. These requirements eliminated the feasible
-          catalogue:
+          We did not substitute an incompatible part. These requirements rule out every compatible
+          build we checked:
         </p>
         <ul className="reason-list">
           {reasons.map((reason) => (
