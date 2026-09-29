@@ -333,7 +333,7 @@ export function ProductDetailScreen({
 
           <section className="detail-section product-section" aria-labelledby="reviews-heading">
             <div className="section-heading">
-              <div><p className="eyebrow">Permitted cited sources</p><h2 id="reviews-heading" tabIndex={-1}>Review evidence</h2></div>
+              <div><p className="eyebrow">Sources we can cite</p><h2 id="reviews-heading" tabIndex={-1}>Review evidence</h2></div>
               <p>{reviews ? "" : "Reviews are unavailable."}</p>
             </div>
             {state.reviewsError ? <EvidencePanelError title="Review evidence could not be loaded" message={state.reviewsError} /> : reviews?.evidence.length ? (
