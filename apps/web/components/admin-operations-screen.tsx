@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import { getAdminOperations, USING_DEMO_DATA } from "@/lib/api";
 import { categoryLabels, formatFreshness } from "@/lib/format";
 import type { AdminOperationsResponse } from "@/lib/types";
@@ -190,7 +191,7 @@ export function AdminOperationsScreen() {
               <small id="admin-token-help">Held only in this page&apos;s memory for the request. It is never saved to browser storage.</small>
             </div>
             <button className="button button--primary" type="submit" disabled={loading}>
-              {loading && <span className="button-spinner" aria-hidden="true" />}
+              {loading && <LoaderCircle className="button-spinner" aria-hidden="true" size={16} strokeWidth={2} />}
               {loading ? "Loading counters" : "Load operations"}
             </button>
           </form>

@@ -381,11 +381,8 @@ svg {
 }
 
 .button-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgb(255 255 255 / 35%);
-  border-top-color: currentColor;
-  border-radius: 50%;
+  display: block;
+  flex: 0 0 auto;
   animation: spin 700ms linear infinite;
 }
 

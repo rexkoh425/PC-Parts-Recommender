@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
 import {
   apiErrorEvidence,
   apiErrorRequestId,
@@ -194,7 +194,7 @@ export function ReplacementDrawer({
 
         {loading && (
           <div className="drawer-loading" role="status">
-            <span className="button-spinner" aria-hidden="true" />
+            <LoaderCircle className="button-spinner" aria-hidden="true" size={16} strokeWidth={2} />
             Checking compatible catalogue options…
           </div>
         )}
@@ -315,7 +315,7 @@ export function ReplacementDrawer({
         >
           {applying ? (
             <>
-              <span className="button-spinner" aria-hidden="true" />
+              <LoaderCircle className="button-spinner" aria-hidden="true" size={16} strokeWidth={2} />
               Rechecking build…
             </>
           ) : (

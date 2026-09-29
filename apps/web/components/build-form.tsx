@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Check, CircleAlert, ClipboardList } from "lucide-react";
+import { ArrowRight, Check, CircleAlert, ClipboardList, LoaderCircle } from "lucide-react";
 import { Tabs } from "@/components/tabs";
 import { generateBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
@@ -668,7 +668,7 @@ export function BuildForm() {
           >
             {submitting ? (
               <>
-                <span className="button-spinner" aria-hidden="true" />
+                <LoaderCircle className="button-spinner" aria-hidden="true" size={16} strokeWidth={2} />
                 Solving the build…
               </>
             ) : (
