@@ -311,8 +311,8 @@ export function BuildForm() {
                 }
               />
               <p className="field-help" id="performance-target-help">
-                Something specific you want to hit, like 100 fps at 1440p. We&apos;ll show
-                whatever evidence we have for it.
+                Add a goal such as 100 FPS at 1440p. We&apos;ll show relevant benchmark evidence when
+                it is available.
               </p>
               <FieldError
                 id="performance-target-error"
