@@ -99,8 +99,8 @@ export function SharedBuildScreen() {
           <h1>{profileLabels[snapshot.profile]}</h1>
           <p className="lede">
             {verifiedServerRecord
-              ? "This is a server-recorded recommendation snapshot from generation time. Re-run the build before buying to check the current catalogue, stock, and prices."
-              : "This link contains editable browser-provided data. Its prices, scores, and claimed compatibility are unverified; generate a new build before relying on it."}
+              ? "This saved recommendation was recorded by the service when it was generated. Re-run it before buying to check the current catalogue, stock, and prices."
+              : "This link was created in a browser and has not been verified by the service. Re-run it before relying on its prices, scores, or compatibility."}
           </p>
         </div>
         <StatusPill
