@@ -658,11 +658,11 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
                     <div><dt>Checks run</dt><dd>{compatibilitySummary.total}</dd></div>
                     <div><dt>Passed</dt><dd>{compatibilitySummary.pass}</dd></div>
                     <div><dt>Warnings</dt><dd>{compatibilitySummary.warning}</dd></div>
-                    <div><dt>Unknown</dt><dd>{compatibilitySummary.unknown}</dd></div>
+                    <div><dt>Needs verification</dt><dd>{compatibilitySummary.unknown}</dd></div>
                   </dl>
                   <p>
-                    Complete builds cannot contain a hard FAIL or UNKNOWN result. Warnings remain
-                    visible and are penalised by the optimiser.
+                    Complete builds cannot contain a failed or unverified check. Warnings remain
+                    visible and lower the build&apos;s ranking.
                   </p>
                 </div>
                 <ul className="check-list">
