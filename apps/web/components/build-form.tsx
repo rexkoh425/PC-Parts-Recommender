@@ -577,7 +577,7 @@ export function BuildForm() {
                     placeholder="e.g. AMD, Fractal Design"
                     onChange={(event) => setField("preferred_brands", event.target.value)}
                   />
-                  <p className="field-help">Comma separated. Used as a soft ranking signal.</p>
+                  <p className="field-help">Separate brands with commas. This is a preference, not a requirement.</p>
                 </div>
                 <div className="field">
                   <label htmlFor="excluded-brands">Excluded brands</label>
@@ -588,7 +588,7 @@ export function BuildForm() {
                     placeholder="e.g. Brand name"
                     onChange={(event) => setField("excluded_brands", event.target.value)}
                   />
-                  <p className="field-help">Excluded brands are a hard constraint.</p>
+                  <p className="field-help">Excluded brands are never selected.</p>
                 </div>
               </div>
               <FieldError id="form-error" message={errors.form} />
