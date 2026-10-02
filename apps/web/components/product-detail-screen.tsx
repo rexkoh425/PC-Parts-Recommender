@@ -306,7 +306,7 @@ export function ProductDetailScreen({
 
           <section className="detail-section product-section" aria-labelledby="benchmarks-heading">
             <div className="section-heading">
-              <div><p className="eyebrow">Observed versus modelled</p><h2 id="benchmarks-heading" tabIndex={-1}>Benchmark evidence</h2></div>
+              <div><p className="eyebrow">Measured and estimated results</p><h2 id="benchmarks-heading" tabIndex={-1}>Benchmark evidence</h2></div>
               <p>{benchmarks ? "" : "Benchmarks are unavailable."}</p>
             </div>
             {state.benchmarksError ? <EvidencePanelError title="Benchmark evidence could not be loaded" message={state.benchmarksError} /> : benchmarks?.benchmarks.length ? (
