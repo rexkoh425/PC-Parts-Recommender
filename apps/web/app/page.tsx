@@ -53,7 +53,7 @@ export default function HomePage() {
       <section className="method-strip" id="method" aria-label="How recommendations are generated">
         <div className="shell method-strip__inner">
           <div><span>01</span><strong>Search</strong><small>25,666 parts, matched to your needs</small></div>
-          <div><span>02</span><strong>Check</strong><small>Every part against every other</small></div>
+          <div><span>02</span><strong>Check</strong><small>Each part checked against the rest</small></div>
           <div><span>03</span><strong>Rank</strong><small>Scored against your workload</small></div>
           <div><span>04</span><strong>Optimise</strong><small>The best whole machine for the money</small></div>
         </div>
