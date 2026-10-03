@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     q: "How do you know the parts fit together?",
-    a: "Socket, memory type, graphics card length, cooler height, case clearance and power draw are all checked between every pair of parts before a build can be ranked. A part that fails any check never appears in a result.",
+    a: "Socket fit, memory type, graphics-card length, cooler height, case clearance and power draw are checked across the build before it can be ranked. A part that fails any check never appears in a result.",
   },
   {
     q: "What does the score out of 100 mean?",
@@ -43,8 +43,8 @@ export default function HowItWorksPage() {
         <p className="eyebrow">How it works</p>
         <h1 id="hiw-title">From a brief to a machine that fits together.</h1>
         <p className="lede">
-          You give a budget and the work you do. Every part is searched, checked against every other
-          part, scored for that workload, then assembled into complete builds.
+          You give a budget and the work you do. The parts are searched, checked to make sure they
+          fit together, scored for that workload, then assembled into complete builds.
         </p>
       </section>
 
