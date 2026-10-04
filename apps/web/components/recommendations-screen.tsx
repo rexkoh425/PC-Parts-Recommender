@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, CircleAlert, Info, RefreshCw } from "lucide-react";
+import { ArrowRight, Circle, CircleAlert, Info, RefreshCw } from "lucide-react";
 import { getRequestBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
   categoryLabels,
@@ -41,7 +41,7 @@ function ResultSkeleton() {
   );
 }
 
-function NoFeasibleBuild({
+export function NoFeasibleBuild({
   response,
   onRelax,
 }: {
@@ -70,7 +70,10 @@ function NoFeasibleBuild({
         </p>
         <ul className="reason-list">
           {reasons.map((reason) => (
-            <li key={`${reason.code}-${reason.message}`}>{reason.message}</li>
+            <li key={`${reason.code}-${reason.message}`}>
+              <Circle className="reason-list__bullet" aria-hidden="true" size={13} strokeWidth={2.4} />
+              <span>{reason.message}</span>
+            </li>
           ))}
         </ul>
         {relaxations.length > 0 && (

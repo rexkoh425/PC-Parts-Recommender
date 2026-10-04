@@ -2184,20 +2184,16 @@ svg {
 }
 
 .reason-list li {
-  position: relative;
-  padding-left: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   color: var(--ink-soft);
 }
 
-.reason-list li::before {
-  position: absolute;
-  top: 0.42em;
-  left: 0;
-  width: 9px;
-  height: 9px;
-  border: 2px solid var(--amber);
-  border-radius: 50%;
-  content: "";
+.reason-list__bullet {
+  flex: none;
+  margin-top: 0.35em;
+  color: var(--amber);
 }
 
 .relaxations {
