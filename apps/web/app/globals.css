@@ -1024,13 +1024,10 @@ svg {
 
 .combobox-shell__loading {
   position: absolute;
-  top: 17px;
+  top: 50%;
   right: 15px;
-  width: 15px;
-  height: 15px;
-  border: 2px solid var(--line);
-  border-top-color: var(--forest);
-  border-radius: 50%;
+  margin-top: -8px;
+  color: var(--forest);
   animation: spin 700ms linear infinite;
 }
 

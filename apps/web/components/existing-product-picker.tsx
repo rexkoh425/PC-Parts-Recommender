@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import { searchProducts } from "@/lib/api";
 import { categoryLabels } from "@/lib/format";
 import type { ExistingProductInput, ProductSearchItem } from "@/lib/types";
@@ -142,7 +143,14 @@ export function ExistingProductPicker({
           aria-describedby={`${listId}-help`}
           disabled={disabled}
         />
-        {loading && <span className="combobox-shell__loading" aria-hidden="true" />}
+        {loading && (
+          <LoaderCircle
+            className="combobox-shell__loading"
+            aria-hidden="true"
+            size={16}
+            strokeWidth={2}
+          />
+        )}
         {open && (loading || results.length > 0 || message) && (
           <div className="combobox-popover">
             <ul id={listId} role="listbox">
