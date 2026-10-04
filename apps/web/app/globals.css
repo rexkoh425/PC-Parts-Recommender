@@ -6464,10 +6464,13 @@ textarea:focus-visible {
 }
 
 .faq-item > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   cursor: pointer;
   list-style: none;
-  padding: 20px 40px 20px 0;
-  position: relative;
+  padding: 20px 0;
   font-size: var(--text-md);
   font-weight: 550;
   letter-spacing: -0.01em;
@@ -6475,21 +6478,14 @@ textarea:focus-visible {
 
 .faq-item > summary::-webkit-details-marker { display: none; }
 
-.faq-item > summary::after {
-  content: "";
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  width: 8px;
-  height: 8px;
-  border-right: 2px solid var(--forest-400);
-  border-bottom: 2px solid var(--forest-400);
-  transform: translateY(-70%) rotate(45deg);
+.faq-item__chevron {
+  flex: none;
+  color: var(--forest-400);
   transition: transform 160ms ease;
 }
 
-.faq-item[open] > summary::after {
-  transform: translateY(-30%) rotate(225deg);
+.faq-item[open] .faq-item__chevron {
+  transform: rotate(180deg);
 }
 
 .faq-item > summary:hover {

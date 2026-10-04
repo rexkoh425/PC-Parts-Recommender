@@ -154,7 +154,10 @@ export default function HowItWorksPage() {
         <div className="faq-list">
           {faqs.map((item) => (
             <details key={item.q} className="faq-item">
-              <summary>{item.q}</summary>
+              <summary>
+                <span>{item.q}</span>
+                <ChevronDown className="faq-item__chevron" aria-hidden="true" size={16} strokeWidth={1.8} />
+              </summary>
               <p>{item.a}</p>
             </details>
           ))}

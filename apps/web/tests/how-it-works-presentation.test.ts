@@ -13,6 +13,7 @@ describe("how it works presentation", () => {
     expect(html).toContain("Socket fit, memory type, graphics-card length");
     expect(html).toContain("search vectors for matching parts");
     expect(html).toContain("lucide-chevron-down");
+    expect(html).toContain("faq-item__chevron");
     expect(html).toContain("Where these numbers come from");
   });
 });
