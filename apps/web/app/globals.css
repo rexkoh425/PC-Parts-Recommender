@@ -6174,10 +6174,6 @@ h3 {
   --section-y-lead: 80px;
 }
 
-.hero__eyebrow-dot {
-  color: var(--accent);
-}
-
 .recommended-chip {
   background: var(--accent-soft);
   color: var(--accent);
@@ -6748,13 +6744,11 @@ body {
   }
 }
 
-.hero__eyebrow-dot {
+.hero__eyebrow-icon {
   display: inline-block;
-  width: 6px;
-  height: 6px;
-  margin-right: 4px;
-  border-radius: 50%;
-  background: var(--accent);
+  margin-right: 8px;
+  vertical-align: -2px;
+  color: var(--accent);
 }
 
 .overall-score {

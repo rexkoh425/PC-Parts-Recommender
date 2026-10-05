@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, MapPin } from "lucide-react";
 import { BuildForm } from "@/components/build-form";
 import { formatSgd } from "@/lib/format";
 
@@ -13,7 +13,7 @@ export default function HomePage() {
       <section className="hero shell" aria-labelledby="hero-title">
         <div className="hero__copy">
           <p className="eyebrow">
-            <span className="hero__eyebrow-dot" aria-hidden="true" />
+            <MapPin className="hero__eyebrow-icon" aria-hidden="true" size={13} strokeWidth={2} />
             Built for Singapore prices
           </p>
           <h1 id="hero-title">
