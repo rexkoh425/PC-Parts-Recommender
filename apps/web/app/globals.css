@@ -898,6 +898,14 @@ svg {
   border-top: 1px solid var(--line);
 }
 
+.advanced-preferences summary,
+.price-intelligence__anomalies summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+}
+
 .advanced-preferences summary {
   width: fit-content;
   color: var(--forest);
@@ -908,6 +916,20 @@ svg {
 
 .advanced-preferences[open] summary {
   margin-bottom: 20px;
+}
+
+.advanced-preferences summary::-webkit-details-marker,
+.price-intelligence__anomalies summary::-webkit-details-marker {
+  display: none;
+}
+
+.disclosure-chevron {
+  flex: none;
+  transition: transform 160ms ease;
+}
+
+details[open] > summary .disclosure-chevron {
+  transform: rotate(180deg);
 }
 
 .build-output-controls {

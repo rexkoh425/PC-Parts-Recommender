@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Check, CircleAlert, ClipboardList, LoaderCircle } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, CircleAlert, ClipboardList, LoaderCircle } from "lucide-react";
 import { Tabs } from "@/components/tabs";
 import { generateBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
@@ -566,7 +566,10 @@ export function BuildForm() {
             </div>
 
             <details className="advanced-preferences">
-              <summary>Brand preferences</summary>
+              <summary>
+                <span>Brand preferences</span>
+                <ChevronDown className="disclosure-chevron" aria-hidden="true" size={16} strokeWidth={1.8} />
+              </summary>
               <div className="field-grid field-grid--two">
                 <div className="field">
                   <label htmlFor="preferred-brands">Preferred brands</label>

@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 import { formatEvidenceTimestamp, humanizeAttributeKey } from "../lib/catalogue";
 import { formatSgd } from "../lib/format";
 import type { PriceIntelligenceSummary } from "../lib/types";
@@ -76,7 +77,10 @@ export function PriceIntelligencePanel({
       )}
       {intelligence.anomalies.length > 0 && (
         <details className="price-intelligence__anomalies">
-          <summary>{intelligence.anomalies.length} robust price outlier {intelligence.anomalies.length === 1 ? "flag" : "flags"}</summary>
+          <summary>
+            <span>{intelligence.anomalies.length} robust price outlier {intelligence.anomalies.length === 1 ? "flag" : "flags"}</span>
+            <ChevronDown className="disclosure-chevron" aria-hidden="true" size={16} strokeWidth={1.8} />
+          </summary>
           <ul>
             {intelligence.anomalies.map((anomaly) => (
               <li key={`${anomaly.listing_id}-${anomaly.observed_at}`}>

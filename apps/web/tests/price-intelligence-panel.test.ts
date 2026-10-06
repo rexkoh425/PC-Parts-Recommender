@@ -55,4 +55,20 @@ describe("PriceIntelligencePanel", () => {
     expect(html).not.toContain(">Insufficient history<");
     expect(html).not.toContain("Insufficient price history");
   });
+
+  it("uses a library disclosure icon for anomalous price observations", () => {
+    const html = render({
+      ...summary,
+      anomalies: [{
+        listing_id: "outlier-1",
+        observed_at: "2026-07-22T00:00:00.000Z",
+        delivered_price_sgd: 1_199,
+        direction: "high",
+      }],
+    });
+
+    expect(html).toContain("robust price outlier flag");
+    expect(html).toContain("disclosure-chevron");
+    expect(html).toContain("lucide-chevron-down");
+  });
 });
