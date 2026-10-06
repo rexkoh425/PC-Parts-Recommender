@@ -15,7 +15,6 @@ import {
   formatAttributeValue,
   humanizeAttributeKey,
   observedStockLabel,
-  stockTone,
 } from "@/lib/catalogue";
 import {
   comparedAttributeKeys,
@@ -27,6 +26,7 @@ import {
 } from "@/lib/product-comparison";
 import { categoryInlineLabels, categoryLabels, categoryPluralLabels, formatSgd } from "@/lib/format";
 import type { ProductDetail, ProductSearchItem } from "@/lib/types";
+import { ObservedStock } from "./observed-stock";
 
 interface ProductComparisonScreenProps {
   initialProductIds: string[];
@@ -272,10 +272,7 @@ export function ProductComparisonScreen({ initialProductIds }: ProductComparison
                   <small>
                     {formatSgd(product.lowest_price_sgd)}
                     <span aria-hidden="true"> · </span>
-                    <span className={`observed-stock observed-stock--${stockTone(product.stock_status)}`}>
-                      <span aria-hidden="true" />
-                      {observedStockLabel(product.stock_status)}
-                    </span>
+                    <ObservedStock status={product.stock_status} />
                   </small>
                 ) : (
                   product.headline_spec && <small>{product.headline_spec}</small>

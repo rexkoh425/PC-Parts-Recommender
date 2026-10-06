@@ -3671,19 +3671,17 @@ svg {
   font-weight: 680;
 }
 
-.observed-stock > span {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--ink-faint);
+.observed-stock__icon {
+  flex: none;
+  color: var(--ink-faint);
 }
 
-.observed-stock--positive > span {
-  background: #2b9d70;
+.observed-stock--positive .observed-stock__icon {
+  color: #2b9d70;
 }
 
-.observed-stock--warning > span {
-  background: var(--amber);
+.observed-stock--warning .observed-stock__icon {
+  color: var(--amber);
 }
 
 .catalogue-card__identity {

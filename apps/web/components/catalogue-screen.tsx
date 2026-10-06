@@ -12,8 +12,6 @@ import {
 } from "@/lib/api";
 import {
   formatEvidenceTimestamp,
-  observedStockLabel,
-  stockTone,
 } from "@/lib/catalogue";
 import { categoryLabels, formatSgd } from "@/lib/format";
 import type {
@@ -22,6 +20,7 @@ import type {
   ProductSearchResponse,
 } from "@/lib/types";
 import { CategoryIcon } from "./category-icon";
+import { ObservedStock } from "./observed-stock";
 import { StatusPill } from "./status-pill";
 
 const categoryOptions = Object.entries(categoryLabels) as Array<[ComponentCategory, string]>;
@@ -98,10 +97,7 @@ function ProductResultCard({
           {categoryLabels[product.category]}
         </span>
         {!USING_DEMO_DATA && (
-          <span className={`observed-stock observed-stock--${stockTone(product.stock_status)}`}>
-            <span aria-hidden="true" />
-            {observedStockLabel(product.stock_status)}
-          </span>
+          <ObservedStock status={product.stock_status} />
         )}
       </div>
       <div className="catalogue-card__identity">

@@ -20,7 +20,6 @@ import {
   humanizeAttributeKey,
   observedStockLabel,
   priceObservationPresentation,
-  stockTone,
 } from "@/lib/catalogue";
 import { categoryLabels, formatSgd } from "@/lib/format";
 import type {
@@ -30,6 +29,7 @@ import type {
   ProductReviewsResponse,
 } from "@/lib/types";
 import { PriceIntelligencePanel } from "./price-intelligence-panel";
+import { ObservedStock } from "./observed-stock";
 
 export interface ProductEvidenceState {
   product: ProductDetail;
@@ -230,10 +230,7 @@ export function ProductDetailScreen({
             <span className={`category-chip category-chip--${product.category}`}>
               {categoryLabels[product.category]}
             </span>
-            <span className={`observed-stock observed-stock--${stockTone(product.stock_status)}`}>
-              <span aria-hidden="true" />
-              {observedStockLabel(product.stock_status)}
-            </span>
+            <ObservedStock status={product.stock_status} />
           </div>
           <p className="eyebrow">{product.brand ?? "Brand not reported"}</p>
           <h1>{product.canonical_name}</h1>
