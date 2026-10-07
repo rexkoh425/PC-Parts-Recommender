@@ -538,9 +538,9 @@ export function BuildForm() {
                 className="profile-picker"
                 aria-describedby={errors.requested_profiles ? "profiles-error" : "profiles-help"}
               >
-                <legend>Build profiles</legend>
+                <legend>Build priorities</legend>
                 <p className="field-help" id="profiles-help">
-                  Select up to {values.max_builds} objective profiles.
+                  Choose up to {values.max_builds} ways to prioritise your results.
                 </p>
                 <div className="profile-picker__grid">
                   {profileOptions.map(([profile, label]) => {
@@ -687,7 +687,7 @@ export function BuildForm() {
               : "Compatibility is checked before anything is ranked."}
           </p>
           <div className="generation-status" aria-live="polite">
-            {submitting && "Ranking candidates and solving compatibility constraints."}
+            {submitting && "Checking which parts fit together and ranking the best builds."}
           </div>
         </aside>
       </div>
