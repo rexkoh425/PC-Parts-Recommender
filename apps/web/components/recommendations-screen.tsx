@@ -6,7 +6,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Circle, CircleAlert, Info, RefreshCw } from "lucide-react";
 import { getRequestBuilds, getSessionId, trackInteraction, USING_DEMO_DATA } from "@/lib/api";
 import {
-  categoryLabels,
   formatScore,
   formatSgd,
   formatSuggestedRelaxation,
@@ -231,7 +230,7 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
 
       <header className="results-header">
         <div>
-          <p className="eyebrow">Constraint-checked shortlist</p>
+          <p className="eyebrow">Compatible shortlist</p>
           <h1>
             {builds.length} compatible build{builds.length === 1 ? "" : "s"}
             {budget ? ` under ${formatSgd(budget)}` : ""}
@@ -285,7 +284,7 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
             <p className="eyebrow">At a glance</p>
             <h2 id="comparison-heading">Compare the trade-offs</h2>
           </div>
-          <p>All scores are normalised within the current compatible candidate set.</p>
+          <p>Scores compare only the compatible builds shown here.</p>
           </div>
         <p className="table-scroll-hint">
           Swipe horizontally to compare every column
@@ -333,7 +332,7 @@ export function RecommendationsScreen({ requestId }: { requestId: string }) {
 
       <footer className="evidence-footer">
         <p>
-          {categoryLabels.gpu} and workload scores distinguish direct benchmark observations from model estimates in build details.
+          Open a build to see whether graphics and workload scores come from measured benchmarks or estimates.
         </p>
       </footer>
     </main>
