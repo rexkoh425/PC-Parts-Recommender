@@ -78,7 +78,7 @@ export function PriceIntelligencePanel({
       {intelligence.anomalies.length > 0 && (
         <details className="price-intelligence__anomalies">
           <summary>
-            <span>{intelligence.anomalies.length} robust price outlier {intelligence.anomalies.length === 1 ? "flag" : "flags"}</span>
+            <span>{intelligence.anomalies.length} unusual recorded price{intelligence.anomalies.length === 1 ? "" : "s"}</span>
             <ChevronDown className="disclosure-chevron" aria-hidden="true" size={16} strokeWidth={1.8} />
           </summary>
           <ul>

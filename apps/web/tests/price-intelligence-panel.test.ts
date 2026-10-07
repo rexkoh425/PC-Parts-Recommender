@@ -67,7 +67,7 @@ describe("PriceIntelligencePanel", () => {
       }],
     });
 
-    expect(html).toContain("robust price outlier flag");
+    expect(html).toContain("1 unusual recorded price");
     expect(html).toContain("disclosure-chevron");
     expect(html).toContain("lucide-chevron-down");
   });
