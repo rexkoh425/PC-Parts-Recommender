@@ -32,7 +32,7 @@ const faqs = [
   },
   {
     q: "Is this a real shop?",
-    a: "It is a portfolio demo. The catalogue, compatibility rules and optimiser are real; the storefront is not, and nothing here is for sale.",
+    a: "It is a portfolio demo. It uses a real parts catalogue and compatibility checks to assemble results, but it is not a storefront and nothing here is for sale.",
   },
 ];
 

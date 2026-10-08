@@ -11,6 +11,7 @@ describe("how it works presentation", () => {
     expect(html).toContain("Each part checked against the rest");
     expect(html).toContain("checked to make sure they fit together");
     expect(html).toContain("Socket fit, memory type, graphics-card length");
+    expect(html).toContain("real parts catalogue and compatibility checks");
     expect(html).toContain("search vectors for matching parts");
     expect(html).toContain("lucide-chevron-down");
     expect(html).toContain("faq-item__chevron");
