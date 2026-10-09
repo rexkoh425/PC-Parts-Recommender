@@ -102,8 +102,8 @@ function DetailSkeleton() {
   );
 }
 
-function componentReason(component: BuildComponent): string {
-  return component.selection_reasons?.[0] ?? "Selected for compatibility and objective fit.";
+export function componentReason(component: BuildComponent): string {
+  return component.selection_reasons?.[0] ?? "Selected because it fits this build and your priorities.";
 }
 
 function formatSignedSgd(value: number): string {

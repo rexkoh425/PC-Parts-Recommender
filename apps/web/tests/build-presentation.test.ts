@@ -3,7 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { BuildBudgetBreakdown } from "../components/build-budget-breakdown";
 import { BuildCard } from "../components/build-card";
-import type { BuildSummary } from "../lib/types";
+import { componentReason } from "../components/build-detail-screen";
+import type { BuildComponent, BuildSummary } from "../lib/types";
 
 const build: BuildSummary = {
   build_id: "build-presentation",
@@ -98,5 +99,16 @@ describe("build presentation", () => {
     expect(html).toContain("Example graphics card");
     expect(html).toContain("away from the build total shown");
     expect(html).toContain("from the build total shown");
+  });
+
+  it("explains fallback component selections in plain language", () => {
+    const component: BuildComponent = {
+      category: "cpu",
+      product_id: "cpu-1",
+      canonical_name: "Example processor",
+      price_sgd: 400,
+    };
+
+    expect(componentReason(component)).toBe("Selected because it fits this build and your priorities.");
   });
 });
