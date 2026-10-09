@@ -2594,6 +2594,11 @@ details[open] > summary .disclosure-chevron {
   color: var(--ink-soft);
 }
 
+.evidence-badge--relative {
+  white-space: normal;
+  line-height: 1.25;
+}
+
 .performance-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

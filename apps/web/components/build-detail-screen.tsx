@@ -54,18 +54,18 @@ const profileHeadings: Record<BuildSummary["profile"], string> = {
   lowest_power: "The lowest power draw of the builds that fit.",
 };
 
-function relativeDecisionLabel(signal: PerformanceSignal): string {
+export function relativeDecisionLabel(signal: PerformanceSignal): string {
   switch (signal.decision) {
     case "model_not_promotion_eligible":
-      return "Relative score · model not promoted";
+      return "Relative score · estimate pending review";
     case "input_outside_training_contract":
-      return "Relative score · input outside training range";
+      return "Relative score · outside tested range";
     case "model_not_promotion_eligible_and_input_outside_training_contract":
-      return "Relative score · model not promoted and input outside range";
+      return "Relative score · estimate pending review; outside tested range";
     case "precise_predictions_disabled":
-      return "Relative score · precise estimate disabled";
+      return "Relative score · detailed estimate unavailable";
     case "precise_predictions_disabled_and_input_outside_training_contract":
-      return "Relative score · precise estimate disabled and input outside range";
+      return "Relative score · detailed estimate unavailable; outside tested range";
     case "deterministic_baseline":
       return "Relative score";
     default:
