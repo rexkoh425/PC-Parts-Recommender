@@ -31,5 +31,6 @@ describe("recommendations presentation", () => {
 
     expect(html).toContain("reason-list__bullet");
     expect(html).toContain("lucide-circle");
+    expect(html).toContain("Requirements check");
   });
 });

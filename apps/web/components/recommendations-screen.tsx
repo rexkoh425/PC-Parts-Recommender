@@ -61,7 +61,7 @@ export function NoFeasibleBuild({
         <CircleAlert size={30} strokeWidth={1.8} />
       </div>
       <div>
-        <p className="eyebrow">Constraint result</p>
+        <p className="eyebrow">Requirements check</p>
         <h1 id="infeasible-title">No compatible build yet</h1>
         <p className="lede">
           We did not substitute an incompatible part. These requirements rule out every compatible
