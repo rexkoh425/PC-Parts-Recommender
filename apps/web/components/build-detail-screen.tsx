@@ -631,8 +631,8 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
               </ul>
             ) : (
               <div className="empty-evidence">
-                <strong>Detailed benchmark evidence is not attached to this response.</strong>
-                <p>The overall relative scores remain available; missing values are not shown as zero.</p>
+                <strong>Detailed benchmark evidence is unavailable for this build.</strong>
+                <p>Overall scores remain available. Missing values are never shown as zero.</p>
               </div>
             )}
           </section>
@@ -689,10 +689,10 @@ export function BuildDetailScreen({ buildId }: { buildId: string }) {
               </>
             ) : (
               <div className="empty-evidence">
-                <strong>Detailed compatibility outcomes were not returned.</strong>
+                <strong>Detailed compatibility checks are unavailable for this build.</strong>
                 <p>
                   The build status is {build.compatibility_status}. We cannot show the individual
-                  checks because they were not included in this result.
+                  checks because this result did not include them.
                 </p>
               </div>
             )}
