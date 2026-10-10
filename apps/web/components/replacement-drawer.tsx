@@ -182,7 +182,7 @@ export function ReplacementDrawer({
               aria-describedby="reoptimize-capability-note"
             />
             <span>
-              <strong>Re-optimise supporting parts</strong>
+              <strong>Update supporting parts too</strong>
               <small id="reoptimize-capability-note">
                 {runtimeCapabilities.reoptimizeUnlockedReplacement
                   ? "Let other unlocked parts change too, so the build stays compatible and good value."
@@ -232,8 +232,8 @@ export function ReplacementDrawer({
                       {!selectable && (
                         <span>
                           {status === "fail"
-                            ? "This candidate fails a compatibility rule and cannot be applied."
-                            : "Compatibility has not been verified; this candidate cannot be applied."}
+                            ? "This option does not meet a compatibility rule, so it cannot be applied."
+                            : "Compatibility has not been verified for this option, so it cannot be applied."}
                         </span>
                       )}
                     </span>
