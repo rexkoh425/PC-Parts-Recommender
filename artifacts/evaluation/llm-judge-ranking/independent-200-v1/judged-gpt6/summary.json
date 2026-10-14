@@ -1,0 +1,106 @@
+{
+  "schema_version": "pc-build-recommender.llm-weak-judgments.v1",
+  "label_source": "llm_weak",
+  "eligible_for_production_or_human_quality_claims": false,
+  "model_id": "gpt-6-luna",
+  "prompt_version": "pcbr-llm-relevance-rubric-v2",
+  "rubric_sha256": "f3a603fc5bc89393ef50bb91162cd4a75f06d67701415c7e060d9969de5819d5",
+  "input_sha256": "4e665e077332d81b6145e909e513c70cad40bacf64d24927936741ba01b488d2",
+  "judgments_sha256": "cab1ab1e6b56c103c0e63bd836b46ade6ec135559c261f9eaa6738f1a3ce3889",
+  "ranking_dataset_sha256": "7c0154f43a64bfd19d0ee0bbfb0cf6aa08cdf5e509c0a6c92737cbc1dad49edf",
+  "task_count": 5600,
+  "input_task_count": 5600,
+  "unresolved_task_count": 0,
+  "attempted_this_run": 5228,
+  "failed_this_run": 0,
+  "circuit_breaker_tripped": false,
+  "not_attempted_this_run": 0,
+  "schedule_snapshot_sha256": "1e95cacb3c23043d3eebdd1a5478d7a89075bb3ac3beb589333e87f2667c1323",
+  "training_dataset_ready": true,
+  "incomplete_query_count": 0,
+  "query_count": 200,
+  "query_group_count": 200,
+  "grade_counts": {
+    "0": 1595,
+    "1": 441,
+    "2": 2248,
+    "3": 638,
+    "4": 678
+  },
+  "grade_counts_by_category": {
+    "case": {
+      "0": 27,
+      "1": 0,
+      "2": 25,
+      "3": 3,
+      "4": 1
+    },
+    "cooler": {
+      "0": 278,
+      "1": 24,
+      "2": 123,
+      "3": 23,
+      "4": 112
+    },
+    "cpu": {
+      "0": 210,
+      "1": 111,
+      "2": 353,
+      "3": 135,
+      "4": 59
+    },
+    "gpu": {
+      "0": 229,
+      "1": 32,
+      "2": 264,
+      "3": 188,
+      "4": 155
+    },
+    "memory": {
+      "0": 202,
+      "1": 133,
+      "2": 431,
+      "3": 79,
+      "4": 51
+    },
+    "motherboard": {
+      "0": 279,
+      "1": 32,
+      "2": 169,
+      "3": 17,
+      "4": 63
+    },
+    "power_supply": {
+      "0": 272,
+      "1": 55,
+      "2": 323,
+      "3": 69,
+      "4": 177
+    },
+    "storage": {
+      "0": 98,
+      "1": 54,
+      "2": 560,
+      "3": 124,
+      "4": 60
+    }
+  },
+  "confidence_buckets": {
+    "below_0.5": 2,
+    "0.5_to_below_0.8": 284,
+    "0.8_to_1.0": 5314
+  },
+  "missing_evidence_count": 5542,
+  "raw_hard_requirement_contradiction_count": 247,
+  "raw_high_grade_hard_contradiction_count": 0,
+  "raw_grade_recorded_count": 5600,
+  "final_hard_requirement_contradiction_count": 0,
+  "low_confidence_count": 2,
+  "hard_requirement_violation_count": 1465,
+  "hard_requirement_unknown_count": 157,
+  "prompt_tokens": 4903775,
+  "completion_tokens": 734540,
+  "estimated_cost_usd": null,
+  "checkpoint": "judgments.checkpoint.jsonl",
+  "ranking_dataset": "ranking_dataset.llm_weak.jsonl"
+}
