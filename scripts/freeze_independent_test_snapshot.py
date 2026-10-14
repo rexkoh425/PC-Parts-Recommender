@@ -17,7 +17,14 @@ def main() -> None:
     for row in rows:
         row["split"] = "test"
     args.output.write_text(json.dumps(rows, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"query_count": len(rows), "snapshot_sha256": hashlib.sha256(args.output.read_bytes()).hexdigest()}))
+    print(
+        json.dumps(
+            {
+                "query_count": len(rows),
+                "snapshot_sha256": hashlib.sha256(args.output.read_bytes()).hexdigest(),
+            }
+        )
+    )
 
 
 if __name__ == "__main__":

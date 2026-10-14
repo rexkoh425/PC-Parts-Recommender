@@ -10,15 +10,17 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
-
-from scripts.llm_ranking_experiment import DiagnosticFeatureBuilder, model_ranking
 from training.train_ranking import _load_queries
+
 from pc_build_recommender.ranking import LambdaMARTRanker
 from pc_build_recommender.retrieval import ndcg_at_k
+from scripts.llm_ranking_experiment import DiagnosticFeatureBuilder, model_ranking
 
 
 def metrics(query, ranking):
-    labels = {c.product_id: g for c, g in zip(query.candidates, query.relevance_grades, strict=True)}
+    labels = {
+        c.product_id: g for c, g in zip(query.candidates, query.relevance_grades, strict=True)
+    }
     relevant = {pid for pid, grade in labels.items() if grade > 0}
     first = next((i for i, pid in enumerate(ranking, 1) if pid in relevant), None)
     return {
@@ -51,8 +53,12 @@ def main() -> None:
     evaluation_categories = {}
     if args.query_manifest:
         manifest = json.loads(args.query_manifest.read_text(encoding="utf-8"))
-        evaluation_categories = {row["query_id"]: row.get("evaluation_category") for row in manifest["queries"]}
-    snapshot = {row["query_id"]: row for row in json.loads(args.snapshot.read_text(encoding="utf-8"))}
+        evaluation_categories = {
+            row["query_id"]: row.get("evaluation_category") for row in manifest["queries"]
+        }
+    snapshot = {
+        row["query_id"]: row for row in json.loads(args.snapshot.read_text(encoding="utf-8"))
+    }
     ranker = LambdaMARTRanker.load(args.model, feature_builder=DiagnosticFeatureBuilder())
     rows = []
     for query in queries:
@@ -65,7 +71,10 @@ def main() -> None:
             row = metrics(query, order)
             row.update(
                 query_id=query.context.query_id,
-                evaluation_category=evaluation_categories.get(query.context.query_id, getattr(query.context, "evaluation_category", query.candidates[0].category)),
+                evaluation_category=evaluation_categories.get(
+                    query.context.query_id,
+                    getattr(query.context, "evaluation_category", query.candidates[0].category),
+                ),
                 judge_model=getattr(query.context, "judge_model", "gpt-6-luna"),
                 method=method,
                 inference_ms=inference_ms if method == "lambdamart" else None,
@@ -84,9 +93,12 @@ def main() -> None:
     for row in rows:
         query_map[row["query_id"]][row["method"]] = row
     deltas = {
-        metric: [query_map[q]["lambdamart"][metric] - query_map[q]["rrf"][metric]
-                 for q in query_map
-                 if query_map[q]["lambdamart"][metric] is not None and query_map[q]["rrf"][metric] is not None]
+        metric: [
+            query_map[q]["lambdamart"][metric] - query_map[q]["rrf"][metric]
+            for q in query_map
+            if query_map[q]["lambdamart"][metric] is not None
+            and query_map[q]["rrf"][metric] is not None
+        ]
         for metric in ("ndcg_at_5", "ndcg_at_10", "mrr", "recall_at_10", "recall_at_50")
     }
     wins = sum(d > 0 for d in deltas["ndcg_at_10"])
@@ -98,13 +110,22 @@ def main() -> None:
         "judge_model": "gpt-6-luna",
         "query_count": len(query_map),
         "models": summary,
-        "paired_deltas": {metric: {"mean": float(np.mean(values)), "ci95": bootstrap(values)} for metric, values in deltas.items()},
+        "paired_deltas": {
+            metric: {"mean": float(np.mean(values)), "ci95": bootstrap(values)}
+            for metric, values in deltas.items()
+        },
         "ndcg10_wins": wins,
         "ndcg10_losses": losses,
         "ndcg10_ties": ties,
-        "relative_ndcg10_delta": float(np.mean(deltas["ndcg_at_10"]) / summary["rrf"]["ndcg_at_10"]),
-        "inference_p95_ms": float(np.percentile([r["inference_ms"] for r in by_method["lambdamart"]], 95)),
-        "inference_p99_ms": float(np.percentile([r["inference_ms"] for r in by_method["lambdamart"]], 99)),
+        "relative_ndcg10_delta": float(
+            np.mean(deltas["ndcg_at_10"]) / summary["rrf"]["ndcg_at_10"]
+        ),
+        "inference_p95_ms": float(
+            np.percentile([r["inference_ms"] for r in by_method["lambdamart"]], 95)
+        ),
+        "inference_p99_ms": float(
+            np.percentile([r["inference_ms"] for r in by_method["lambdamart"]], 99)
+        ),
         "scope": "fixed 28-candidate pools per query; LLM-only diagnostic, not human validation",
     }
     category_rows = defaultdict(lambda: defaultdict(list))
@@ -117,12 +138,29 @@ def main() -> None:
         for category, methods in category_rows.items()
     }
     report["worst_regressions"] = sorted(
-        ({"query_id": q, "delta_ndcg10": float(query_map[q]["lambdamart"]["ndcg_at_10"] - query_map[q]["rrf"]["ndcg_at_10"])} for q in query_map),
+        (
+            {
+                "query_id": q,
+                "delta_ndcg10": float(
+                    query_map[q]["lambdamart"]["ndcg_at_10"] - query_map[q]["rrf"]["ndcg_at_10"]
+                ),
+            }
+            for q in query_map
+        ),
         key=lambda row: row["delta_ndcg10"],
     )[:20]
     report["largest_improvements"] = sorted(
-        ({"query_id": q, "delta_ndcg10": float(query_map[q]["lambdamart"]["ndcg_at_10"] - query_map[q]["rrf"]["ndcg_at_10"])} for q in query_map),
-        key=lambda row: row["delta_ndcg10"], reverse=True,
+        (
+            {
+                "query_id": q,
+                "delta_ndcg10": float(
+                    query_map[q]["lambdamart"]["ndcg_at_10"] - query_map[q]["rrf"]["ndcg_at_10"]
+                ),
+            }
+            for q in query_map
+        ),
+        key=lambda row: row["delta_ndcg10"],
+        reverse=True,
     )[:20]
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

@@ -23,7 +23,8 @@ def main() -> None:
     old = next(row for row in data["queries"] if row["query_id"] == args.query_id)
     used = {row["query_id"] for row in data["queries"]}
     replacement = next(
-        row for row in candidates
+        row
+        for row in candidates
         if row["query_id"] not in used
         and row["query_id"] not in set(args.exclude_id)
         and not row["query_id"].startswith("fresh-v1-")
@@ -31,7 +32,9 @@ def main() -> None:
     )
     replacement = dict(replacement)
     replacement["evaluation_category"] = old["evaluation_category"]
-    data["queries"] = [replacement if row["query_id"] == args.query_id else row for row in data["queries"]]
+    data["queries"] = [
+        replacement if row["query_id"] == args.query_id else row for row in data["queries"]
+    ]
     data["schema_version"] = "pcbr.independent-heldout-query-cohort.v3"
     data["replaced_query_ids"] = sorted(set(data.get("replaced_query_ids", [])) | {args.query_id})
     data["replacement_source_sha256"] = hashlib.sha256(args.candidates.read_bytes()).hexdigest()

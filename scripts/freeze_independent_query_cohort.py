@@ -5,9 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import re
 from pathlib import Path
-
 
 QUOTAS = {
     "gaming_gpu": 35,
@@ -27,11 +25,17 @@ def classify(row: dict) -> str:
         return "complex_multi_constraint"
     if any(token in text for token in ("gaming", "fps", "1440p", "4k", "graphics")):
         return "gaming_gpu"
-    if any(token in text for token in ("compile", "render", "workstation", "development", "productivity")):
+    if any(
+        token in text
+        for token in ("compile", "render", "workstation", "development", "productivity")
+    ):
         return "cpu_productivity"
     if any(token in text for token in ("budget", "affordable", "value", "cheap")):
         return "budget"
-    if any(token in text for token in ("upgrade", "compatible", "compatibility", "existing", "fit", "socket")):
+    if any(
+        token in text
+        for token in ("upgrade", "compatible", "compatibility", "existing", "fit", "socket")
+    ):
         return "compatibility_upgrade"
     if any(token in text for token in ("quiet", "suitable", "modern", "prefer", "need")):
         return "ambiguous_natural_language"
@@ -76,12 +80,27 @@ def main() -> None:
         "quotas": QUOTAS,
         "queries": selected,
         "source_sha256": hashlib.sha256(args.input.read_bytes()).hexdigest(),
-        "classification": "deterministic keyword and must-count buckets; not human intent annotation",
-        "limitation": "synthetic model-authored queries with automated similarity screening; manual semantic review remains outstanding",
+        "classification": (
+            "deterministic keyword and must-count buckets; not human intent annotation"
+        ),
+        "limitation": (
+            "synthetic model-authored queries with automated similarity screening; "
+            "manual semantic review remains outstanding"
+        ),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(json.dumps({"query_count": len(selected), "category_counts": {name: quota for name, quota in QUOTAS.items()}}, indent=2))
+    args.output.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    print(
+        json.dumps(
+            {
+                "query_count": len(selected),
+                "category_counts": {name: quota for name, quota in QUOTAS.items()},
+            },
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":

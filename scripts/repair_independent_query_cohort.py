@@ -71,11 +71,18 @@ def main() -> None:
         "source_sha256": hashlib.sha256(args.candidates.read_bytes()).hexdigest(),
         "prior_manifest_sha256": hashlib.sha256(args.queries.read_bytes()).hexdigest(),
         "audit_sha256": hashlib.sha256(args.audit.read_bytes()).hexdigest(),
-        "limitation": "synthetic model-authored queries; independence is subject to the strict automated audit",
+        "limitation": (
+            "synthetic model-authored queries; independence is subject to the strict "
+            "automated audit"
+        ),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(json.dumps({"query_count": len(kept), "counts": counts, "replaced": len(flagged)}, indent=2))
+    args.output.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    print(
+        json.dumps({"query_count": len(kept), "counts": counts, "replaced": len(flagged)}, indent=2)
+    )
 
 
 if __name__ == "__main__":
