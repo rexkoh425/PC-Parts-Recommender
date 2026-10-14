@@ -1,0 +1,274 @@
+{
+  "schema_version": "pcbr.frozen-independent-evaluation.v1",
+  "label_source": "llm_weak",
+  "judge_model": "gpt-6-luna",
+  "query_count": 200,
+  "models": {
+    "bm25": {
+      "ndcg_at_5": 0.4743062341813476,
+      "ndcg_at_10": 0.5290784143756556,
+      "mrr": 0.7634833902208902,
+      "recall_at_10": 0.3660295388477332,
+      "recall_at_50": 1.0
+    },
+    "vector": {
+      "ndcg_at_5": 0.5302223621993969,
+      "ndcg_at_10": 0.5651635157382404,
+      "mrr": 0.8020705570670336,
+      "recall_at_10": 0.3488229820877702,
+      "recall_at_50": 1.0
+    },
+    "rrf": {
+      "ndcg_at_5": 0.5345802991547433,
+      "ndcg_at_10": 0.5682898398698046,
+      "mrr": 0.820777559015059,
+      "recall_at_10": 0.3644852553082941,
+      "recall_at_50": 1.0
+    },
+    "lambdamart": {
+      "ndcg_at_5": 0.6231671819607658,
+      "ndcg_at_10": 0.6723009413669707,
+      "mrr": 0.8734435885465297,
+      "recall_at_10": 0.47461651061772064,
+      "recall_at_50": 1.0
+    }
+  },
+  "paired_deltas": {
+    "ndcg_at_5": {
+      "mean": 0.08858688280602262,
+      "ci95": [
+        0.04796052300257855,
+        0.13148383564619867
+      ]
+    },
+    "ndcg_at_10": {
+      "mean": 0.10401110149716619,
+      "ci95": [
+        0.0669522831473817,
+        0.14361787127502038
+      ]
+    },
+    "mrr": {
+      "mean": 0.05266602953147071,
+      "ci95": [
+        0.015642293806411453,
+        0.09127208928870693
+      ]
+    },
+    "recall_at_10": {
+      "mean": 0.11013125530942654,
+      "ci95": [
+        0.07303602258000841,
+        0.1497997694314591
+      ]
+    },
+    "recall_at_50": {
+      "mean": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "ndcg10_wins": 108,
+  "ndcg10_losses": 63,
+  "ndcg10_ties": 29,
+  "relative_ndcg10_delta": 0.1830247423057839,
+  "inference_p95_ms": 0.6269749821512951,
+  "inference_p99_ms": 0.847195989335887,
+  "scope": "fixed 28-candidate pools per query; LLM-only diagnostic, not human validation",
+  "category_ndcg10": {
+    "cpu_productivity": {
+      "rrf": 0.5542597293817321,
+      "lambdamart": 0.5913384703980993
+    },
+    "compatibility_upgrade": {
+      "rrf": 0.7110674450690877,
+      "lambdamart": 0.7153392597969704
+    },
+    "complex_multi_constraint": {
+      "rrf": 0.3391367811353368,
+      "lambdamart": 0.7485643725211089
+    },
+    "gaming_gpu": {
+      "rrf": 0.5573355594350078,
+      "lambdamart": 0.6222963143343972
+    },
+    "specific_specifications": {
+      "rrf": 0.44469713313606163,
+      "lambdamart": 0.6308504612741547
+    },
+    "ambiguous_natural_language": {
+      "rrf": 0.6407369783556291,
+      "lambdamart": 0.7236872359816453
+    },
+    "budget": {
+      "rrf": 0.6239160841622201,
+      "lambdamart": 0.7022686395012042
+    }
+  },
+  "worst_regressions": [
+    {
+      "query_id": "diverse-v1-gpu-00-008",
+      "delta_ndcg10": -0.5793154527268625
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-002",
+      "delta_ndcg10": -0.510575128993979
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-030",
+      "delta_ndcg10": -0.44251564309675756
+    },
+    {
+      "query_id": "diverse-v1-storage-01-012",
+      "delta_ndcg10": -0.42980494116000983
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-021",
+      "delta_ndcg10": -0.36513533413678556
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-003",
+      "delta_ndcg10": -0.29843246055193545
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-026",
+      "delta_ndcg10": -0.29650841483313367
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-025",
+      "delta_ndcg10": -0.2821846635583651
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-016",
+      "delta_ndcg10": -0.2589955898853701
+    },
+    {
+      "query_id": "diverse-v1-memory-00-013",
+      "delta_ndcg10": -0.2575940901020756
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-036",
+      "delta_ndcg10": -0.23193582677685948
+    },
+    {
+      "query_id": "diverse-v1-storage-00-018",
+      "delta_ndcg10": -0.22079634473301057
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-024",
+      "delta_ndcg10": -0.21995400740569807
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-002",
+      "delta_ndcg10": -0.21138385318075242
+    },
+    {
+      "query_id": "diverse-v1-storage-00-037",
+      "delta_ndcg10": -0.20516732953010475
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-020",
+      "delta_ndcg10": -0.17723452152854924
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-026",
+      "delta_ndcg10": -0.1685606847901182
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-035",
+      "delta_ndcg10": -0.1672497847359241
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-011",
+      "delta_ndcg10": -0.16020767145134235
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-006",
+      "delta_ndcg10": -0.15851098418336462
+    }
+  ],
+  "largest_improvements": [
+    {
+      "query_id": "diverse-v1-cooler-01-004",
+      "delta_ndcg10": 1.0
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-032",
+      "delta_ndcg10": 1.0
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-016",
+      "delta_ndcg10": 1.0
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-027",
+      "delta_ndcg10": 1.0
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-004",
+      "delta_ndcg10": 0.8556544594339588
+    },
+    {
+      "query_id": "diverse-v1-memory-01-005",
+      "delta_ndcg10": 0.8264151063646236
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-022",
+      "delta_ndcg10": 0.7900053564899002
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-021",
+      "delta_ndcg10": 0.7328286204777912
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-008",
+      "delta_ndcg10": 0.7292672315994236
+    },
+    {
+      "query_id": "diverse-v1-memory-01-001",
+      "delta_ndcg10": 0.6834742135627414
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-005",
+      "delta_ndcg10": 0.6732862335381459
+    },
+    {
+      "query_id": "diverse-v1-memory-00-004",
+      "delta_ndcg10": 0.6309297535714574
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-001",
+      "delta_ndcg10": 0.6302931594815355
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-028",
+      "delta_ndcg10": 0.6176232631585065
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-022",
+      "delta_ndcg10": 0.5964984284535196
+    },
+    {
+      "query_id": "diverse-v1-storage-01-028",
+      "delta_ndcg10": 0.5926681287193571
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-033",
+      "delta_ndcg10": 0.5385188278191104
+    },
+    {
+      "query_id": "diverse-v1-storage-00-008",
+      "delta_ndcg10": 0.5371070263188665
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-035",
+      "delta_ndcg10": 0.5071367207381852
+    },
+    {
+      "query_id": "diverse-v1-memory-00-017",
+      "delta_ndcg10": 0.5
+    }
+  ]
+}
