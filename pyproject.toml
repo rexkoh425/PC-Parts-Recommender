@@ -41,11 +41,11 @@ modeling = [
   "scipy>=1.14,<2",
 ]
 embeddings = [
-  "sentence-transformers>=3.4,<6",
+  "sentence-transformers>=3.4,<7",
 ]
 serving = [
   "pyyaml>=6,<7",
-  "sentence-transformers>=3.4,<6",
+  "sentence-transformers>=3.4,<7",
 ]
 pipeline = [
   "dagster>=1.9,<2",
