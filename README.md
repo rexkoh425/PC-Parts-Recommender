@@ -14,6 +14,76 @@ A public portfolio demo is deployed at
 https://pc-parts-recommender-web-lgei.vercel.app/. It runs against the controlled demo
 contract; live retailer stock and the production FastAPI release are not connected yet.
 
+## Why this project is interesting
+
+This is a search-and-decision system for a difficult recommendation domain: PC parts have
+structured compatibility constraints, incomplete specifications, changing evidence quality, and
+multi-objective trade-offs. The project demonstrates how to move from retrieval to an executable,
+validated build instead of stopping at a ranked list.
+
+**Recruiter snapshot**
+
+- Hybrid retrieval combines BM25, sentence-transformer vectors, and equal-weight RRF.
+- A frozen LightGBM LambdaMART reranker improved diagnostic NDCG@10 from **0.5683 to 0.6723
+  (+18.3%)** on a new 200-query cohort.
+- The reranker won **108 / 200** query comparisons against RRF, with 63 losses and 29 ties.
+- An OR-Tools CP-SAT optimiser solved **167 / 167 feasible** synthetic cases, versus **30 / 167**
+  for greedy search.
+- The implementation includes provenance hashes, leakage audits, blinded annotation workflows,
+  fail-closed compatibility rules, and reproducible evaluation scripts.
+
+**Tech-lead snapshot**
+
+The strongest evidence is diagnostic rather than production-qualified. The 200-query ranking result
+uses a separate `gpt-6-luna` judge, not human qrels; Recall@50 is trivially 1.0 because evaluation
+uses a fixed 28-candidate pool; and the existing RRF production default is intentionally unchanged.
+The repository records those limitations rather than presenting weak labels as customer truth.
+
+## Product use cases
+
+### 1. Build a compatible PC under real constraints
+
+"Give me a quiet 1440p gaming build under a fixed budget, keep my existing AM4 memory, and leave
+room for a future GPU upgrade." The system retrieves candidates, checks compatibility, explains
+unknowns, and uses CP-SAT to produce a complete build or a truthful infeasibility result.
+
+### 2. Find parts when specifications are incomplete
+
+Users can search by workload, dimensions, sockets, power limits, memory capacity, storage interface,
+or upgrade path. Missing catalogue fields are represented as `UNKNOWN` instead of silently treated
+as compatible.
+
+### 3. Help an engineer debug recommendation quality
+
+Every stage can be inspected: source snapshots, candidate pools, retrieval scores, feature
+contracts, query-group splits, judge provenance, constraint overrides, model hashes, and paired
+bootstrap intervals. This makes regressions and leakage investigations repeatable.
+
+## Latest ranking evidence
+
+The table below is the latest independent, frozen-model diagnostic. It is **LLM-judged, not human
+validated**, and is reported separately from the original 53-query sealed benchmark.
+
+| Method | NDCG@10 | MRR | Recall@10 | Recall@50 |
+| --- | ---: | ---: | ---: | ---: |
+| BM25 | 0.5291 | 0.7635 | 0.3660 | 1.0000 |
+| Vector retrieval | 0.5652 | 0.8021 | 0.3488 | 1.0000 |
+| Equal-weight RRF | 0.5683 | 0.8208 | 0.3645 | 1.0000 |
+| Frozen LambdaMART | **0.6723** | **0.8734** | **0.4746** | 1.0000 |
+
+LambdaMART vs RRF: **+0.1040 absolute NDCG@10**, **+18.30% relative**, paired 95% bootstrap CI
+`[0.0670, 0.1436]`, with **108 wins / 63 losses / 29 ties**. Reranking latency was 0.627 ms p95
+and 0.847 ms p99 on the local benchmark. Search latency was not measured by this fixed-pool test.
+
+The original 53-query diagnostic measured RRF NDCG@10 `0.5835` and LambdaMART `0.8467` (+45.10%).
+The independent result is directionally consistent but smaller, which is why equal-weight RRF remains
+the production default until independently human-validated qrels exist.
+
+Evidence artifacts: [independence audit](artifacts/evaluation/llm-judge-ranking/independent-200-v1/query-independence-audit-final.json),
+[ranking report](artifacts/evaluation/llm-judge-ranking/independent-200-v1/evaluation-v2/report.json),
+[query-level results](artifacts/evaluation/llm-judge-ranking/independent-200-v1/evaluation-v2/ranking-results.csv),
+and [human-review template](artifacts/evaluation/llm-judge-ranking/independent-200-v1/human-review-40-template.csv).
+
 ## What is implemented
 
 ```mermaid
@@ -62,6 +132,8 @@ These are verified local artifacts, not roadmap targets:
 | Offline semantic encoder bundle (local) | 12 files, 91,580,262 bytes; verified offline CPU warm-up returns a normalized 384-vector and the pinned index fingerprint | Ignored operator artifact only, not a public model distribution or complete serving release. Catalogue, retailer-rights, ER, ranking, database, and deployment gates remain unmet. |
 | Retailer catalogue gate | 485 controlled offers; 2 exact MPN+brand mappings; 0 known in stock | The other 483 offers remain unmatched. None has explicit data-use rights, so display, history, embedding, training, and production readiness remain blocked. |
 | Retrieval silver diagnostic | 32 queries, 102,664 query-candidate rows | Predicate-generated labels with no human review. RRF NDCG@10 was 0.308534 versus 0.193411 for BM25. The run is non-promotable and no LambdaMART model was trained. |
+| Weighted-RRF tuning diagnostic | 16 train / 8 validation / 8 test query groups; 30 settings tuned on validation | The selected BM25 weight 0.5 / RRF k=40 scored 0.2528 NDCG@10 on the sealed silver test, below equal RRF's 0.3138. No serving default changed; labels are predicate-generated and non-promotable. |
+| Optimizer quality benchmark | 200 synthetic scenarios; CP-SAT feasible on 167/167 feasible cases (83.5% overall), greedy on 30/167 (15.0%) | CP-SAT matched greedy objective on all 30 jointly valid cases (0% paired gain) and the exhaustive oracle on 80/80 checks. Warm-start hints were slower. This is synthetic engineering evidence, not customer evidence. |
 | Blender CPU performance artifacts | v2 and legacy v3 revoked; corrected development diagnostic has post-selection R-squared 0.8763 and MAPE 18.98% on 30 held-out rows / 15 groups | The legacy artifacts inverted native `samples/minute` scores. The newer diagnostic is correct-target but still development-only, non-promotable, and above the 12% error gate; it cannot support a model-quality claim. |
 | Blender GPU OPTIX pilot | 50 observed hardware rows across 36 families; LightGBM internal test R-squared -1.8538 and MAPE 203.52% on 6 rows / 5 families | A 4.5.0 / `junkshop` / OPTIX / Windows development diagnostic only. It is deliberately non-routable and non-promotable: the cohort is below the 100-family credibility minimum, rows are external-claim-ineligible, and every accuracy/calibration gate fails. |
 | Blender 2026-07-23 temporal audit | 113 novel submissions and 339 novel observations; 0 rows matched the frozen Blender 4.0.0 / `junkshop` / CPU / Windows cohort | No inference, metric calculation, pooling, retraining, or promotion occurred. Status is `insufficient_external_cohort`; report semantic digest `95713915...44b`, file SHA-256 `e675a0d1...58cf`. |
