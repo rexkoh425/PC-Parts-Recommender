@@ -230,6 +230,16 @@ class _CpModelState:
         terms.extend(-penalty * variable for variable, penalty in self.warning_variables)
         self.model.maximize(sum(terms))
 
+    def set_hint(self, selected: Mapping[ComponentCategory, OptimizationCandidate]) -> None:
+        """Seed CP-SAT with a validated feasible build without changing its objective."""
+
+        selected_ids = {candidate.product_id for candidate in selected.values()}
+        for candidate in self.candidates:
+            self.model.add_hint(
+                self.variables[candidate.product_id],
+                int(candidate.product_id in selected_ids),
+            )
+
     def forbid_exact_solution(
         self, selected: Mapping[ComponentCategory, OptimizationCandidate]
     ) -> None:
@@ -242,10 +252,11 @@ class _CpModelState:
 class BuildOptimizer:
     """Generate objective-profile builds with fail-closed validation and diversity."""
 
-    def __init__(self, *, max_validator_rejections: int = 50) -> None:
+    def __init__(self, *, max_validator_rejections: int = 50, warm_start: bool = False) -> None:
         if max_validator_rejections < 1:
             raise ValueError("max_validator_rejections must be positive")
         self.max_validator_rejections = max_validator_rejections
+        self.warm_start = warm_start
 
     def optimize(
         self,
@@ -292,6 +303,14 @@ class BuildOptimizer:
 
             state = _CpModelState(problem, eligible, solutions)
             state.set_objective(profile)
+            if self.warm_start:
+                # Imported lazily to keep the deterministic baseline independent of
+                # CP-SAT and avoid a module cycle at import time.
+                from .greedy import greedy_solution
+
+                hint = greedy_solution(problem, profile, local_width=2)
+                if hint is not None:
+                    state.set_hint(hint.selected)
             final_status = OptimizationStatus.UNKNOWN
             final_wall_time = 0.0
             final_objective: int | None = None
