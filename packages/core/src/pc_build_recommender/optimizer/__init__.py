@@ -3,6 +3,7 @@
 from .adapters import candidate_from_domain, money_to_cents, problem_from_domain, solution_to_domain
 from .engine import BuildOptimizer
 from .exhaustive import ExhaustiveResult, enumerate_feasible_builds
+from .greedy import greedy_optimize, greedy_solution
 from .models import (
     DEFAULT_POWER_ALLOWANCES_WATTS,
     PROFILE_WEIGHTS,
@@ -52,6 +53,8 @@ __all__ = [
     "diagnose_problem",
     "eligible_candidates",
     "enumerate_feasible_builds",
+    "greedy_optimize",
+    "greedy_solution",
     "estimated_load_watts",
     "money_to_cents",
     "problem_from_domain",
