@@ -86,19 +86,18 @@ def main() -> int:
         print("\nDry run - nothing written.")
         return 0
 
-    with psycopg.connect(load_dsn(), connect_timeout=20) as conn:
-        with conn.cursor() as cur:
-            for start in range(0, len(pairs), args.batch):
-                chunk = pairs[start : start + args.batch]
-                cur.executemany(
-                    "update public.canonical_products set source_url = %s where product_id = %s",
-                    chunk,
-                )
-                conn.commit()
-                print(f"  {min(start + args.batch, len(pairs)):,}/{len(pairs):,}")
+    with psycopg.connect(load_dsn(), connect_timeout=20) as conn, conn.cursor() as cur:
+        for start in range(0, len(pairs), args.batch):
+            chunk = pairs[start : start + args.batch]
+            cur.executemany(
+                "update public.canonical_products set source_url = %s where product_id = %s",
+                chunk,
+            )
+            conn.commit()
+            print(f"  {min(start + args.batch, len(pairs)):,}/{len(pairs):,}")
 
-            cur.execute("select count(*) from public.canonical_products where source_url is not null")
-            written = cur.fetchone()[0]
+        cur.execute("select count(*) from public.canonical_products where source_url is not null")
+        written = cur.fetchone()[0]
 
     print(f"\nDone. {written:,} products now carry a manufacturer link.")
     return 0

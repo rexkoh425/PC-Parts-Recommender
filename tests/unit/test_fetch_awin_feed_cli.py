@@ -4,6 +4,7 @@ import base64
 import csv
 import hashlib
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -151,6 +152,7 @@ def _write_source_registry(tmp_path: Path, *, policy: Path) -> Path:
     """
 
     registry = yaml.safe_load(_SOURCE_REGISTRY.read_text(encoding="utf-8"))
+    registry["verified_on"] = datetime.now(UTC).date().isoformat()
     registry["sources"]["awin_12345_67890"] = {
         "kind": "authorized_retailer_product_feed",
         "template": AWIN_SOURCE_TEMPLATE,
