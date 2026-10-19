@@ -1,0 +1,2260 @@
+{
+  "schema_version": "pc-build-recommender.optimizer-quality.v2",
+  "created_at_utc": "2026-11-09T22:52:48.220903+00:00",
+  "git_revision": "5ae6cb0f3475baa090ce3ca4d5accfff4687ce61",
+  "working_tree_dirty": true,
+  "provenance": "deterministic synthetic scenarios; no customer builds or market price evidence",
+  "scenario_count": 1000,
+  "difficulty_counts": {
+    "easy": 200,
+    "medium": 350,
+    "hard": 350,
+    "infeasible": 100
+  },
+  "real_catalog_scenarios": 0,
+  "synthetic_scenarios": 1000,
+  "cohort_status_counts": {
+    "proven_feasible": 900,
+    "proven_infeasible": 100,
+    "unresolved": 0
+  },
+  "seed": 20261110,
+  "cohort_sha256": "c6325def44e14b400af9c1629dce8333184f945c3080f68d4873e793d614f718",
+  "candidate_counts_per_category": [
+    2,
+    3,
+    4
+  ],
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "python": "3.12.9",
+    "ortools": "9.15.6755"
+  },
+  "algorithms": [
+    {
+      "algorithm": "greedy",
+      "attempted": 1000,
+      "valid_build_count": 144,
+      "feasible_rate": 0.144,
+      "proven_feasible_cases_solved": 144,
+      "proven_infeasible_cases_identified": 100,
+      "unresolved_cases": 756,
+      "hard_constraint_violations": 0,
+      "mean_objective": 5851726.444444444,
+      "median_objective": 5915982.5,
+      "runtime_p50_seconds": 0.00011900000390596688,
+      "runtime_p95_seconds": 0.00015279999934136868,
+      "runtime_p99_seconds": 0.00020750000840052962,
+      "optimal_status_count": 0,
+      "timeout_or_unknown_count": 0
+    },
+    {
+      "algorithm": "greedy-local",
+      "attempted": 1000,
+      "valid_build_count": 599,
+      "feasible_rate": 0.599,
+      "proven_feasible_cases_solved": 599,
+      "proven_infeasible_cases_identified": 100,
+      "unresolved_cases": 301,
+      "hard_constraint_violations": 0,
+      "mean_objective": 5658875.532554257,
+      "median_objective": 5688378,
+      "runtime_p50_seconds": 0.002841499983333051,
+      "runtime_p95_seconds": 0.0032765000069048256,
+      "runtime_p99_seconds": 0.003888599982019514,
+      "optimal_status_count": 0,
+      "timeout_or_unknown_count": 0
+    },
+    {
+      "algorithm": "cp-sat",
+      "attempted": 1000,
+      "valid_build_count": 900,
+      "feasible_rate": 0.9,
+      "proven_feasible_cases_solved": 900,
+      "proven_infeasible_cases_identified": 100,
+      "unresolved_cases": 0,
+      "hard_constraint_violations": 0,
+      "mean_objective": 5538846.471111111,
+      "median_objective": 5534495.5,
+      "runtime_p50_seconds": 0.0017097000090871006,
+      "runtime_p95_seconds": 0.003393899998627603,
+      "runtime_p99_seconds": 0.004365100001450628,
+      "optimal_status_count": 900,
+      "timeout_or_unknown_count": 0
+    },
+    {
+      "algorithm": "cp-sat-warm",
+      "attempted": 1000,
+      "valid_build_count": 900,
+      "feasible_rate": 0.9,
+      "proven_feasible_cases_solved": 900,
+      "proven_infeasible_cases_identified": 100,
+      "unresolved_cases": 0,
+      "hard_constraint_violations": 0,
+      "mean_objective": 5538846.471111111,
+      "median_objective": 5534495.5,
+      "runtime_p50_seconds": 0.004780499992193654,
+      "runtime_p95_seconds": 0.006462999997893348,
+      "runtime_p99_seconds": 0.007744900009129196,
+      "optimal_status_count": 900,
+      "timeout_or_unknown_count": 0
+    }
+  ],
+  "paired_vs_greedy": {
+    "greedy-local": {
+      "comparable_valid_pairs": 144,
+      "mean_absolute_objective_delta": 0,
+      "mean_relative_objective_improvement": 0.0,
+      "win_rate": 0,
+      "challenger_found_valid_when_greedy_failed": 455
+    },
+    "cp-sat": {
+      "comparable_valid_pairs": 144,
+      "mean_absolute_objective_delta": 0,
+      "mean_relative_objective_improvement": 0.0,
+      "win_rate": 0,
+      "challenger_found_valid_when_greedy_failed": 756
+    },
+    "cp-sat-warm": {
+      "comparable_valid_pairs": 144,
+      "mean_absolute_objective_delta": 0,
+      "mean_relative_objective_improvement": 0.0,
+      "win_rate": 0,
+      "challenger_found_valid_when_greedy_failed": 756
+    }
+  },
+  "by_difficulty": {
+    "easy": {
+      "greedy": {
+        "attempted": 200,
+        "valid_build_count": 55,
+        "feasible_rate": 0.275,
+        "mean_objective": 5821735.6,
+        "runtime_p95_seconds": 0.00014069999451749027
+      },
+      "greedy-local": {
+        "attempted": 200,
+        "valid_build_count": 200,
+        "feasible_rate": 1.0,
+        "mean_objective": 5636795.195,
+        "runtime_p95_seconds": 0.0033537000126671046
+      },
+      "cp-sat": {
+        "attempted": 200,
+        "valid_build_count": 200,
+        "feasible_rate": 1.0,
+        "mean_objective": 5636795.195,
+        "runtime_p95_seconds": 0.001664300012635067
+      },
+      "cp-sat-warm": {
+        "attempted": 200,
+        "valid_build_count": 200,
+        "feasible_rate": 1.0,
+        "mean_objective": 5636795.195,
+        "runtime_p95_seconds": 0.004852999991271645
+      }
+    },
+    "medium": {
+      "greedy": {
+        "attempted": 350,
+        "valid_build_count": 65,
+        "feasible_rate": 0.18571428571428572,
+        "mean_objective": 5827056.830769231,
+        "runtime_p95_seconds": 0.00015419998089782894
+      },
+      "greedy-local": {
+        "attempted": 350,
+        "valid_build_count": 314,
+        "feasible_rate": 0.8971428571428571,
+        "mean_objective": 5621465.993630573,
+        "runtime_p95_seconds": 0.0033309000136796385
+      },
+      "cp-sat": {
+        "attempted": 350,
+        "valid_build_count": 350,
+        "feasible_rate": 1.0,
+        "mean_objective": 5693309.765714286,
+        "runtime_p95_seconds": 0.0037210999871604145
+      },
+      "cp-sat-warm": {
+        "attempted": 350,
+        "valid_build_count": 350,
+        "feasible_rate": 1.0,
+        "mean_objective": 5693309.765714286,
+        "runtime_p95_seconds": 0.007088500016834587
+      }
+    },
+    "hard": {
+      "greedy": {
+        "attempted": 350,
+        "valid_build_count": 24,
+        "feasible_rate": 0.06857142857142857,
+        "mean_objective": 5987269,
+        "runtime_p95_seconds": 0.0001534000039100647
+      },
+      "greedy-local": {
+        "attempted": 350,
+        "valid_build_count": 85,
+        "feasible_rate": 0.24285714285714285,
+        "mean_objective": 5849024.505882353,
+        "runtime_p95_seconds": 0.0032364999933633953
+      },
+      "cp-sat": {
+        "attempted": 350,
+        "valid_build_count": 350,
+        "feasible_rate": 1.0,
+        "mean_objective": 5328412.477142857,
+        "runtime_p95_seconds": 0.003282100020442158
+      },
+      "cp-sat-warm": {
+        "attempted": 350,
+        "valid_build_count": 350,
+        "feasible_rate": 1.0,
+        "mean_objective": 5328412.477142857,
+        "runtime_p95_seconds": 0.006318800005828962
+      }
+    },
+    "infeasible": {
+      "greedy": {
+        "attempted": 100,
+        "valid_build_count": 0,
+        "feasible_rate": 0.0,
+        "mean_objective": null,
+        "runtime_p95_seconds": 0.00015279999934136868
+      },
+      "greedy-local": {
+        "attempted": 100,
+        "valid_build_count": 0,
+        "feasible_rate": 0.0,
+        "mean_objective": null,
+        "runtime_p95_seconds": 0.0031377999985124916
+      },
+      "cp-sat": {
+        "attempted": 100,
+        "valid_build_count": 0,
+        "feasible_rate": 0.0,
+        "mean_objective": null,
+        "runtime_p95_seconds": 3.8700003642588854e-05
+      },
+      "cp-sat-warm": {
+        "attempted": 100,
+        "valid_build_count": 0,
+        "feasible_rate": 0.0,
+        "mean_objective": null,
+        "runtime_p95_seconds": 3.359999391250312e-05
+      }
+    }
+  },
+  "exhaustive_oracle": {
+    "checks": 200,
+    "matched": 200,
+    "mean_relative_optimality_gap": 0.0,
+    "maximum_relative_optimality_gap": 0.0,
+    "rows": [
+      {
+        "scenario": 0,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5516070,
+        "solver_objective": 5516070,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 0,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5516070,
+        "solver_objective": 5516070,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 1,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5889567,
+        "solver_objective": 5889567,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 1,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5889567,
+        "solver_objective": 5889567,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 2,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6177125,
+        "solver_objective": 6177125,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 2,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6177125,
+        "solver_objective": 6177125,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 3,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5472992,
+        "solver_objective": 5472992,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 3,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5472992,
+        "solver_objective": 5472992,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 4,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5259364,
+        "solver_objective": 5259364,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 4,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5259364,
+        "solver_objective": 5259364,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 5,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5473225,
+        "solver_objective": 5473225,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 5,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5473225,
+        "solver_objective": 5473225,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 6,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5781301,
+        "solver_objective": 5781301,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 6,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5781301,
+        "solver_objective": 5781301,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 7,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6330242,
+        "solver_objective": 6330242,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 7,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6330242,
+        "solver_objective": 6330242,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 8,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5236192,
+        "solver_objective": 5236192,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 8,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5236192,
+        "solver_objective": 5236192,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 9,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5125508,
+        "solver_objective": 5125508,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 9,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5125508,
+        "solver_objective": 5125508,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 10,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5443066,
+        "solver_objective": 5443066,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 10,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5443066,
+        "solver_objective": 5443066,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 11,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5854841,
+        "solver_objective": 5854841,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 11,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5854841,
+        "solver_objective": 5854841,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 12,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6235092,
+        "solver_objective": 6235092,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 12,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6235092,
+        "solver_objective": 6235092,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 13,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5401656,
+        "solver_objective": 5401656,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 13,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5401656,
+        "solver_objective": 5401656,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 14,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 4403506,
+        "solver_objective": 4403506,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 14,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 4403506,
+        "solver_objective": 4403506,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 15,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5479608,
+        "solver_objective": 5479608,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 15,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5479608,
+        "solver_objective": 5479608,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 16,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5811838,
+        "solver_objective": 5811838,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 16,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5811838,
+        "solver_objective": 5811838,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 17,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6355837,
+        "solver_objective": 6355837,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 17,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6355837,
+        "solver_objective": 6355837,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 18,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5198453,
+        "solver_objective": 5198453,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 18,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5198453,
+        "solver_objective": 5198453,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 19,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 4886579,
+        "solver_objective": 4886579,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 19,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 4886579,
+        "solver_objective": 4886579,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 20,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5476178,
+        "solver_objective": 5476178,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 20,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5476178,
+        "solver_objective": 5476178,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 21,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5892825,
+        "solver_objective": 5892825,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 21,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5892825,
+        "solver_objective": 5892825,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 22,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6406869,
+        "solver_objective": 6406869,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 22,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6406869,
+        "solver_objective": 6406869,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 23,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5373537,
+        "solver_objective": 5373537,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 23,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5373537,
+        "solver_objective": 5373537,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 24,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5234927,
+        "solver_objective": 5234927,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 24,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5234927,
+        "solver_objective": 5234927,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 25,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5469031,
+        "solver_objective": 5469031,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 25,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5469031,
+        "solver_objective": 5469031,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 26,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5970032,
+        "solver_objective": 5970032,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 26,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5970032,
+        "solver_objective": 5970032,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 27,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6376370,
+        "solver_objective": 6376370,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 27,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6376370,
+        "solver_objective": 6376370,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 28,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5971340,
+        "solver_objective": 5971340,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 28,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5971340,
+        "solver_objective": 5971340,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 29,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5290165,
+        "solver_objective": 5290165,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 29,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5290165,
+        "solver_objective": 5290165,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 30,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5540399,
+        "solver_objective": 5540399,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 30,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5540399,
+        "solver_objective": 5540399,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 31,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6038379,
+        "solver_objective": 6038379,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 31,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6038379,
+        "solver_objective": 6038379,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 32,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6067887,
+        "solver_objective": 6067887,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 32,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6067887,
+        "solver_objective": 6067887,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 33,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5388710,
+        "solver_objective": 5388710,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 33,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5388710,
+        "solver_objective": 5388710,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 34,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5224056,
+        "solver_objective": 5224056,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 34,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5224056,
+        "solver_objective": 5224056,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 35,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5451629,
+        "solver_objective": 5451629,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 35,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5451629,
+        "solver_objective": 5451629,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 36,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5820096,
+        "solver_objective": 5820096,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 36,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5820096,
+        "solver_objective": 5820096,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 37,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6226091,
+        "solver_objective": 6226091,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 37,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6226091,
+        "solver_objective": 6226091,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 38,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5025943,
+        "solver_objective": 5025943,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 38,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5025943,
+        "solver_objective": 5025943,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 39,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5294798,
+        "solver_objective": 5294798,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 39,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5294798,
+        "solver_objective": 5294798,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 40,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5367833,
+        "solver_objective": 5367833,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 40,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5367833,
+        "solver_objective": 5367833,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 41,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6008863,
+        "solver_objective": 6008863,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 41,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6008863,
+        "solver_objective": 6008863,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 42,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6175560,
+        "solver_objective": 6175560,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 42,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6175560,
+        "solver_objective": 6175560,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 43,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5531354,
+        "solver_objective": 5531354,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 43,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5531354,
+        "solver_objective": 5531354,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 44,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5574370,
+        "solver_objective": 5574370,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 44,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5574370,
+        "solver_objective": 5574370,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 45,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5378936,
+        "solver_objective": 5378936,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 45,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5378936,
+        "solver_objective": 5378936,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 46,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5864466,
+        "solver_objective": 5864466,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 46,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5864466,
+        "solver_objective": 5864466,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 47,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6308825,
+        "solver_objective": 6308825,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 47,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6308825,
+        "solver_objective": 6308825,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 48,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5724326,
+        "solver_objective": 5724326,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 48,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5724326,
+        "solver_objective": 5724326,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 49,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 4952082,
+        "solver_objective": 4952082,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 49,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 4952082,
+        "solver_objective": 4952082,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 50,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5515184,
+        "solver_objective": 5515184,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 50,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5515184,
+        "solver_objective": 5515184,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 51,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5693390,
+        "solver_objective": 5693390,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 51,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5693390,
+        "solver_objective": 5693390,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 52,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6255537,
+        "solver_objective": 6255537,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 52,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6255537,
+        "solver_objective": 6255537,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 53,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5940083,
+        "solver_objective": 5940083,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 53,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5940083,
+        "solver_objective": 5940083,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 54,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5583128,
+        "solver_objective": 5583128,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 54,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5583128,
+        "solver_objective": 5583128,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 55,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5357681,
+        "solver_objective": 5357681,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 55,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5357681,
+        "solver_objective": 5357681,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 56,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5845124,
+        "solver_objective": 5845124,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 56,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5845124,
+        "solver_objective": 5845124,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 57,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6290402,
+        "solver_objective": 6290402,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 57,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6290402,
+        "solver_objective": 6290402,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 58,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5913356,
+        "solver_objective": 5913356,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 58,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5913356,
+        "solver_objective": 5913356,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 59,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5264760,
+        "solver_objective": 5264760,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 59,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5264760,
+        "solver_objective": 5264760,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 60,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5273734,
+        "solver_objective": 5273734,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 60,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5273734,
+        "solver_objective": 5273734,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 61,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6023020,
+        "solver_objective": 6023020,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 61,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6023020,
+        "solver_objective": 6023020,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 62,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6123481,
+        "solver_objective": 6123481,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 62,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6123481,
+        "solver_objective": 6123481,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 63,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5268191,
+        "solver_objective": 5268191,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 63,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5268191,
+        "solver_objective": 5268191,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 64,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5083984,
+        "solver_objective": 5083984,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 64,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5083984,
+        "solver_objective": 5083984,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 65,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5469344,
+        "solver_objective": 5469344,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 65,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5469344,
+        "solver_objective": 5469344,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 66,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5888624,
+        "solver_objective": 5888624,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 66,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5888624,
+        "solver_objective": 5888624,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 67,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6309077,
+        "solver_objective": 6309077,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 67,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6309077,
+        "solver_objective": 6309077,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 68,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5155789,
+        "solver_objective": 5155789,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 68,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5155789,
+        "solver_objective": 5155789,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 69,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5450522,
+        "solver_objective": 5450522,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 69,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5450522,
+        "solver_objective": 5450522,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 70,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5176737,
+        "solver_objective": 5176737,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 70,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5176737,
+        "solver_objective": 5176737,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 71,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6096513,
+        "solver_objective": 6096513,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 71,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6096513,
+        "solver_objective": 6096513,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 72,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6258650,
+        "solver_objective": 6258650,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 72,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6258650,
+        "solver_objective": 6258650,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 73,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5125159,
+        "solver_objective": 5125159,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 73,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5125159,
+        "solver_objective": 5125159,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 74,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5433957,
+        "solver_objective": 5433957,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 74,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5433957,
+        "solver_objective": 5433957,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 75,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5431728,
+        "solver_objective": 5431728,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 75,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5431728,
+        "solver_objective": 5431728,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 76,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5938813,
+        "solver_objective": 5938813,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 76,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5938813,
+        "solver_objective": 5938813,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 77,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5904559,
+        "solver_objective": 5904559,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 77,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5904559,
+        "solver_objective": 5904559,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 78,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5263409,
+        "solver_objective": 5263409,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 78,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5263409,
+        "solver_objective": 5263409,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 79,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 4591460,
+        "solver_objective": 4591460,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 79,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 4591460,
+        "solver_objective": 4591460,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 80,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5328112,
+        "solver_objective": 5328112,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 80,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5328112,
+        "solver_objective": 5328112,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 81,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6091716,
+        "solver_objective": 6091716,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 81,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6091716,
+        "solver_objective": 6091716,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 82,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6029322,
+        "solver_objective": 6029322,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 82,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6029322,
+        "solver_objective": 6029322,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 83,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5748098,
+        "solver_objective": 5748098,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 83,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5748098,
+        "solver_objective": 5748098,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 84,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 4867980,
+        "solver_objective": 4867980,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 84,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 4867980,
+        "solver_objective": 4867980,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 85,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5590316,
+        "solver_objective": 5590316,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 85,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5590316,
+        "solver_objective": 5590316,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 86,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6102613,
+        "solver_objective": 6102613,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 86,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6102613,
+        "solver_objective": 6102613,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 87,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6149985,
+        "solver_objective": 6149985,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 87,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6149985,
+        "solver_objective": 6149985,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 88,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5695732,
+        "solver_objective": 5695732,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 88,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5695732,
+        "solver_objective": 5695732,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 89,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 4951961,
+        "solver_objective": 4951961,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 89,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 4951961,
+        "solver_objective": 4951961,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 90,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5730228,
+        "solver_objective": 5730228,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 90,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5730228,
+        "solver_objective": 5730228,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 91,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5917953,
+        "solver_objective": 5917953,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 91,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5917953,
+        "solver_objective": 5917953,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 92,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5832694,
+        "solver_objective": 5832694,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 92,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5832694,
+        "solver_objective": 5832694,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 93,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5215856,
+        "solver_objective": 5215856,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 93,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5215856,
+        "solver_objective": 5215856,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 94,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5090457,
+        "solver_objective": 5090457,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 94,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5090457,
+        "solver_objective": 5090457,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 95,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5600959,
+        "solver_objective": 5600959,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 95,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5600959,
+        "solver_objective": 5600959,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 96,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5925468,
+        "solver_objective": 5925468,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 96,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5925468,
+        "solver_objective": 5925468,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 97,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6299872,
+        "solver_objective": 6299872,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 97,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6299872,
+        "solver_objective": 6299872,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 98,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5362759,
+        "solver_objective": 5362759,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 98,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5362759,
+        "solver_objective": 5362759,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 99,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5290078,
+        "solver_objective": 5290078,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 99,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5290078,
+        "solver_objective": 5290078,
+        "matched": true,
+        "relative_optimality_gap": 0.0,
+        "combinations_evaluated": 256
+      }
+    ]
+  },
+  "correctness": "all returned builds independently passed validate_selected_build",
+  "objective_unchanged": true,
+  "warm_start": "validated greedy-local solution supplied as a CP-SAT hint; objective and constraints unchanged"
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "pc-build-recommender.optimizer-quality-scenarios.v1",
+  "scenario_count": 5000,
+  "seed": 20261110,
+  "difficulty_distribution": {
+    "easy": 1000,
+    "medium": 1750,
+    "hard": 1750,
+    "infeasible": 500
+  },
+  "cohort_sha256": "bc965ac22673f25589fe9d8044c16f4ff656e606cb86bd03a21735cf2d662f53",
+  "provenance": "deterministic synthetic scenarios; no customer builds or market price evidence"
+}

@@ -1,0 +1,122 @@
+{
+  "easy": {
+    "greedy": {
+      "attempted": 200,
+      "valid_build_count": 55,
+      "feasible_rate": 0.275,
+      "mean_objective": 5821735.6,
+      "runtime_p95_seconds": 0.00014429999282583594
+    },
+    "greedy-local": {
+      "attempted": 200,
+      "valid_build_count": 200,
+      "feasible_rate": 1.0,
+      "mean_objective": 5636795.195,
+      "runtime_p95_seconds": 0.0031017999863252044
+    },
+    "cp-sat": {
+      "attempted": 200,
+      "valid_build_count": 200,
+      "feasible_rate": 1.0,
+      "mean_objective": 5636795.195,
+      "runtime_p95_seconds": 0.0014894999912939966
+    },
+    "cp-sat-warm": {
+      "attempted": 200,
+      "valid_build_count": 200,
+      "feasible_rate": 1.0,
+      "mean_objective": 5636795.195,
+      "runtime_p95_seconds": 0.004353600001195446
+    }
+  },
+  "medium": {
+    "greedy": {
+      "attempted": 350,
+      "valid_build_count": 65,
+      "feasible_rate": 0.18571428571428572,
+      "mean_objective": 5827056.830769231,
+      "runtime_p95_seconds": 0.00012539999443106353
+    },
+    "greedy-local": {
+      "attempted": 350,
+      "valid_build_count": 314,
+      "feasible_rate": 0.8971428571428571,
+      "mean_objective": 5621465.993630573,
+      "runtime_p95_seconds": 0.003116600011708215
+    },
+    "cp-sat": {
+      "attempted": 350,
+      "valid_build_count": 350,
+      "feasible_rate": 1.0,
+      "mean_objective": 5693309.765714286,
+      "runtime_p95_seconds": 0.003577600000426173
+    },
+    "cp-sat-warm": {
+      "attempted": 350,
+      "valid_build_count": 350,
+      "feasible_rate": 1.0,
+      "mean_objective": 5693309.765714286,
+      "runtime_p95_seconds": 0.006699699995806441
+    }
+  },
+  "hard": {
+    "greedy": {
+      "attempted": 350,
+      "valid_build_count": 24,
+      "feasible_rate": 0.06857142857142857,
+      "mean_objective": 5987269,
+      "runtime_p95_seconds": 0.0001652000064495951
+    },
+    "greedy-local": {
+      "attempted": 350,
+      "valid_build_count": 85,
+      "feasible_rate": 0.24285714285714285,
+      "mean_objective": 5849024.505882353,
+      "runtime_p95_seconds": 0.0035133000055793673
+    },
+    "cp-sat": {
+      "attempted": 350,
+      "valid_build_count": 350,
+      "feasible_rate": 1.0,
+      "mean_objective": 5328412.477142857,
+      "runtime_p95_seconds": 0.0034328000037930906
+    },
+    "cp-sat-warm": {
+      "attempted": 350,
+      "valid_build_count": 350,
+      "feasible_rate": 1.0,
+      "mean_objective": 5328412.477142857,
+      "runtime_p95_seconds": 0.006761099997675046
+    }
+  },
+  "infeasible": {
+    "greedy": {
+      "attempted": 100,
+      "valid_build_count": 0,
+      "feasible_rate": 0.0,
+      "mean_objective": null,
+      "runtime_p95_seconds": 0.00013639999087899923
+    },
+    "greedy-local": {
+      "attempted": 100,
+      "valid_build_count": 0,
+      "feasible_rate": 0.0,
+      "mean_objective": null,
+      "runtime_p95_seconds": 0.0034582999942358583
+    },
+    "cp-sat": {
+      "attempted": 100,
+      "valid_build_count": 0,
+      "feasible_rate": 0.0,
+      "mean_objective": null,
+      "runtime_p95_seconds": 3.3800024539232254e-05
+    },
+    "cp-sat-warm": {
+      "attempted": 100,
+      "valid_build_count": 0,
+      "feasible_rate": 0.0,
+      "mean_objective": null,
+      "runtime_p95_seconds": 3.170000854879618e-05
+    }
+  }
+}

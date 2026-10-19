@@ -1,0 +1,11 @@
+{
+  "schema_version": "pc-build-recommender.optimizer-quality-correctness.v1",
+  "scenario_count": 1000,
+  "algorithm_count": 4,
+  "returned_solution_records": 2543,
+  "hard_constraint_violations": 0,
+  "all_returned_builds_independently_valid": true,
+  "oracle_checks": 200,
+  "oracle_matches": 200,
+  "unresolved_solver_records": 0
+}

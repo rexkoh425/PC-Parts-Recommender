@@ -1,0 +1,94 @@
+{
+  "easy": {
+    "greedy": {
+      "attempted": 1000,
+      "valid_build_count": 299,
+      "feasible_rate": 0.299,
+      "mean_objective": 5762355.387959866,
+      "runtime_p95_seconds": 0.00010340000153519213
+    },
+    "greedy-local": {
+      "attempted": 1000,
+      "valid_build_count": 1000,
+      "feasible_rate": 1.0,
+      "mean_objective": 5634587.639,
+      "runtime_p95_seconds": 0.002961899997899309
+    },
+    "cp-sat": {
+      "attempted": 1000,
+      "valid_build_count": 1000,
+      "feasible_rate": 1.0,
+      "mean_objective": 5634587.639,
+      "runtime_p95_seconds": 0.0013136999914422631
+    }
+  },
+  "medium": {
+    "greedy": {
+      "attempted": 1750,
+      "valid_build_count": 340,
+      "feasible_rate": 0.19428571428571428,
+      "mean_objective": 5843608.2235294115,
+      "runtime_p95_seconds": 0.00013920001219958067
+    },
+    "greedy-local": {
+      "attempted": 1750,
+      "valid_build_count": 1579,
+      "feasible_rate": 0.9022857142857142,
+      "mean_objective": 5615560.739708676,
+      "runtime_p95_seconds": 0.0033564000041224062
+    },
+    "cp-sat": {
+      "attempted": 1750,
+      "valid_build_count": 1750,
+      "feasible_rate": 1.0,
+      "mean_objective": 5691706.883428572,
+      "runtime_p95_seconds": 0.0036881999985780567
+    }
+  },
+  "hard": {
+    "greedy": {
+      "attempted": 1750,
+      "valid_build_count": 157,
+      "feasible_rate": 0.08971428571428572,
+      "mean_objective": 6002594.7197452225,
+      "runtime_p95_seconds": 0.00015200002235360444
+    },
+    "greedy-local": {
+      "attempted": 1750,
+      "valid_build_count": 436,
+      "feasible_rate": 0.24914285714285714,
+      "mean_objective": 5872914.263761468,
+      "runtime_p95_seconds": 0.00357359999907203
+    },
+    "cp-sat": {
+      "attempted": 1750,
+      "valid_build_count": 1750,
+      "feasible_rate": 1.0,
+      "mean_objective": 5334166.222285714,
+      "runtime_p95_seconds": 0.0034553000004962087
+    }
+  },
+  "infeasible": {
+    "greedy": {
+      "attempted": 500,
+      "valid_build_count": 0,
+      "feasible_rate": 0.0,
+      "mean_objective": null,
+      "runtime_p95_seconds": 0.00012360000982880592
+    },
+    "greedy-local": {
+      "attempted": 500,
+      "valid_build_count": 0,
+      "feasible_rate": 0.0,
+      "mean_objective": null,
+      "runtime_p95_seconds": 0.00333510001655668
+    },
+    "cp-sat": {
+      "attempted": 500,
+      "valid_build_count": 0,
+      "feasible_rate": 0.0,
+      "mean_objective": null,
+      "runtime_p95_seconds": 3.099997411482036e-05
+    }
+  }
+}
