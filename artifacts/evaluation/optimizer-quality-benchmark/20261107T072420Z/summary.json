@@ -1,0 +1,52 @@
+{
+  "created_at_utc": "2026-11-07T07:24:21.796446+00:00",
+  "git_revision": "5ae6cb0f3475baa090ce3ca4d5accfff4687ce61",
+  "provenance": "deterministic synthetic optimizer scenarios; not observed customer builds",
+  "scenario_count": 40,
+  "seed": 20261107,
+  "candidate_count_per_category": 3,
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.9"
+  },
+  "algorithms": [
+    {
+      "algorithm": "greedy",
+      "attempted": 40,
+      "valid_build_rate": 0.9,
+      "hard_constraint_violations": 0,
+      "mean_objective": 6008000,
+      "median_objective": 6008000.0,
+      "runtime_p50_seconds": 0.00011620018631219864,
+      "runtime_p95_seconds": 0.00014489982277154922,
+      "runtime_p99_seconds": 0.00017409957945346832
+    },
+    {
+      "algorithm": "greedy-local",
+      "attempted": 40,
+      "valid_build_rate": 0.9,
+      "hard_constraint_violations": 0,
+      "mean_objective": 6008000,
+      "median_objective": 6008000.0,
+      "runtime_p50_seconds": 0.00010249949991703033,
+      "runtime_p95_seconds": 0.002566799521446228,
+      "runtime_p99_seconds": 0.002591300755739212
+    },
+    {
+      "algorithm": "cp-sat",
+      "attempted": 40,
+      "valid_build_rate": 0.9,
+      "hard_constraint_violations": 0,
+      "mean_objective": 6008000,
+      "median_objective": 6008000.0,
+      "runtime_p50_seconds": 0.0009893998503684998,
+      "runtime_p95_seconds": 0.0015097996219992638,
+      "runtime_p99_seconds": 0.001514999195933342
+    }
+  ],
+  "exhaustive_oracle": {
+    "checks": 10,
+    "objective_matches": 10
+  },
+  "correctness": "all returned builds independently passed validate_selected_build"
+}

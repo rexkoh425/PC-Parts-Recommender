@@ -1,0 +1,1020 @@
+{
+  "schema_version": "pc-build-recommender.optimizer-quality.v2",
+  "created_at_utc": "2026-11-07T17:44:16.355445+00:00",
+  "git_revision": "5ae6cb0f3475baa090ce3ca4d5accfff4687ce61",
+  "provenance": "deterministic synthetic scenarios; no customer builds or market price evidence",
+  "scenario_count": 200,
+  "difficulty_counts": {
+    "easy": 34,
+    "medium": 34,
+    "hard": 33,
+    "locked": 33,
+    "stock": 33,
+    "infeasible": 33
+  },
+  "real_catalog_scenarios": 0,
+  "synthetic_scenarios": 200,
+  "seed": 20261108,
+  "cohort_sha256": "52a2f42f7efd901836f1cadf5e72dbdcf88c22ce3ff01309adbf0c295ff589f2",
+  "candidate_counts_per_category": [
+    2,
+    3,
+    4
+  ],
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.9"
+  },
+  "algorithms": [
+    {
+      "algorithm": "greedy",
+      "attempted": 200,
+      "valid_build_count": 30,
+      "feasible_rate": 0.15,
+      "hard_constraint_violations": 0,
+      "mean_objective": 5899391.566666666,
+      "median_objective": 5958537.5,
+      "runtime_p50_seconds": 0.00011489999997138511,
+      "runtime_p95_seconds": 0.00014490000012301607,
+      "runtime_p99_seconds": 0.00018910000017058337,
+      "optimal_status_count": 0,
+      "timeout_or_unknown_count": 0
+    },
+    {
+      "algorithm": "greedy-local",
+      "attempted": 200,
+      "valid_build_count": 98,
+      "feasible_rate": 0.49,
+      "hard_constraint_violations": 0,
+      "mean_objective": 5695684.173469388,
+      "median_objective": 5752582.5,
+      "runtime_p50_seconds": 0.002689900000405032,
+      "runtime_p95_seconds": 0.0031543000004603527,
+      "runtime_p99_seconds": 0.003364000000146916,
+      "optimal_status_count": 0,
+      "timeout_or_unknown_count": 0
+    },
+    {
+      "algorithm": "cp-sat",
+      "attempted": 200,
+      "valid_build_count": 167,
+      "feasible_rate": 0.835,
+      "hard_constraint_violations": 0,
+      "mean_objective": 5587577.646706587,
+      "median_objective": 5604975,
+      "runtime_p50_seconds": 0.0014872000001560082,
+      "runtime_p95_seconds": 0.0031120000003284076,
+      "runtime_p99_seconds": 0.01344009999957052,
+      "optimal_status_count": 167,
+      "timeout_or_unknown_count": 0
+    },
+    {
+      "algorithm": "cp-sat-warm",
+      "attempted": 200,
+      "valid_build_count": 167,
+      "feasible_rate": 0.835,
+      "hard_constraint_violations": 0,
+      "mean_objective": 5587577.646706587,
+      "median_objective": 5604975,
+      "runtime_p50_seconds": 0.004395799999656447,
+      "runtime_p95_seconds": 0.005949799999143579,
+      "runtime_p99_seconds": 0.006207700000231853,
+      "optimal_status_count": 167,
+      "timeout_or_unknown_count": 0
+    }
+  ],
+  "paired_vs_greedy": {
+    "greedy-local": {
+      "comparable_valid_pairs": 30,
+      "mean_absolute_objective_delta": 0,
+      "mean_relative_objective_improvement": 0.0,
+      "win_rate": 0,
+      "challenger_found_valid_when_greedy_failed": 68
+    },
+    "cp-sat": {
+      "comparable_valid_pairs": 30,
+      "mean_absolute_objective_delta": 0,
+      "mean_relative_objective_improvement": 0.0,
+      "win_rate": 0,
+      "challenger_found_valid_when_greedy_failed": 137
+    },
+    "cp-sat-warm": {
+      "comparable_valid_pairs": 30,
+      "mean_absolute_objective_delta": 0,
+      "mean_relative_objective_improvement": 0.0,
+      "win_rate": 0,
+      "challenger_found_valid_when_greedy_failed": 137
+    }
+  },
+  "by_difficulty": {
+    "easy": {
+      "greedy": {
+        "attempted": 34,
+        "valid_build_count": 11,
+        "feasible_rate": 0.3235294117647059,
+        "mean_objective": 5774248.181818182,
+        "runtime_p95_seconds": 0.00012630000037461286
+      },
+      "greedy-local": {
+        "attempted": 34,
+        "valid_build_count": 34,
+        "feasible_rate": 1.0,
+        "mean_objective": 5673968.294117647,
+        "runtime_p95_seconds": 0.003261699999711709
+      },
+      "cp-sat": {
+        "attempted": 34,
+        "valid_build_count": 34,
+        "feasible_rate": 1.0,
+        "mean_objective": 5673968.294117647,
+        "runtime_p95_seconds": 0.0012212999999974272
+      },
+      "cp-sat-warm": {
+        "attempted": 34,
+        "valid_build_count": 34,
+        "feasible_rate": 1.0,
+        "mean_objective": 5673968.294117647,
+        "runtime_p95_seconds": 0.003859500000544358
+      }
+    },
+    "medium": {
+      "greedy": {
+        "attempted": 34,
+        "valid_build_count": 8,
+        "feasible_rate": 0.23529411764705882,
+        "mean_objective": 5941339.375,
+        "runtime_p95_seconds": 0.00012069999957020627
+      },
+      "greedy-local": {
+        "attempted": 34,
+        "valid_build_count": 32,
+        "feasible_rate": 0.9411764705882353,
+        "mean_objective": 5669360.8125,
+        "runtime_p95_seconds": 0.002893200000471552
+      },
+      "cp-sat": {
+        "attempted": 34,
+        "valid_build_count": 34,
+        "feasible_rate": 1.0,
+        "mean_objective": 5758164.911764706,
+        "runtime_p95_seconds": 0.0035304000002724933
+      },
+      "cp-sat-warm": {
+        "attempted": 34,
+        "valid_build_count": 34,
+        "feasible_rate": 1.0,
+        "mean_objective": 5758164.911764706,
+        "runtime_p95_seconds": 0.006207700000231853
+      }
+    },
+    "hard": {
+      "greedy": {
+        "attempted": 33,
+        "valid_build_count": 1,
+        "feasible_rate": 0.030303030303030304,
+        "mean_objective": 6127538,
+        "runtime_p95_seconds": 0.0001747999995131977
+      },
+      "greedy-local": {
+        "attempted": 33,
+        "valid_build_count": 6,
+        "feasible_rate": 0.18181818181818182,
+        "mean_objective": 5845707.166666667,
+        "runtime_p95_seconds": 0.0031936999994286452
+      },
+      "cp-sat": {
+        "attempted": 33,
+        "valid_build_count": 33,
+        "feasible_rate": 1.0,
+        "mean_objective": 5294404.060606061,
+        "runtime_p95_seconds": 0.0031120000003284076
+      },
+      "cp-sat-warm": {
+        "attempted": 33,
+        "valid_build_count": 33,
+        "feasible_rate": 1.0,
+        "mean_objective": 5294404.060606061,
+        "runtime_p95_seconds": 0.005956399999377027
+      }
+    },
+    "locked": {
+      "greedy": {
+        "attempted": 33,
+        "valid_build_count": 5,
+        "feasible_rate": 0.15151515151515152,
+        "mean_objective": 6054775.2,
+        "runtime_p95_seconds": 0.00014970000029279618
+      },
+      "greedy-local": {
+        "attempted": 33,
+        "valid_build_count": 14,
+        "feasible_rate": 0.42424242424242425,
+        "mean_objective": 5788260,
+        "runtime_p95_seconds": 0.003187199999956647
+      },
+      "cp-sat": {
+        "attempted": 33,
+        "valid_build_count": 33,
+        "feasible_rate": 1.0,
+        "mean_objective": 5763318.666666667,
+        "runtime_p95_seconds": 0.0031509999998888816
+      },
+      "cp-sat-warm": {
+        "attempted": 33,
+        "valid_build_count": 33,
+        "feasible_rate": 1.0,
+        "mean_objective": 5763318.666666667,
+        "runtime_p95_seconds": 0.005978199999844946
+      }
+    },
+    "stock": {
+      "greedy": {
+        "attempted": 33,
+        "valid_build_count": 5,
+        "feasible_rate": 0.15151515151515152,
+        "mean_objective": 5906577.6,
+        "runtime_p95_seconds": 0.00012209999931656057
+      },
+      "greedy-local": {
+        "attempted": 33,
+        "valid_build_count": 12,
+        "feasible_rate": 0.36363636363636365,
+        "mean_objective": 5644391.5,
+        "runtime_p95_seconds": 0.002790399999867077
+      },
+      "cp-sat": {
+        "attempted": 33,
+        "valid_build_count": 33,
+        "feasible_rate": 1.0,
+        "mean_objective": 5440245.090909091,
+        "runtime_p95_seconds": 0.0029276000004756497
+      },
+      "cp-sat-warm": {
+        "attempted": 33,
+        "valid_build_count": 33,
+        "feasible_rate": 1.0,
+        "mean_objective": 5440245.090909091,
+        "runtime_p95_seconds": 0.005461099999592989
+      }
+    },
+    "infeasible": {
+      "greedy": {
+        "attempted": 33,
+        "valid_build_count": 0,
+        "feasible_rate": 0.0,
+        "mean_objective": null,
+        "runtime_p95_seconds": 0.0001266999997824314
+      },
+      "greedy-local": {
+        "attempted": 33,
+        "valid_build_count": 0,
+        "feasible_rate": 0.0,
+        "mean_objective": null,
+        "runtime_p95_seconds": 0.002773400000478432
+      },
+      "cp-sat": {
+        "attempted": 33,
+        "valid_build_count": 0,
+        "feasible_rate": 0.0,
+        "mean_objective": null,
+        "runtime_p95_seconds": 3.310000010969816e-05
+      },
+      "cp-sat-warm": {
+        "attempted": 33,
+        "valid_build_count": 0,
+        "feasible_rate": 0.0,
+        "mean_objective": null,
+        "runtime_p95_seconds": 2.479999966453761e-05
+      }
+    }
+  },
+  "exhaustive_oracle": {
+    "checks": 80,
+    "matched": 80,
+    "rows": [
+      {
+        "scenario": 0,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5450943,
+        "solver_objective": 5450943,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 0,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5450943,
+        "solver_objective": 5450943,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 1,
+        "difficulty": "medium",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5257645,
+        "solver_objective": 5257645,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 1,
+        "difficulty": "medium",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5257645,
+        "solver_objective": 5257645,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 2,
+        "difficulty": "hard",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5174881,
+        "solver_objective": 5174881,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 2,
+        "difficulty": "hard",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5174881,
+        "solver_objective": 5174881,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 3,
+        "difficulty": "locked",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6076871,
+        "solver_objective": 6076871,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 3,
+        "difficulty": "locked",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6076871,
+        "solver_objective": 6076871,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 4,
+        "difficulty": "stock",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5381210,
+        "solver_objective": 5381210,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 4,
+        "difficulty": "stock",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5381210,
+        "solver_objective": 5381210,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 5,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 5,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 6,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5259364,
+        "solver_objective": 5259364,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 6,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5259364,
+        "solver_objective": 5259364,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 7,
+        "difficulty": "medium",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5519837,
+        "solver_objective": 5519837,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 7,
+        "difficulty": "medium",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5519837,
+        "solver_objective": 5519837,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 8,
+        "difficulty": "hard",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5921354,
+        "solver_objective": 5921354,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 8,
+        "difficulty": "hard",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5921354,
+        "solver_objective": 5921354,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 9,
+        "difficulty": "locked",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5718135,
+        "solver_objective": 5718135,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 9,
+        "difficulty": "locked",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5718135,
+        "solver_objective": 5718135,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 10,
+        "difficulty": "stock",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6015297,
+        "solver_objective": 6015297,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 10,
+        "difficulty": "stock",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6015297,
+        "solver_objective": 6015297,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 11,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 11,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 12,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5443066,
+        "solver_objective": 5443066,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 12,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5443066,
+        "solver_objective": 5443066,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 13,
+        "difficulty": "medium",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6003391,
+        "solver_objective": 6003391,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 13,
+        "difficulty": "medium",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6003391,
+        "solver_objective": 6003391,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 14,
+        "difficulty": "hard",
+        "algorithm": "cp-sat",
+        "oracle_objective": 4937763,
+        "solver_objective": 4937763,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 14,
+        "difficulty": "hard",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 4937763,
+        "solver_objective": 4937763,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 15,
+        "difficulty": "locked",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5779145,
+        "solver_objective": 5779145,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 15,
+        "difficulty": "locked",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5779145,
+        "solver_objective": 5779145,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 16,
+        "difficulty": "stock",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5065685,
+        "solver_objective": 5065685,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 16,
+        "difficulty": "stock",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5065685,
+        "solver_objective": 5065685,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 17,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 17,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 18,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5811838,
+        "solver_objective": 5811838,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 18,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5811838,
+        "solver_objective": 5811838,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 19,
+        "difficulty": "medium",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6093838,
+        "solver_objective": 6093838,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 19,
+        "difficulty": "medium",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6093838,
+        "solver_objective": 6093838,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 20,
+        "difficulty": "hard",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5121263,
+        "solver_objective": 5121263,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 20,
+        "difficulty": "hard",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5121263,
+        "solver_objective": 5121263,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 21,
+        "difficulty": "locked",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5410428,
+        "solver_objective": 5410428,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 21,
+        "difficulty": "locked",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5410428,
+        "solver_objective": 5410428,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 22,
+        "difficulty": "stock",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5088509,
+        "solver_objective": 5088509,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 22,
+        "difficulty": "stock",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5088509,
+        "solver_objective": 5088509,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 23,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 23,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 24,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6406869,
+        "solver_objective": 6406869,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 24,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6406869,
+        "solver_objective": 6406869,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 25,
+        "difficulty": "medium",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5541485,
+        "solver_objective": 5541485,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 25,
+        "difficulty": "medium",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5541485,
+        "solver_objective": 5541485,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 26,
+        "difficulty": "hard",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5518688,
+        "solver_objective": 5518688,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 26,
+        "difficulty": "hard",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5518688,
+        "solver_objective": 5518688,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 27,
+        "difficulty": "locked",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5484600,
+        "solver_objective": 5484600,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 27,
+        "difficulty": "locked",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5484600,
+        "solver_objective": 5484600,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 28,
+        "difficulty": "stock",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5896805,
+        "solver_objective": 5896805,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 28,
+        "difficulty": "stock",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5896805,
+        "solver_objective": 5896805,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 29,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 29,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 30,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5971340,
+        "solver_objective": 5971340,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 30,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5971340,
+        "solver_objective": 5971340,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 31,
+        "difficulty": "medium",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5857395,
+        "solver_objective": 5857395,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 31,
+        "difficulty": "medium",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5857395,
+        "solver_objective": 5857395,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 32,
+        "difficulty": "hard",
+        "algorithm": "cp-sat",
+        "oracle_objective": 4956223,
+        "solver_objective": 4956223,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 32,
+        "difficulty": "hard",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 4956223,
+        "solver_objective": 4956223,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 33,
+        "difficulty": "locked",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6028106,
+        "solver_objective": 6028106,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 33,
+        "difficulty": "locked",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6028106,
+        "solver_objective": 6028106,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 34,
+        "difficulty": "stock",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5145835,
+        "solver_objective": 5145835,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 34,
+        "difficulty": "stock",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5145835,
+        "solver_objective": 5145835,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 35,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 35,
+        "difficulty": "infeasible",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": null,
+        "solver_objective": null,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 36,
+        "difficulty": "easy",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5224056,
+        "solver_objective": 5224056,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 36,
+        "difficulty": "easy",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5224056,
+        "solver_objective": 5224056,
+        "matched": true,
+        "combinations_evaluated": 256
+      },
+      {
+        "scenario": 37,
+        "difficulty": "medium",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5420620,
+        "solver_objective": 5420620,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 37,
+        "difficulty": "medium",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5420620,
+        "solver_objective": 5420620,
+        "matched": true,
+        "combinations_evaluated": 6561
+      },
+      {
+        "scenario": 38,
+        "difficulty": "hard",
+        "algorithm": "cp-sat",
+        "oracle_objective": 5808430,
+        "solver_objective": 5808430,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 38,
+        "difficulty": "hard",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 5808430,
+        "solver_objective": 5808430,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 39,
+        "difficulty": "locked",
+        "algorithm": "cp-sat",
+        "oracle_objective": 6142945,
+        "solver_objective": 6142945,
+        "matched": true,
+        "combinations_evaluated": 65536
+      },
+      {
+        "scenario": 39,
+        "difficulty": "locked",
+        "algorithm": "cp-sat-warm",
+        "oracle_objective": 6142945,
+        "solver_objective": 6142945,
+        "matched": true,
+        "combinations_evaluated": 65536
+      }
+    ]
+  },
+  "correctness": "all returned builds independently passed validate_selected_build",
+  "objective_unchanged": true,
+  "warm_start": "validated greedy-local solution supplied as a CP-SAT hint; objective and constraints unchanged"
+}

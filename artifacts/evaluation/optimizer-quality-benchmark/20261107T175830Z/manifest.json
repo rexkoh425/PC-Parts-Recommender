@@ -1,0 +1,27 @@
+{
+  "schema_version": "pc-build-recommender.optimizer-quality-manifest.v1",
+  "git_revision": "5ae6cb0f3475baa090ce3ca4d5accfff4687ce61",
+  "working_tree_dirty": true,
+  "seed": 20261108,
+  "cohort_sha256": "52a2f42f7efd901836f1cadf5e72dbdcf88c22ce3ff01309adbf0c295ff589f2",
+  "source_files": {
+    "scripts/benchmark_optimizer_quality.py": "7090ffc1cfc278a5aca24d2a29448f2ced47f5a5051e6bbb0a5c419a681d6c84",
+    "packages/core/src/pc_build_recommender/optimizer/engine.py": "ebfe99622fd67a3baa0b0442bff5d8deea7ae7f06e4984d4c86e83e164e6ed4c",
+    "packages/core/src/pc_build_recommender/optimizer/greedy.py": "016803f05a255c9d7950a5bf2fa14c024dfdd14aa3f9f0088472b24fd4f4b002",
+    "packages/core/src/pc_build_recommender/optimizer/scoring.py": "34af57c67c274526415267d09b4d099fff6be01ddace13dfaaddaf2bd5da7236",
+    "packages/core/src/pc_build_recommender/optimizer/validation.py": "cd2161cb6fc6d57c2600ffd30bbac15d57e464655895571e95d1e7a645f309f2"
+  },
+  "software_versions": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "python": "3.12.9",
+    "ortools": "9.15.6755"
+  },
+  "files": {
+    "scenarios.jsonl": "52a2f42f7efd901836f1cadf5e72dbdcf88c22ce3ff01309adbf0c295ff589f2",
+    "runs.csv": "6ce288d4712b7c7becfd7df6ca81d13a76de5127f10b80a6bc6cf0932b0f5f76",
+    "summary.json": "6ccd8b82f1011702633c8253b8646db648a1e084a0117e1a67ea6d3078a97fa2",
+    "report.md": "1b8e51ff58dc90bb713634a0b2d2ad91faca1ec570d6b4e4f72629dcddbc182c"
+  },
+  "manifest_sha256": "8c0ed5df333b16441b6b2040c76a50f6bc1c2065af9a3e88847acadf3d51d8b3"
+}
