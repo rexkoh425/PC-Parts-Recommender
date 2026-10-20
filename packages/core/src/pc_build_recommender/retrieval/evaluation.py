@@ -24,6 +24,7 @@ class RelevanceLabelSource(StrEnum):
     HUMAN = "human"
     SILVER = "silver"
     SYNTHETIC = "synthetic"
+    LLM_WEAK = "llm_weak"
     UNVERIFIED = "unverified"
 
 
@@ -345,9 +346,7 @@ def evaluate_ranked_candidates(
             product_id: int(query.relevance_labels.get(product_id, 0))
             for product_id in query.candidate_ids
         }
-        relevant = {
-            item for item, grade in complete_relevance_labels.items() if grade > 0
-        }
+        relevant = {item for item, grade in complete_relevance_labels.items() if grade > 0}
         for cutoff in recall_ks:
             recall = len(relevant.intersection(ranking[:cutoff])) / len(relevant)
             recall_values[cutoff].append(recall)
