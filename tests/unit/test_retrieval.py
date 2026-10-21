@@ -119,6 +119,14 @@ def test_reciprocal_rank_fusion_uses_rank_not_raw_score() -> None:
     assert fused[0].source_ranks == {"bm25": 2, "vector": 1}
 
 
+def test_weighted_rrf_rebalances_sources_and_validates_weights() -> None:
+    rankings = {"bm25": ["a", "b"], "vector": ["b", "a"]}
+    assert reciprocal_rank_fusion(rankings)[0].product_id == "a"
+    assert reciprocal_rank_fusion(rankings, weights={"vector": 2.0})[0].product_id == "b"
+    with pytest.raises(ValueError, match="finite and positive"):
+        reciprocal_rank_fusion(rankings, weights={"bm25": 0.0})
+
+
 def test_structured_filters_are_strict_for_applicable_category(
     products: list[ProductDocument],
 ) -> None:

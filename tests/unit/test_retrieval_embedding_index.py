@@ -100,6 +100,12 @@ class FailingEncoder:
         raise RuntimeError("model weights unavailable")
 
 
+class RevisionCountingEncoder(CountingEncoder):
+    def __init__(self, revision: str) -> None:
+        super().__init__()
+        self.revision = revision
+
+
 def test_product_embedding_text_is_stable_and_covers_retrieval_evidence() -> None:
     first = _products()[0]
     reordered = dict(reversed(list(first.items())))
@@ -235,8 +241,7 @@ def test_hash_index_persists_float32_matrix_id_map_and_manifest(tmp_path) -> Non
 
     matrix = np.load(result.embeddings_path, allow_pickle=False)
     id_rows = [
-        json.loads(line)
-        for line in result.id_map_path.read_text(encoding="utf-8").splitlines()
+        json.loads(line) for line in result.id_map_path.read_text(encoding="utf-8").splitlines()
     ]
     manifest = json.loads(result.manifest_path.read_text(encoding="utf-8"))
     assert matrix.dtype == np.float32
@@ -413,3 +418,33 @@ def test_corrupt_artifact_disables_incremental_reuse(tmp_path) -> None:
     assert rebuilt.encoded_count == 2
     assert rebuilt.reused_count == 0
     assert len(encoder.calls) == 1
+
+
+def test_incremental_handles_deleted_new_and_incompatible_revision(tmp_path) -> None:
+    source = tmp_path / "products.jsonl"
+    output = tmp_path / "index"
+    products = _products()
+    _write_products(source, products)
+    build_embedding_index(
+        source, output, data_version="catalog-v1", encoder=RevisionCountingEncoder("a")
+    )
+
+    replacement = dict(products[0])
+    replacement["product_id"] = "gpu-new"
+    replacement["model"] = "RTX New"
+    _write_products(source, [products[1], replacement])
+    changed = build_embedding_index(
+        source, output, data_version="catalog-v2", encoder=RevisionCountingEncoder("a")
+    )
+    id_rows = [
+        json.loads(line) for line in changed.id_map_path.read_text(encoding="utf-8").splitlines()
+    ]
+    assert changed.encoded_count == 1
+    assert changed.reused_count == 1
+    assert [row["product_id"] for row in id_rows] == ["cpu-7950x", "gpu-new"]
+
+    incompatible = build_embedding_index(
+        source, output, data_version="catalog-v2", encoder=RevisionCountingEncoder("b")
+    )
+    assert incompatible.encoded_count == 2
+    assert incompatible.reused_count == 0
