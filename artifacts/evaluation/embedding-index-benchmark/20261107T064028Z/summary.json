@@ -1,0 +1,115 @@
+{
+  "created_at_utc": "2026-11-07T06:45:48.410699+00:00",
+  "git_revision": "5ae6cb0f3475baa090ce3ca4d5accfff4687ce61",
+  "input": {
+    "path": "C:\\NUS\\Peronal_projects\\PC recommendation\\data\\processed\\buildcores_open_db\\f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f\\full\\records.jsonl",
+    "source_files": [
+      "C:\\NUS\\Peronal_projects\\PC recommendation\\data\\processed\\buildcores_open_db\\f3ee75dd07ffdd7725da7b056229e0df12838c571b2372bd59563f3a79fd383f\\full\\records.jsonl"
+    ],
+    "product_count": 25666,
+    "limit": null
+  },
+  "experiment": {
+    "seed": 20261107,
+    "repetitions": 5,
+    "warm_start": true,
+    "model_warmup_seconds_excluded": 6.487760700285435,
+    "order": "alternating full/incremental",
+    "floating_point_tolerance": {
+      "rtol": 1e-06,
+      "atol": 1e-06
+    }
+  },
+  "encoder": {
+    "kind": "sentence-transformer",
+    "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+    "model_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "device": "cuda",
+    "batch_size": 128,
+    "dimension": 384
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.9",
+    "hardware": {
+      "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+      "gpu": "NVIDIA GeForce RTX 5070 Ti",
+      "torch": "2.13.0+cu130"
+    }
+  },
+  "ram_metric": "peak current-process working set sampled every 20 ms",
+  "scenarios": [
+    {
+      "scenario": "0%",
+      "change_rate": 0.0,
+      "median_full_seconds": 8.391732499934733,
+      "median_incremental_seconds": 1.199668999761343,
+      "median_speedup": 6.9950398831712315,
+      "recomputed": 0,
+      "reused": 25666,
+      "peak_ram_bytes": 0,
+      "index_bytes": 44490465,
+      "correctness": "passed"
+    },
+    {
+      "scenario": "1%",
+      "change_rate": 0.01,
+      "median_full_seconds": 8.57574569992721,
+      "median_incremental_seconds": 1.0788219003006816,
+      "median_speedup": 7.949176502198407,
+      "recomputed": 257,
+      "reused": 25409,
+      "peak_ram_bytes": 0,
+      "index_bytes": 44490465,
+      "correctness": "passed"
+    },
+    {
+      "scenario": "2%",
+      "change_rate": 0.02,
+      "median_full_seconds": 8.39284719992429,
+      "median_incremental_seconds": 1.137080400250852,
+      "median_speedup": 7.381049922303417,
+      "recomputed": 513,
+      "reused": 25153,
+      "peak_ram_bytes": 0,
+      "index_bytes": 44490465,
+      "correctness": "passed"
+    },
+    {
+      "scenario": "5%",
+      "change_rate": 0.05,
+      "median_full_seconds": 8.405993599444628,
+      "median_incremental_seconds": 1.3791669998317957,
+      "median_speedup": 6.094978781010443,
+      "recomputed": 1283,
+      "reused": 24383,
+      "peak_ram_bytes": 0,
+      "index_bytes": 44490465,
+      "correctness": "passed"
+    },
+    {
+      "scenario": "10%",
+      "change_rate": 0.1,
+      "median_full_seconds": 8.39050249941647,
+      "median_incremental_seconds": 1.7622571997344494,
+      "median_speedup": 4.761224695623781,
+      "recomputed": 2567,
+      "reused": 23099,
+      "peak_ram_bytes": 0,
+      "index_bytes": 44490469,
+      "correctness": "passed"
+    },
+    {
+      "scenario": "price-only",
+      "change_rate": 0.0,
+      "median_full_seconds": 8.636103599332273,
+      "median_incremental_seconds": 0.9542226996272802,
+      "median_speedup": 9.050406789427184,
+      "recomputed": 0,
+      "reused": 25666,
+      "peak_ram_bytes": 0,
+      "index_bytes": 44490497,
+      "correctness": "passed"
+    }
+  ]
+}
