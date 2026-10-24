@@ -1,0 +1,371 @@
+{
+  "schema_version": "pc-build-recommender.weighted-rrf-silver-diagnostic.v1",
+  "created_at_utc": "2026-11-07T19:55:03.490184+00:00",
+  "git_revision": "5ae6cb0f3475baa090ce3ca4d5accfff4687ce61",
+  "label_source": "silver",
+  "eligible_for_production_or_resume_claims": false,
+  "claim_boundary": "32-query deterministic specification-silver diagnostic only",
+  "catalogue_count": 25666,
+  "catalogue_sha256": "8c738c5136615080ac29ced074726f97cab473c5a45eafdf19c26504aa624ce2",
+  "qrels_sha256": "76f78f769eb7747269051e9be7c96870121ef1f444225533332ec04fa473fbc8",
+  "embedding_manifest_sha256": "4e9ccfc65af09962fb3caf8a259681464255edaa8f6a5984f9ac9520f62225c0",
+  "query_count": 32,
+  "query_product_pair_count": 102664,
+  "split_seed": 20261108,
+  "split_sizes": {
+    "train": 16,
+    "validation": 8,
+    "test": 8
+  },
+  "split_assignments": {
+    "cpu-workstation-16-core": "train",
+    "cpu-low-power-integrated-graphics": "train",
+    "cpu-am5-eight-core": "test",
+    "cpu-lga1700-included-cooler": "validation",
+    "gpu-local-ai-16gb": "test",
+    "gpu-compact-eight-gb": "validation",
+    "gpu-efficient-12gb": "train",
+    "gpu-modern-16gb-memory": "train",
+    "motherboard-am5-ddr5-atx": "train",
+    "motherboard-lga1700-ddr4-matx": "test",
+    "motherboard-mini-itx-wifi": "validation",
+    "motherboard-upgradeable-storage-memory": "train",
+    "memory-32gb-ddr5-6000": "validation",
+    "memory-64gb-ddr5-5600": "train",
+    "memory-32gb-ddr4-low-latency": "test",
+    "memory-high-capacity-ddr5": "train",
+    "storage-2tb-nvme-m2": "train",
+    "storage-1tb-nvme-m2": "validation",
+    "storage-4tb-sata-2-5-inch": "train",
+    "storage-8tb-sata-3-5-inch": "test",
+    "psu-850w-gold-or-better": "train",
+    "psu-sfx-650w": "test",
+    "psu-1000w-platinum": "validation",
+    "psu-650-to-750w-gold": "train",
+    "cooler-360mm-aio-am5": "train",
+    "cooler-240mm-aio-lga1700": "validation",
+    "cooler-low-profile-air-am5": "test",
+    "cooler-air-am5-lga1700-160mm": "train",
+    "case-mini-tower-matx-300mm-gpu": "train",
+    "case-mid-tower-350mm-gpu": "validation",
+    "case-full-tower-400mm-gpu-six-bays": "test",
+    "case-mid-tower-170mm-cooler-four-bays": "train"
+  },
+  "candidate_set_fixed": true,
+  "retrieval_first_stage_changed": false,
+  "query_encoder": {
+    "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+    "requested_device": "auto",
+    "resolved_device": "cuda",
+    "batch_size": 64,
+    "dimension": 384,
+    "cosine_score_rounding_decimals": 8
+  },
+  "tuning_grid_count": 30,
+  "selected_on_validation_only": {
+    "bm25_weight": 0.5,
+    "vector_weight": 1.0,
+    "rrf_k": 40,
+    "validation_ndcg_at_10": 0.46788073816811465
+  },
+  "test": {
+    "query_count": 8,
+    "baseline_rrf_ndcg_at_10": 0.3137828945888946,
+    "weighted_rrf_ndcg_at_10": 0.25282642525086696,
+    "absolute_delta": -0.06095646933802762,
+    "relative_improvement": -0.19426320041406422,
+    "paired_bootstrap_95_ci_absolute_delta": [
+      -0.1743633543129618,
+      0.03617250653826818
+    ],
+    "bootstrap_resamples": 1000,
+    "query_win_rate": 0.375,
+    "by_category": {
+      "cpu": {
+        "baseline_ndcg_at_10": 0.19991320165059226,
+        "weighted_rrf_ndcg_at_10": 0.1675119647467629,
+        "delta": -0.03240123690382937
+      },
+      "gpu": {
+        "baseline_ndcg_at_10": 0.7055672068963288,
+        "weighted_rrf_ndcg_at_10": 0.3475293976982623,
+        "delta": -0.3580378091980665
+      },
+      "motherboard": {
+        "baseline_ndcg_at_10": 0.3967378179380473,
+        "weighted_rrf_ndcg_at_10": 0.21726071285222986,
+        "delta": -0.17947710508581743
+      },
+      "memory": {
+        "baseline_ndcg_at_10": 0.0,
+        "weighted_rrf_ndcg_at_10": 0.10723795136818651,
+        "delta": 0.10723795136818651
+      },
+      "storage": {
+        "baseline_ndcg_at_10": 0.3945319748634142,
+        "weighted_rrf_ndcg_at_10": 0.4666666666666667,
+        "delta": 0.0721346918032525
+      },
+      "power_supply": {
+        "baseline_ndcg_at_10": 0.27535623973828394,
+        "weighted_rrf_ndcg_at_10": 0.29430974830400664,
+        "delta": 0.0189535085657227
+      },
+      "cooler": {
+        "baseline_ndcg_at_10": 0.0,
+        "weighted_rrf_ndcg_at_10": 0.0,
+        "delta": 0.0
+      },
+      "case": {
+        "baseline_ndcg_at_10": 0.5381567156244901,
+        "weighted_rrf_ndcg_at_10": 0.4220949603708208,
+        "delta": -0.1160617552536693
+      }
+    },
+    "baseline_per_query": {
+      "cpu-am5-eight-core": 0.19991320165059226,
+      "gpu-local-ai-16gb": 0.7055672068963288,
+      "motherboard-lga1700-ddr4-matx": 0.3967378179380473,
+      "memory-32gb-ddr4-low-latency": 0.0,
+      "storage-8tb-sata-3-5-inch": 0.3945319748634142,
+      "psu-sfx-650w": 0.27535623973828394,
+      "cooler-low-profile-air-am5": 0.0,
+      "case-full-tower-400mm-gpu-six-bays": 0.5381567156244901
+    },
+    "weighted_rrf_per_query": {
+      "cpu-am5-eight-core": 0.1675119647467629,
+      "gpu-local-ai-16gb": 0.3475293976982623,
+      "motherboard-lga1700-ddr4-matx": 0.21726071285222986,
+      "memory-32gb-ddr4-low-latency": 0.10723795136818651,
+      "storage-8tb-sata-3-5-inch": 0.4666666666666667,
+      "psu-sfx-650w": 0.29430974830400664,
+      "cooler-low-profile-air-am5": 0.0,
+      "case-full-tower-400mm-gpu-six-bays": 0.4220949603708208
+    }
+  },
+  "baseline_configuration": {
+    "bm25_weight": 1.0,
+    "vector_weight": 1.0,
+    "rrf_k": 60
+  },
+  "tuning_results": [
+    {
+      "bm25_weight": 0.5,
+      "vector_weight": 1.0,
+      "rrf_k": 40,
+      "validation_ndcg_at_10": 0.46788073816811465,
+      "train_ndcg_at_10": 0.2814701762460419
+    },
+    {
+      "bm25_weight": 0.5,
+      "vector_weight": 1.0,
+      "rrf_k": 60,
+      "validation_ndcg_at_10": 0.4341388983661665,
+      "train_ndcg_at_10": 0.28084413519575996
+    },
+    {
+      "bm25_weight": 0.75,
+      "vector_weight": 1.0,
+      "rrf_k": 40,
+      "validation_ndcg_at_10": 0.43214812207693143,
+      "train_ndcg_at_10": 0.2753507800337942
+    },
+    {
+      "bm25_weight": 0.5,
+      "vector_weight": 1.0,
+      "rrf_k": 20,
+      "validation_ndcg_at_10": 0.43093269607299617,
+      "train_ndcg_at_10": 0.26689358074753594
+    },
+    {
+      "bm25_weight": 0.75,
+      "vector_weight": 1.0,
+      "rrf_k": 20,
+      "validation_ndcg_at_10": 0.4184684086318586,
+      "train_ndcg_at_10": 0.27529684377213354
+    },
+    {
+      "bm25_weight": 0.5,
+      "vector_weight": 1.0,
+      "rrf_k": 100,
+      "validation_ndcg_at_10": 0.41747343827655514,
+      "train_ndcg_at_10": 0.2993684523240557
+    },
+    {
+      "bm25_weight": 0.5,
+      "vector_weight": 1.0,
+      "rrf_k": 10,
+      "validation_ndcg_at_10": 0.4174145445285562,
+      "train_ndcg_at_10": 0.26452988557426577
+    },
+    {
+      "bm25_weight": 0.75,
+      "vector_weight": 1.0,
+      "rrf_k": 60,
+      "validation_ndcg_at_10": 0.40474626789219603,
+      "train_ndcg_at_10": 0.28781081024178407
+    },
+    {
+      "bm25_weight": 0.75,
+      "vector_weight": 1.0,
+      "rrf_k": 100,
+      "validation_ndcg_at_10": 0.39854641305384286,
+      "train_ndcg_at_10": 0.29643256705420845
+    },
+    {
+      "bm25_weight": 1.0,
+      "vector_weight": 1.0,
+      "rrf_k": 20,
+      "validation_ndcg_at_10": 0.39670109500495654,
+      "train_ndcg_at_10": 0.2506017893066595
+    },
+    {
+      "bm25_weight": 1.0,
+      "vector_weight": 1.0,
+      "rrf_k": 100,
+      "validation_ndcg_at_10": 0.39450225651466314,
+      "train_ndcg_at_10": 0.2957677862822717
+    },
+    {
+      "bm25_weight": 0.75,
+      "vector_weight": 1.0,
+      "rrf_k": 10,
+      "validation_ndcg_at_10": 0.37731532513286015,
+      "train_ndcg_at_10": 0.25074736655950536
+    },
+    {
+      "bm25_weight": 1.0,
+      "vector_weight": 1.0,
+      "rrf_k": 40,
+      "validation_ndcg_at_10": 0.3756694686685478,
+      "train_ndcg_at_10": 0.2703000405909132
+    },
+    {
+      "bm25_weight": 1.25,
+      "vector_weight": 1.0,
+      "rrf_k": 100,
+      "validation_ndcg_at_10": 0.374484317171221,
+      "train_ndcg_at_10": 0.2752944908614583
+    },
+    {
+      "bm25_weight": 1.0,
+      "vector_weight": 1.0,
+      "rrf_k": 10,
+      "validation_ndcg_at_10": 0.37347487349628755,
+      "train_ndcg_at_10": 0.24378042075421802
+    },
+    {
+      "bm25_weight": 1.0,
+      "vector_weight": 1.0,
+      "rrf_k": 60,
+      "validation_ndcg_at_10": 0.36422546459415867,
+      "train_ndcg_at_10": 0.27806346657025127
+    },
+    {
+      "bm25_weight": 1.25,
+      "vector_weight": 1.0,
+      "rrf_k": 40,
+      "validation_ndcg_at_10": 0.3605349660443362,
+      "train_ndcg_at_10": 0.2344893712720254
+    },
+    {
+      "bm25_weight": 1.25,
+      "vector_weight": 1.0,
+      "rrf_k": 60,
+      "validation_ndcg_at_10": 0.3603402557428423,
+      "train_ndcg_at_10": 0.24247718311122718
+    },
+    {
+      "bm25_weight": 1.5,
+      "vector_weight": 1.0,
+      "rrf_k": 100,
+      "validation_ndcg_at_10": 0.35032041769999817,
+      "train_ndcg_at_10": 0.2567488011960192
+    },
+    {
+      "bm25_weight": 2.0,
+      "vector_weight": 1.0,
+      "rrf_k": 100,
+      "validation_ndcg_at_10": 0.33502879618443376,
+      "train_ndcg_at_10": 0.20784449586149117
+    },
+    {
+      "bm25_weight": 1.5,
+      "vector_weight": 1.0,
+      "rrf_k": 40,
+      "validation_ndcg_at_10": 0.3337867941255397,
+      "train_ndcg_at_10": 0.2112848069980694
+    },
+    {
+      "bm25_weight": 1.5,
+      "vector_weight": 1.0,
+      "rrf_k": 60,
+      "validation_ndcg_at_10": 0.3318095578553181,
+      "train_ndcg_at_10": 0.22321672124538733
+    },
+    {
+      "bm25_weight": 1.25,
+      "vector_weight": 1.0,
+      "rrf_k": 20,
+      "validation_ndcg_at_10": 0.329177559560245,
+      "train_ndcg_at_10": 0.2268514795943793
+    },
+    {
+      "bm25_weight": 1.25,
+      "vector_weight": 1.0,
+      "rrf_k": 10,
+      "validation_ndcg_at_10": 0.3120806787614988,
+      "train_ndcg_at_10": 0.21987585229446907
+    },
+    {
+      "bm25_weight": 2.0,
+      "vector_weight": 1.0,
+      "rrf_k": 60,
+      "validation_ndcg_at_10": 0.30757339957628727,
+      "train_ndcg_at_10": 0.19691311264368133
+    },
+    {
+      "bm25_weight": 1.5,
+      "vector_weight": 1.0,
+      "rrf_k": 10,
+      "validation_ndcg_at_10": 0.30294334011604673,
+      "train_ndcg_at_10": 0.23632683906612933
+    },
+    {
+      "bm25_weight": 2.0,
+      "vector_weight": 1.0,
+      "rrf_k": 40,
+      "validation_ndcg_at_10": 0.29863931994604037,
+      "train_ndcg_at_10": 0.1998249864390162
+    },
+    {
+      "bm25_weight": 1.5,
+      "vector_weight": 1.0,
+      "rrf_k": 20,
+      "validation_ndcg_at_10": 0.2944764730401233,
+      "train_ndcg_at_10": 0.22008912893327265
+    },
+    {
+      "bm25_weight": 2.0,
+      "vector_weight": 1.0,
+      "rrf_k": 20,
+      "validation_ndcg_at_10": 0.27848515619585795,
+      "train_ndcg_at_10": 0.2170209471903176
+    },
+    {
+      "bm25_weight": 2.0,
+      "vector_weight": 1.0,
+      "rrf_k": 10,
+      "validation_ndcg_at_10": 0.2725993698649089,
+      "train_ndcg_at_10": 0.2116451018445185
+    }
+  ],
+  "random_seed": 20261108,
+  "limitations": [
+    "Specification-generated silver labels are not human relevance judgments.",
+    "Only eight query groups are in the sealed holdout; confidence intervals are wide.",
+    "The experiment adjusts fusion weights only; first-stage retrieval is unchanged.",
+    "This diagnostic cannot establish production or resume-quality recommendation lift."
+  ],
+  "artifact_sha256": "fb9e1a3eb97fa421c449ad0cc540a3b005acfceec33427c72a1a398c5e268147"
+}
