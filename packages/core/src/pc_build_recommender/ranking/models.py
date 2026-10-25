@@ -114,10 +114,13 @@ class RankingContext:
     preferences: Mapping[str, Any] = field(default_factory=dict)
     data_version: str | None = None
     candidate_set_version: str | None = None
+    query_group_id: str | None = None
 
     def __post_init__(self) -> None:
         if not self.query_id:
             raise ValueError("query_id must not be empty")
+        if self.query_group_id is not None and not self.query_group_id:
+            raise ValueError("query_group_id must not be empty when supplied")
         if self.budget_sgd is not None and (
             not math.isfinite(self.budget_sgd) or self.budget_sgd <= 0
         ):
@@ -249,7 +252,7 @@ class RankerMetadata:
         ):
             if type(boolean_value) is not bool:
                 raise TypeError(f"{name} must be a boolean")
-        allowed_sources = {"human", "silver", "synthetic", "unverified"}
+        allowed_sources = {"human", "silver", "synthetic", "llm_weak", "unverified"}
         if self.training_label_source not in allowed_sources:
             raise ValueError("unsupported training_label_source")
         for name, digest in (
@@ -336,12 +339,8 @@ class RankerMetadata:
             contains_synthetic_labels=payload.get("contains_synthetic_labels", False),
             training_judgment_manifest_sha256=payload.get("training_judgment_manifest_sha256"),
             training_dataset_manifest_sha256=payload.get("training_dataset_manifest_sha256"),
-            training_prelabel_snapshot_sha256=payload.get(
-                "training_prelabel_snapshot_sha256"
-            ),
-            training_feature_contract_sha256=payload.get(
-                "training_feature_contract_sha256"
-            ),
+            training_prelabel_snapshot_sha256=payload.get("training_prelabel_snapshot_sha256"),
+            training_feature_contract_sha256=payload.get("training_feature_contract_sha256"),
             query_group_split_checksum=payload.get("query_group_split_checksum"),
             query_split_membership_verified=payload.get("query_split_membership_verified", False),
             model_sha256=payload.get("model_sha256"),
