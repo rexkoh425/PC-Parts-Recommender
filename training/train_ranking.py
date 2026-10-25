@@ -274,14 +274,19 @@ def _split_queries(
     queries: Sequence[LabeledRankingQuery], *, seed: int
 ) -> dict[str, tuple[LabeledRankingQuery, ...]]:
     query_ids = [query.context.query_id for query in queries]
+    group_by_query = {
+        query.context.query_id: query.context.query_group_id or query.context.query_id
+        for query in queries
+    }
     split = deterministic_group_split(
-        query_ids,
+        (group_by_query[query_id] for query_id in query_ids),
         weights={"train": 0.6, "validation": 0.2, "test": 0.2},
         seed=seed,
     )
     result: dict[str, list[LabeledRankingQuery]] = {name: [] for name in split.weights}
     for query in queries:
-        result[split.split_for(query.context.query_id)].append(query)
+        group_id = group_by_query[query.context.query_id]
+        result[split.split_for(group_id)].append(query)
     if len({grade for query in result["train"] for grade in query.relevance_grades}) < 2:
         raise ValueError("ranking training split needs at least two relevance grades")
     return {name: tuple(rows) for name, rows in result.items()}
@@ -429,7 +434,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--label-provenance",
-        choices=("human", "silver", "synthetic"),
+        choices=("human", "silver", "synthetic", "llm_weak"),
         required=True,
     )
     parser.add_argument(

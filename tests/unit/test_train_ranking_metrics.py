@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 import pytest
-from training.train_ranking import _mean_ndcg
+from training.train_ranking import _mean_ndcg, _split_queries
 
 from pc_build_recommender.ranking import (
     LabeledRankingQuery,
@@ -49,9 +49,7 @@ def test_validation_diagnostic_ndcg_matches_exponential_gain_evaluator() -> None
 
     learned, bm25 = _mean_ndcg(_FixedScoreRanker((2.0, 3.0, 1.0)), (query,))
 
-    expected = (7.0 + 15.0 / 1.584962500721156) / (
-        15.0 + 7.0 / 1.584962500721156
-    )
+    expected = (7.0 + 15.0 / 1.584962500721156) / (15.0 + 7.0 / 1.584962500721156)
     assert learned == pytest.approx(expected)
     assert learned < 0.9
     assert bm25 == 1.0
@@ -70,8 +68,28 @@ def test_validation_diagnostic_breaks_score_ties_by_product_id() -> None:
 
     learned, bm25 = _mean_ndcg(_FixedScoreRanker((0.0, 0.0, 0.0)), (query,))
 
-    expected = (7.0 + 15.0 / 2.0) / (
-        15.0 + 7.0 / 1.584962500721156
-    )
+    expected = (7.0 + 15.0 / 2.0) / (15.0 + 7.0 / 1.584962500721156)
     assert learned == pytest.approx(expected)
     assert bm25 == pytest.approx(expected)
+
+
+def test_weak_label_split_keeps_query_intent_groups_together() -> None:
+    queries = []
+    for index in range(8):
+        group_id = "intent-a" if index < 2 else f"intent-{index}"
+        queries.append(
+            LabeledRankingQuery.create(
+                RankingContext(query_id=f"q{index}", query_group_id=group_id),
+                (
+                    RankingCandidate(product_id=f"best-{index}", category="gpu"),
+                    RankingCandidate(product_id=f"middle-{index}", category="gpu"),
+                    RankingCandidate(product_id=f"low-{index}", category="gpu"),
+                ),
+                (4, 2, 0),
+            )
+        )
+    split = _split_queries(queries, seed=77)
+    assignment = {
+        query.context.query_id: split_name for split_name, rows in split.items() for query in rows
+    }
+    assert assignment["q0"] == assignment["q1"]
