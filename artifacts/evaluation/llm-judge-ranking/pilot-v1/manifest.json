@@ -1,0 +1,31 @@
+{
+  "schema_version": "pcbr.llm-judge-pilot-queue.v1",
+  "seed": 20261108,
+  "purpose": "pilot only; query intents previously used in silver diagnostics; no independent final holdout",
+  "label_source": "unjudged",
+  "catalogue_sha256": "8c738c5136615080ac29ced074726f97cab473c5a45eafdf19c26504aa624ce2",
+  "query_file_sha256": "fac11c46a59f1cfe88908fb2b7f0188e018c956665cd885f7ceceff4d8469968",
+  "embedding_manifest_sha256": "4e9ccfc65af09962fb3caf8a259681464255edaa8f6a5984f9ac9520f62225c0",
+  "tasks_sha256": "c7af81f5178117b8184a9d4b96d206574473def092957368531ff3ce236af52f",
+  "snapshot_sha256": "f4614c3e11d8825acdfc4ec49578b2dc815303d5a97d8ee0989812d6957b9d64",
+  "query_count": 32,
+  "task_count": 896,
+  "categories": {
+    "cpu": 4,
+    "gpu": 4,
+    "motherboard": 4,
+    "memory": 4,
+    "storage": 4,
+    "power_supply": 4,
+    "cooler": 4,
+    "case": 4
+  },
+  "splits": {
+    "train": 16,
+    "test": 8,
+    "validation": 8
+  },
+  "encoder_device": "cuda",
+  "selection": "8 unique each from BM25, vector and RRF, plus 4 seeded category controls",
+  "label_note": "existing silver predicates inform explicit requirements; no silver grades are included"
+}

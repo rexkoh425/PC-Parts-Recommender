@@ -1,0 +1,32 @@
+{
+  "schema_version": "pc-build-recommender.llm-weak-judgments.v1",
+  "label_source": "llm_weak",
+  "eligible_for_production_or_human_quality_claims": false,
+  "model_id": "codex-5.3-spark",
+  "prompt_version": "pcbr-llm-relevance-rubric-v1",
+  "rubric_sha256": "685adcc6ba954cfc26b920c308f7e45f0c530191e15b7ab5b175322ede8b8e8d",
+  "input_sha256": "8021f75fe4f181c91c1cd24308c3198d542d3019d65db253d26e539510dabc6b",
+  "judgments_sha256": null,
+  "ranking_dataset_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "task_count": 0,
+  "input_task_count": 1,
+  "unresolved_task_count": 1,
+  "incomplete_query_count": 1,
+  "query_count": 0,
+  "query_group_count": 0,
+  "grade_counts": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0
+  },
+  "low_confidence_count": 0,
+  "hard_requirement_violation_count": 0,
+  "hard_requirement_unknown_count": 0,
+  "prompt_tokens": 0,
+  "completion_tokens": 0,
+  "estimated_cost_usd": null,
+  "checkpoint": "judgments.checkpoint.jsonl",
+  "ranking_dataset": "ranking_dataset.llm_weak.jsonl"
+}
