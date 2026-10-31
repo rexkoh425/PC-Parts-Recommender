@@ -1,0 +1,217 @@
+{
+  "schema_version": "pcbr.llm-pilot-validation.v1",
+  "label_source": "llm_weak",
+  "dataset_sha256": "6875a7ff3997e339c7be77a734474f45c10aa88245126aa2f481df5cfe4fb88c",
+  "model_sha256": "c304ad016d135d77462978bde5ed6ffde46cbf4c116041562af5431743e5f002",
+  "query_count": 7,
+  "models": {
+    "bm25": {
+      "ndcg_at_10": 0.390339558656802,
+      "mrr": 0.6178571428571429,
+      "recall_at_50": 1.0
+    },
+    "vector": {
+      "ndcg_at_10": 0.4857729689917497,
+      "mrr": 0.5777777777777777,
+      "recall_at_50": 1.0
+    },
+    "rrf": {
+      "ndcg_at_10": 0.568571831919284,
+      "mrr": 0.619047619047619,
+      "recall_at_50": 1.0
+    },
+    "lambdamart": {
+      "ndcg_at_10": 0.819134560203738,
+      "mrr": 1.0,
+      "recall_at_50": 1.0
+    }
+  },
+  "absolute_ndcg_delta_vs_rrf": 0.25056272828445403,
+  "relative_ndcg_delta_vs_rrf": 0.44068790294912924,
+  "paired_bootstrap_95_ci": [
+    0.16069281547130213,
+    0.31443386884771696
+  ],
+  "bootstrap_resamples": 1000,
+  "wins": 6,
+  "losses": 1,
+  "ties": 0,
+  "per_query": [
+    {
+      "query_id": "case-full-tower-400mm-gpu-six-bays",
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.35433341234705834,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.08274602130532004,
+          "mrr": 0.1111111111111111,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.7202120512750652,
+          "mrr": 0.5,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "case-mid-tower-350mm-gpu",
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.6156886473955918,
+          "mrr": 0.5,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.9266360779006401,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.49667571720465364,
+          "mrr": 0.5,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.8236998933965709,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "cooler-240mm-aio-lga1700",
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.6489315753318466,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.7503359712972109,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.9363792118010483,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9305687780632228,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "cooler-360mm-aio-am5",
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.5307120946034936,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.5617131059245699,
+          "mrr": 0.5,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.6036081270984908,
+          "mrr": 0.5,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.8236998933965709,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "gpu-compact-eight-gb",
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.06879325983925363,
+          "mrr": 0.5,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.2642151169560527,
+          "mrr": 0.3333333333333333,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.3392628513295944,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.6893542873481407,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "gpu-efficient-12gb",
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.19717296025883194,
+          "mrr": 0.125,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.7468210886401634,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.3475397041459694,
+          "mrr": 0.3333333333333333,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.6421008306789184,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "memory-32gb-ddr5-6000",
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.31674496082153764,
+          "mrr": 0.2,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.06794340091829074,
+          "mrr": 0.1,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.536325160580166,
+          "mrr": 0.5,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.8245182385427422,
+          "mrr": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    }
+  ],
+  "limitation": "previously used pilot queries; seven validation groups; LLM weak labels; conditional candidate-pool recall"
+}

@@ -1,0 +1,17 @@
+{
+  "pairs": 16,
+  "exact_agreement": 1.0,
+  "mean_absolute_grade_difference": 0.0,
+  "cohen_kappa": 1.0,
+  "model_a": "gpt-6-luna",
+  "model_b": "gpt-5.6-luna",
+  "limitations": "stratified extreme grades; deterministic hard overrides; same rubric and provider; not human review",
+  "raw_grade_exact_agreement": 0.8125,
+  "raw_grade_pair_counts": {
+    "0:0": 4,
+    "0:2": 1,
+    "1:0": 2,
+    "1:1": 1,
+    "4:4": 8
+  }
+}

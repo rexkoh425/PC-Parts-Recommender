@@ -1,0 +1,16 @@
+{
+  "files": {
+    "ranker.txt": {
+      "sha256": "c304ad016d135d77462978bde5ed6ffde46cbf4c116041562af5431743e5f002",
+      "size_bytes": 22972
+    },
+    "ranker.txt.metadata.json": {
+      "sha256": "02015668fe3835346a87484572d85a178868d8cbe290b211d3b141e51b34ce91",
+      "size_bytes": 2496
+    }
+  },
+  "manifest_sha256": "14f5550e27df89ddfa550b2106b62cb285a35d2b95aeceaf9b6e678259e66099",
+  "publication_intent_sha256": "e1779f98b0554214ffb00ca756fdc0ebc480db164bdad9b9e965633011e83a49",
+  "ranker_version": "pilot-llm-v1",
+  "schema_version": "pc-build-recommender.lambdamart-artifact-manifest.v2"
+}

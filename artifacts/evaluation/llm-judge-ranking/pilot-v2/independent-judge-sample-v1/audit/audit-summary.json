@@ -1,0 +1,35 @@
+{
+  "schema_version": "pcbr.llm-pilot-audit.v1",
+  "label_source": "llm_weak",
+  "eligible_for_promotion": false,
+  "queue_sha256": "c5563e2f67588f7905e301082f03d2c158ac96635d4a383edb66cacff0222382",
+  "checkpoint_sha256": "01a2587ddc4cacba27fe0064bb309d72cd5c5d28654144e3d40b408eb56b9569",
+  "query_file_sha256": "fac11c46a59f1cfe88908fb2b7f0188e018c956665cd885f7ceceff4d8469968",
+  "audited_grades_sha256": "e394e34cae9ae3a4ad02a10437530d456ba7bba76ac8a1eaa32ea3c3c6a219ff",
+  "task_count": 16,
+  "query_count": 16,
+  "categories": {
+    "case": 2,
+    "cooler": 2,
+    "cpu": 2,
+    "gpu": 2,
+    "memory": 2,
+    "motherboard": 2,
+    "power_supply": 2,
+    "storage": 2
+  },
+  "audited_grade_counts": {
+    "0": 8,
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 8
+  },
+  "grade_corrections": 0,
+  "severe_raw_hard_contradictions": 0,
+  "unresolved_hard_contradictions": 0,
+  "unknown_hard_requirements": 1,
+  "missing_evidence_count": 14,
+  "low_confidence_count": 0,
+  "limitations": "authored technical pilot; an automated hard-constraint audit does not establish factual accuracy of every free-text rationale"
+}
