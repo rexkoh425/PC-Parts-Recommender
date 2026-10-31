@@ -1,0 +1,100 @@
+{
+  "schema_version": "pc-build-recommender.llm-weak-judgments.v1",
+  "label_source": "llm_weak",
+  "eligible_for_production_or_human_quality_claims": false,
+  "model_id": "gpt-6-luna",
+  "prompt_version": "pcbr-llm-relevance-rubric-v2",
+  "rubric_sha256": "f3a603fc5bc89393ef50bb91162cd4a75f06d67701415c7e060d9969de5819d5",
+  "input_sha256": "cb5cd7ac6830cad71651bd62f545d75907a466ec681fcb7f19106582c24ecb2f",
+  "judgments_sha256": "b58f454351669a4206fae87ac8b87cded083429aff643177a5e6390e38743977",
+  "ranking_dataset_sha256": "171dc511b72ab17644ad955d6e7cedf7593eb5eaf4b082da08cca55e4beb26d1",
+  "task_count": 896,
+  "input_task_count": 896,
+  "unresolved_task_count": 0,
+  "training_dataset_ready": true,
+  "incomplete_query_count": 0,
+  "query_count": 32,
+  "query_group_count": 32,
+  "grade_counts": {
+    "0": 558,
+    "1": 2,
+    "2": 38,
+    "3": 12,
+    "4": 286
+  },
+  "grade_counts_by_category": {
+    "case": {
+      "0": 60,
+      "1": 0,
+      "2": 10,
+      "3": 0,
+      "4": 42
+    },
+    "cooler": {
+      "0": 63,
+      "1": 2,
+      "2": 7,
+      "3": 0,
+      "4": 40
+    },
+    "cpu": {
+      "0": 76,
+      "1": 0,
+      "2": 3,
+      "3": 5,
+      "4": 28
+    },
+    "gpu": {
+      "0": 70,
+      "1": 0,
+      "2": 4,
+      "3": 2,
+      "4": 36
+    },
+    "memory": {
+      "0": 82,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 30
+    },
+    "motherboard": {
+      "0": 86,
+      "1": 0,
+      "2": 12,
+      "3": 2,
+      "4": 12
+    },
+    "power_supply": {
+      "0": 53,
+      "1": 0,
+      "2": 1,
+      "3": 0,
+      "4": 58
+    },
+    "storage": {
+      "0": 68,
+      "1": 0,
+      "2": 1,
+      "3": 3,
+      "4": 40
+    }
+  },
+  "confidence_buckets": {
+    "below_0.5": 0,
+    "0.5_to_below_0.8": 2,
+    "0.8_to_1.0": 894
+  },
+  "missing_evidence_count": 835,
+  "raw_hard_requirement_contradiction_count": 172,
+  "raw_grade_recorded_count": 896,
+  "final_hard_requirement_contradiction_count": 0,
+  "low_confidence_count": 0,
+  "hard_requirement_violation_count": 558,
+  "hard_requirement_unknown_count": 67,
+  "prompt_tokens": 822905,
+  "completion_tokens": 84837,
+  "estimated_cost_usd": null,
+  "checkpoint": "judgments.checkpoint.jsonl",
+  "ranking_dataset": "ranking_dataset.llm_weak.jsonl"
+}
