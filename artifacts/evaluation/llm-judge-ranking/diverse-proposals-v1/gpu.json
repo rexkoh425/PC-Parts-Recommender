@@ -1,0 +1,570 @@
+{
+  "category": "gpu",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 4379,
+    "total_tokens": 4918,
+    "prompt_tokens": 539,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 384
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a GPU for 4K gaming with at least 16 GB of VRAM and a memory bus of 256 bits or wider.",
+      "intent_family": "high-resolution gaming capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 256
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a graphics card for competitive 1080p gaming that uses GDDR6 memory.",
+      "intent_family": "high-refresh-rate esports gaming",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr6"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a GPU suitable for 1440p gaming with at least 12 GB of VRAM.",
+      "intent_family": "mainstream high-resolution gaming",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_text": "I want a graphics card for ray-traced games and modern releases, preferably with more than 12 GB of VRAM.",
+      "intent_family": "ray-tracing longevity",
+      "must": []
+    },
+    {
+      "query_text": "Need a GPU for a compact gaming build that is no longer than 270 mm.",
+      "intent_family": "compact case gaming upgrade",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 270
+        }
+      ]
+    },
+    {
+      "query_text": "Find a graphics card that fits a two-slot limit in my small-form-factor case.",
+      "intent_family": "small-form-factor physical compatibility",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I need a GPU under 200 watts for an efficient home gaming PC.",
+      "intent_family": "low-power gaming system",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 200
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a graphics card with at least 8 GB of VRAM for a general-purpose gaming build.",
+      "intent_family": "entry-level modern gaming",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "Need a GPU with 24 GB of VRAM for large 3D scenes and GPU rendering.",
+      "intent_family": "professional 3D rendering memory capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "eq",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_text": "Find a graphics card for Blender and other GPU-accelerated creative work, but I am unsure which specifications matter most.",
+      "intent_family": "creative application acceleration",
+      "must": []
+    },
+    {
+      "query_text": "I need a GPU for local AI experimentation with as much VRAM as possible.",
+      "intent_family": "local machine-learning memory capacity",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a graphics card for video editing with at least 12 GB of VRAM.",
+      "intent_family": "video production workload support",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_text": "Find a GPU for CAD and 3D modeling that has a memory bus of at least 192 bits.",
+      "intent_family": "workstation viewport performance",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 192
+        }
+      ]
+    },
+    {
+      "query_text": "I want a graphics card for cryptocurrency research and compute experiments, but I do not know whether gaming or workstation models are better.",
+      "intent_family": "uncertain compute-oriented selection",
+      "must": []
+    },
+    {
+      "query_text": "Need a GPU with GDDR6X memory for a high-end gaming and creator workstation.",
+      "intent_family": "high-bandwidth gaming and creator system",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr6x"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a graphics card with GDDR7 memory for a new enthusiast PC.",
+      "intent_family": "next-generation enthusiast build",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr7"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a replacement GPU that stays within a 300-watt board power limit.",
+      "intent_family": "power-constrained replacement",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a graphics card upgrade that will fit in a case with only 320 mm of GPU clearance.",
+      "intent_family": "case-limited graphics upgrade",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 320
+        }
+      ]
+    },
+    {
+      "query_text": "Find a GPU for an HTPC that is no longer than 200 mm.",
+      "intent_family": "home-theater PC compatibility",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 200
+        }
+      ]
+    },
+    {
+      "query_text": "I need a graphics card for a slim workstation with a maximum thickness of two slots.",
+      "intent_family": "thin workstation compatibility",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a GPU with at least 16 GB of VRAM for modded games and high-resolution texture packs.",
+      "intent_family": "texture-heavy gaming",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "Need a graphics card with 8 GB of VRAM or less for an older 1080p gaming system.",
+      "intent_family": "legacy system replacement",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "le",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "Find a GPU with a 128-bit memory bus for a basic office and light-gaming computer.",
+      "intent_family": "basic mixed-use graphics",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "eq",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "I want a graphics card with a 384-bit memory bus for bandwidth-intensive workloads.",
+      "intent_family": "memory-bandwidth-focused computing",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "eq",
+          "value": 384
+        }
+      ]
+    },
+    {
+      "query_text": "Need a GPU with at least 20 GB of VRAM for scientific visualization and large datasets.",
+      "intent_family": "large-data visualization",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 20
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a graphics card under 250 watts that can serve as a quiet workstation GPU.",
+      "intent_family": "efficient workstation build",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 250
+        }
+      ]
+    },
+    {
+      "query_text": "Find a GPU that is at least 300 mm long because my case has room for a large graphics card and I want a substantial cooler.",
+      "intent_family": "large-case performance build",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "ge",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_text": "I need a graphics card that is no more than 2.5 slots wide for a dual-GPU workstation layout.",
+      "intent_family": "multi-GPU physical planning",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a GPU with at least 10 GB of VRAM for 1440p gaming and occasional streaming.",
+      "intent_family": "gaming and streaming balance",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "query_text": "Find a graphics card with GDDR6 memory and no more than 180 watts of board power for a modest upgrade.",
+      "intent_family": "efficient incremental upgrade",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr6"
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 180
+        }
+      ]
+    },
+    {
+      "query_text": "I want a GPU with at least 16 GB of VRAM, but it must fit within 280 mm.",
+      "intent_family": "high-memory compact gaming",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 280
+        }
+      ]
+    },
+    {
+      "query_text": "Need a graphics card with a memory bus of at least 256 bits and board power below 350 watts.",
+      "intent_family": "high-bandwidth power-balanced selection",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 256
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 350
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a GPU with 12 GB exactly because my software license is limited to that memory configuration.",
+      "intent_family": "software-constrained memory selection",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "eq",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_text": "Find a graphics card with at least 24 GB of VRAM and a memory bus of at least 320 bits for professional workloads.",
+      "intent_family": "professional high-capacity memory subsystem",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 24
+        },
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 320
+        }
+      ]
+    },
+    {
+      "query_text": "I need a GPU for a portable workstation, but I am not sure whether a desktop card will fit or perform well.",
+      "intent_family": "uncertain mobile workstation compatibility",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a graphics card for a living-room PC that must stay under 150 watts.",
+      "intent_family": "low-power living-room system",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 150
+        }
+      ]
+    },
+    {
+      "query_text": "Need a GPU that fits a 240 mm case clearance and provides enough VRAM for modern games.",
+      "intent_family": "small-case modern gaming",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 240
+        }
+      ]
+    },
+    {
+      "query_text": "Find a graphics card no wider than three slots for a build with limited expansion space.",
+      "intent_family": "expansion-space constrained build",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "I want a GPU with HBM memory for specialized compute work.",
+      "intent_family": "specialized high-bandwidth compute",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "hbm"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a graphics card with 6 GB or less of VRAM for a basic display-output replacement.",
+      "intent_family": "basic display replacement",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "le",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "Need a GPU with at least 12 GB of VRAM, but its board power must not exceed 220 watts.",
+      "intent_family": "moderate-power high-memory upgrade",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_text": "Find a graphics card at least 280 mm long with a 256-bit memory bus for a spacious gaming tower.",
+      "intent_family": "tower gaming performance selection",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "ge",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "eq",
+          "value": 256
+        }
+      ]
+    },
+    {
+      "query_text": "I need a GPU with GDDR6X memory and at least 16 GB of VRAM for demanding creator applications.",
+      "intent_family": "high-bandwidth creator workload",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr6x"
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a graphics card that is no more than 210 mm long and no wider than two slots for a very compact build.",
+      "intent_family": "ultra-compact graphics compatibility",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 210
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find a GPU with at least 16 GB of VRAM and board power under 275 watts for a balanced gaming and editing PC.",
+      "intent_family": "balanced gaming and editing upgrade",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 275
+        }
+      ]
+    },
+    {
+      "query_text": "I need a graphics card with a 192-bit or wider memory bus for a long-term 1440p build.",
+      "intent_family": "future-oriented 1440p platform",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 192
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a GPU for game development, but I am unsure whether VRAM, memory bandwidth, or power efficiency should take priority.",
+      "intent_family": "game-development tradeoff exploration",
+      "must": []
+    },
+    {
+      "query_text": "Need a graphics card with at least 8 GB of VRAM, no more than 250 mm in length, and a maximum board power of 175 watts.",
+      "intent_family": "compact efficient gaming upgrade",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 250
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 175
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

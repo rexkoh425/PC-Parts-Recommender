@@ -1,0 +1,687 @@
+{
+  "category": "storage",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 3311,
+    "total_tokens": 3835,
+    "prompt_tokens": 524,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 317
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a 2TB M.2 NVMe drive for a gaming PC dedicated to a large game library.",
+      "intent_family": "gaming library expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 1TB SATA SSD to replace the hard drive in an older desktop.",
+      "intent_family": "legacy desktop storage replacement",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 4TB internal drive for storing photos, videos, and documents on my home PC.",
+      "intent_family": "large personal media storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_text": "I want an NVMe boot drive with at least 500GB for a new productivity workstation.",
+      "intent_family": "workstation operating-system storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a compact M.2 2280 drive for a small-form-factor gaming build.",
+      "intent_family": "small-form-factor gaming upgrade",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        }
+      ]
+    },
+    {
+      "query_text": "Please find a 2.5-inch SATA drive with at least 2TB for a laptop upgrade.",
+      "intent_family": "laptop internal storage upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a storage drive of 8TB or more for a home media server.",
+      "intent_family": "home server capacity expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8000
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 1TB drive for video editing scratch files in a desktop workstation.",
+      "intent_family": "creative workstation scratch storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "Find an M.2 2280 NVMe drive under 2TB for a secondary game-install drive.",
+      "intent_family": "secondary gaming storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 500GB SATA drive for a basic office PC.",
+      "intent_family": "office computer replacement storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Can you find a drive with at least 2TB for a PC used to archive family videos?",
+      "intent_family": "long-term household archiving",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "I want an NVMe M.2 drive for compiling code and running virtual machines.",
+      "intent_family": "developer workstation storage",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a 4TB internal drive that fits a standard 3.5-inch desktop bay.",
+      "intent_family": "desktop bulk-storage expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 4000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for an inexpensive-feeling? SATA storage option for an older PC, around 1TB.",
+      "intent_family": "older-system storage refresh",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a drive no larger than 1TB for a Linux workstation boot and application disk.",
+      "intent_family": "compact workstation system disk",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 2TB internal SSD for a gaming laptop, but I am unsure which slot it has.",
+      "intent_family": "uncertain gaming laptop upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "Please find a 1TB M.2 2280 drive for a motherboard with an NVMe slot.",
+      "intent_family": "motherboard-compatible system upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I need at least 6TB of internal storage for raw photography files.",
+      "intent_family": "professional photo archive expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 6000
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a small-capacity SATA drive, 250GB or less, for a lightweight office build.",
+      "intent_family": "low-capacity budget system storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 250
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 2TB NVMe drive for a game-development PC that stores projects locally.",
+      "intent_family": "game-development project storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a 2.5-inch drive with at least 1TB for a compact desktop enclosure.",
+      "intent_family": "compact enclosure storage expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a 3.5-inch internal drive with 10TB or more for backups.",
+      "intent_family": "large local backup storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 10000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_text": "Can you find an M.2 2280 drive at least 1TB for a mini-ITX gaming PC?",
+      "intent_family": "mini-ITX gaming storage upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a SATA drive between 1TB and 4TB for a home desktop used by several family members.",
+      "intent_family": "shared household desktop storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 4000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for the largest practical M.2 drive for a workstation, with no specific capacity decided yet.",
+      "intent_family": "uncertain high-capacity workstation selection",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an NVMe boot drive between 500GB and 2TB for a general-purpose PC.",
+      "intent_family": "general-purpose system drive selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I need internal storage for a desktop that has only a spare 2.5-inch bay.",
+      "intent_family": "bay-constrained desktop upgrade",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        }
+      ]
+    },
+    {
+      "query_text": "Please find a 4TB or larger drive for a Plex-style media library.",
+      "intent_family": "media server library expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_text": "I want a 1TB M.2 drive for a laptop, but I do not know whether it uses SATA or NVMe.",
+      "intent_family": "ambiguous laptop interface selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a drive no more than 2TB for a quiet home office PC.",
+      "intent_family": "moderate-capacity office storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 2TB SATA drive to hold a Steam library on a secondary desktop disk.",
+      "intent_family": "secondary game library storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an NVMe M.2 2280 drive with at least 2TB for large design and engineering files.",
+      "intent_family": "engineering workstation project storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 500GB or smaller drive for a secondary operating-system installation.",
+      "intent_family": "dual-boot system storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 500
+        }
+      ]
+    },
+    {
+      "query_text": "Please find a 3.5-inch drive around 12TB for a personal backup server.",
+      "intent_family": "personal backup server expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 12000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a compact internal drive for a small PC, but the exact capacity and interface are flexible.",
+      "intent_family": "small-PC storage discovery",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        }
+      ]
+    },
+    {
+      "query_text": "Need at least 1TB of storage for a PC used to record and edit gameplay footage.",
+      "intent_family": "game capture and editing storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 2TB M.2 2280 drive that uses PCIe 4.0 for a new gaming build.",
+      "intent_family": "new-generation gaming system storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "pcie_4_0"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a SATA drive with 4TB or less for a desktop file server.",
+      "intent_family": "desktop file server capacity planning",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 4000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 1TB internal drive for a refurbished PC, and compatibility matters more than maximum speed.",
+      "intent_family": "refurbished PC compatibility upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "Please find an M.2 2280 NVMe drive between 1TB and 4TB for a content-creation workstation.",
+      "intent_family": "content-creation workstation expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 4000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I am upgrading an older gaming PC and need at least 2TB, but I am unsure whether it supports SATA or NVMe.",
+      "intent_family": "uncertain older gaming PC upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a drive of 250GB to 500GB for a simple home server operating system.",
+      "intent_family": "small server system-disk selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 250
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "le",
+          "value": 500
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 2.5-inch SATA drive with 500GB for an older laptop repair.",
+      "intent_family": "legacy laptop repair storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a high-capacity internal drive for a surveillance recording PC, with at least 8TB.",
+      "intent_family": "surveillance recording storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8000
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

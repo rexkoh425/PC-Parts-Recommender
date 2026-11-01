@@ -1,0 +1,393 @@
+{
+  "category": "cpu",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2486,
+    "total_tokens": 3030,
+    "prompt_tokens": 544,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 496
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a CPU for competitive gaming with strong single-threaded performance and low power draw.",
+      "intent_family": "competitive_gaming_performance",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a processor for a quiet small-form-factor gaming PC.",
+      "intent_family": "quiet_compact_gaming_build",
+      "must": []
+    },
+    {
+      "query_text": "Need a CPU for 4K gaming while streaming gameplay and recording locally.",
+      "intent_family": "gaming_streaming_workload",
+      "must": []
+    },
+    {
+      "query_text": "I want a CPU for a high-refresh-rate gaming system paired with a dedicated graphics card.",
+      "intent_family": "high_refresh_rate_gaming",
+      "must": []
+    },
+    {
+      "query_text": "Find a processor suitable for gaming and occasional video editing without going to an extreme desktop platform.",
+      "intent_family": "gaming_content_creation_balance",
+      "must": []
+    },
+    {
+      "query_text": "I need a CPU for smooth gaming in a compact mini-ITX build with an AM5 motherboard.",
+      "intent_family": "mini_itx_gaming_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a processor with at least 8 cores for compiling large software projects.",
+      "intent_family": "software_compilation",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "Need a CPU with at least 12 cores for 3D rendering and animation work.",
+      "intent_family": "3d_rendering",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_text": "I want a processor with at least 16 threads for running multiple development environments and virtual machines.",
+      "intent_family": "virtualization_and_multitasking",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "Find a CPU for software development, containers, and local database testing.",
+      "intent_family": "developer_workstation",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a processor for long-duration CPU rendering that can stay below 125 watts.",
+      "intent_family": "sustained_rendering_with_power_limit",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 125
+        }
+      ]
+    },
+    {
+      "query_text": "Need a CPU for a home server that should use no more than 65 watts.",
+      "intent_family": "low_power_home_server",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "query_text": "I need a processor with a base clock of at least 3.5 GHz for a general-purpose workstation.",
+      "intent_family": "workstation_base_clock_requirement",
+      "must": [
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 3.5
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a CPU with a base clock no higher than 2.5 GHz for a low-power always-on system.",
+      "intent_family": "energy_efficient_always_on_system",
+      "must": [
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "le",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_text": "Need a processor compatible with an AM4 motherboard for an upgrade without changing the board.",
+      "intent_family": "legacy_platform_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a CPU for an AM5 motherboard and DDR5-based workstation build.",
+      "intent_family": "new_platform_workstation_build",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a processor that works with an LGA1700 motherboard for a replacement build.",
+      "intent_family": "existing_intel_platform_replacement",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1700"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a CPU that supports a standard ATX motherboard for a full-size desktop.",
+      "intent_family": "full_size_desktop_compatibility",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a processor compatible with a micro-ATX board for a compact office PC.",
+      "intent_family": "compact_office_pc_compatibility",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a CPU with support for at least 128GB of memory for a virtualization host.",
+      "intent_family": "high_memory_virtualization",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "Find a processor that supports at least 64GB of memory for a photo and video editing workstation.",
+      "intent_family": "memory_capacity_for_content_creation",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a CPU that includes a stock cooler for a simple budget desktop build.",
+      "intent_family": "complete_budget_build",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "Need a processor without an included cooler because I already have a compatible liquid cooler.",
+      "intent_family": "reuse_existing_cooling",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": false
+        }
+      ]
+    },
+    {
+      "query_text": "I need a low-heat CPU for a fanless or near-silent office computer.",
+      "intent_family": "silent_office_computer",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a processor for spreadsheet-heavy office work, web applications, and video calls.",
+      "intent_family": "office_productivity",
+      "must": []
+    },
+    {
+      "query_text": "Find a CPU for a media server that will transcode several streams and run storage services.",
+      "intent_family": "home_media_server",
+      "must": []
+    },
+    {
+      "query_text": "Need a processor for a NAS that will also run containers and backups.",
+      "intent_family": "nas_and_container_host",
+      "must": []
+    },
+    {
+      "query_text": "I want a CPU for a dedicated game server with several concurrent players.",
+      "intent_family": "dedicated_game_server",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a processor for machine learning experimentation on the CPU without requiring a discrete accelerator.",
+      "intent_family": "cpu_machine_learning_experimentation",
+      "must": []
+    },
+    {
+      "query_text": "Need a CPU for code compilation and virtual machines in a portable workstation.",
+      "intent_family": "mobile_workstation_desktop_build",
+      "must": []
+    },
+    {
+      "query_text": "Find a processor for a compact home lab with virtualization, networking services, and monitoring.",
+      "intent_family": "compact_home_lab",
+      "must": []
+    },
+    {
+      "query_text": "I need a CPU that balances gaming, live streaming, and background recording on one PC.",
+      "intent_family": "all_in_one_gaming_streaming",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a processor for music production with many software instruments and low-latency audio.",
+      "intent_family": "music_production",
+      "must": []
+    },
+    {
+      "query_text": "Need a CPU for CAD, light simulation, and occasional rendering in a professional workstation.",
+      "intent_family": "cad_and_engineering_workstation",
+      "must": []
+    },
+    {
+      "query_text": "I want a processor for large spreadsheets and financial models with strong multitasking capability.",
+      "intent_family": "financial_productivity_workstation",
+      "must": []
+    },
+    {
+      "query_text": "Find a CPU for running several programming language toolchains and IDEs at once.",
+      "intent_family": "multi_toolchain_development",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a processor for a living-room PC that can handle games and media playback.",
+      "intent_family": "living_room_gaming_media_pc",
+      "must": []
+    },
+    {
+      "query_text": "Need a CPU for a compact build where motherboard compatibility matters more than maximum expansion.",
+      "intent_family": "compact_platform_compatibility",
+      "must": []
+    },
+    {
+      "query_text": "I need a processor for a long-lived upgrade path with a modern desktop socket.",
+      "intent_family": "future_upgrade_path",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a CPU that can handle simultaneous gaming, browser tabs, voice chat, and background applications.",
+      "intent_family": "gaming_multitasking",
+      "must": []
+    },
+    {
+      "query_text": "Find a processor for batch photo processing and occasional 4K video exports.",
+      "intent_family": "photo_video_creator_workstation",
+      "must": []
+    },
+    {
+      "query_text": "Need a CPU for a developer workstation that prioritizes compile times but must fit an existing motherboard.",
+      "intent_family": "existing_board_development_upgrade",
+      "must": []
+    },
+    {
+      "query_text": "I want a processor for a low-cost family PC that should cover schoolwork, streaming, and light games.",
+      "intent_family": "family_general_purpose_pc",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a CPU for a power-conscious desktop that runs office applications and occasional creative software.",
+      "intent_family": "power_conscious_general_desktop",
+      "must": []
+    },
+    {
+      "query_text": "Need a processor for a workstation build with many browser tabs, document editing, and background synchronization.",
+      "intent_family": "heavy_general_multitasking",
+      "must": []
+    },
+    {
+      "query_text": "Find a CPU for a small business desktop fleet where included cooling would simplify assembly.",
+      "intent_family": "business_desktop_standardization",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "I need a processor for a compact server build that supports an ATX motherboard and stays under 95 watts.",
+      "intent_family": "compact_server_power_constraint",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 95
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a CPU with at least 10 cores and at least 20 threads for mixed workstation workloads.",
+      "intent_family": "high_parallel_workstation",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 10
+        },
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 20
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

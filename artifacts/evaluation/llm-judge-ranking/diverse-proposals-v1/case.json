@@ -1,0 +1,673 @@
+{
+  "category": "case",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 3725,
+    "total_tokens": 4265,
+    "prompt_tokens": 540,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 505
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a mid-tower case for a gaming PC with room for a 340 mm graphics card.",
+      "intent_family": "gaming build with standard component clearance",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mid_tower"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 340
+        }
+      ]
+    },
+    {
+      "query_text": "Find a compact case that supports a Mini-ITX motherboard for a living-room gaming system.",
+      "intent_family": "space-conscious small form factor gaming build",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "small_form_factor"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a workstation around an E-ATX board and need a case that can accommodate it.",
+      "intent_family": "large motherboard workstation compatibility",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "e_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "What case should I look for to reuse my ATX motherboard in a quieter office PC?",
+      "intent_family": "quiet office upgrade using an existing motherboard",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a full-tower case for a multi-drive editing workstation with at least six drive bays.",
+      "intent_family": "high-storage professional workstation",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "full_tower"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case for a long 400 mm GPU and a full-size ATX motherboard.",
+      "intent_family": "high-clearance performance build",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 400
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a compact ATX case for a desktop that will sit on a small desk.",
+      "intent_family": "desk-space constrained ATX build",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a case with at least four drive bays for a home file server.",
+      "intent_family": "home server storage capacity",
+      "must": [
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Which case fits a 165 mm air cooler and a micro-ATX motherboard?",
+      "intent_family": "air-cooled micro-ATX compatibility",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 165
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a small case for a Mini-ITX travel PC, but the graphics card must be no longer than 220 mm.",
+      "intent_family": "portable gaming system with short GPU constraint",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "small_form_factor"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_text": "Find a mid-tower that can hold both ATX and micro-ATX boards for a future upgrade.",
+      "intent_family": "upgrade-flexible mainstream enclosure",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mid_tower"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I am replacing an old case and need one with at least three drive bays for several existing hard drives.",
+      "intent_family": "storage-oriented case replacement",
+      "must": [
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "What case works for a tall 180 mm CPU cooler without moving to a full tower?",
+      "intent_family": "tall air cooler clearance in a non-full-tower case",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 180
+        },
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mid_tower"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a full tower that supports both E-ATX and ATX motherboards for a flexible workstation build.",
+      "intent_family": "expandable professional motherboard platform",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "full_tower"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "e_atx"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I need the smallest practical case for a basic home office PC using a Mini-ITX board.",
+      "intent_family": "minimal-footprint office computer",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "small_form_factor"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a case that can fit a 360 mm graphics card and at least two storage drives.",
+      "intent_family": "gaming and storage balance",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 360
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I want an unobtrusive case for a living-room PC, but I am not sure which size is appropriate.",
+      "intent_family": "ambiguous living-room form factor selection",
+      "must": []
+    },
+    {
+      "query_text": "Find a case for an ATX motherboard with a graphics card up to 300 mm long.",
+      "intent_family": "mainstream ATX gaming compatibility",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_text": "Which enclosure is suitable for a dual-purpose gaming and video-editing PC with several large drives?",
+      "intent_family": "mixed gaming and content-creation expansion needs",
+      "must": []
+    },
+    {
+      "query_text": "I need a case no larger than a small-form-factor enclosure for a portable development machine.",
+      "intent_family": "portable developer workstation",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "small_form_factor"
+        }
+      ]
+    },
+    {
+      "query_text": "Look for a mid-tower with clearance for a 170 mm CPU cooler and a 350 mm GPU.",
+      "intent_family": "balanced high-clearance gaming build",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mid_tower"
+        },
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 170
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 350
+        }
+      ]
+    },
+    {
+      "query_text": "I need a case that supports a micro-ATX board and at least five drive bays for a small NAS.",
+      "intent_family": "compact network storage server",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case for a legacy ATX board that I can reuse in a budget gaming upgrade.",
+      "intent_family": "budget upgrade reusing an existing ATX platform",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "What is a good case for a very long 420 mm graphics card in a high-end gaming build?",
+      "intent_family": "extreme graphics card clearance",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 420
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a case with room for a 190 mm tower cooler and an ATX board.",
+      "intent_family": "oversized air cooling for ATX",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 190
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a full tower with at least eight drive bays for a media archive server.",
+      "intent_family": "large archival storage enclosure",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "full_tower"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case that is suitable for a compact workstation, but I have not decided between Mini-ITX and micro-ATX.",
+      "intent_family": "undecided compact workstation form factor",
+      "must": []
+    },
+    {
+      "query_text": "I want a case that keeps an existing 280 mm graphics card and micro-ATX motherboard usable during an upgrade.",
+      "intent_family": "component reuse in a compact upgrade",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Which case has at least two drive bays and supports a full-size ATX board for a home lab?",
+      "intent_family": "home lab expansion and storage",
+      "must": [
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a compact gaming case that accepts a 320 mm GPU but does not need multiple drive bays.",
+      "intent_family": "compact gaming with graphics clearance priority",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "small_form_factor"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 320
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case for a quiet productivity PC with a low-profile cooler, but I do not know whether Mini-ITX or micro-ATX is better.",
+      "intent_family": "ambiguous quiet small-office build",
+      "must": []
+    },
+    {
+      "query_text": "Search for an ATX case with at least seven drive bays for a local backup server.",
+      "intent_family": "high-capacity backup server",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a compact rendering workstation around a 155 mm CPU cooler and a 330 mm graphics card.",
+      "intent_family": "compact workstation with balanced thermal clearance",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 155
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 330
+        }
+      ]
+    },
+    {
+      "query_text": "What case should I use to move a micro-ATX gaming system into a smaller enclosure?",
+      "intent_family": "downsizing an existing gaming system",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a mid-tower that accepts an E-ATX motherboard for a professional desktop build.",
+      "intent_family": "E-ATX support in a conventional tower",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mid_tower"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "e_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case with at least six drive bays and enough room for a 360 mm GPU for a machine-learning workstation.",
+      "intent_family": "storage-heavy accelerator workstation",
+      "must": [
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 6
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 360
+        }
+      ]
+    },
+    {
+      "query_text": "I want a small-footprint case for a basic PC, but I may use either an ATX or micro-ATX motherboard.",
+      "intent_family": "uncertain mainstream compact form factor",
+      "must": []
+    },
+    {
+      "query_text": "Look for a case that can fit a 175 mm CPU cooler and a 380 mm graphics card for a future-proof gaming build.",
+      "intent_family": "future upgrade clearance for gaming components",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 175
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 380
+        }
+      ]
+    },
+    {
+      "query_text": "Which case is appropriate for an ATX-based streaming PC with at least four drive bays?",
+      "intent_family": "streaming system with storage expansion",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I need the smallest case that can house my Mini-ITX motherboard and a 250 mm graphics card.",
+      "intent_family": "minimum-volume Mini-ITX gaming enclosure",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "small_form_factor"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 250
+        }
+      ]
+    },
+    {
+      "query_text": "Find a full tower for a custom workstation where motherboard size, GPU length, and cooler height are all still undecided.",
+      "intent_family": "open-ended workstation enclosure selection",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "full_tower"
+        }
+      ]
+    },
+    {
+      "query_text": "I am converting a desktop into a file server and need an enclosure with at least ten drive bays.",
+      "intent_family": "maximum drive expansion for a file server",
+      "must": [
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a mid-tower that supports ATX and leaves room for a 160 mm CPU cooler.",
+      "intent_family": "standard ATX air-cooled build",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mid_tower"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 160
+        }
+      ]
+    },
+    {
+      "query_text": "I need a case for a compact office computer, but the required motherboard and storage capacity are not known yet.",
+      "intent_family": "underspecified office enclosure search",
+      "must": []
+    },
+    {
+      "query_text": "What case can support a 370 mm graphics card, a 180 mm cooler, and a micro-ATX motherboard for a gaming upgrade?",
+      "intent_family": "high-clearance compact gaming upgrade",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 370
+        },
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 180
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case with three or more drive bays for an ATX home-server build that may be expanded later.",
+      "intent_family": "expandable ATX home server",
+      "must": [
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a small-form-factor case for a silent-looking desktop, but the workload and component sizes are still undecided.",
+      "intent_family": "ambiguous low-footprint desktop selection",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

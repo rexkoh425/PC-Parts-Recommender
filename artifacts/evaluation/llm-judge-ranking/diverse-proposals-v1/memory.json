@@ -1,0 +1,822 @@
+{
+  "category": "memory",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 5587,
+    "total_tokens": 6123,
+    "prompt_tokens": 536,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 351
+    }
+  },
+  "queries": [
+    {
+      "query_text": "32GB DDR5 gaming memory kit with two modules, 6000 MT/s and CAS latency 30",
+      "intent_family": "high-performance gaming upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "eq",
+          "value": 6000
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "eq",
+          "value": 30
+        }
+      ]
+    },
+    {
+      "query_text": "64GB DDR5 RAM for a gaming and streaming PC, preferably as two modules",
+      "intent_family": "gaming and streaming capacity expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Affordable 32GB DDR4 memory kit for upgrading an older desktop",
+      "intent_family": "budget legacy-platform upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "128GB DDR5 memory for a workstation handling large creative projects",
+      "intent_family": "professional workstation capacity upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 128
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "16GB DDR4 RAM for a basic home and office desktop",
+      "intent_family": "entry-level everyday computing upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "32GB DDR5 memory with the lowest practical CAS latency for gaming",
+      "intent_family": "latency-focused gaming selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "DDR5 RAM rated at 6000 MT/s or faster for a new desktop build",
+      "intent_family": "speed-oriented new system build",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6000
+        }
+      ]
+    },
+    {
+      "query_text": "A 32GB memory kit that balances good gaming speed with reasonable latency",
+      "intent_family": "balanced gaming memory choice",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "Low-profile 32GB DDR5 memory less than 35mm tall for a compact CPU cooler",
+      "intent_family": "cooler-clearance constrained upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 35
+        }
+      ]
+    },
+    {
+      "query_text": "64GB DDR4 RAM using four modules for an existing motherboard",
+      "intent_family": "full-slot legacy capacity expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Two-module 32GB DDR5 kit for dual-channel desktop operation",
+      "intent_family": "dual-channel desktop upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "16GB DDR5 memory for a small upgrade while keeping the system responsive",
+      "intent_family": "modest modern-platform upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "96GB DDR5 RAM for a developer workstation running multiple virtual machines",
+      "intent_family": "virtualization capacity expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 96
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "DDR4 memory with at least 3200 MT/s for a productivity desktop",
+      "intent_family": "speed-conscious legacy productivity upgrade",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 3200
+        }
+      ]
+    },
+    {
+      "query_text": "32GB RAM with CAS latency no higher than 36 for a DDR5 gaming build",
+      "intent_family": "latency-bounded gaming build",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 36
+        }
+      ]
+    },
+    {
+      "query_text": "A single 16GB DDR4 memory module for adding capacity without replacing existing RAM",
+      "intent_family": "incremental single-module expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "Two 32GB modules totaling 64GB for a DDR5 content-creation workstation",
+      "intent_family": "large dual-module workstation upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "DDR4 RAM under 40mm tall for a desktop with a large air cooler",
+      "intent_family": "legacy cooler-clearance compatibility",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 40
+        }
+      ]
+    },
+    {
+      "query_text": "Fast 32GB memory for competitive gaming, with capacity more important than RGB lighting",
+      "intent_family": "performance-focused esports upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "DDR5 memory for a new PC when the desired capacity and speed are still undecided",
+      "intent_family": "early-stage modern platform research",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "A 32GB DDR4 kit with two modules and 3200 MT/s for a Ryzen upgrade",
+      "intent_family": "platform-preserving processor upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "eq",
+          "value": 3200
+        }
+      ]
+    },
+    {
+      "query_text": "64GB DDR5 memory with two modules and at least 5600 MT/s for gaming and editing",
+      "intent_family": "mixed-use high-capacity build",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 5600
+        }
+      ]
+    },
+    {
+      "query_text": "The largest DDR4 memory upgrade that fits a four-slot desktop motherboard",
+      "intent_family": "maximum legacy platform capacity search",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "Compact-height DDR5 RAM for a mini PC build where cooler clearance is limited",
+      "intent_family": "small-form-factor clearance search",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "32GB DDR5 RAM with CAS latency 32 or lower for a responsive gaming system",
+      "intent_family": "responsive gaming memory selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "A 48GB DDR5 kit for a workstation that needs more than 32GB but less than 64GB",
+      "intent_family": "intermediate-capacity workstation upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 48
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Two-module 16GB DDR4 kit for a basic dual-channel office computer",
+      "intent_family": "basic dual-channel office upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "DDR5 RAM at 7200 MT/s for experimenting with a high-speed enthusiast build",
+      "intent_family": "enthusiast overclocking-oriented search",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "eq",
+          "value": 7200
+        }
+      ]
+    },
+    {
+      "query_text": "32GB DDR4 memory with CAS latency 16 for an older gaming PC",
+      "intent_family": "low-latency legacy gaming upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "eq",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "Memory for a home server that prioritizes capacity and stability over maximum speed",
+      "intent_family": "home server capacity planning",
+      "must": []
+    },
+    {
+      "query_text": "A 32GB kit suitable for gaming now and future expansion later",
+      "intent_family": "upgrade-path-conscious gaming purchase",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "DDR5 RAM with two modules, no taller than 32mm, for a low-clearance build",
+      "intent_family": "dual-module low-clearance build",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "80GB DDR5 memory for running several development tools and containers",
+      "intent_family": "nonstandard capacity developer upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 80
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "A replacement 8GB DDR4 memory module for an aging desktop",
+      "intent_family": "single-module replacement",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "64GB DDR5 memory with CAS latency 36 or lower for a general-purpose workstation",
+      "intent_family": "high-capacity latency-bounded workstation build",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 36
+        }
+      ]
+    },
+    {
+      "query_text": "Memory for a refurbished office PC when the installed memory type is unknown",
+      "intent_family": "uncertain legacy system compatibility search",
+      "must": []
+    },
+    {
+      "query_text": "Two 16GB DDR5 modules rated for at least 6000 MT/s in a new gaming build",
+      "intent_family": "dual-module speed-focused gaming build",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6000
+        }
+      ]
+    },
+    {
+      "query_text": "32GB DDR4 memory with two modules and CAS latency no higher than 18",
+      "intent_family": "low-latency DDR4 upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 18
+        }
+      ]
+    },
+    {
+      "query_text": "The most capacity possible in DDR5 memory while using only two modules",
+      "intent_family": "two-module maximum-capacity search",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "A balanced 64GB memory kit for gaming, video editing, and everyday use",
+      "intent_family": "mixed-workload capacity selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "DDR5 memory under 30mm tall for a compact case with restricted CPU cooler clearance",
+      "intent_family": "ultra-low-profile modern memory search",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 30
+        }
+      ]
+    },
+    {
+      "query_text": "A 16GB DDR4 memory kit at 2666 MT/s to match an existing office PC",
+      "intent_family": "matched legacy memory replacement",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "eq",
+          "value": 2666
+        }
+      ]
+    },
+    {
+      "query_text": "96GB DDR5 memory using three modules for a specialized workstation configuration",
+      "intent_family": "unusual module-count workstation configuration",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 96
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "32GB memory for a gaming PC where compatibility with the motherboard matters more than raw speed",
+      "intent_family": "compatibility-first gaming upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "DDR5 RAM with 6400 MT/s and CAS latency 32 for an enthusiast gaming system",
+      "intent_family": "high-speed low-latency enthusiast gaming build",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "eq",
+          "value": 6400
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "A 24GB DDR4 upgrade for a system that needs more memory but has limited expansion room",
+      "intent_family": "constrained legacy capacity upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 24
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}
