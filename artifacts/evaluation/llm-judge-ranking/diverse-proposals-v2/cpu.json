@@ -1,0 +1,536 @@
+{
+  "category": "cpu",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2866,
+    "total_tokens": 3693,
+    "prompt_tokens": 827,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 323
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a CPU for a casual gaming PC that can also handle everyday browsing and schoolwork.",
+      "intent_family": "casual_gaming_and_everyday_use",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a processor for VR gaming with at least 8 cores and 16 threads.",
+      "intent_family": "vr_gaming_system_build",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "I want a CPU for an emulation-focused PC, but I need it to fit an AM4 motherboard.",
+      "intent_family": "emulation_platform_build",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a processor for a dedicated game development machine with at least 12 cores.",
+      "intent_family": "game_development_workstation",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_text": "Which CPU would suit a large spreadsheet and data-analysis computer without requiring a specific platform?",
+      "intent_family": "data_analysis_desktop",
+      "must": []
+    },
+    {
+      "query_text": "I am building a programming practice PC and want a processor with an included cooler.",
+      "intent_family": "programming_learning_pc",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "Find a CPU for a home photography backup and cataloging computer with a maximum 65W TDP.",
+      "intent_family": "photo_archive_desktop",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "query_text": "I need a processor for a small office accounting PC that supports an LGA1700 motherboard.",
+      "intent_family": "accounting_desktop_platform_fit",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA1700"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a CPU for a retro gaming build using an AM4 board and an included stock cooler.",
+      "intent_family": "retro_gaming_build",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "I want a processor for a home lab that needs to run several lightweight virtual machines, but I have not chosen a socket yet.",
+      "intent_family": "lightweight_virtual_machine_lab",
+      "must": []
+    },
+    {
+      "query_text": "Need a CPU for a digital signage PC with no more than 45W TDP.",
+      "intent_family": "digital_signage_low_heat_system",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 45
+        }
+      ]
+    },
+    {
+      "query_text": "Find a processor for an arcade cabinet build that supports AM5 motherboards.",
+      "intent_family": "arcade_cabinet_computer",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        }
+      ]
+    },
+    {
+      "query_text": "I am assembling a Linux desktop for command-line tools and want at least 6 cores.",
+      "intent_family": "linux_command_line_desktop",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "Which CPU is appropriate for a basic computer vision workstation if I do not have a fixed performance target?",
+      "intent_family": "computer_vision_workstation",
+      "must": []
+    },
+    {
+      "query_text": "I need a processor for a small form factor build with a 35W thermal limit.",
+      "intent_family": "small_form_factor_thermal_constraint",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 35
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a CPU to run a local database for personal projects, with at least 8 threads.",
+      "intent_family": "personal_database_host",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "I want a processor for a classroom computer lab that includes a cooler and works with LGA1200.",
+      "intent_family": "classroom_pc_lab_standard",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA1200"
+        },
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "Need a CPU for a game streaming capture appliance, but I am unsure whether the workload needs many cores.",
+      "intent_family": "game_capture_appliance",
+      "must": []
+    },
+    {
+      "query_text": "Find a processor for an archival file-compression workstation with at least 10 cores.",
+      "intent_family": "file_compression_workstation",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "query_text": "I am upgrading an AM5 system and need a CPU with a base clock of at least 3.5 GHz.",
+      "intent_family": "am5_clock_speed_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 3.5
+        }
+      ]
+    },
+    {
+      "query_text": "Which CPU should I choose for a kiosk computer that must stay under 30W TDP?",
+      "intent_family": "kiosk_thermal_limit",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 30
+        }
+      ]
+    },
+    {
+      "query_text": "I need a processor for an amateur radio digital-mode PC with an included cooler.",
+      "intent_family": "amateur_radio_desktop",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a CPU for a home automation controller that supports both AM4 and AM5 motherboards.",
+      "intent_family": "home_automation_controller",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a processor for a local generative-art interface, but the exact balance between CPU cores and GPU acceleration is unclear.",
+      "intent_family": "local_generative_art_host",
+      "must": []
+    },
+    {
+      "query_text": "Need a CPU for an educational robotics computer with at least 4 cores and a maximum 35W TDP.",
+      "intent_family": "educational_robotics_controller",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 35
+        }
+      ]
+    },
+    {
+      "query_text": "Find a processor for a home office PC that can use a motherboard with an LGA1851 socket.",
+      "intent_family": "home_office_platform_selection",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA1851"
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a dedicated audio transcription computer and need at least 16 threads.",
+      "intent_family": "audio_transcription_machine",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "Which CPU would work for a small digital art workstation if I want an included cooler and no more than 65W TDP?",
+      "intent_family": "digital_art_entry_workstation",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "query_text": "I need a processor for an old motherboard replacement, but I only know that it uses an AM3+ socket.",
+      "intent_family": "older_am3_plus_replacement",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM3+"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a CPU for a small retail point-of-sale computer with at least 2 cores.",
+      "intent_family": "retail_point_of_sale_system",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I want a processor for a local web-development sandbox that can run on a board supporting LGA1700 or LGA1851.",
+      "intent_family": "local_web_sandbox_platform_choice",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA1700"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA1851"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a CPU for a hobbyist operating-system build environment, with at least 8 cores and a base clock of 3.0 GHz.",
+      "intent_family": "operating_system_build_environment",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 3.0
+        }
+      ]
+    },
+    {
+      "query_text": "Find a processor for a compact backup appliance that must stay below 45W TDP and include a cooler.",
+      "intent_family": "compact_backup_appliance",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 45
+        },
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "I am choosing a CPU for a CAD learning computer and need at least 6 cores, but I have no socket preference.",
+      "intent_family": "cad_learning_desktop",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "Which processor is suitable for a local password-management and security-tools PC? I am undecided about the platform.",
+      "intent_family": "personal_security_tools_pc",
+      "must": []
+    },
+    {
+      "query_text": "I need a CPU for a home weather-station dashboard with a maximum 25W TDP.",
+      "intent_family": "weather_station_dashboard",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 25
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a processor for a used-parts gaming rebuild that fits an LGA1151 motherboard.",
+      "intent_family": "used_parts_gaming_rebuild",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA1151"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a CPU for a language-learning and video-call computer with an included cooler.",
+      "intent_family": "language_learning_video_call_pc",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "Need a processor for a small-scale scientific data exploration PC with at least 12 threads.",
+      "intent_family": "scientific_data_exploration",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_text": "Find a CPU for a portable LAN-party computer with no more than 65W TDP.",
+      "intent_family": "portable_lan_party_pc",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a home inventory and document-scanning PC that supports an AM5 motherboard.",
+      "intent_family": "home_document_scanning_system",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        }
+      ]
+    },
+    {
+      "query_text": "Which CPU should I consider for a hobby video-conferencing server when I do not know how many simultaneous users it will have?",
+      "intent_family": "hobby_video_conferencing_server",
+      "must": []
+    },
+    {
+      "query_text": "I need a processor for a motherboard refresh where the CPU must support at least 128GB of memory.",
+      "intent_family": "high_memory_platform_refresh",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a CPU for a retro operating-system compatibility test bench with at least 4 cores.",
+      "intent_family": "retro_software_test_bench",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I want a processor for a compact photo-scanning station with a base clock of at least 2.8 GHz and an included cooler.",
+      "intent_family": "compact_photo_scanning_station",
+      "must": [
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 2.8
+        },
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "Need a CPU for a home network monitoring computer that supports both micro ATX and mini ITX motherboards.",
+      "intent_family": "home_network_monitoring_platform",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

@@ -1,0 +1,546 @@
+{
+  "category": "case",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 3552,
+    "total_tokens": 4415,
+    "prompt_tokens": 863,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 872
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a case for a dual-system streaming setup with room for both an ATX gaming board and a Mini-ITX capture system.",
+      "intent_family": "dual-system streaming enclosure compatibility",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a case that can reuse my 280 mm graphics card in a compact desktop build.",
+      "intent_family": "reuse of a known short graphics card",
+      "must": [
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 280
+        }
+      ]
+    },
+    {
+      "query_text": "I want a low-profile office PC case that accepts a CPU cooler no taller than 70 mm.",
+      "intent_family": "low-profile processor cooling for an office system",
+      "must": [
+        {
+          "field": "maximum_cooler_height_mm",
+          "operator": "le",
+          "value": 70
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case for a media workstation that still has space for at least two optical drives.",
+      "intent_family": "optical-media workstation enclosure",
+      "must": [
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a classroom computer fleet and need a compact case that supports Mini-ITX motherboards.",
+      "intent_family": "standardized compact classroom desktop deployment",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a repair-friendly case for a small business PC, but I have not decided on the motherboard format yet.",
+      "intent_family": "serviceability-focused business desktop selection",
+      "must": []
+    },
+    {
+      "query_text": "I want a case that can sit vertically beside a monitor and fit a Micro-ATX motherboard.",
+      "intent_family": "vertical side-by-side desktop placement",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a dual-chamber case for a clean cable-managed build; the rest of the component sizes are undecided.",
+      "intent_family": "dual-chamber cable-management build",
+      "must": []
+    },
+    {
+      "query_text": "Find a compact case for a living-room emulation PC using a Mini-ITX board and a graphics card up to 250 mm long.",
+      "intent_family": "living-room emulation system with discrete graphics",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        },
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 250
+        }
+      ]
+    },
+    {
+      "query_text": "I need a case for a virtualization host that supports ATX and has at least four drive bays.",
+      "intent_family": "virtualization host with mixed compute and storage needs",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "My existing CPU cooler is 158 mm tall, so I need a compatible enclosure for an upgrade build.",
+      "intent_family": "reuse of a specific tower CPU cooler",
+      "must": [
+        {
+          "field": "maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 158
+        }
+      ]
+    },
+    {
+      "query_text": "I need a case that fits a 330 mm graphics card for a workstation refresh.",
+      "intent_family": "reuse of a long existing graphics card",
+      "must": [
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 330
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a slim desktop case for an integrated-graphics productivity computer with no fixed motherboard choice yet.",
+      "intent_family": "slim integrated-graphics productivity system",
+      "must": []
+    },
+    {
+      "query_text": "Find an enclosure for a multi-GPU compute machine; I am still deciding between ATX and larger motherboard formats.",
+      "intent_family": "multi-GPU compute enclosure selection",
+      "must": []
+    },
+    {
+      "query_text": "I want a case with room for three internal drive bays for a local media cataloging computer.",
+      "intent_family": "local media library storage expansion",
+      "must": [
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "Need a compact case for a point-of-sale workstation that supports Micro-ATX boards.",
+      "intent_family": "compact point-of-sale workstation deployment",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I am assembling a PC for music production and want a case with at least two drive bays, but cooling requirements are still open.",
+      "intent_family": "music-production desktop with modest storage expansion",
+      "must": [
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a case suitable for a wall-mounted hobby PC; motherboard size and component clearances are not decided.",
+      "intent_family": "wall-mounted hobby computer enclosure",
+      "must": []
+    },
+    {
+      "query_text": "I need a case for a compact photo-editing computer that supports Mini-ITX and a GPU at least 270 mm long.",
+      "intent_family": "small photo-editing workstation with discrete graphics",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        },
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 270
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case for a retro gaming build that can accommodate two front-accessible drive bays.",
+      "intent_family": "retro gaming system with legacy drive access",
+      "must": [
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I want an enclosure for a developer desktop that can use either Micro-ATX or ATX without committing to one board size.",
+      "intent_family": "cross-format developer desktop platform",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        },
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a case for a small accounting office PC with a graphics card no longer than 220 mm.",
+      "intent_family": "short-card office workstation compatibility",
+      "must": [
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "le",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for an enclosure for a classroom CAD lab where each system will use a 160 mm CPU cooler.",
+      "intent_family": "repeatable CAD lab hardware standardization",
+      "must": [
+        {
+          "field": "maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 160
+        }
+      ]
+    },
+    {
+      "query_text": "I need a case for a backup workstation that supports ATX and at least three internal drive bays.",
+      "intent_family": "backup workstation with board and storage compatibility",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case for a desk-side voice recording PC where low noise matters more than a particular size.",
+      "intent_family": "quiet audio recording enclosure selection",
+      "must": []
+    },
+    {
+      "query_text": "I want a case for a first PC build with a removable side panel and no preference yet for board size or graphics card length.",
+      "intent_family": "beginner-friendly enclosure discovery",
+      "must": []
+    },
+    {
+      "query_text": "Need a compact enclosure for a digital signage player using a Mini-ITX motherboard.",
+      "intent_family": "digital signage player deployment",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a case for a small robotics controller PC that can fit a graphics card up to 200 mm long.",
+      "intent_family": "robotics control computer with optional discrete graphics",
+      "must": [
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 200
+        }
+      ]
+    },
+    {
+      "query_text": "I need a case for a 3D-printing workstation with room for a CPU cooler at least 150 mm tall.",
+      "intent_family": "3D-printing workstation cooling compatibility",
+      "must": [
+        {
+          "field": "maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 150
+        }
+      ]
+    },
+    {
+      "query_text": "Find an enclosure for a home theater recording system with at least three drive bays and support for Micro-ATX.",
+      "intent_family": "home theater recording and storage system",
+      "must": [
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a case for a compact machine-learning desktop, but I have not selected the motherboard, GPU, or cooling approach.",
+      "intent_family": "early-stage machine-learning desktop enclosure search",
+      "must": []
+    },
+    {
+      "query_text": "Need a case that supports a full-size ATX board for a laboratory instrument controller.",
+      "intent_family": "laboratory instrument control workstation",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a small enclosure for a travel-friendly office PC with a graphics card limited to 240 mm.",
+      "intent_family": "travel-friendly office desktop with short graphics card",
+      "must": [
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "le",
+          "value": 240
+        }
+      ]
+    },
+    {
+      "query_text": "I need a case for a personal finance server with at least five drive bays.",
+      "intent_family": "personal finance data server storage layout",
+      "must": [
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "query_text": "Find a case for an educational Linux lab that supports both Mini-ITX and Micro-ATX boards.",
+      "intent_family": "multi-format educational Linux lab deployment",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        },
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a compact case for a kiosk computer with a CPU cooler clearance of at least 120 mm.",
+      "intent_family": "kiosk computer cooling compatibility",
+      "must": [
+        {
+          "field": "maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 120
+        }
+      ]
+    },
+    {
+      "query_text": "Need an enclosure for a computer-vision workstation that can accept a 310 mm graphics card and a Micro-ATX motherboard.",
+      "intent_family": "computer-vision workstation component compatibility",
+      "must": [
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 310
+        },
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a case for a home automation hub with two drive bays; I prefer a small desktop but have no exact size requirement.",
+      "intent_family": "home automation hub with local storage",
+      "must": [
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I need a case for a developer test bench that can hold a 145 mm CPU cooler and an ATX motherboard.",
+      "intent_family": "developer hardware test bench compatibility",
+      "must": [
+        {
+          "field": "maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 145
+        },
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an enclosure for a compact CAD viewer with a graphics card no longer than 260 mm.",
+      "intent_family": "compact CAD visualization system",
+      "must": [
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "le",
+          "value": 260
+        }
+      ]
+    },
+    {
+      "query_text": "I want a case for a museum exhibit PC that supports Mini-ITX and has no other fixed component requirements.",
+      "intent_family": "museum exhibit computer deployment",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a case for a small business database workstation with at least four drive bays and no commitment to a motherboard format.",
+      "intent_family": "small-business database workstation storage planning",
+      "must": [
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for an enclosure for a compact game-development PC that fits a 300 mm GPU and a 155 mm CPU cooler.",
+      "intent_family": "compact game-development workstation component fit",
+      "must": [
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 300
+        },
+        {
+          "field": "maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 155
+        }
+      ]
+    },
+    {
+      "query_text": "I need a case for a research data-acquisition PC with an ATX motherboard and at least two drive bays.",
+      "intent_family": "research data-acquisition workstation platform",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "drive_bays",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find a compact enclosure for a telemedicine workstation using a graphics card up to 230 mm long.",
+      "intent_family": "telemedicine workstation with compact graphics support",
+      "must": [
+        {
+          "field": "maximum_gpu_length_mm",
+          "operator": "le",
+          "value": 230
+        }
+      ]
+    },
+    {
+      "query_text": "I want a case for a personal web-development server, but the required motherboard size and storage layout are still undecided.",
+      "intent_family": "early-stage personal web server enclosure selection",
+      "must": []
+    },
+    {
+      "query_text": "Need an enclosure for a compact animation review PC that supports Micro-ATX and a CPU cooler at least 140 mm tall.",
+      "intent_family": "compact animation review workstation compatibility",
+      "must": [
+        {
+          "field": "supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        },
+        {
+          "field": "maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 140
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

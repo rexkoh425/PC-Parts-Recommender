@@ -1,0 +1,494 @@
+{
+  "category": "power_supply",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2690,
+    "total_tokens": 3509,
+    "prompt_tokens": 819,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 189
+    }
+  },
+  "queries": [
+    {
+      "query_text": "Need a power supply for a dual-CPU virtualization host with two EPS connectors and enough capacity for several storage drives.",
+      "intent_family": "dual-socket virtualization host connectivity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for an SFX-L power supply for a slim workstation case used for CAD and simulation.",
+      "intent_family": "slim workstation form-factor matching",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx_l"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a fully modular PSU for a custom water-cooled build so every cable can be routed individually.",
+      "intent_family": "fully modular liquid-cooled custom build",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 650W power supply for a home NAS with multiple hard drives and a low-power processor.",
+      "intent_family": "home NAS capacity selection",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 650
+        }
+      ]
+    },
+    {
+      "query_text": "Need an 80 Plus Platinum PSU for a machine that will run intensive workloads for long periods.",
+      "intent_family": "platinum-rated prolonged workload operation",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_platinum"
+        }
+      ]
+    },
+    {
+      "query_text": "What power supply should I use for an older tower case that may only accept a standard ATX unit?",
+      "intent_family": "legacy tower form-factor uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a semi-modular unit for a clean mid-tower build without paying for fully modular cabling.",
+      "intent_family": "semi-modular mid-tower assembly",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "semi_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 1000W PSU for a workstation with several PCIe cards, but I am unsure which connector layout is appropriate.",
+      "intent_family": "multi-card workstation capacity with connector uncertainty",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "Find a compact ATX power supply for a narrow tower that cannot use SFX units.",
+      "intent_family": "narrow-tower ATX compatibility",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a power supply with at least two EPS connectors for a motherboard with auxiliary CPU power inputs.",
+      "intent_family": "auxiliary CPU power connectivity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am assembling a silent home server and want a Gold-rated PSU, but the required wattage is not yet known.",
+      "intent_family": "quiet home-server efficiency selection",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_gold"
+        }
+      ]
+    },
+    {
+      "query_text": "What PSU is suitable for a rackmount storage system with a nonstandard chassis?",
+      "intent_family": "rackmount storage power compatibility uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 750W fully modular power supply for a graphics workstation that also runs several USB-powered peripherals.",
+      "intent_family": "peripheral-heavy graphics workstation capacity",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 750
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "Need an SFX power supply for a console-style enclosure used as a lightweight development PC.",
+      "intent_family": "console-style development PC sizing",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a Bronze-rated PSU for a family computer used for web browsing, schoolwork, and occasional photo organization.",
+      "intent_family": "basic family computer efficiency selection",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_bronze"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 1200W power supply for a machine with several hard drives and accelerator cards, but I am uncertain about case fit.",
+      "intent_family": "accelerator and storage system capacity with chassis uncertainty",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 1200
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a fixed-cable PSU for a simple build where modular connectors are not important.",
+      "intent_family": "fixed-cable simplicity preference",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "non_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "What power supply works for a dual-boot developer machine with a discrete GPU and occasional long compiles?",
+      "intent_family": "developer workstation workload sizing",
+      "must": []
+    },
+    {
+      "query_text": "Need an 850W Gold power supply for a tower used for 3D rendering and software development.",
+      "intent_family": "mixed rendering and development capacity",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 850
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_gold"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a low-profile power supply for a horizontal desktop chassis used under a monitor.",
+      "intent_family": "horizontal desktop chassis compatibility",
+      "must": []
+    },
+    {
+      "query_text": "I want a fully modular 550W PSU for a compact home lab with one processor and several network cards.",
+      "intent_family": "compact home-lab modular networking build",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 550
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "Need an ATX PSU rated for 80 Plus Titanium efficiency for an energy-conscious personal server.",
+      "intent_family": "titanium-rated personal server operation",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_titanium"
+        }
+      ]
+    },
+    {
+      "query_text": "What power supply should I choose for a workstation with an unusually large number of SATA drives?",
+      "intent_family": "high-drive-count workstation planning",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 700W semi-modular PSU for a general-purpose tower with a discrete graphics card.",
+      "intent_family": "semi-modular general tower selection",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 700
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "semi_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a redundant-style power setup for a business desktop, but I do not know whether the chassis supports a special PSU format.",
+      "intent_family": "business desktop redundancy compatibility uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "Find a 1600W power supply for a specialized machine with several high-draw expansion cards.",
+      "intent_family": "specialized expansion-card capacity",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 1600
+        }
+      ]
+    },
+    {
+      "query_text": "Need a compact PSU for an embedded industrial computer where the enclosure dimensions are not yet confirmed.",
+      "intent_family": "embedded industrial enclosure uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "I want an 80 Plus Silver power supply for a machine that spends much of the day compiling code.",
+      "intent_family": "silver-rated developer workstation operation",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_silver"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 450W PSU for a low-power router and firewall appliance with several Ethernet interfaces.",
+      "intent_family": "network appliance power sizing",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 450
+        }
+      ]
+    },
+    {
+      "query_text": "What modularity level is best for a repairable field workstation that may need parts replaced frequently?",
+      "intent_family": "serviceable field workstation cabling",
+      "must": []
+    },
+    {
+      "query_text": "Need an SFX-L 800W power supply for a compact machine with a professional graphics card.",
+      "intent_family": "SFX-L professional graphics system sizing",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx_l"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 800
+        }
+      ]
+    },
+    {
+      "query_text": "Find a PSU with exactly one EPS connector for a conventional single-socket motherboard.",
+      "intent_family": "single-socket CPU power connectivity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "I am choosing a power supply for a backup server and need to balance lower efficiency losses against a limited chassis space.",
+      "intent_family": "backup-server efficiency versus chassis tradeoff",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 900W fully modular PSU for a digital-audio workstation with several internal drives and interface cards.",
+      "intent_family": "digital-audio workstation expansion capacity",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 900
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a power supply for a workstation that will be moved between offices, so weight and connector flexibility both matter.",
+      "intent_family": "portable workstation power tradeoff",
+      "must": []
+    },
+    {
+      "query_text": "What PSU should I use in a tower with an unusually deep cable-routing channel behind the motherboard tray?",
+      "intent_family": "deep-cable-channel tower selection",
+      "must": []
+    },
+    {
+      "query_text": "Find a 1300W 80 Plus Gold power supply for a professional simulation computer with multiple accelerator cards.",
+      "intent_family": "professional simulation accelerator capacity",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 1300
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_gold"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a non-modular 600W PSU for a tightly enclosed office tower where unused cables can remain out of the way.",
+      "intent_family": "non-modular enclosed office tower selection",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 600
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "non_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a power supply for a laboratory PC that may alternate between low idle power and short high-load bursts.",
+      "intent_family": "laboratory burst-load power planning",
+      "must": []
+    },
+    {
+      "query_text": "Need an 80 Plus Gold SFX power supply for a small machine used for remote desktop access and local testing.",
+      "intent_family": "Gold-rated SFX test machine",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_gold"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        }
+      ]
+    },
+    {
+      "query_text": "What power supply fits a custom enclosure built around a removable industrial backplane?",
+      "intent_family": "custom industrial enclosure compatibility",
+      "must": []
+    },
+    {
+      "query_text": "Find a 1050W semi-modular PSU for a workstation with a high-end CPU, several NVMe drives, and a capture card.",
+      "intent_family": "capture-enabled workstation capacity",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 1050
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "semi_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "I need help selecting a PSU for a computer that will alternate between machine learning experiments and ordinary office use.",
+      "intent_family": "variable machine-learning and office workload planning",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 500W ATX power supply for a small business file server with modest storage expansion.",
+      "intent_family": "small-business file-server sizing",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a fully modular PSU for a custom open-frame computer where components may be rearranged often.",
+      "intent_family": "reconfigurable open-frame computer cabling",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "What power supply is appropriate for an older workstation motherboard when its CPU power connector requirements are unclear?",
+      "intent_family": "older workstation connector uncertainty",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

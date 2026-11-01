@@ -1,0 +1,487 @@
+{
+  "category": "memory",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 3099,
+    "total_tokens": 3917,
+    "prompt_tokens": 818,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 452
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need memory for a photo-editing PC that handles large RAW catalogs and layered 4K projects without relying heavily on the page file.",
+      "intent_family": "creative_media_memory_expansion",
+      "must": []
+    },
+    {
+      "query_text": "Find RAM for a compact living-room PC where the modules must stay under 32 mm tall because of the CPU cooler.",
+      "intent_family": "compact_case_height_constrained_memory",
+      "must": [
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a DDR5 system and want a matched 2-module kit totaling 64GB for general gaming and application use.",
+      "intent_family": "matched_ddr5_capacity_build",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Which memory would suit a machine used for compiling large software projects and running several IDEs at once?",
+      "intent_family": "software_development_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I need a 16GB replacement module for an older desktop that currently has one failed stick.",
+      "intent_family": "legacy_failure_replacement",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "Recommend memory for a gaming PC that also records gameplay locally, with enough capacity for the game, recording software, and browser tabs.",
+      "intent_family": "local_recording_multitask_memory",
+      "must": []
+    },
+    {
+      "query_text": "Find desktop RAM for a motherboard that accepts DDR4 and has four memory slots; I want room to add more later.",
+      "intent_family": "future_expandability_memory_search",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "I am replacing memory in an office mini PC and need modules compatible with its small motherboard, but I do not know the exact board model.",
+      "intent_family": "uncertain_mini_pc_memory_compatibility",
+      "must": []
+    },
+    {
+      "query_text": "What memory should I choose for a PC used to edit long-form 1080p video and export projects while multitasking?",
+      "intent_family": "video_editing_multitask_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I want a 32GB DDR4 kit for a home gaming computer, prioritizing reliable everyday operation over extreme tuning.",
+      "intent_family": "reliability_oriented_ddr4_gaming_choice",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "Find RAM for a small workstation that will run large spreadsheets, database tools, and several business applications simultaneously.",
+      "intent_family": "business_data_analysis_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I need memory for an older Intel desktop and would prefer a matched pair rather than mixing the existing sticks.",
+      "intent_family": "matched_pair_legacy_replacement",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Recommend RAM for a gaming laptop, but I am unsure whether it uses DDR4 or DDR5 and do not have the model number handy.",
+      "intent_family": "ambiguous_laptop_memory_identification",
+      "must": []
+    },
+    {
+      "query_text": "I am assembling a quiet PC and need memory that will not interfere with a large tower air cooler.",
+      "intent_family": "air_cooler_interference_avoidance",
+      "must": []
+    },
+    {
+      "query_text": "Find a 128GB memory kit for a machine that will process large datasets locally and keep multiple analysis tools open.",
+      "intent_family": "large_dataset_local_processing_memory",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "I want two memory modules for a new desktop, but the motherboard documentation only lists a maximum supported speed rather than a preferred kit.",
+      "intent_family": "documentation_limited_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "What RAM makes sense for a family PC used for web browsing, schoolwork, video calls, and light photo organization?",
+      "intent_family": "family_multitask_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I need a single 8GB stick for a basic desktop that currently has an empty memory slot.",
+      "intent_family": "basic_single_stick_addition",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "Find memory for a PC used with several Android emulators at the same time, where capacity matters more than maximum frequency.",
+      "intent_family": "emulator_concurrency_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I am building a silent media server and want RAM suitable for handling multiple streams and background file indexing.",
+      "intent_family": "media_server_multistream_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "Recommend a 64GB DDR4 kit for a system that runs simulation software and large engineering files, without assuming any particular speed.",
+      "intent_family": "engineering_simulation_capacity_selection",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "I need laptop memory for an older notebook used for travel work, but I only know that it has two memory slots.",
+      "intent_family": "older_notebook_memory_research",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find RAM for a PC that will host several containers and development services, with a preference for leaving some capacity unused for growth.",
+      "intent_family": "container_host_growth_planning",
+      "must": []
+    },
+    {
+      "query_text": "I want a 16GB DDR5 memory kit for a small everyday desktop, using two modules to populate the board evenly.",
+      "intent_family": "small_ddr5_everyday_build",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Which memory should I buy for a PC that will run a digital audio workstation with many software instruments and effects?",
+      "intent_family": "digital_audio_production_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I need replacement RAM for a desktop whose existing module is labeled PC4-25600, and I want the replacement to match the memory generation.",
+      "intent_family": "label_based_memory_generation_match",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a memory kit for a board with only two slots where I want to reach 32GB without leaving either slot unused.",
+      "intent_family": "two_slot_capacity_planning",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am upgrading a family desktop from 8GB and want a clear path to more memory later, but I have not chosen the final capacity yet.",
+      "intent_family": "open_ended_memory_roadmap",
+      "must": []
+    },
+    {
+      "query_text": "Recommend RAM for a PC that will run several virtual machines occasionally, but not as a dedicated virtualization host.",
+      "intent_family": "occasional_virtual_machine_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I need memory for an AM5 motherboard and want modules listed as compatible with that socket.",
+      "intent_family": "socket_specific_memory_compatibility",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find RAM for a micro-ATX board that must be listed as compatible with the motherboard size.",
+      "intent_family": "motherboard_size_compatibility_filter",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I am choosing memory for a first-time PC build and cannot tell whether more capacity or faster modules will help my mix of games and school applications.",
+      "intent_family": "uncertain_capacity_speed_tradeoff",
+      "must": []
+    },
+    {
+      "query_text": "What memory should I use in a PC for machine-learning experimentation where datasets may exceed available system memory?",
+      "intent_family": "machine_learning_dataset_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I want a 32GB kit made of four modules because the motherboard manual recommends filling all four channels for this platform.",
+      "intent_family": "four_module_population_requirement",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Find desktop memory for a computer that will be transported frequently, with a preference for modules that do not extend far above the motherboard.",
+      "intent_family": "transport_friendly_low_profile_memory",
+      "must": []
+    },
+    {
+      "query_text": "I need RAM for a Linux desktop used for compiling, browsing documentation, and running local test environments at the same time.",
+      "intent_family": "linux_development_multitask_memory",
+      "must": []
+    },
+    {
+      "query_text": "Recommend a 96GB kit for a workstation that needs more than 64GB but does not require the largest available capacity.",
+      "intent_family": "intermediate_high_capacity_workstation_memory",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 96
+        }
+      ]
+    },
+    {
+      "query_text": "I am replacing all memory in an older desktop and want the new modules to use the same DDR3 generation as the motherboard.",
+      "intent_family": "complete_ddr3_memory_replacement",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr3"
+        }
+      ]
+    },
+    {
+      "query_text": "Find RAM for a PC that will run modded games with large texture packs and many background applications, but I have no fixed capacity target.",
+      "intent_family": "modded_gaming_memory_research",
+      "must": []
+    },
+    {
+      "query_text": "I need a 2-module 16GB kit for a compact desktop, and each module must be no taller than 30 mm.",
+      "intent_family": "compact_two_module_memory_fit",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 30
+        }
+      ]
+    },
+    {
+      "query_text": "Which RAM is appropriate for a personal finance PC that keeps large spreadsheets, browser windows, and reporting tools open all day?",
+      "intent_family": "financial_productivity_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I want DDR5 memory for a new PC but am unsure whether to choose one large module or a matched pair.",
+      "intent_family": "uncertain_module_configuration_build",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 64GB kit with a rated speed of at least 6000 MT/s for a new desktop build.",
+      "intent_family": "high_throughput_capacity_build",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6000
+        }
+      ]
+    },
+    {
+      "query_text": "I need memory for a PC used to run several browser profiles and web-based tools for online research, with no gaming requirement.",
+      "intent_family": "browser_profile_multitasking_memory",
+      "must": []
+    },
+    {
+      "query_text": "Recommend RAM for a home lab where the motherboard model is known but the vendor compatibility list is incomplete.",
+      "intent_family": "incomplete_vendor_list_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I am looking for a 2-module DDR4 kit with CAS latency no higher than 18 for a general-purpose desktop.",
+      "intent_family": "cas_bounded_ddr4_desktop_choice",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 18
+        }
+      ]
+    },
+    {
+      "query_text": "Find memory for a PC that will alternate between office work, light game development, and occasional video exports, where the best capacity balance is unclear.",
+      "intent_family": "mixed_creative_productivity_tradeoff",
+      "must": []
+    },
+    {
+      "query_text": "I need a 4GB DDR3 module for an old office computer that has one empty slot and is not being used for demanding software.",
+      "intent_family": "minimal_legacy_capacity_addition",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr3"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

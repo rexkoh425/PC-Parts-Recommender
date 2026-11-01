@@ -1,0 +1,374 @@
+{
+  "category": "gpu",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2463,
+    "total_tokens": 3268,
+    "prompt_tokens": 805,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 609
+    }
+  },
+  "queries": [
+    {
+      "query_text": "GPU for a VR flight simulator using a high-resolution headset and demanding cockpit scenery",
+      "intent_family": "virtual-reality simulation graphics",
+      "must": []
+    },
+    {
+      "query_text": "GPU for CAD assemblies and engineering visualization where viewport smoothness matters more than gaming features",
+      "intent_family": "engineering CAD visualization",
+      "must": []
+    },
+    {
+      "query_text": "GPU for GIS and 3D terrain mapping with large datasets displayed interactively",
+      "intent_family": "geospatial visualization",
+      "must": []
+    },
+    {
+      "query_text": "GPU for scientific visualization of volumetric data and simulation results on a desktop workstation",
+      "intent_family": "scientific visualization",
+      "must": []
+    },
+    {
+      "query_text": "GPU for Linux gaming with reliable support for current Vulkan titles",
+      "intent_family": "Linux gaming compatibility",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a quiet workstation build where low acoustic output is more important than maximum performance",
+      "intent_family": "quiet workstation selection",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a silent living-room editing system that should avoid a large triple-fan cooler",
+      "intent_family": "quiet media workstation",
+      "must": []
+    },
+    {
+      "query_text": "GPU for OBS scene composition and hardware video encoding on a dedicated broadcast PC",
+      "intent_family": "dedicated broadcast encoding",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a digital signage controller driving several displays across a retail information wall",
+      "intent_family": "commercial multi-display deployment",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a color-critical photography workstation with multiple high-resolution monitors",
+      "intent_family": "multi-monitor photo workstation",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a remote desktop workstation where responsive 3D application interaction is needed over a network",
+      "intent_family": "remote 3D workstation",
+      "must": []
+    },
+    {
+      "query_text": "GPU for an offline architectural walkthrough system with a focus on stable viewport operation",
+      "intent_family": "architectural walkthrough visualization",
+      "must": []
+    },
+    {
+      "query_text": "GPU for medical image visualization and interactive volumetric scan review",
+      "intent_family": "medical imaging visualization",
+      "must": []
+    },
+    {
+      "query_text": "GPU for astronomy image processing and interactive display of large sky survey data",
+      "intent_family": "astronomical data visualization",
+      "must": []
+    },
+    {
+      "query_text": "GPU for cryptocurrency hashing experiments where software support is more important than gaming performance",
+      "intent_family": "specialized hashing compute",
+      "must": []
+    },
+    {
+      "query_text": "GPU for OpenCL-based engineering tools with uncertain vendor-specific acceleration requirements",
+      "intent_family": "vendor-neutral engineering compute",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a local scientific-computing workstation, but the application vendor has not specified a preferred architecture",
+      "intent_family": "underspecified scientific compute selection",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a PCIe expansion card layout where the graphics card must leave room for adjacent add-in cards",
+      "intent_family": "adjacent expansion planning",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a motherboard with limited PCIe slot spacing and no room for a thick cooler",
+      "intent_family": "restricted slot-spacing compatibility",
+      "must": []
+    },
+    {
+      "query_text": "GPU replacement for an aging card while keeping the existing power connectors and case layout",
+      "intent_family": "connector-compatible graphics replacement",
+      "must": []
+    },
+    {
+      "query_text": "GPU upgrade for a system whose power supply has only one available 8-pin PCIe connector",
+      "intent_family": "single-cable power compatibility",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a compact office tower with a 245 mm graphics-card clearance limit",
+      "intent_family": "office tower clearance upgrade",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 245
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a workstation that accepts only a single-slot graphics card",
+      "intent_family": "single-slot workstation compatibility",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a dual-slot case with no space for a three-slot cooler",
+      "intent_family": "dual-slot enclosure compatibility",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a build with a 300 watt board-power ceiling",
+      "intent_family": "board-power-limited performance selection",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a passively cooled or very low-noise system with a board power limit of 150 watts",
+      "intent_family": "low-thermal-load graphics selection",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 150
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with at least 16GB of VRAM for large procedural scenes and simulation previews",
+      "intent_family": "large procedural scene capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with 8GB of VRAM for a budget-conscious 1080p game-development test machine",
+      "intent_family": "game-development test capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with 24GB of VRAM for large offline scientific datasets, without assuming a particular application",
+      "intent_family": "large scientific dataset capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_text": "GPU using GDDR6 memory for a workstation refresh that should avoid older memory standards",
+      "intent_family": "modern memory-standard upgrade",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr6"
+        }
+      ]
+    },
+    {
+      "query_text": "GPU using GDDR6X memory for a bandwidth-sensitive desktop graphics build",
+      "intent_family": "advanced graphics-memory selection",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr6x"
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with a 256-bit memory bus for a data-heavy visualization workstation",
+      "intent_family": "wide-bus visualization selection",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 256
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with a memory bus no wider than 192 bits for a system with conservative board complexity goals",
+      "intent_family": "moderate-bus system design",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "le",
+          "value": 192
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a legacy DirectX application that does not need modern gaming features",
+      "intent_family": "legacy application continuity",
+      "must": []
+    },
+    {
+      "query_text": "GPU for an emulation-focused PC running older consoles at high internal resolutions",
+      "intent_family": "emulation graphics acceleration",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a home lab used to test graphics APIs and shader code across several operating systems",
+      "intent_family": "graphics API development",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a software developer who needs to reproduce rendering bugs on a current desktop platform",
+      "intent_family": "rendering software diagnostics",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a digital art workstation where pen-display responsiveness matters more than 3D rendering speed",
+      "intent_family": "2D digital art workstation",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a photo booth and event-production computer that needs dependable display output during long sessions",
+      "intent_family": "event-production display reliability",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a kiosk application with uncertain acceleration requirements and strict physical installation rules",
+      "intent_family": "kiosk deployment under uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a backup workstation that should match an existing system's VRAM capacity without selecting by game benchmarks",
+      "intent_family": "capacity-matched workstation replacement",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a mixed operating-system lab where driver availability across Windows and Linux is a deciding factor",
+      "intent_family": "cross-platform driver selection",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a PCIe workstation upgrade where the card must remain below 220 watts and fit in a two-slot position",
+      "intent_family": "constrained workstation retrofit",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 220
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a compact server chassis with 200 mm of card clearance and a single-slot limit",
+      "intent_family": "short single-slot server graphics",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 200
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a workstation upgrade requiring at least 12GB of VRAM while staying under 250 watts",
+      "intent_family": "moderate-power memory upgrade",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 250
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with at least 16GB of VRAM, a 256-bit-or-wider bus, and a card length under 320 mm",
+      "intent_family": "high-capacity constrained workstation graphics",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 256
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 320
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a compatibility-sensitive replacement where the computer model and available power connectors are not known",
+      "intent_family": "underspecified compatibility replacement",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

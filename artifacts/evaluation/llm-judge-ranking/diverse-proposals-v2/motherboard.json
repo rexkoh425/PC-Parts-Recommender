@@ -1,0 +1,674 @@
+{
+  "category": "motherboard",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 3469,
+    "total_tokens": 4502,
+    "prompt_tokens": 1033,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 248
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a motherboard for a quiet home office PC using an Intel processor and DDR5 memory.",
+      "intent_family": "quiet office platform selection with unspecified expansion needs",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a full-size motherboard for a dual-purpose gaming and video-editing PC with four memory slots.",
+      "intent_family": "full-size hybrid gaming and media-production platform",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I want a motherboard that supports an AMD AM5 processor and has at least two M.2 slots for a new build.",
+      "intent_family": "AM5 multi-drive platform selection",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Which motherboard should I choose for a small Intel office PC if I need two SATA drives and DDR4 memory?",
+      "intent_family": "small Intel office system with retained SATA storage",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a high-memory data-analysis workstation and need a motherboard supporting at least 128GB of RAM.",
+      "intent_family": "high-capacity memory platform for data analysis",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "Find a motherboard for a compact living-room PC that fits a Mini-ITX case and uses DDR5.",
+      "intent_family": "compact media PC platform with current memory",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a motherboard for an AM4 processor with four DIMM slots so I can reuse my existing CPU and expand memory later.",
+      "intent_family": "AM4 memory-layout upgrade planning",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "What motherboard works for a small-form-factor Intel gaming PC with one M.2 drive and no need for multiple storage devices?",
+      "intent_family": "minimal-storage small-form-factor Intel gaming build",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "I am unsure whether I should use AMD or Intel, but I want a motherboard for a reliable family desktop.",
+      "intent_family": "processor-platform discovery for a family desktop",
+      "must": []
+    },
+    {
+      "query_text": "Find an ATX motherboard with six or more SATA ports for a media archive computer.",
+      "intent_family": "large SATA archive platform",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "I want a motherboard for a compact content-creation PC with at least three M.2 slots and four memory slots.",
+      "intent_family": "compact creator platform balancing fast storage and memory expansion",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Which motherboard should I buy for a Ryzen 5000 processor if I want to keep the system inexpensive and use DDR4?",
+      "intent_family": "cost-conscious older AMD processor reuse",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a motherboard for an Intel processor in a micro-ATX case, with room for at least 64GB of memory.",
+      "intent_family": "moderate-memory micro-ATX Intel system",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "Find a motherboard for a laboratory computer that can use an AMD AM5 processor and four SATA drives.",
+      "intent_family": "AM5 laboratory system with mixed local storage",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I am replacing a damaged motherboard and need the same socket and DDR4 memory support, but I do not know the exact model yet.",
+      "intent_family": "uncertain replacement matching existing processor and memory",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "What motherboard is suitable for a four-monitor trading workstation with an Intel CPU and two M.2 drives?",
+      "intent_family": "multi-display workstation platform with dual fast storage",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I want a motherboard for a compact AMD home-theater PC that uses Mini-ITX and has two memory slots.",
+      "intent_family": "small AMD home-theater platform with constrained memory layout",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find a motherboard for an AMD processor with support for at least 192GB of memory for a large software project.",
+      "intent_family": "very-high-memory AMD development platform",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 192
+        }
+      ]
+    },
+    {
+      "query_text": "I need a motherboard for an Intel CPU and DDR5 memory in a standard ATX gaming case, but I am undecided about storage.",
+      "intent_family": "Intel gaming platform selection with unresolved storage priorities",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Which motherboard fits a micro-ATX case and provides at least three SATA ports for a small photo-backup computer?",
+      "intent_family": "micro-ATX photo backup system with modest SATA capacity",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a dual-boot Linux and Windows machine and need a motherboard with two M.2 slots and DDR5 support.",
+      "intent_family": "dual-boot desktop with separated fast-storage devices",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an AMD motherboard for a tower PC that can start with 32GB of RAM and later reach at least 128GB.",
+      "intent_family": "staged AMD memory expansion planning",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "I need a motherboard for a small Intel machine where case space matters more than having many expansion options.",
+      "intent_family": "space-prioritized Intel compact build selection",
+      "must": []
+    },
+    {
+      "query_text": "What motherboard should I use for a machine with one NVMe drive, four hard drives, and an unspecified processor?",
+      "intent_family": "mixed-storage platform selection before CPU choice",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I want a motherboard with four memory slots for a future-proofed DDR5 family workstation.",
+      "intent_family": "DDR5 workstation memory expansion planning",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Find a motherboard for an AM4 office computer that needs at least 64GB of DDR4 memory.",
+      "intent_family": "AM4 office system with moderate memory capacity",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "I need a Mini-ITX motherboard for a portable computer with a single SATA SSD and no requirement for extra drives.",
+      "intent_family": "portable Mini-ITX system with minimal legacy storage",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "Which motherboard is appropriate for a home automation computer when low power and exact processor compatibility are not yet decided?",
+      "intent_family": "home automation platform discovery under incomplete specifications",
+      "must": []
+    },
+    {
+      "query_text": "I am building a micro-ATX AMD machine and want at least two M.2 slots without using a full-size board.",
+      "intent_family": "micro-ATX AMD fast-storage expansion",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find an Intel motherboard with six memory slots for a specialized workstation.",
+      "intent_family": "Intel workstation with unusually large memory-module layout",
+      "must": [
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "I need a motherboard for a DDR4 gaming PC that will use three SATA drives and one M.2 drive.",
+      "intent_family": "older-memory gaming build with mixed storage",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "What motherboard should I choose for a compact Intel editing computer if I need at least 96GB of memory?",
+      "intent_family": "compact Intel editing platform with elevated memory capacity",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 96
+        }
+      ]
+    },
+    {
+      "query_text": "I am planning a new AMD desktop but have not decided whether I need ATX or micro-ATX; I mainly want dependable compatibility.",
+      "intent_family": "AMD desktop platform discovery before size commitment",
+      "must": []
+    },
+    {
+      "query_text": "Find an ATX motherboard for a long-term storage workstation with at least eight SATA ports.",
+      "intent_family": "ATX archival workstation with extensive SATA connectivity",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "I want a motherboard that accepts an Intel processor, DDR5 memory, and at least 2TB of total memory capacity for a research machine.",
+      "intent_family": "Intel research platform with extreme memory ceiling",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 2048
+        }
+      ]
+    },
+    {
+      "query_text": "Which motherboard fits an AM5 processor in a micro-ATX case while retaining four DIMM slots?",
+      "intent_family": "AM5 micro-ATX platform with full memory-slot expansion",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I need a motherboard for a small business file server with two M.2 drives and six SATA drives, but the CPU platform is undecided.",
+      "intent_family": "file-server storage planning before processor selection",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "Find a motherboard for an Intel processor that can fit a standard ATX case and use four DDR4 memory modules.",
+      "intent_family": "Intel DDR4 tower build with full memory population",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I am choosing a board for a VR development PC and need three M.2 slots, but I have not selected AMD or Intel yet.",
+      "intent_family": "fast-storage platform discovery for development work",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "What motherboard works for an AM4 processor in a full-size case with at least six SATA ports?",
+      "intent_family": "AM4 full-tower storage-oriented system",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "I need a motherboard for a compact DDR5 machine with no more than two memory slots because the system will remain small.",
+      "intent_family": "compact DDR5 build with deliberately limited memory layout",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "le",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find a motherboard for a home lab that supports an Intel CPU, at least 128GB of memory, and four M.2 drives.",
+      "intent_family": "Intel home-lab platform balancing high memory and fast storage",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I am replacing an old motherboard in a micro-ATX computer and need to preserve DDR4 memory, but the processor model is uncertain.",
+      "intent_family": "uncertain compact replacement while retaining existing memory",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "Which motherboard should I use for an AMD media server with one M.2 boot drive and eight SATA storage drives?",
+      "intent_family": "AMD media server with boot and bulk-storage separation",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "I want an Intel motherboard for a compact gaming and streaming PC that supports at least 64GB of DDR5 memory.",
+      "intent_family": "compact Intel gaming-streaming platform with moderate DDR5 capacity",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "Find a motherboard for a general-purpose computer where I care about upgrade flexibility but have not fixed the CPU, case size, or memory generation.",
+      "intent_family": "open-ended upgrade-flexibility platform discovery",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

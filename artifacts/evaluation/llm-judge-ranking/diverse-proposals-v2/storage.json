@@ -1,0 +1,557 @@
+{
+  "category": "storage",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2794,
+    "total_tokens": 3561,
+    "prompt_tokens": 767,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 269
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a fast NVMe drive for a virtual machine host, with at least 2TB of capacity and an M.2 2280 form factor.",
+      "intent_family": "virtualization host storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        },
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 4TB SATA hard drive for a desktop database that writes continuously.",
+      "intent_family": "database workload storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Need an M.2 NVMe boot drive for a Linux PC, preferably around 1TB.",
+      "intent_family": "Linux boot-drive selection",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "What storage should I add to a PC used for running several local containers and development services?",
+      "intent_family": "container-host storage discovery",
+      "must": []
+    },
+    {
+      "query_text": "I want a quiet 2.5-inch SATA SSD for a home theater PC used for playback and light file storage.",
+      "intent_family": "quiet home-theater PC storage",
+      "must": [
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 2TB internal SSD for a PC that runs large GIS datasets and mapping software.",
+      "intent_family": "geospatial data workstation storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "Need a 3.5-inch SATA hard drive for storing machine-learning datasets on a desktop.",
+      "intent_family": "machine-learning dataset storage",
+      "must": [
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "I am upgrading a PC used for music production and need at least 1TB of internal storage.",
+      "intent_family": "music-production workstation storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "Which internal drive makes sense for a PC running several virtual machines when I am unsure whether to prioritize SSD speed or capacity?",
+      "intent_family": "ambiguous virtualization storage tradeoff",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 500GB SATA SSD to replace a failing drive in a standard desktop.",
+      "intent_family": "desktop failure-replacement storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 500
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Need internal storage for a PC used to compile large software projects and cache build artifacts.",
+      "intent_family": "software-build cache storage",
+      "must": []
+    },
+    {
+      "query_text": "Find an NVMe drive with at least 4TB for a workstation processing scientific datasets.",
+      "intent_family": "scientific data processing storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 2.5-inch SATA drive for an older desktop case with limited mounting options.",
+      "intent_family": "limited-mounting desktop storage",
+      "must": [
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "What internal storage should I choose for a PC that hosts a local SQL database for testing?",
+      "intent_family": "local test-database storage selection",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 1TB M.2 2280 NVMe drive for a quiet office PC used for document-heavy work.",
+      "intent_family": "quiet productivity PC storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a high-capacity internal drive for storing offline maps and terrain models on a field workstation.",
+      "intent_family": "field-workstation geospatial storage",
+      "must": []
+    },
+    {
+      "query_text": "I want a 2TB SSD for a PC used to analyze large log files and telemetry exports.",
+      "intent_family": "log-analysis workstation storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "Find internal storage for a computer that runs a local Kubernetes cluster and multiple containers.",
+      "intent_family": "local orchestration host storage",
+      "must": []
+    },
+    {
+      "query_text": "Need a 3.5-inch SATA drive of at least 8TB for a PC-based video surveillance review station.",
+      "intent_family": "surveillance review workstation storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 8000
+        },
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Which drive should I buy for a PC used to edit podcasts and store multitrack audio sessions?",
+      "intent_family": "podcast production storage",
+      "must": []
+    },
+    {
+      "query_text": "Looking for an internal NVMe drive for a PC that runs computer-aided design applications and large assemblies.",
+      "intent_family": "CAD workstation storage",
+      "must": [
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 4TB internal drive for a PC used to store and search a large document corpus locally.",
+      "intent_family": "local document corpus storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 2.5-inch SATA SSD for a low-noise point-of-sale computer.",
+      "intent_family": "point-of-sale system storage",
+      "must": [
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "What storage is appropriate for a PC that runs a local Git mirror and code search index?",
+      "intent_family": "local code-index storage",
+      "must": []
+    },
+    {
+      "query_text": "Need at least 2TB of internal storage for a PC used to process remote-sensing imagery.",
+      "intent_family": "remote-sensing workstation storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a PC for audio sample libraries and want an M.2 2280 NVMe drive.",
+      "intent_family": "audio sample library storage",
+      "must": [
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a reliable-feeling storage option for a family genealogy database on a desktop, but I do not know how much capacity I need.",
+      "intent_family": "genealogy database storage discovery",
+      "must": []
+    },
+    {
+      "query_text": "Find a 1TB SATA SSD for a desktop used as a dedicated print server.",
+      "intent_family": "print-server storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a large internal drive for storing locally downloaded technical manuals and searchable PDFs.",
+      "intent_family": "technical reference archive storage",
+      "must": []
+    },
+    {
+      "query_text": "Which PC storage should I use for a local security lab with virtual appliances and disk images?",
+      "intent_family": "security lab virtualization storage",
+      "must": []
+    },
+    {
+      "query_text": "I need an M.2 2280 NVMe drive with at least 2TB for a PC that processes large genomic files.",
+      "intent_family": "bioinformatics workstation storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        },
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 3.5-inch SATA hard drive for a desktop that stores raw telescope images.",
+      "intent_family": "astronomy image storage",
+      "must": [
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "What internal drive would suit a PC used for statistical analysis of large survey files?",
+      "intent_family": "survey-data analysis storage",
+      "must": []
+    },
+    {
+      "query_text": "Need a 500GB M.2 2280 NVMe drive for a compact office workstation.",
+      "intent_family": "compact office workstation storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 500
+        },
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "m_2_2280"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I want internal storage for a PC that runs a local media catalog and metadata search tool, but the workload is not clearly defined.",
+      "intent_family": "media-catalog application storage discovery",
+      "must": []
+    },
+    {
+      "query_text": "Find at least 6TB of SATA storage for a desktop used to retain exported security-camera clips for review.",
+      "intent_family": "security footage retention storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 6000
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Need an internal SSD for a PC used to run GIS rendering jobs, with speed more important than maximum capacity.",
+      "intent_family": "GIS rendering performance storage",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 2TB internal drive for a PC used to host a local package registry and artifact repository.",
+      "intent_family": "software artifact repository storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "Which storage option fits a desktop used for electronic design automation projects and simulation files?",
+      "intent_family": "electronic design automation storage",
+      "must": []
+    },
+    {
+      "query_text": "I need a 2.5-inch SATA SSD for an industrial control PC.",
+      "intent_family": "industrial control computer storage",
+      "must": [
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an internal drive of at least 3TB for a PC used to store downloaded open-data collections.",
+      "intent_family": "open-data collection storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 3000
+        }
+      ]
+    },
+    {
+      "query_text": "Need storage for a PC that runs a local password manager and identity-management test environment.",
+      "intent_family": "identity-management lab storage",
+      "must": []
+    },
+    {
+      "query_text": "What drive should I choose for a desktop used to process scanned books with OCR?",
+      "intent_family": "OCR processing storage",
+      "must": []
+    },
+    {
+      "query_text": "Looking for an NVMe SSD with at least 1TB for a PC used to host a local search engine index.",
+      "intent_family": "local search-index storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 3.5-inch SATA drive for a desktop that stores engineering drawings and revision histories.",
+      "intent_family": "engineering document repository storage",
+      "must": [
+        {
+          "field": "form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        },
+        {
+          "field": "interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Which internal storage is suitable for a PC used to run a local weather-modeling workflow when capacity and speed are both important?",
+      "intent_family": "weather-modeling storage tradeoff",
+      "must": []
+    },
+    {
+      "query_text": "Find at least 8TB of internal storage for a computer used to retain large collections of public-domain datasets.",
+      "intent_family": "public dataset retention storage",
+      "must": [
+        {
+          "field": "capacity_gb",
+          "operator": "ge",
+          "value": 8000
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}
