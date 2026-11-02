@@ -1,0 +1,32 @@
+{
+  "schema_version": "pcbr.llm-judge-pilot-queue.v1",
+  "seed": 20261108,
+  "purpose": "synthetic authored diagnostic; semantic intent independence not human verified",
+  "label_source": "unjudged",
+  "catalogue_sha256": "8c738c5136615080ac29ced074726f97cab473c5a45eafdf19c26504aa624ce2",
+  "query_file_sha256": "22f33de98b3ce173eecc5086315c7f9b5bd05dfeb6efb25a566291a9f499e12a",
+  "embedding_manifest_sha256": "4e9ccfc65af09962fb3caf8a259681464255edaa8f6a5984f9ac9520f62225c0",
+  "tasks_sha256": "ce23c14903bda3e29198dda2ccda525d34d9a2569be57c38ccf5628933a02864",
+  "snapshot_sha256": "e33a8f9624d7e90ad6692671da1fbce8d8f9c6263a33220a997f276ba6ad1361",
+  "query_count": 320,
+  "query_group_count": 310,
+  "task_count": 8960,
+  "categories": {
+    "cpu": 40,
+    "gpu": 40,
+    "memory": 40,
+    "motherboard": 40,
+    "power_supply": 40,
+    "storage": 40,
+    "cooler": 40,
+    "case": 40
+  },
+  "splits": {
+    "validation": 65,
+    "train": 191,
+    "test": 64
+  },
+  "encoder_device": "cuda",
+  "selection": "8 unique each from BM25, vector and RRF, plus 4 seeded category controls",
+  "label_note": "query-authored requirements; no relevance grades included"
+}

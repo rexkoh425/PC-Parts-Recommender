@@ -1,0 +1,6365 @@
+{
+  "schema_version": "pcbr.authored-ranking-intents.v1",
+  "queries": [
+    {
+      "query_id": "fresh-v1-cpu-render-power-00",
+      "query_group_id": "intent-281e5f3dab976e88",
+      "family": "render-power",
+      "category": "cpu",
+      "query_text": "CPU for rendering with at least 4 cores and TDP at most 45 W",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 45
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-upgrade-socket-00",
+      "query_group_id": "intent-72fd77ae304afe48",
+      "family": "upgrade-socket",
+      "category": "cpu",
+      "query_text": "Upgrade processor for AM4, at least 4 cores for development",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-threads-clock-00",
+      "query_group_id": "intent-289e28c256a9ca50",
+      "family": "threads-clock",
+      "category": "cpu",
+      "query_text": "CPU for compiling code with at least 8 threads and base clock of 2.5 GHz",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-memory-support-00",
+      "query_group_id": "intent-e2664e1e4838ad65",
+      "family": "memory-support",
+      "category": "cpu",
+      "query_text": "Workstation CPU supporting at least 32 GB memory and 4 cores",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-cooler-included-00",
+      "query_group_id": "intent-567d9bb81c17af98",
+      "family": "cooler-included",
+      "category": "cpu",
+      "query_text": "Processor with bundled cooler, AM4 socket, TDP no more than 45 W",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 45
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-render-power-01",
+      "query_group_id": "intent-34b3116de7e68c3c",
+      "family": "render-power",
+      "category": "cpu",
+      "query_text": "CPU for rendering with at least 6 cores and TDP at most 65 W",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 6
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-upgrade-socket-01",
+      "query_group_id": "intent-75614988b4c3a9da",
+      "family": "upgrade-socket",
+      "category": "cpu",
+      "query_text": "Upgrade processor for AM5, at least 6 cores for development",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-threads-clock-01",
+      "query_group_id": "intent-a44af4650753038e",
+      "family": "threads-clock",
+      "category": "cpu",
+      "query_text": "CPU for compiling code with at least 12 threads and base clock of 2.5 GHz",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 12
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-memory-support-01",
+      "query_group_id": "intent-3e3935b964b4244c",
+      "family": "memory-support",
+      "category": "cpu",
+      "query_text": "Workstation CPU supporting at least 64 GB memory and 6 cores",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-cooler-included-01",
+      "query_group_id": "intent-d749e5a59463b270",
+      "family": "cooler-included",
+      "category": "cpu",
+      "query_text": "Processor with bundled cooler, AM5 socket, TDP no more than 65 W",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-render-power-02",
+      "query_group_id": "intent-52ab310bfbb58cd7",
+      "family": "render-power",
+      "category": "cpu",
+      "query_text": "CPU for rendering with at least 8 cores and TDP at most 95 W",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 95
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-upgrade-socket-02",
+      "query_group_id": "intent-14decef25edef7e7",
+      "family": "upgrade-socket",
+      "category": "cpu",
+      "query_text": "Upgrade processor for LGA 1200, at least 8 cores for development",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-threads-clock-02",
+      "query_group_id": "intent-8c1277bdb9365e59",
+      "family": "threads-clock",
+      "category": "cpu",
+      "query_text": "CPU for compiling code with at least 16 threads and base clock of 2.5 GHz",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-memory-support-02",
+      "query_group_id": "intent-c6bad317c20ca6f9",
+      "family": "memory-support",
+      "category": "cpu",
+      "query_text": "Workstation CPU supporting at least 96 GB memory and 8 cores",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 96
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-cooler-included-02",
+      "query_group_id": "intent-ee714a2a31029b87",
+      "family": "cooler-included",
+      "category": "cpu",
+      "query_text": "Processor with bundled cooler, LGA 1200 socket, TDP no more than 95 W",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 95
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-render-power-03",
+      "query_group_id": "intent-25c8e11aadb56ca0",
+      "family": "render-power",
+      "category": "cpu",
+      "query_text": "CPU for rendering with at least 10 cores and TDP at most 125 W",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 10
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 125
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-upgrade-socket-03",
+      "query_group_id": "intent-25a635503e52fdf1",
+      "family": "upgrade-socket",
+      "category": "cpu",
+      "query_text": "Upgrade processor for LGA 1700, at least 10 cores for development",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1700"
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-threads-clock-03",
+      "query_group_id": "intent-d37f986837d6d01e",
+      "family": "threads-clock",
+      "category": "cpu",
+      "query_text": "CPU for compiling code with at least 20 threads and base clock of 2.5 GHz",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 20
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-memory-support-03",
+      "query_group_id": "intent-0c7c45a0c967ef2a",
+      "family": "memory-support",
+      "category": "cpu",
+      "query_text": "Workstation CPU supporting at least 128 GB memory and 10 cores",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-cooler-included-03",
+      "query_group_id": "intent-7ed573acdf25e8da",
+      "family": "cooler-included",
+      "category": "cpu",
+      "query_text": "Processor with bundled cooler, LGA 1700 socket, TDP no more than 125 W",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1700"
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 125
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-render-power-04",
+      "query_group_id": "intent-9bf01f77af2efd0c",
+      "family": "render-power",
+      "category": "cpu",
+      "query_text": "CPU for rendering with at least 12 cores and TDP at most 170 W",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 12
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 170
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-upgrade-socket-04",
+      "query_group_id": "intent-1ecf8d6c02785eaf",
+      "family": "upgrade-socket",
+      "category": "cpu",
+      "query_text": "Upgrade processor for LGA 1851, at least 12 cores for development",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1851"
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-threads-clock-04",
+      "query_group_id": "intent-4b3aa9c0359dc48d",
+      "family": "threads-clock",
+      "category": "cpu",
+      "query_text": "CPU for compiling code with at least 24 threads and base clock of 2.5 GHz",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 24
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-memory-support-04",
+      "query_group_id": "intent-c0645a8390ba8a01",
+      "family": "memory-support",
+      "category": "cpu",
+      "query_text": "Workstation CPU supporting at least 192 GB memory and 12 cores",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 192
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-cooler-included-04",
+      "query_group_id": "intent-4748fb444700c996",
+      "family": "cooler-included",
+      "category": "cpu",
+      "query_text": "Processor with bundled cooler, LGA 1851 socket, TDP no more than 170 W",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1851"
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 170
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-render-power-05",
+      "query_group_id": "intent-4e43d577f9ce1e00",
+      "family": "render-power",
+      "category": "cpu",
+      "query_text": "CPU for rendering with at least 16 cores and TDP at most 220 W",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-upgrade-socket-05",
+      "query_group_id": "intent-148b0a09b850d959",
+      "family": "upgrade-socket",
+      "category": "cpu",
+      "query_text": "Upgrade processor for LGA 2066, at least 16 cores for development",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 2066"
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-threads-clock-05",
+      "query_group_id": "intent-3e34619b4772152e",
+      "family": "threads-clock",
+      "category": "cpu",
+      "query_text": "CPU for compiling code with at least 32 threads and base clock of 2.5 GHz",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-memory-support-05",
+      "query_group_id": "intent-f007c54283637e6c",
+      "family": "memory-support",
+      "category": "cpu",
+      "query_text": "Workstation CPU supporting at least 256 GB memory and 16 cores",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 256
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-cooler-included-05",
+      "query_group_id": "intent-30537c5e14e4ece7",
+      "family": "cooler-included",
+      "category": "cpu",
+      "query_text": "Processor with bundled cooler, LGA 2066 socket, TDP no more than 220 W",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 2066"
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-render-power-06",
+      "query_group_id": "intent-9c948f3c4cbd6022",
+      "family": "render-power",
+      "category": "cpu",
+      "query_text": "CPU for rendering with at least 20 cores and TDP at most 250 W",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 20
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 250
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-upgrade-socket-06",
+      "query_group_id": "intent-9401dab0fea137fa",
+      "family": "upgrade-socket",
+      "category": "cpu",
+      "query_text": "Upgrade processor for AM4, at least 20 cores for development",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 20
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-threads-clock-06",
+      "query_group_id": "intent-fa97ec9a2324b55b",
+      "family": "threads-clock",
+      "category": "cpu",
+      "query_text": "CPU for compiling code with at least 40 threads and base clock of 2.5 GHz",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 40
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-memory-support-06",
+      "query_group_id": "intent-b998919fad716e54",
+      "family": "memory-support",
+      "category": "cpu",
+      "query_text": "Workstation CPU supporting at least 512 GB memory and 20 cores",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 512
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 20
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-cooler-included-06",
+      "query_group_id": "intent-df77295a463802a6",
+      "family": "cooler-included",
+      "category": "cpu",
+      "query_text": "Processor with bundled cooler, AM4 socket, TDP no more than 250 W",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 250
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-render-power-07",
+      "query_group_id": "intent-cdecaed6abe8d4be",
+      "family": "render-power",
+      "category": "cpu",
+      "query_text": "CPU for rendering with at least 24 cores and TDP at most 280 W",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 24
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 280
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-upgrade-socket-07",
+      "query_group_id": "intent-4b03686ade33cdea",
+      "family": "upgrade-socket",
+      "category": "cpu",
+      "query_text": "Upgrade processor for AM5, at least 24 cores for development",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-threads-clock-07",
+      "query_group_id": "intent-18fcd6a3a8fb4baa",
+      "family": "threads-clock",
+      "category": "cpu",
+      "query_text": "CPU for compiling code with at least 48 threads and base clock of 2.5 GHz",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 48
+        },
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-memory-support-07",
+      "query_group_id": "intent-5cf462298699a342",
+      "family": "memory-support",
+      "category": "cpu",
+      "query_text": "Workstation CPU supporting at least 1024 GB memory and 24 cores",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 1024
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cpu-cooler-included-07",
+      "query_group_id": "intent-5b4624659bc10e36",
+      "family": "cooler-included",
+      "category": "cpu",
+      "query_text": "Processor with bundled cooler, AM5 socket, TDP no more than 280 W",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        },
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 280
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-vram-power-00",
+      "query_group_id": "intent-1571255399387be8",
+      "family": "vram-power",
+      "category": "gpu",
+      "query_text": "Graphics card for 1440p gaming with at least 4 GB VRAM and board power at most 75 W",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 75
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-compact-vram-00",
+      "query_group_id": "intent-5bd42988af63294b",
+      "family": "compact-vram",
+      "category": "gpu",
+      "query_text": "GPU for a small PC with 4 GB or more VRAM and length at most 180 mm",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 180
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-memory-type-00",
+      "query_group_id": "intent-f41701b96c5ea957",
+      "family": "memory-type",
+      "category": "gpu",
+      "query_text": "Graphics card using GDDR5 memory with at least 4 GB for media work",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR5"
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-case-clearance-00",
+      "query_group_id": "intent-269bf0da010b6315",
+      "family": "case-clearance",
+      "category": "gpu",
+      "query_text": "GPU fitting 180 mm length and 1 slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 180
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-bus-vram-00",
+      "query_group_id": "intent-34a7847850970b52",
+      "family": "bus-vram",
+      "category": "gpu",
+      "query_text": "Graphics card with a memory bus at least 64 bits and 4 GB VRAM for compute",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-vram-power-01",
+      "query_group_id": "intent-a02a9186cbc6353f",
+      "family": "vram-power",
+      "category": "gpu",
+      "query_text": "Graphics card for 1440p gaming with at least 6 GB VRAM and board power at most 120 W",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 6
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 120
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-compact-vram-01",
+      "query_group_id": "intent-ed5ef6338612b4e5",
+      "family": "compact-vram",
+      "category": "gpu",
+      "query_text": "GPU for a small PC with 6 GB or more VRAM and length at most 200 mm",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 6
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 200
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-memory-type-01",
+      "query_group_id": "intent-18a1c468849a81d3",
+      "family": "memory-type",
+      "category": "gpu",
+      "query_text": "Graphics card using GDDR6 memory with at least 6 GB for media work",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR6"
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-case-clearance-01",
+      "query_group_id": "intent-2cbd1bbd38cc7885",
+      "family": "case-clearance",
+      "category": "gpu",
+      "query_text": "GPU fitting 200 mm length and 1.5 slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 200
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 1.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-bus-vram-01",
+      "query_group_id": "intent-03bdd0ac40837230",
+      "family": "bus-vram",
+      "category": "gpu",
+      "query_text": "Graphics card with a memory bus at least 96 bits and 6 GB VRAM for compute",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 96
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-vram-power-02",
+      "query_group_id": "intent-7c82554f97eaf325",
+      "family": "vram-power",
+      "category": "gpu",
+      "query_text": "Graphics card for 1440p gaming with at least 8 GB VRAM and board power at most 150 W",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 150
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-compact-vram-02",
+      "query_group_id": "intent-5f39249fd1a9e239",
+      "family": "compact-vram",
+      "category": "gpu",
+      "query_text": "GPU for a small PC with 8 GB or more VRAM and length at most 220 mm",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-memory-type-02",
+      "query_group_id": "intent-3ed1ca3339f287f9",
+      "family": "memory-type",
+      "category": "gpu",
+      "query_text": "Graphics card using GDDR6X memory with at least 8 GB for media work",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR6X"
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-case-clearance-02",
+      "query_group_id": "intent-b7832322f1c017a6",
+      "family": "case-clearance",
+      "category": "gpu",
+      "query_text": "GPU fitting 220 mm length and 2 slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 220
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-bus-vram-02",
+      "query_group_id": "intent-373f0bdbd54997f4",
+      "family": "bus-vram",
+      "category": "gpu",
+      "query_text": "Graphics card with a memory bus at least 128 bits and 8 GB VRAM for compute",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 128
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-vram-power-03",
+      "query_group_id": "intent-6bb4a80dd0d50c2f",
+      "family": "vram-power",
+      "category": "gpu",
+      "query_text": "Graphics card for 1440p gaming with at least 10 GB VRAM and board power at most 180 W",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 10
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 180
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-compact-vram-03",
+      "query_group_id": "intent-430b3a9e751f33c1",
+      "family": "compact-vram",
+      "category": "gpu",
+      "query_text": "GPU for a small PC with 10 GB or more VRAM and length at most 240 mm",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 10
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 240
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-memory-type-03",
+      "query_group_id": "intent-f662be5373ca0381",
+      "family": "memory-type",
+      "category": "gpu",
+      "query_text": "Graphics card using GDDR7 memory with at least 10 GB for media work",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR7"
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-case-clearance-03",
+      "query_group_id": "intent-ecbac1dad516e5be",
+      "family": "case-clearance",
+      "category": "gpu",
+      "query_text": "GPU fitting 240 mm length and 2.5 slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 240
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-bus-vram-03",
+      "query_group_id": "intent-d31b3e1de22bf649",
+      "family": "bus-vram",
+      "category": "gpu",
+      "query_text": "Graphics card with a memory bus at least 160 bits and 10 GB VRAM for compute",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 160
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-vram-power-04",
+      "query_group_id": "intent-229a03c682ec1a10",
+      "family": "vram-power",
+      "category": "gpu",
+      "query_text": "Graphics card for 1440p gaming with at least 12 GB VRAM and board power at most 220 W",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-compact-vram-04",
+      "query_group_id": "intent-0b4def1458789847",
+      "family": "compact-vram",
+      "category": "gpu",
+      "query_text": "GPU for a small PC with 12 GB or more VRAM and length at most 260 mm",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 260
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-memory-type-04",
+      "query_group_id": "intent-f387a835f3ced73a",
+      "family": "memory-type",
+      "category": "gpu",
+      "query_text": "Graphics card using GDDR5 memory with at least 12 GB for media work",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR5"
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-case-clearance-04",
+      "query_group_id": "intent-a617dfcd7b85b89f",
+      "family": "case-clearance",
+      "category": "gpu",
+      "query_text": "GPU fitting 260 mm length and 3 slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 260
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-bus-vram-04",
+      "query_group_id": "intent-2f88a1a3fe56c386",
+      "family": "bus-vram",
+      "category": "gpu",
+      "query_text": "Graphics card with a memory bus at least 192 bits and 12 GB VRAM for compute",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 192
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-vram-power-05",
+      "query_group_id": "intent-859bdebf31f20e56",
+      "family": "vram-power",
+      "category": "gpu",
+      "query_text": "Graphics card for 1440p gaming with at least 16 GB VRAM and board power at most 260 W",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 260
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-compact-vram-05",
+      "query_group_id": "intent-b61b321e2002cd9c",
+      "family": "compact-vram",
+      "category": "gpu",
+      "query_text": "GPU for a small PC with 16 GB or more VRAM and length at most 280 mm",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 280
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-memory-type-05",
+      "query_group_id": "intent-6235efa7577cf302",
+      "family": "memory-type",
+      "category": "gpu",
+      "query_text": "Graphics card using GDDR6 memory with at least 16 GB for media work",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR6"
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-case-clearance-05",
+      "query_group_id": "intent-b7af3ba542e30ee3",
+      "family": "case-clearance",
+      "category": "gpu",
+      "query_text": "GPU fitting 280 mm length and 3.5 slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 3.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-bus-vram-05",
+      "query_group_id": "intent-cb366941a841fa9e",
+      "family": "bus-vram",
+      "category": "gpu",
+      "query_text": "Graphics card with a memory bus at least 256 bits and 16 GB VRAM for compute",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 256
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-vram-power-06",
+      "query_group_id": "intent-356bbd8fcab063d1",
+      "family": "vram-power",
+      "category": "gpu",
+      "query_text": "Graphics card for 1440p gaming with at least 20 GB VRAM and board power at most 300 W",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 20
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-compact-vram-06",
+      "query_group_id": "intent-ca56a87113cedddc",
+      "family": "compact-vram",
+      "category": "gpu",
+      "query_text": "GPU for a small PC with 20 GB or more VRAM and length at most 300 mm",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 20
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-memory-type-06",
+      "query_group_id": "intent-ab2fb742d0db9f32",
+      "family": "memory-type",
+      "category": "gpu",
+      "query_text": "Graphics card using GDDR6X memory with at least 20 GB for media work",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR6X"
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 20
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-case-clearance-06",
+      "query_group_id": "intent-80515e2079c5f7e5",
+      "family": "case-clearance",
+      "category": "gpu",
+      "query_text": "GPU fitting 300 mm length and 4 slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 300
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-bus-vram-06",
+      "query_group_id": "intent-711286cf29a6357e",
+      "family": "bus-vram",
+      "category": "gpu",
+      "query_text": "Graphics card with a memory bus at least 320 bits and 20 GB VRAM for compute",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 320
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 20
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-vram-power-07",
+      "query_group_id": "intent-852a2f69e604fb84",
+      "family": "vram-power",
+      "category": "gpu",
+      "query_text": "Graphics card for 1440p gaming with at least 24 GB VRAM and board power at most 350 W",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 24
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 350
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-compact-vram-07",
+      "query_group_id": "intent-a2d84d3f96ab068d",
+      "family": "compact-vram",
+      "category": "gpu",
+      "query_text": "GPU for a small PC with 24 GB or more VRAM and length at most 320 mm",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 24
+        },
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 320
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-memory-type-07",
+      "query_group_id": "intent-003ed65fa701567f",
+      "family": "memory-type",
+      "category": "gpu",
+      "query_text": "Graphics card using GDDR7 memory with at least 24 GB for media work",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR7"
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-case-clearance-07",
+      "query_group_id": "intent-0be7418c200583d6",
+      "family": "case-clearance",
+      "category": "gpu",
+      "query_text": "GPU fitting 320 mm length and 4.5 slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 320
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 4.5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-gpu-bus-vram-07",
+      "query_group_id": "intent-f51b85948bf4ce7b",
+      "family": "bus-vram",
+      "category": "gpu",
+      "query_text": "Graphics card with a memory bus at least 384 bits and 24 GB VRAM for compute",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 384
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-capacity-speed-00",
+      "query_group_id": "intent-2f7a7a55e0910ada",
+      "family": "capacity-speed",
+      "category": "memory",
+      "query_text": "Memory for development with at least 8 GB and speed at least 2400 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 2400
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-type-capacity-00",
+      "query_group_id": "intent-54ca343ed33109cf",
+      "family": "type-capacity",
+      "category": "memory",
+      "query_text": "Upgrade RAM for a DDR4 motherboard, at least 8 GB",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-latency-speed-00",
+      "query_group_id": "intent-7cdf964ca8db6287",
+      "family": "latency-speed",
+      "category": "memory",
+      "query_text": "RAM with CAS latency at most 14 and speed at least 2400 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 14
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 2400
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-modules-capacity-00",
+      "query_group_id": "intent-f780539657b5116b",
+      "family": "modules-capacity",
+      "category": "memory",
+      "query_text": "Memory kit with 1 modules and at least 8 GB total",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-clearance-00",
+      "query_group_id": "intent-eba48b3f9d6b4a77",
+      "family": "clearance",
+      "category": "memory",
+      "query_text": "Low clearance memory at least 8 GB and at most 25 mm tall",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 25
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-capacity-speed-01",
+      "query_group_id": "intent-8ba0c5edf67770f4",
+      "family": "capacity-speed",
+      "category": "memory",
+      "query_text": "Memory for development with at least 16 GB and speed at least 2666 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 2666
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-type-capacity-01",
+      "query_group_id": "intent-51943053ccbcb735",
+      "family": "type-capacity",
+      "category": "memory",
+      "query_text": "Upgrade RAM for a DDR4 motherboard, at least 16 GB",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-latency-speed-01",
+      "query_group_id": "intent-14687edda1c65d39",
+      "family": "latency-speed",
+      "category": "memory",
+      "query_text": "RAM with CAS latency at most 16 and speed at least 2666 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 2666
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-modules-capacity-01",
+      "query_group_id": "intent-c5a34edf64eb71b2",
+      "family": "modules-capacity",
+      "category": "memory",
+      "query_text": "Memory kit with 2 modules and at least 16 GB total",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-clearance-01",
+      "query_group_id": "intent-b9d4c2d1f0bdd6e8",
+      "family": "clearance",
+      "category": "memory",
+      "query_text": "Low clearance memory at least 16 GB and at most 28 mm tall",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 28
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-capacity-speed-02",
+      "query_group_id": "intent-3bb8c79f977356f4",
+      "family": "capacity-speed",
+      "category": "memory",
+      "query_text": "Memory for development with at least 24 GB and speed at least 3200 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 24
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 3200
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-type-capacity-02",
+      "query_group_id": "intent-71b91aa19f22b1c4",
+      "family": "type-capacity",
+      "category": "memory",
+      "query_text": "Upgrade RAM for a DDR4 motherboard, at least 24 GB",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-latency-speed-02",
+      "query_group_id": "intent-575ecded28aa9f27",
+      "family": "latency-speed",
+      "category": "memory",
+      "query_text": "RAM with CAS latency at most 18 and speed at least 3200 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 18
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 3200
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-modules-capacity-02",
+      "query_group_id": "intent-3dd4b47d731b367b",
+      "family": "modules-capacity",
+      "category": "memory",
+      "query_text": "Memory kit with 4 modules and at least 24 GB total",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-clearance-02",
+      "query_group_id": "intent-0160a5306e3f8a66",
+      "family": "clearance",
+      "category": "memory",
+      "query_text": "Low clearance memory at least 24 GB and at most 30 mm tall",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 24
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 30
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-capacity-speed-03",
+      "query_group_id": "intent-66032fd2af123afc",
+      "family": "capacity-speed",
+      "category": "memory",
+      "query_text": "Memory for development with at least 32 GB and speed at least 3600 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 3600
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-type-capacity-03",
+      "query_group_id": "intent-a9c02a77bb66cf47",
+      "family": "type-capacity",
+      "category": "memory",
+      "query_text": "Upgrade RAM for a DDR4 motherboard, at least 32 GB",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-latency-speed-03",
+      "query_group_id": "intent-c88d55790e5bbc0b",
+      "family": "latency-speed",
+      "category": "memory",
+      "query_text": "RAM with CAS latency at most 20 and speed at least 3600 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 20
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 3600
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-modules-capacity-03",
+      "query_group_id": "intent-a5c04c174c131d38",
+      "family": "modules-capacity",
+      "category": "memory",
+      "query_text": "Memory kit with 1 modules and at least 32 GB total",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-clearance-03",
+      "query_group_id": "intent-d8fa7fedc754add1",
+      "family": "clearance",
+      "category": "memory",
+      "query_text": "Low clearance memory at least 32 GB and at most 32 mm tall",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-capacity-speed-04",
+      "query_group_id": "intent-34cc94fbd0a4f721",
+      "family": "capacity-speed",
+      "category": "memory",
+      "query_text": "Memory for development with at least 48 GB and speed at least 4800 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 48
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 4800
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-type-capacity-04",
+      "query_group_id": "intent-c71ce0becb736922",
+      "family": "type-capacity",
+      "category": "memory",
+      "query_text": "Upgrade RAM for a DDR5 motherboard, at least 48 GB",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 48
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-latency-speed-04",
+      "query_group_id": "intent-e3eb0e1154b8dbd4",
+      "family": "latency-speed",
+      "category": "memory",
+      "query_text": "RAM with CAS latency at most 28 and speed at least 4800 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 28
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 4800
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-modules-capacity-04",
+      "query_group_id": "intent-b6eb42f72abd0df3",
+      "family": "modules-capacity",
+      "category": "memory",
+      "query_text": "Memory kit with 2 modules and at least 48 GB total",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 48
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-clearance-04",
+      "query_group_id": "intent-dcf57c4489ada4e8",
+      "family": "clearance",
+      "category": "memory",
+      "query_text": "Low clearance memory at least 48 GB and at most 34 mm tall",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 48
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 34
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-capacity-speed-05",
+      "query_group_id": "intent-eedcf38b762aad88",
+      "family": "capacity-speed",
+      "category": "memory",
+      "query_text": "Memory for development with at least 64 GB and speed at least 5600 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 5600
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-type-capacity-05",
+      "query_group_id": "intent-14390a2768de60f2",
+      "family": "type-capacity",
+      "category": "memory",
+      "query_text": "Upgrade RAM for a DDR5 motherboard, at least 64 GB",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-latency-speed-05",
+      "query_group_id": "intent-b33c3dc7e7504a63",
+      "family": "latency-speed",
+      "category": "memory",
+      "query_text": "RAM with CAS latency at most 32 and speed at least 5600 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 5600
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-modules-capacity-05",
+      "query_group_id": "intent-9360c255e6310dd3",
+      "family": "modules-capacity",
+      "category": "memory",
+      "query_text": "Memory kit with 4 modules and at least 64 GB total",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-clearance-05",
+      "query_group_id": "intent-30e7ac30912db760",
+      "family": "clearance",
+      "category": "memory",
+      "query_text": "Low clearance memory at least 64 GB and at most 36 mm tall",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 36
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-capacity-speed-06",
+      "query_group_id": "intent-17302f7ed033e32e",
+      "family": "capacity-speed",
+      "category": "memory",
+      "query_text": "Memory for development with at least 96 GB and speed at least 6000 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 96
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-type-capacity-06",
+      "query_group_id": "intent-892e4a5ca4986c44",
+      "family": "type-capacity",
+      "category": "memory",
+      "query_text": "Upgrade RAM for a DDR5 motherboard, at least 96 GB",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 96
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-latency-speed-06",
+      "query_group_id": "intent-2f087f64378e2c8e",
+      "family": "latency-speed",
+      "category": "memory",
+      "query_text": "RAM with CAS latency at most 36 and speed at least 6000 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 36
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-modules-capacity-06",
+      "query_group_id": "intent-6eda13f474c6be64",
+      "family": "modules-capacity",
+      "category": "memory",
+      "query_text": "Memory kit with 2 modules and at least 96 GB total",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 96
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-clearance-06",
+      "query_group_id": "intent-e5075a30e20fd786",
+      "family": "clearance",
+      "category": "memory",
+      "query_text": "Low clearance memory at least 96 GB and at most 40 mm tall",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 96
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 40
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-capacity-speed-07",
+      "query_group_id": "intent-7a7dfbc6695a2a66",
+      "family": "capacity-speed",
+      "category": "memory",
+      "query_text": "Memory for development with at least 128 GB and speed at least 6400 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 128
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6400
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-type-capacity-07",
+      "query_group_id": "intent-27fcef7ddaff657a",
+      "family": "type-capacity",
+      "category": "memory",
+      "query_text": "Upgrade RAM for a DDR5 motherboard, at least 128 GB",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-latency-speed-07",
+      "query_group_id": "intent-0254987b1a041e94",
+      "family": "latency-speed",
+      "category": "memory",
+      "query_text": "RAM with CAS latency at most 40 and speed at least 6400 MT/s",
+      "must": [
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 40
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6400
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-modules-capacity-07",
+      "query_group_id": "intent-dffc80a393e22dda",
+      "family": "modules-capacity",
+      "category": "memory",
+      "query_text": "Memory kit with 4 modules and at least 128 GB total",
+      "must": [
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-memory-clearance-07",
+      "query_group_id": "intent-31ed7687fc1015c5",
+      "family": "clearance",
+      "category": "memory",
+      "query_text": "Low clearance memory at least 128 GB and at most 45 mm tall",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 128
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 45
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-socket-memory-00",
+      "query_group_id": "intent-82ce18f220b1352d",
+      "family": "socket-memory",
+      "category": "motherboard",
+      "query_text": "Motherboard for AM4 CPU using DDR4 and supporting 32 GB memory",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-case-slots-00",
+      "query_group_id": "intent-bd7eb4c37cb56487",
+      "family": "case-slots",
+      "category": "motherboard",
+      "query_text": "atx motherboard with at least 1 memory slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-m2-capacity-00",
+      "query_group_id": "intent-2248249f53747643",
+      "family": "m2-capacity",
+      "category": "motherboard",
+      "query_text": "Motherboard with at least 1 M.2 slots and 32 GB maximum memory",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-storage-ports-00",
+      "query_group_id": "intent-49d711b87742b21c",
+      "family": "storage-ports",
+      "category": "motherboard",
+      "query_text": "Motherboard for AM4 with at least 1 SATA ports and two M.2 slots",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-memory-slots-00",
+      "query_group_id": "intent-40ba071b1c5a3111",
+      "family": "memory-slots",
+      "category": "motherboard",
+      "query_text": "DDR4 motherboard with at least 1 memory slots and 32 GB maximum RAM",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-socket-memory-01",
+      "query_group_id": "intent-a258b67d9f87818e",
+      "family": "socket-memory",
+      "category": "motherboard",
+      "query_text": "Motherboard for AM5 CPU using DDR5 and supporting 64 GB memory",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-case-slots-01",
+      "query_group_id": "intent-5d15235bbf227d56",
+      "family": "case-slots",
+      "category": "motherboard",
+      "query_text": "micro_atx motherboard with at least 2 memory slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-m2-capacity-01",
+      "query_group_id": "intent-b38444304fdbf1a4",
+      "family": "m2-capacity",
+      "category": "motherboard",
+      "query_text": "Motherboard with at least 2 M.2 slots and 64 GB maximum memory",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-storage-ports-01",
+      "query_group_id": "intent-e4e7ddfcb601f765",
+      "family": "storage-ports",
+      "category": "motherboard",
+      "query_text": "Motherboard for AM5 with at least 2 SATA ports and two M.2 slots",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-memory-slots-01",
+      "query_group_id": "intent-68ba93bb7ce66ebd",
+      "family": "memory-slots",
+      "category": "motherboard",
+      "query_text": "DDR5 motherboard with at least 2 memory slots and 64 GB maximum RAM",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-socket-memory-02",
+      "query_group_id": "intent-4d328ad6a612853e",
+      "family": "socket-memory",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 1151 CPU using DDR4 and supporting 96 GB memory",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1151"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 96
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-case-slots-02",
+      "query_group_id": "intent-024d57885f1eef4d",
+      "family": "case-slots",
+      "category": "motherboard",
+      "query_text": "mini_itx motherboard with at least 3 memory slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-m2-capacity-02",
+      "query_group_id": "intent-d7be8834f9f670df",
+      "family": "m2-capacity",
+      "category": "motherboard",
+      "query_text": "Motherboard with at least 3 M.2 slots and 96 GB maximum memory",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 96
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-storage-ports-02",
+      "query_group_id": "intent-de9d49c8cad070a6",
+      "family": "storage-ports",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 1151 with at least 3 SATA ports and two M.2 slots",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1151"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-memory-slots-02",
+      "query_group_id": "intent-1a202ce75d55a68e",
+      "family": "memory-slots",
+      "category": "motherboard",
+      "query_text": "DDR4 motherboard with at least 3 memory slots and 96 GB maximum RAM",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 96
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-socket-memory-03",
+      "query_group_id": "intent-7e22ee53675880c5",
+      "family": "socket-memory",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 1200 CPU using DDR4 and supporting 128 GB memory",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-case-slots-03",
+      "query_group_id": "intent-01ba09e72c3a7ff7",
+      "family": "case-slots",
+      "category": "motherboard",
+      "query_text": "e_atx motherboard with at least 4 memory slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "e_atx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-m2-capacity-03",
+      "query_group_id": "intent-dfec882b144da226",
+      "family": "m2-capacity",
+      "category": "motherboard",
+      "query_text": "Motherboard with at least 4 M.2 slots and 128 GB maximum memory",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-storage-ports-03",
+      "query_group_id": "intent-5f07759d1fc440f7",
+      "family": "storage-ports",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 1200 with at least 4 SATA ports and two M.2 slots",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-memory-slots-03",
+      "query_group_id": "intent-2ca0547d3dc8f6ee",
+      "family": "memory-slots",
+      "category": "motherboard",
+      "query_text": "DDR4 motherboard with at least 4 memory slots and 128 GB maximum RAM",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-socket-memory-04",
+      "query_group_id": "intent-e5bf870479c742e3",
+      "family": "socket-memory",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 1700 CPU using DDR4 and supporting 192 GB memory",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1700"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 192
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-case-slots-04",
+      "query_group_id": "intent-0f818bda5d7c941c",
+      "family": "case-slots",
+      "category": "motherboard",
+      "query_text": "atx motherboard with at least 5 memory slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-m2-capacity-04",
+      "query_group_id": "intent-33cfd50dfd7bb7d7",
+      "family": "m2-capacity",
+      "category": "motherboard",
+      "query_text": "Motherboard with at least 5 M.2 slots and 192 GB maximum memory",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 5
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 192
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-storage-ports-04",
+      "query_group_id": "intent-e93309dc32f6169a",
+      "family": "storage-ports",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 1700 with at least 5 SATA ports and two M.2 slots",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1700"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 5
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-memory-slots-04",
+      "query_group_id": "intent-4d5921706b989fa5",
+      "family": "memory-slots",
+      "category": "motherboard",
+      "query_text": "DDR4 motherboard with at least 5 memory slots and 192 GB maximum RAM",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 5
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 192
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-socket-memory-05",
+      "query_group_id": "intent-41df6f44d0057d0e",
+      "family": "socket-memory",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 1851 CPU using DDR5 and supporting 256 GB memory",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1851"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 256
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-case-slots-05",
+      "query_group_id": "intent-f42afe29d00c9be4",
+      "family": "case-slots",
+      "category": "motherboard",
+      "query_text": "micro_atx motherboard with at least 6 memory slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-m2-capacity-05",
+      "query_group_id": "intent-08e88d14950b1763",
+      "family": "m2-capacity",
+      "category": "motherboard",
+      "query_text": "Motherboard with at least 6 M.2 slots and 256 GB maximum memory",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 6
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 256
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-storage-ports-05",
+      "query_group_id": "intent-8871c8181cebb3ef",
+      "family": "storage-ports",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 1851 with at least 6 SATA ports and two M.2 slots",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1851"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 6
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-memory-slots-05",
+      "query_group_id": "intent-615e074c62af8f8c",
+      "family": "memory-slots",
+      "category": "motherboard",
+      "query_text": "DDR5 motherboard with at least 6 memory slots and 256 GB maximum RAM",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 6
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 256
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-socket-memory-06",
+      "query_group_id": "intent-e13f12f35dc8bbad",
+      "family": "socket-memory",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 2066 CPU using DDR4 and supporting 512 GB memory",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 2066"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 512
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-case-slots-06",
+      "query_group_id": "intent-049947bdc569af6d",
+      "family": "case-slots",
+      "category": "motherboard",
+      "query_text": "mini_itx motherboard with at least 7 memory slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-m2-capacity-06",
+      "query_group_id": "intent-bec384d1a8631b46",
+      "family": "m2-capacity",
+      "category": "motherboard",
+      "query_text": "Motherboard with at least 7 M.2 slots and 512 GB maximum memory",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 7
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 512
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-storage-ports-06",
+      "query_group_id": "intent-2a72b9c116daaa4d",
+      "family": "storage-ports",
+      "category": "motherboard",
+      "query_text": "Motherboard for LGA 2066 with at least 7 SATA ports and two M.2 slots",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 2066"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 7
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-memory-slots-06",
+      "query_group_id": "intent-872d5f9014570ee0",
+      "family": "memory-slots",
+      "category": "motherboard",
+      "query_text": "DDR4 motherboard with at least 7 memory slots and 512 GB maximum RAM",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 7
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 512
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-socket-memory-07",
+      "query_group_id": "intent-6ae4a72089cb8d79",
+      "family": "socket-memory",
+      "category": "motherboard",
+      "query_text": "Motherboard for AM4 CPU using DDR4 and supporting 1024 GB memory",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 1024
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-case-slots-07",
+      "query_group_id": "intent-5dd66012346409c6",
+      "family": "case-slots",
+      "category": "motherboard",
+      "query_text": "e_atx motherboard with at least 8 memory slots for an existing case",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "e_atx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-m2-capacity-07",
+      "query_group_id": "intent-6e30bd7da361b767",
+      "family": "m2-capacity",
+      "category": "motherboard",
+      "query_text": "Motherboard with at least 8 M.2 slots and 1024 GB maximum memory",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 1024
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-storage-ports-07",
+      "query_group_id": "intent-9979f9d470b0b166",
+      "family": "storage-ports",
+      "category": "motherboard",
+      "query_text": "Motherboard for AM4 with at least 8 SATA ports and two M.2 slots",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-motherboard-memory-slots-07",
+      "query_group_id": "intent-cf5f6df360f1bd78",
+      "family": "memory-slots",
+      "category": "motherboard",
+      "query_text": "DDR4 motherboard with at least 8 memory slots and 1024 GB maximum RAM",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 8
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 1024
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-size-wattage-00",
+      "query_group_id": "intent-fb22fdfe378e11cc",
+      "family": "size-wattage",
+      "category": "power_supply",
+      "query_text": "ATX power supply rated at least 350 W for a compact build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 350
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-efficiency-00",
+      "query_group_id": "intent-b1ba239dbbbbeecf",
+      "family": "efficiency",
+      "category": "power_supply",
+      "query_text": "Power supply rated at least 350 W with 80 plus bronze efficiency",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 350
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_bronze"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-gpu-connectors-00",
+      "query_group_id": "intent-b52e2e8a35bf29b9",
+      "family": "gpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU rated at least 350 W with at least 1 6+2 pin PCIe connectors for a GPU",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 350
+        },
+        {
+          "field": "category_attributes.pcie_connectors.6_plus_2_pin",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cpu-connectors-00",
+      "query_group_id": "intent-3648a7f9423a1c39",
+      "family": "cpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU with at least 1 EPS connectors and 350 W capacity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 350
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cabling-00",
+      "query_group_id": "intent-382693977aa2bc94",
+      "family": "cabling",
+      "category": "power_supply",
+      "query_text": "non modular power supply with at least 350 W output",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "non_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 350
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-size-wattage-01",
+      "query_group_id": "intent-d5e54ed3f065ff83",
+      "family": "size-wattage",
+      "category": "power_supply",
+      "query_text": "SFX power supply rated at least 450 W for a compact build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 450
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-efficiency-01",
+      "query_group_id": "intent-b278733ed72842ac",
+      "family": "efficiency",
+      "category": "power_supply",
+      "query_text": "Power supply rated at least 450 W with 80 plus gold efficiency",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 450
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_gold"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-gpu-connectors-01",
+      "query_group_id": "intent-bdfad2d971f0a3b7",
+      "family": "gpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU rated at least 450 W with at least 2 6+2 pin PCIe connectors for a GPU",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 450
+        },
+        {
+          "field": "category_attributes.pcie_connectors.6_plus_2_pin",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cpu-connectors-01",
+      "query_group_id": "intent-053b8b5c9bc12460",
+      "family": "cpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU with at least 2 EPS connectors and 450 W capacity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 450
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cabling-01",
+      "query_group_id": "intent-2bba7e7003a99949",
+      "family": "cabling",
+      "category": "power_supply",
+      "query_text": "semi modular power supply with at least 450 W output",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "semi_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 450
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-size-wattage-02",
+      "query_group_id": "intent-563796c1d8bd4436",
+      "family": "size-wattage",
+      "category": "power_supply",
+      "query_text": "ATX power supply rated at least 550 W for a compact build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 550
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-efficiency-02",
+      "query_group_id": "intent-f9488babb8383062",
+      "family": "efficiency",
+      "category": "power_supply",
+      "query_text": "Power supply rated at least 550 W with 80 plus platinum efficiency",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 550
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_platinum"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-gpu-connectors-02",
+      "query_group_id": "intent-69c3bfa5fa728b13",
+      "family": "gpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU rated at least 550 W with at least 3 6+2 pin PCIe connectors for a GPU",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 550
+        },
+        {
+          "field": "category_attributes.pcie_connectors.6_plus_2_pin",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cpu-connectors-02",
+      "query_group_id": "intent-279af4865ff05e87",
+      "family": "cpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU with at least 3 EPS connectors and 550 W capacity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 550
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cabling-02",
+      "query_group_id": "intent-d9446c24160d0a5c",
+      "family": "cabling",
+      "category": "power_supply",
+      "query_text": "non modular power supply with at least 550 W output",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "non_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 550
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-size-wattage-03",
+      "query_group_id": "intent-5852d1cf68b816a7",
+      "family": "size-wattage",
+      "category": "power_supply",
+      "query_text": "SFX power supply rated at least 650 W for a compact build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-efficiency-03",
+      "query_group_id": "intent-23285e2c81c1f7a0",
+      "family": "efficiency",
+      "category": "power_supply",
+      "query_text": "Power supply rated at least 650 W with 80 plus titanium efficiency",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_titanium"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-gpu-connectors-03",
+      "query_group_id": "intent-82bb3ea7aa7f2abc",
+      "family": "gpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU rated at least 650 W with at least 4 6+2 pin PCIe connectors for a GPU",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        },
+        {
+          "field": "category_attributes.pcie_connectors.6_plus_2_pin",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cpu-connectors-03",
+      "query_group_id": "intent-0db322d720de8a42",
+      "family": "cpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU with at least 4 EPS connectors and 650 W capacity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cabling-03",
+      "query_group_id": "intent-19be52add863f5ac",
+      "family": "cabling",
+      "category": "power_supply",
+      "query_text": "semi modular power supply with at least 650 W output",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "semi_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-size-wattage-04",
+      "query_group_id": "intent-2197dc69add91f3b",
+      "family": "size-wattage",
+      "category": "power_supply",
+      "query_text": "ATX power supply rated at least 750 W for a compact build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-efficiency-04",
+      "query_group_id": "intent-49d02732d22d10c8",
+      "family": "efficiency",
+      "category": "power_supply",
+      "query_text": "Power supply rated at least 750 W with 80 plus bronze efficiency",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_bronze"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-gpu-connectors-04",
+      "query_group_id": "intent-a33f6d37edc1d79a",
+      "family": "gpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU rated at least 750 W with at least 1 6+2 pin PCIe connectors for a GPU",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        },
+        {
+          "field": "category_attributes.pcie_connectors.6_plus_2_pin",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cpu-connectors-04",
+      "query_group_id": "intent-1c205eeece754082",
+      "family": "cpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU with at least 1 EPS connectors and 750 W capacity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cabling-04",
+      "query_group_id": "intent-a942c47afed2964a",
+      "family": "cabling",
+      "category": "power_supply",
+      "query_text": "non modular power supply with at least 750 W output",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "non_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-size-wattage-05",
+      "query_group_id": "intent-4622c0e5074a219b",
+      "family": "size-wattage",
+      "category": "power_supply",
+      "query_text": "SFX power supply rated at least 850 W for a compact build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 850
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-efficiency-05",
+      "query_group_id": "intent-672cf6bfcbc68618",
+      "family": "efficiency",
+      "category": "power_supply",
+      "query_text": "Power supply rated at least 850 W with 80 plus gold efficiency",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 850
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_gold"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-gpu-connectors-05",
+      "query_group_id": "intent-0666c3baaeeb7cfc",
+      "family": "gpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU rated at least 850 W with at least 2 6+2 pin PCIe connectors for a GPU",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 850
+        },
+        {
+          "field": "category_attributes.pcie_connectors.6_plus_2_pin",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cpu-connectors-05",
+      "query_group_id": "intent-5d45671365736261",
+      "family": "cpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU with at least 2 EPS connectors and 850 W capacity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 850
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cabling-05",
+      "query_group_id": "intent-93f49117f7a839e5",
+      "family": "cabling",
+      "category": "power_supply",
+      "query_text": "semi modular power supply with at least 850 W output",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "semi_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 850
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-size-wattage-06",
+      "query_group_id": "intent-2fd2614311cf593b",
+      "family": "size-wattage",
+      "category": "power_supply",
+      "query_text": "ATX power supply rated at least 1000 W for a compact build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-efficiency-06",
+      "query_group_id": "intent-fdd8535055761efe",
+      "family": "efficiency",
+      "category": "power_supply",
+      "query_text": "Power supply rated at least 1000 W with 80 plus platinum efficiency",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_platinum"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-gpu-connectors-06",
+      "query_group_id": "intent-273494349eb49849",
+      "family": "gpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU rated at least 1000 W with at least 3 6+2 pin PCIe connectors for a GPU",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.pcie_connectors.6_plus_2_pin",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cpu-connectors-06",
+      "query_group_id": "intent-c1ee79abb6be8604",
+      "family": "cpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU with at least 3 EPS connectors and 1000 W capacity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cabling-06",
+      "query_group_id": "intent-10d6c16e656a5513",
+      "family": "cabling",
+      "category": "power_supply",
+      "query_text": "non modular power supply with at least 1000 W output",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "non_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-size-wattage-07",
+      "query_group_id": "intent-d852efb6e4786b2b",
+      "family": "size-wattage",
+      "category": "power_supply",
+      "query_text": "SFX power supply rated at least 1200 W for a compact build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1200
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-efficiency-07",
+      "query_group_id": "intent-93faf08bc93cb181",
+      "family": "efficiency",
+      "category": "power_supply",
+      "query_text": "Power supply rated at least 1200 W with 80 plus titanium efficiency",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1200
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "80_plus_titanium"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-gpu-connectors-07",
+      "query_group_id": "intent-b76a98ee846a0584",
+      "family": "gpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU rated at least 1200 W with at least 4 6+2 pin PCIe connectors for a GPU",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1200
+        },
+        {
+          "field": "category_attributes.pcie_connectors.6_plus_2_pin",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cpu-connectors-07",
+      "query_group_id": "intent-65190ff70298fa10",
+      "family": "cpu-connectors",
+      "category": "power_supply",
+      "query_text": "PSU with at least 4 EPS connectors and 1200 W capacity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1200
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-power_supply-cabling-07",
+      "query_group_id": "intent-d68ac0a7046ec530",
+      "family": "cabling",
+      "category": "power_supply",
+      "query_text": "semi modular power supply with at least 1200 W output",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "semi_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1200
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-workload-interface-00",
+      "query_group_id": "intent-85d5dbb3f82eeb77",
+      "family": "workload-interface",
+      "category": "storage",
+      "query_text": "Storage for video projects, at least 250 GB using nvme_pcie",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 250
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-physical-form-00",
+      "query_group_id": "intent-04289b14cf883738",
+      "family": "physical-form",
+      "category": "storage",
+      "query_text": "Replacement storage of form factor m2_2280 and capacity at least 250 GB",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m2_2280"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 250
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-backup-00",
+      "query_group_id": "intent-0aa335badeeef8f1",
+      "family": "backup",
+      "category": "storage",
+      "query_text": "Backup drive with at least 250 GB using SATA",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 250
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-operating-system-00",
+      "query_group_id": "intent-85d5dbb3f82eeb77",
+      "family": "operating-system",
+      "category": "storage",
+      "query_text": "NVMe boot drive with at least 250 GB for a development PC",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 250
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-bay-00",
+      "query_group_id": "intent-b4576418cd4d3181",
+      "family": "bay",
+      "category": "storage",
+      "query_text": "Storage fitting a 3.5 inch bay with at least 250 GB for archival data",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 250
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-workload-interface-01",
+      "query_group_id": "intent-188ece1d7d0b88bf",
+      "family": "workload-interface",
+      "category": "storage",
+      "query_text": "Storage for video projects, at least 500 GB using sata",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-physical-form-01",
+      "query_group_id": "intent-69af4792f5fea600",
+      "family": "physical-form",
+      "category": "storage",
+      "query_text": "Replacement storage of form factor 2_5_inch and capacity at least 500 GB",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 500
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-backup-01",
+      "query_group_id": "intent-188ece1d7d0b88bf",
+      "family": "backup",
+      "category": "storage",
+      "query_text": "Backup drive with at least 500 GB using SATA",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-operating-system-01",
+      "query_group_id": "intent-16cef640c4e56d2d",
+      "family": "operating-system",
+      "category": "storage",
+      "query_text": "NVMe boot drive with at least 500 GB for a development PC",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-bay-01",
+      "query_group_id": "intent-4a52f0ff5879b927",
+      "family": "bay",
+      "category": "storage",
+      "query_text": "Storage fitting a 3.5 inch bay with at least 500 GB for archival data",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-workload-interface-02",
+      "query_group_id": "intent-c51277afcd126f40",
+      "family": "workload-interface",
+      "category": "storage",
+      "query_text": "Storage for video projects, at least 1000 GB using sata",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-physical-form-02",
+      "query_group_id": "intent-5d7eafba105ddccc",
+      "family": "physical-form",
+      "category": "storage",
+      "query_text": "Replacement storage of form factor 3_5_inch and capacity at least 1000 GB",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-backup-02",
+      "query_group_id": "intent-c51277afcd126f40",
+      "family": "backup",
+      "category": "storage",
+      "query_text": "Backup drive with at least 1000 GB using SATA",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-operating-system-02",
+      "query_group_id": "intent-a393c5cb63378646",
+      "family": "operating-system",
+      "category": "storage",
+      "query_text": "NVMe boot drive with at least 1000 GB for a development PC",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-bay-02",
+      "query_group_id": "intent-5d7eafba105ddccc",
+      "family": "bay",
+      "category": "storage",
+      "query_text": "Storage fitting a 3.5 inch bay with at least 1000 GB for archival data",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-workload-interface-03",
+      "query_group_id": "intent-f40ea18b35de33a7",
+      "family": "workload-interface",
+      "category": "storage",
+      "query_text": "Storage for video projects, at least 1500 GB using nvme_pcie",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-physical-form-03",
+      "query_group_id": "intent-82ea4cb63e7b3712",
+      "family": "physical-form",
+      "category": "storage",
+      "query_text": "Replacement storage of form factor m2_2230 and capacity at least 1500 GB",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m2_2230"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1500
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-backup-03",
+      "query_group_id": "intent-bdfe7458bae54dc2",
+      "family": "backup",
+      "category": "storage",
+      "query_text": "Backup drive with at least 1500 GB using SATA",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-operating-system-03",
+      "query_group_id": "intent-f40ea18b35de33a7",
+      "family": "operating-system",
+      "category": "storage",
+      "query_text": "NVMe boot drive with at least 1500 GB for a development PC",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-bay-03",
+      "query_group_id": "intent-f702783f3b2666b3",
+      "family": "bay",
+      "category": "storage",
+      "query_text": "Storage fitting a 3.5 inch bay with at least 1500 GB for archival data",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1500
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-workload-interface-04",
+      "query_group_id": "intent-a5703435d51b1990",
+      "family": "workload-interface",
+      "category": "storage",
+      "query_text": "Storage for video projects, at least 2000 GB using nvme_pcie",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-physical-form-04",
+      "query_group_id": "intent-a9ab9bca1cce1e42",
+      "family": "physical-form",
+      "category": "storage",
+      "query_text": "Replacement storage of form factor m2_2280 and capacity at least 2000 GB",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m2_2280"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-backup-04",
+      "query_group_id": "intent-ce0f225da1ff846d",
+      "family": "backup",
+      "category": "storage",
+      "query_text": "Backup drive with at least 2000 GB using SATA",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-operating-system-04",
+      "query_group_id": "intent-a5703435d51b1990",
+      "family": "operating-system",
+      "category": "storage",
+      "query_text": "NVMe boot drive with at least 2000 GB for a development PC",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-bay-04",
+      "query_group_id": "intent-37cc52c4e56255ff",
+      "family": "bay",
+      "category": "storage",
+      "query_text": "Storage fitting a 3.5 inch bay with at least 2000 GB for archival data",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-workload-interface-05",
+      "query_group_id": "intent-34cf4881c11ff9db",
+      "family": "workload-interface",
+      "category": "storage",
+      "query_text": "Storage for video projects, at least 4000 GB using sata",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-physical-form-05",
+      "query_group_id": "intent-ba46ae431de9c2af",
+      "family": "physical-form",
+      "category": "storage",
+      "query_text": "Replacement storage of form factor 2_5_inch and capacity at least 4000 GB",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-backup-05",
+      "query_group_id": "intent-34cf4881c11ff9db",
+      "family": "backup",
+      "category": "storage",
+      "query_text": "Backup drive with at least 4000 GB using SATA",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-operating-system-05",
+      "query_group_id": "intent-26bf29e6da67204e",
+      "family": "operating-system",
+      "category": "storage",
+      "query_text": "NVMe boot drive with at least 4000 GB for a development PC",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-bay-05",
+      "query_group_id": "intent-fc18a259a6cd53e4",
+      "family": "bay",
+      "category": "storage",
+      "query_text": "Storage fitting a 3.5 inch bay with at least 4000 GB for archival data",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-workload-interface-06",
+      "query_group_id": "intent-995c345a0752f63d",
+      "family": "workload-interface",
+      "category": "storage",
+      "query_text": "Storage for video projects, at least 8000 GB using sata",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-physical-form-06",
+      "query_group_id": "intent-fc5788fa794ec2b6",
+      "family": "physical-form",
+      "category": "storage",
+      "query_text": "Replacement storage of form factor 3_5_inch and capacity at least 8000 GB",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-backup-06",
+      "query_group_id": "intent-995c345a0752f63d",
+      "family": "backup",
+      "category": "storage",
+      "query_text": "Backup drive with at least 8000 GB using SATA",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-operating-system-06",
+      "query_group_id": "intent-eb57994ecb567cfa",
+      "family": "operating-system",
+      "category": "storage",
+      "query_text": "NVMe boot drive with at least 8000 GB for a development PC",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-bay-06",
+      "query_group_id": "intent-fc5788fa794ec2b6",
+      "family": "bay",
+      "category": "storage",
+      "query_text": "Storage fitting a 3.5 inch bay with at least 8000 GB for archival data",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 8000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-workload-interface-07",
+      "query_group_id": "intent-551183aecb8e04c1",
+      "family": "workload-interface",
+      "category": "storage",
+      "query_text": "Storage for video projects, at least 12000 GB using nvme_pcie",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 12000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-physical-form-07",
+      "query_group_id": "intent-38236089c9a269b3",
+      "family": "physical-form",
+      "category": "storage",
+      "query_text": "Replacement storage of form factor m2_2230 and capacity at least 12000 GB",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m2_2230"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 12000
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-backup-07",
+      "query_group_id": "intent-e4cb2eb64bcc0e80",
+      "family": "backup",
+      "category": "storage",
+      "query_text": "Backup drive with at least 12000 GB using SATA",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 12000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-operating-system-07",
+      "query_group_id": "intent-551183aecb8e04c1",
+      "family": "operating-system",
+      "category": "storage",
+      "query_text": "NVMe boot drive with at least 12000 GB for a development PC",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 12000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme_pcie"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-storage-bay-07",
+      "query_group_id": "intent-315e727c423bb9e0",
+      "family": "bay",
+      "category": "storage",
+      "query_text": "Storage fitting a 3.5 inch bay with at least 12000 GB for archival data",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 12000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-height-00",
+      "query_group_id": "intent-a5e75a55bd4d7109",
+      "family": "socket-height",
+      "category": "cooler",
+      "query_text": "Air cooler compatible with AM4, at most 45 mm high",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 45
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-radiator-00",
+      "query_group_id": "intent-a350a1518c032d64",
+      "family": "socket-radiator",
+      "category": "cooler",
+      "query_text": "AIO cooler for AM4 with a 120 mm radiator",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 120
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-fan-socket-00",
+      "query_group_id": "intent-385e30cba2252838",
+      "family": "fan-socket",
+      "category": "cooler",
+      "query_text": "CPU cooler supporting AM4 with at least 1 fans",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-height-fans-00",
+      "query_group_id": "intent-b6c2fd4a36522fde",
+      "family": "height-fans",
+      "category": "cooler",
+      "query_text": "Low height air cooler up to 45 mm and at least 1 fans",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 45
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-radiator-fans-00",
+      "query_group_id": "intent-24fd0af65bf67837",
+      "family": "radiator-fans",
+      "category": "cooler",
+      "query_text": "Liquid cooler with a 120 mm radiator and at least 1 fans",
+      "must": [
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 120
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-height-01",
+      "query_group_id": "intent-0d7744ba40a9bef6",
+      "family": "socket-height",
+      "category": "cooler",
+      "query_text": "Air cooler compatible with AM5, at most 60 mm high",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 60
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-radiator-01",
+      "query_group_id": "intent-0b9c65907ab9823e",
+      "family": "socket-radiator",
+      "category": "cooler",
+      "query_text": "AIO cooler for AM5 with a 140 mm radiator",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 140
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-fan-socket-01",
+      "query_group_id": "intent-be1459201f2477fb",
+      "family": "fan-socket",
+      "category": "cooler",
+      "query_text": "CPU cooler supporting AM5 with at least 2 fans",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-height-fans-01",
+      "query_group_id": "intent-6bfe64d2fda6178c",
+      "family": "height-fans",
+      "category": "cooler",
+      "query_text": "Low height air cooler up to 60 mm and at least 2 fans",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 60
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-radiator-fans-01",
+      "query_group_id": "intent-b018fee1058d4b36",
+      "family": "radiator-fans",
+      "category": "cooler",
+      "query_text": "Liquid cooler with a 140 mm radiator and at least 2 fans",
+      "must": [
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 140
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-height-02",
+      "query_group_id": "intent-14442f188fa1d98d",
+      "family": "socket-height",
+      "category": "cooler",
+      "query_text": "Air cooler compatible with LGA 1200, at most 80 mm high",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 80
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-radiator-02",
+      "query_group_id": "intent-f2030c7d59338c31",
+      "family": "socket-radiator",
+      "category": "cooler",
+      "query_text": "AIO cooler for LGA 1200 with a 180 mm radiator",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 180
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-fan-socket-02",
+      "query_group_id": "intent-d6725837e2a4b722",
+      "family": "fan-socket",
+      "category": "cooler",
+      "query_text": "CPU cooler supporting LGA 1200 with at least 3 fans",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-height-fans-02",
+      "query_group_id": "intent-4c9d0ac56c39c756",
+      "family": "height-fans",
+      "category": "cooler",
+      "query_text": "Low height air cooler up to 80 mm and at least 3 fans",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 80
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-radiator-fans-02",
+      "query_group_id": "intent-017a9eadfcd9fb4f",
+      "family": "radiator-fans",
+      "category": "cooler",
+      "query_text": "Liquid cooler with a 180 mm radiator and at least 3 fans",
+      "must": [
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 180
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-height-03",
+      "query_group_id": "intent-e3227395213ffc0c",
+      "family": "socket-height",
+      "category": "cooler",
+      "query_text": "Air cooler compatible with LGA 1700, at most 100 mm high",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1700"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 100
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-radiator-03",
+      "query_group_id": "intent-29958bda537e4e5a",
+      "family": "socket-radiator",
+      "category": "cooler",
+      "query_text": "AIO cooler for LGA 1700 with a 240 mm radiator",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1700"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 240
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-fan-socket-03",
+      "query_group_id": "intent-02a32d332a48d331",
+      "family": "fan-socket",
+      "category": "cooler",
+      "query_text": "CPU cooler supporting LGA 1700 with at least 1 fans",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1700"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-height-fans-03",
+      "query_group_id": "intent-33554055cf1b016a",
+      "family": "height-fans",
+      "category": "cooler",
+      "query_text": "Low height air cooler up to 100 mm and at least 1 fans",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 100
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-radiator-fans-03",
+      "query_group_id": "intent-1ab01297245f5069",
+      "family": "radiator-fans",
+      "category": "cooler",
+      "query_text": "Liquid cooler with a 240 mm radiator and at least 1 fans",
+      "must": [
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 240
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-height-04",
+      "query_group_id": "intent-04044b73500f8c85",
+      "family": "socket-height",
+      "category": "cooler",
+      "query_text": "Air cooler compatible with LGA 1851, at most 120 mm high",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1851"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 120
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-radiator-04",
+      "query_group_id": "intent-a0e44d4b0a7e83c0",
+      "family": "socket-radiator",
+      "category": "cooler",
+      "query_text": "AIO cooler for LGA 1851 with a 280 mm radiator",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1851"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-fan-socket-04",
+      "query_group_id": "intent-32fae2df5f9fad9a",
+      "family": "fan-socket",
+      "category": "cooler",
+      "query_text": "CPU cooler supporting LGA 1851 with at least 2 fans",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1851"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-height-fans-04",
+      "query_group_id": "intent-800f73c014c56450",
+      "family": "height-fans",
+      "category": "cooler",
+      "query_text": "Low height air cooler up to 120 mm and at least 2 fans",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 120
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-radiator-fans-04",
+      "query_group_id": "intent-3d1875b7c2c5c1c8",
+      "family": "radiator-fans",
+      "category": "cooler",
+      "query_text": "Liquid cooler with a 280 mm radiator and at least 2 fans",
+      "must": [
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-height-05",
+      "query_group_id": "intent-3cd0f67356fef567",
+      "family": "socket-height",
+      "category": "cooler",
+      "query_text": "Air cooler compatible with LGA 2066, at most 140 mm high",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 2066"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 140
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-radiator-05",
+      "query_group_id": "intent-07965e42e68220c1",
+      "family": "socket-radiator",
+      "category": "cooler",
+      "query_text": "AIO cooler for LGA 2066 with a 360 mm radiator",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 2066"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 360
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-fan-socket-05",
+      "query_group_id": "intent-d84acea744236911",
+      "family": "fan-socket",
+      "category": "cooler",
+      "query_text": "CPU cooler supporting LGA 2066 with at least 3 fans",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 2066"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-height-fans-05",
+      "query_group_id": "intent-ef081d99d308edf7",
+      "family": "height-fans",
+      "category": "cooler",
+      "query_text": "Low height air cooler up to 140 mm and at least 3 fans",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 140
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 3
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-radiator-fans-05",
+      "query_group_id": "intent-c60d4f0c72fb2c75",
+      "family": "radiator-fans",
+      "category": "cooler",
+      "query_text": "Liquid cooler with a 360 mm radiator and at least 3 fans",
+      "must": [
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 360
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-height-06",
+      "query_group_id": "intent-b747e24525020e37",
+      "family": "socket-height",
+      "category": "cooler",
+      "query_text": "Air cooler compatible with AM3, at most 160 mm high",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM3"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 160
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-radiator-06",
+      "query_group_id": "intent-227fdc41a128bf53",
+      "family": "socket-radiator",
+      "category": "cooler",
+      "query_text": "AIO cooler for AM3 with a 420 mm radiator",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM3"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 420
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-fan-socket-06",
+      "query_group_id": "intent-8e83467979d7ff96",
+      "family": "fan-socket",
+      "category": "cooler",
+      "query_text": "CPU cooler supporting AM3 with at least 1 fans",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM3"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-height-fans-06",
+      "query_group_id": "intent-dc8606757c2d248f",
+      "family": "height-fans",
+      "category": "cooler",
+      "query_text": "Low height air cooler up to 160 mm and at least 1 fans",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 160
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-radiator-fans-06",
+      "query_group_id": "intent-e344daed4a173703",
+      "family": "radiator-fans",
+      "category": "cooler",
+      "query_text": "Liquid cooler with a 420 mm radiator and at least 1 fans",
+      "must": [
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 420
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-height-07",
+      "query_group_id": "intent-f05e485543d037fe",
+      "family": "socket-height",
+      "category": "cooler",
+      "query_text": "Air cooler compatible with LGA 1151, at most 180 mm high",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1151"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 180
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-socket-radiator-07",
+      "query_group_id": "intent-5787c7b83ec63c07",
+      "family": "socket-radiator",
+      "category": "cooler",
+      "query_text": "AIO cooler for LGA 1151 with a 480 mm radiator",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1151"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 480
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-fan-socket-07",
+      "query_group_id": "intent-56e35782c6f541a9",
+      "family": "fan-socket",
+      "category": "cooler",
+      "query_text": "CPU cooler supporting LGA 1151 with at least 2 fans",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1151"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-height-fans-07",
+      "query_group_id": "intent-5135e2ed05de03c6",
+      "family": "height-fans",
+      "category": "cooler",
+      "query_text": "Low height air cooler up to 180 mm and at least 2 fans",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 180
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-cooler-radiator-fans-07",
+      "query_group_id": "intent-0c410d9b5dd5ba48",
+      "family": "radiator-fans",
+      "category": "cooler",
+      "query_text": "Liquid cooler with a 480 mm radiator and at least 2 fans",
+      "must": [
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 480
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-gpu-drive-bays-00",
+      "query_group_id": "intent-633cb0f61f93f2a6",
+      "family": "gpu-drive-bays",
+      "category": "case",
+      "query_text": "PC case for a 220 mm graphics card with at least 1 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 220
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-gpu-00",
+      "query_group_id": "intent-d6e1abaa671a4860",
+      "family": "board-gpu",
+      "category": "case",
+      "query_text": "Case supporting atx motherboard and a GPU at least 220 mm long",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-tower-clearance-00",
+      "query_group_id": "intent-0c87d68df3673f4b",
+      "family": "tower-clearance",
+      "category": "case",
+      "query_text": "mid tower case with GPU clearance at least 220 mm",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mid_tower"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-cooler-gpu-00",
+      "query_group_id": "intent-9ed68124aa4732fb",
+      "family": "cooler-gpu",
+      "category": "case",
+      "query_text": "Case fitting a 100 mm CPU cooler and 220 mm GPU",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 100
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-storage-00",
+      "query_group_id": "intent-1da5d602b4686935",
+      "family": "board-storage",
+      "category": "case",
+      "query_text": "Case supporting atx motherboard with at least 1 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-gpu-drive-bays-01",
+      "query_group_id": "intent-9da7c79fb7e04453",
+      "family": "gpu-drive-bays",
+      "category": "case",
+      "query_text": "PC case for a 240 mm graphics card with at least 2 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 240
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-gpu-01",
+      "query_group_id": "intent-57d184186cb04aa7",
+      "family": "board-gpu",
+      "category": "case",
+      "query_text": "Case supporting micro_atx motherboard and a GPU at least 240 mm long",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 240
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-tower-clearance-01",
+      "query_group_id": "intent-2d8a25b7046aaccd",
+      "family": "tower-clearance",
+      "category": "case",
+      "query_text": "mini tower case with GPU clearance at least 240 mm",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mini_tower"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 240
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-cooler-gpu-01",
+      "query_group_id": "intent-97a8b871bfd8173f",
+      "family": "cooler-gpu",
+      "category": "case",
+      "query_text": "Case fitting a 110 mm CPU cooler and 240 mm GPU",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 110
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 240
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-storage-01",
+      "query_group_id": "intent-18f18eb4416ba4eb",
+      "family": "board-storage",
+      "category": "case",
+      "query_text": "Case supporting micro_atx motherboard with at least 2 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-gpu-drive-bays-02",
+      "query_group_id": "intent-07008d71ffe126d8",
+      "family": "gpu-drive-bays",
+      "category": "case",
+      "query_text": "PC case for a 260 mm graphics card with at least 3 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 260
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-gpu-02",
+      "query_group_id": "intent-a0a4fded3ad2b051",
+      "family": "board-gpu",
+      "category": "case",
+      "query_text": "Case supporting mini_itx motherboard and a GPU at least 260 mm long",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 260
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-tower-clearance-02",
+      "query_group_id": "intent-7fab520f4b610323",
+      "family": "tower-clearance",
+      "category": "case",
+      "query_text": "full tower case with GPU clearance at least 260 mm",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "full_tower"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 260
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-cooler-gpu-02",
+      "query_group_id": "intent-f24fa083849b3328",
+      "family": "cooler-gpu",
+      "category": "case",
+      "query_text": "Case fitting a 120 mm CPU cooler and 260 mm GPU",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 120
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 260
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-storage-02",
+      "query_group_id": "intent-05ae83d4fdb92216",
+      "family": "board-storage",
+      "category": "case",
+      "query_text": "Case supporting mini_itx motherboard with at least 3 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-gpu-drive-bays-03",
+      "query_group_id": "intent-f9254645f5f7e67f",
+      "family": "gpu-drive-bays",
+      "category": "case",
+      "query_text": "PC case for a 280 mm graphics card with at least 4 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-gpu-03",
+      "query_group_id": "intent-6fd24f524b79c76d",
+      "family": "board-gpu",
+      "category": "case",
+      "query_text": "Case supporting e_atx motherboard and a GPU at least 280 mm long",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "e_atx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 280
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-tower-clearance-03",
+      "query_group_id": "intent-362b40892b2f3e25",
+      "family": "tower-clearance",
+      "category": "case",
+      "query_text": "small form factor case with GPU clearance at least 280 mm",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "small_form_factor"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 280
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-cooler-gpu-03",
+      "query_group_id": "intent-69374e0ebef1d3a8",
+      "family": "cooler-gpu",
+      "category": "case",
+      "query_text": "Case fitting a 130 mm CPU cooler and 280 mm GPU",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 130
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 280
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-storage-03",
+      "query_group_id": "intent-88875818a362ece1",
+      "family": "board-storage",
+      "category": "case",
+      "query_text": "Case supporting e_atx motherboard with at least 4 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "e_atx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-gpu-drive-bays-04",
+      "query_group_id": "intent-2e92f2231f48f560",
+      "family": "gpu-drive-bays",
+      "category": "case",
+      "query_text": "PC case for a 300 mm graphics card with at least 5 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 300
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-gpu-04",
+      "query_group_id": "intent-c1dd4d556f7e974c",
+      "family": "board-gpu",
+      "category": "case",
+      "query_text": "Case supporting atx motherboard and a GPU at least 300 mm long",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-tower-clearance-04",
+      "query_group_id": "intent-e59be65b1bb41d3b",
+      "family": "tower-clearance",
+      "category": "case",
+      "query_text": "mid tower case with GPU clearance at least 300 mm",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mid_tower"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-cooler-gpu-04",
+      "query_group_id": "intent-a8180ebaf9c01678",
+      "family": "cooler-gpu",
+      "category": "case",
+      "query_text": "Case fitting a 140 mm CPU cooler and 300 mm GPU",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 140
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-storage-04",
+      "query_group_id": "intent-29f8e76c93d5a78e",
+      "family": "board-storage",
+      "category": "case",
+      "query_text": "Case supporting atx motherboard with at least 5 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-gpu-drive-bays-05",
+      "query_group_id": "intent-363920db32f3a288",
+      "family": "gpu-drive-bays",
+      "category": "case",
+      "query_text": "PC case for a 320 mm graphics card with at least 6 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 320
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-gpu-05",
+      "query_group_id": "intent-2f9fe890a343ff9d",
+      "family": "board-gpu",
+      "category": "case",
+      "query_text": "Case supporting micro_atx motherboard and a GPU at least 320 mm long",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 320
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-tower-clearance-05",
+      "query_group_id": "intent-0ba2719d77f16d30",
+      "family": "tower-clearance",
+      "category": "case",
+      "query_text": "mini tower case with GPU clearance at least 320 mm",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "mini_tower"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 320
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-cooler-gpu-05",
+      "query_group_id": "intent-22d5e01794771919",
+      "family": "cooler-gpu",
+      "category": "case",
+      "query_text": "Case fitting a 150 mm CPU cooler and 320 mm GPU",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 150
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 320
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-storage-05",
+      "query_group_id": "intent-72eac1b997a902d6",
+      "family": "board-storage",
+      "category": "case",
+      "query_text": "Case supporting micro_atx motherboard with at least 6 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-gpu-drive-bays-06",
+      "query_group_id": "intent-215a5e3f1239330d",
+      "family": "gpu-drive-bays",
+      "category": "case",
+      "query_text": "PC case for a 340 mm graphics card with at least 7 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 340
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-gpu-06",
+      "query_group_id": "intent-3982f956897f3832",
+      "family": "board-gpu",
+      "category": "case",
+      "query_text": "Case supporting mini_itx motherboard and a GPU at least 340 mm long",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 340
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-tower-clearance-06",
+      "query_group_id": "intent-59a17650af2d81e4",
+      "family": "tower-clearance",
+      "category": "case",
+      "query_text": "full tower case with GPU clearance at least 340 mm",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "full_tower"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 340
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-cooler-gpu-06",
+      "query_group_id": "intent-bf205b7e80ce857d",
+      "family": "cooler-gpu",
+      "category": "case",
+      "query_text": "Case fitting a 160 mm CPU cooler and 340 mm GPU",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 160
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 340
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-storage-06",
+      "query_group_id": "intent-bac8a360a68135e2",
+      "family": "board-storage",
+      "category": "case",
+      "query_text": "Case supporting mini_itx motherboard with at least 7 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-gpu-drive-bays-07",
+      "query_group_id": "intent-644af9d124a90508",
+      "family": "gpu-drive-bays",
+      "category": "case",
+      "query_text": "PC case for a 360 mm graphics card with at least 8 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 360
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-gpu-07",
+      "query_group_id": "intent-79cffc6916e61591",
+      "family": "board-gpu",
+      "category": "case",
+      "query_text": "Case supporting e_atx motherboard and a GPU at least 360 mm long",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "e_atx"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 360
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-tower-clearance-07",
+      "query_group_id": "intent-64e2d8d225a53c9c",
+      "family": "tower-clearance",
+      "category": "case",
+      "query_text": "small form factor case with GPU clearance at least 360 mm",
+      "must": [
+        {
+          "field": "category_attributes.case_size",
+          "operator": "eq",
+          "value": "small_form_factor"
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 360
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-cooler-gpu-07",
+      "query_group_id": "intent-14b5c7113e776219",
+      "family": "cooler-gpu",
+      "category": "case",
+      "query_text": "Case fitting a 170 mm CPU cooler and 360 mm GPU",
+      "must": [
+        {
+          "field": "category_attributes.maximum_cooler_height_mm",
+          "operator": "ge",
+          "value": 170
+        },
+        {
+          "field": "category_attributes.maximum_gpu_length_mm",
+          "operator": "ge",
+          "value": 360
+        }
+      ]
+    },
+    {
+      "query_id": "fresh-v1-case-board-storage-07",
+      "query_group_id": "intent-1226d65c6f345138",
+      "family": "board-storage",
+      "category": "case",
+      "query_text": "Case supporting e_atx motherboard with at least 8 drive bays",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "e_atx"
+        },
+        {
+          "field": "category_attributes.drive_bays",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    }
+  ]
+}
