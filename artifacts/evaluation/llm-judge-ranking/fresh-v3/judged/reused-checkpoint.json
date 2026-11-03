@@ -1,0 +1,10 @@
+{
+  "source_sha256": "a61457ed65c8e51969dc3b749c9cf3a20e7998f8af2e3f553f7c565ac14cf5ac",
+  "queue_sha256": "3365fbbc4550107d0e1399ac6b0811fb9d2d9213539e99071e198272d0aeaec8",
+  "matched_count": 224,
+  "rebound_identical_blinded_inputs": 134,
+  "source_queue_sha256": "f091c1ca1781869b4c303ea086b1958ed5b723cb40b7267a20bc69564aecd60e",
+  "target_sha256": "9f1f19a036fb608a7b247d7d955a69bfe20073dcbb1c0e26036ed44d4b02c773",
+  "model_id": "gpt-6-luna",
+  "prompt_version": "pcbr-llm-relevance-rubric-v2"
+}
