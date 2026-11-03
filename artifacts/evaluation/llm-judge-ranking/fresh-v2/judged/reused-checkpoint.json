@@ -1,0 +1,8 @@
+{
+  "source_sha256": "85d01ece5fd1b4f55c30e0044f0d2661998f1943af8a1c461b6ec4b3b0a95d31",
+  "queue_sha256": "f091c1ca1781869b4c303ea086b1958ed5b723cb40b7267a20bc69564aecd60e",
+  "matched_count": 96,
+  "target_sha256": "76fc1f055139e1aeb55b300d0dda9e83ee954f15bdd71a3e2bcd5288628527f1",
+  "model_id": "gpt-6-luna",
+  "prompt_version": "pcbr-llm-relevance-rubric-v2"
+}

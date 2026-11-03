@@ -1,0 +1,8 @@
+{
+  "schema_version": "pcbr.label-independent-constraint-features.v1",
+  "queue_sha256": "f091c1ca1781869b4c303ea086b1958ed5b723cb40b7267a20bc69564aecd60e",
+  "features_sha256": "2f7464fde5bf3ea83b37411892b07c7e98aaafdd90d889090c2456872c61fa98",
+  "pair_count": 8848,
+  "formula": "fraction of explicit hard requirements verified satisfied; unknowns are not counted as satisfied",
+  "evidence": "computed only from frozen query requirements and catalogue fields; no labels or judge explanations"
+}
