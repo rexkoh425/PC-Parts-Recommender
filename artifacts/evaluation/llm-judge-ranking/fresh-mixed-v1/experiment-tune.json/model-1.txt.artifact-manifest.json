@@ -1,0 +1,15 @@
+{
+  "files": {
+    "model-1.txt": {
+      "sha256": "0debdb3487cf91bed7e34221bcad311385208cf411ea39802881c77bddb93fed",
+      "size_bytes": 7051
+    },
+    "model-1.txt.metadata.json": {
+      "sha256": "6d2171df515054890179e58a5d17fcf505de2e2b20d04c0fa8259b8221cb8bf1",
+      "size_bytes": 2586
+    }
+  },
+  "manifest_sha256": "3f4697f98ab25bf41b63405c1d629f2a570b7e93865d019a449c3578b6ab48c8",
+  "ranker_version": "llm-diagnostic-1",
+  "schema_version": "pc-build-recommender.lambdamart-artifact-manifest.v1"
+}

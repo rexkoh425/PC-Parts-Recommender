@@ -1,0 +1,14 @@
+{
+  "schema_version": "pcbr.query-split-audit.v1",
+  "snapshot_sha256": "f3700c3e04f695462f1aebdfb0642d0d11340979143f514d11fb52a8d4120f03",
+  "previous_queries_sha256": "fac11c46a59f1cfe88908fb2b7f0188e018c956665cd885f7ceceff4d8469968",
+  "query_count": 282,
+  "group_count": 281,
+  "threshold": 0.8,
+  "max_cross_split_similarity": 0.7976077198982239,
+  "max_previous_similarity": 0.7963187098503113,
+  "cross_split_matches": [],
+  "previous_query_matches": [],
+  "encoder_device": "cuda",
+  "limitation": "embedding similarity is an automated screen and cannot prove semantic independence"
+}

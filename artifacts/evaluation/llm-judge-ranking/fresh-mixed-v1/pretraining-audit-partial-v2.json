@@ -1,0 +1,39 @@
+{
+  "schema_version": "pcbr.mixed-llm-judgment-audit.v1",
+  "complete": false,
+  "task_count": 7896,
+  "valid_judgments": 5717,
+  "missing_judgments": 2179,
+  "query_count": 282,
+  "query_group_count": 281,
+  "complete_query_count": 202,
+  "split_group_counts": {
+    "train": 169,
+    "validation": 57,
+    "test": 55
+  },
+  "judge_group_counts": {
+    "gpt-5.6-luna": 270,
+    "gpt-6-luna": 11
+  },
+  "split_judge_group_counts": {
+    "test:gpt-5.6-luna": 53,
+    "test:gpt-6-luna": 2,
+    "train:gpt-5.6-luna": 161,
+    "train:gpt-6-luna": 8,
+    "validation:gpt-5.6-luna": 56,
+    "validation:gpt-6-luna": 1
+  },
+  "frozen_queue_sha256": "71e7e117b9908c87f2b19deb075abe6e863c459d48384024cfb8ba5c9c11b6de",
+  "snapshot_sha256": "f3700c3e04f695462f1aebdfb0642d0d11340979143f514d11fb52a8d4120f03",
+  "judge_assignments_sha256": "4ee52d65f0b500509950feccf1adabf52c501fb04aed41e555f641010870411c",
+  "original_judgments_sha256": "d10ec1c826e5178f2ec815cd822f0d7658d075e71d3579e98ad16ebadc270068",
+  "alternative_judgments_sha256": "992dea94cb89ee3ba0a7079da1ef84b51a329af530e1fc1fdb5e7a3ddf386ea3",
+  "prompt_version": "pcbr-llm-relevance-rubric-v2",
+  "rubric_sha256": "f3a603fc5bc89393ef50bb91162cd4a75f06d67701415c7e060d9969de5819d5",
+  "query_split_audit_sha256": "701f9408794ea18e95e52e856832c33164111ce8c9ae06e1bdd4ede554c96203",
+  "feature_snapshot_sha256": "57aa52a265dc7ecefab1ed5c0cefbc6e8b407da5fc3ac2f38924472159861686",
+  "constraint_overrides_sha256": "cf46a4987bbb60c069964674d1508d9606f0436995e221d1b782d3c8b9a991ba",
+  "runtime_note_sha256": "b3c31c8a9ed9bade7ae5962402fa8c236612a8d5d6e580e6af84a0d5f57a4477",
+  "limitation": "validates recorded hard checks and provenance, not every free-text rationale or human relevance"
+}

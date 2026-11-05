@@ -1,0 +1,19 @@
+{
+  "schema_version": "pcbr.frozen-query-constraint-overrides.v1",
+  "source_snapshot_sha256": "f3700c3e04f695462f1aebdfb0642d0d11340979143f514d11fb52a8d4120f03",
+  "created_before_target_query_judgments": true,
+  "created_at_utc": "2026-11-08T08:42:00.027784+00:00",
+  "target_judgments_at_creation": 0,
+  "overrides": {
+    "diverse-v1-motherboard-00-022": [
+      {
+        "field": "category_attributes.memory_type",
+        "operator": "eq",
+        "value": "ddr4",
+        "hard": true,
+        "name": "reuse of explicitly stated DDR4 DIMMs"
+      }
+    ]
+  },
+  "reason": "The query explicitly requires retaining DDR4 DIMMs; its generated structured requirements omitted that constraint."
+}

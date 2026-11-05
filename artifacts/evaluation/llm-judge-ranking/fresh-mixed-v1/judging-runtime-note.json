@@ -1,0 +1,12 @@
+{
+  "schema_version": "pcbr.judging-runtime-note.v1",
+  "prompt_version": "pcbr-llm-relevance-rubric-v2",
+  "prompt_rubric_sha256": "f3a603fc5bc89393ef50bb91162cd4a75f06d67701415c7e060d9969de5819d5",
+  "limitation": "The exact judge source file hash at the start of the running process was not captured.",
+  "subsequent_changes": [
+    "Added an explicit unknown result for empty scalar or collection values in hard checks.",
+    "Added an optional balanced scheduling mode and an additional raw-contradiction summary count."
+  ],
+  "frozen_alternative_queue_empty_hard_check_values": 0,
+  "interpretation": "The changed empty-value rule cannot alter any hard-check outcome in the frozen alternative queue. Scheduling and summary changes do not alter judge prompts or relevance grades."
+}

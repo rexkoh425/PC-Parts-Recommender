@@ -1,0 +1,129 @@
+{
+  "schema_version": "pcbr.mixed-llm-weak-judgments.v1",
+  "label_source": "llm_weak",
+  "eligible_for_production_or_human_quality_claims": false,
+  "training_dataset_ready": true,
+  "unresolved_task_count": 0,
+  "input_sha256": "71e7e117b9908c87f2b19deb075abe6e863c459d48384024cfb8ba5c9c11b6de",
+  "ranking_dataset_sha256": "4fba27c1b415ada952548eb26ebea3bab97c3b481e8ec59768f323217836a583",
+  "source_manifest_sha256": "e0147f0b800a6ffdf11af8641a99e8556923c91c48b49080d0e6dadbb2b91e63",
+  "final_judgment_audit_sha256": "1d47d4e028e620a77983d6e16bccc3ad8e5d167e2838ecb6a6512e84adf46c2c",
+  "alternative_summary_sha256": "b23223c1e7be9d43b1f046f4812235668df7c39922432d25a4bdcc09843620cc",
+  "judge_assignments_sha256": "4ee52d65f0b500509950feccf1adabf52c501fb04aed41e555f641010870411c",
+  "model_id": "mixed-by-query",
+  "primary_judge_model": "gpt-5.6-luna",
+  "model_counts": {
+    "gpt-6-luna": 308,
+    "gpt-5.6-luna": 7588
+  },
+  "prompt_version": "pcbr-llm-relevance-rubric-v2",
+  "task_count": 7896,
+  "query_count": 282,
+  "grade_counts": {
+    "0": 3125,
+    "1": 285,
+    "2": 2219,
+    "3": 844,
+    "4": 1423
+  },
+  "constraint_overrides_sha256": "cf46a4987bbb60c069964674d1508d9606f0436995e221d1b782d3c8b9a991ba",
+  "supplemental_constraint_task_count": 28,
+  "supplemental_grade_corrections": 0,
+  "supplemental_hard_violation_count": 3,
+  "supplemental_hard_unknown_count": 0,
+  "supplemental_high_grade_contradictions": 0,
+  "grade_counts_by_model": {
+    "gpt-6-luna": {
+      "0": 162,
+      "1": 1,
+      "2": 51,
+      "3": 6,
+      "4": 88
+    },
+    "gpt-5.6-luna": {
+      "0": 2963,
+      "1": 284,
+      "2": 2168,
+      "3": 838,
+      "4": 1335
+    }
+  },
+  "grade_counts_by_category": {
+    "case": {
+      "0": 242,
+      "1": 42,
+      "2": 332,
+      "3": 101,
+      "4": 151
+    },
+    "cooler": {
+      "0": 427,
+      "1": 27,
+      "2": 307,
+      "3": 108,
+      "4": 167
+    },
+    "cpu": {
+      "0": 254,
+      "1": 94,
+      "2": 360,
+      "3": 179,
+      "4": 149
+    },
+    "gpu": {
+      "0": 494,
+      "1": 14,
+      "2": 161,
+      "3": 103,
+      "4": 264
+    },
+    "memory": {
+      "0": 496,
+      "1": 13,
+      "2": 242,
+      "3": 122,
+      "4": 163
+    },
+    "motherboard": {
+      "0": 606,
+      "1": 29,
+      "2": 203,
+      "3": 40,
+      "4": 158
+    },
+    "power_supply": {
+      "0": 420,
+      "1": 61,
+      "2": 212,
+      "3": 101,
+      "4": 242
+    },
+    "storage": {
+      "0": 186,
+      "1": 5,
+      "2": 402,
+      "3": 90,
+      "4": 129
+    }
+  },
+  "confidence_buckets_by_model": {
+    "gpt-6-luna": {
+      "0.8_to_1.0": 301,
+      "0.5_to_below_0.8": 7
+    },
+    "gpt-5.6-luna": {
+      "0.8_to_1.0": 7588
+    }
+  },
+  "confidence_recorded_count": 7896,
+  "missing_evidence_count": 7861,
+  "hard_violation_count": 2919,
+  "hard_unknown_count": 369,
+  "raw_high_grade_hard_contradiction_count": 3,
+  "final_hard_contradiction_count": 0,
+  "prompt_tokens": 6963541,
+  "completion_tokens": 1763156,
+  "estimated_cost_usd": null,
+  "limitation": "each query uses one judge; model assignment follows route availability and is not randomized",
+  "constraint_override_audit_sha256": "6800afdd75877fbf9b3b712d222dc576ce5a592fe6ac3f017880c93e8bd86cbf"
+}

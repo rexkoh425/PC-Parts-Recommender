@@ -1,0 +1,2064 @@
+{
+  "schema_version": "pcbr.llm-ranking-holdout.v1",
+  "label_source": "llm_weak",
+  "eligible_for_promotion": false,
+  "selection_sha256": "bab19f81bd77fc8f892b18c4018067a41f1c363c1e84a429af96f15a48a490e1",
+  "primary_judge_model": "gpt-5.6-luna",
+  "query_count": 53,
+  "all_judges_query_count": 55,
+  "group_count": 53,
+  "models": {
+    "bm25": {
+      "ndcg_at_10": 0.45583986367617824,
+      "mrr": 0.6334456424079066,
+      "recall_at_20": 0.7888514211841713,
+      "recall_at_50": 1.0
+    },
+    "vector": {
+      "ndcg_at_10": 0.5755132773662625,
+      "mrr": 0.7823981050396145,
+      "recall_at_20": 0.7892104907239852,
+      "recall_at_50": 1.0
+    },
+    "rrf": {
+      "ndcg_at_10": 0.5835013089502546,
+      "mrr": 0.821166516921234,
+      "recall_at_20": 0.7572195169057971,
+      "recall_at_50": 1.0
+    },
+    "lambdamart": {
+      "ndcg_at_10": 0.846667640344574,
+      "mrr": 0.9811320754716981,
+      "recall_at_20": 0.8825812120649078,
+      "recall_at_50": 1.0
+    }
+  },
+  "absolute_ndcg_delta_vs_rrf": 0.26316633139431933,
+  "relative_ndcg_delta_vs_rrf": 0.45101240966839906,
+  "paired_group_bootstrap_95_ci": [
+    0.18619078164887476,
+    0.3400315437880767
+  ],
+  "bootstrap_resamples": 1000,
+  "ndcg_95_ci_by_model": {
+    "bm25": [
+      0.3811161000540255,
+      0.5298254725624683
+    ],
+    "vector": [
+      0.4955214673263798,
+      0.6518707683755315
+    ],
+    "rrf": [
+      0.5169355742093329,
+      0.64950870584449
+    ],
+    "lambdamart": [
+      0.7945458201312708,
+      0.9001841691574178
+    ]
+  },
+  "wins": 38,
+  "losses": 10,
+  "ties": 5,
+  "win_rate": 0.7169811320754716,
+  "queries_without_relevant_candidates": 1,
+  "homogeneous_grade_query_count": 2,
+  "informative_query_count": 51,
+  "informative_query_ndcg_delta_vs_rrf": 0.27348657968429263,
+  "informative_query_delta_95_ci": [
+    0.19560794585516805,
+    0.352797540177259
+  ],
+  "by_category": {
+    "case": {
+      "bm25": 0.4440414264734495,
+      "vector": 0.4659109123657287,
+      "rrf": 0.47459595577045516,
+      "lambdamart": 0.7764397341863453
+    },
+    "cooler": {
+      "bm25": 0.5065444710526716,
+      "vector": 0.6113310074415829,
+      "rrf": 0.6076505675273515,
+      "lambdamart": 0.8978260332339032
+    },
+    "cpu": {
+      "bm25": 0.4079110086643952,
+      "vector": 0.6921023986137199,
+      "rrf": 0.5253558559622216,
+      "lambdamart": 0.9043834746261373
+    },
+    "gpu": {
+      "bm25": 0.39042870495800924,
+      "vector": 0.557850556431403,
+      "rrf": 0.5555069605529805,
+      "lambdamart": 0.9105340451876893
+    },
+    "memory": {
+      "bm25": 0.6305750529398058,
+      "vector": 0.3745938358485165,
+      "rrf": 0.547332306237211,
+      "lambdamart": 0.799057295813472
+    },
+    "motherboard": {
+      "bm25": 0.310686588448915,
+      "vector": 0.2682969809038958,
+      "rrf": 0.43148377950891154,
+      "lambdamart": 0.7360554839827728
+    },
+    "power_supply": {
+      "bm25": 0.38037203869706354,
+      "vector": 0.7387849924107809,
+      "rrf": 0.6953947990713077,
+      "lambdamart": 0.8870332504607767
+    },
+    "storage": {
+      "bm25": 0.6460570487404966,
+      "vector": 0.7212401685747771,
+      "rrf": 0.6761750594148184,
+      "lambdamart": 0.76939887476966
+    }
+  },
+  "by_judge_model": {
+    "gpt-5.6-luna": {
+      "query_count": 53,
+      "rrf_ndcg_at_10": 0.5835013089502546,
+      "lambdamart_ndcg_at_10": 0.846667640344574
+    },
+    "gpt-6-luna": {
+      "query_count": 2,
+      "rrf_ndcg_at_10": 0.5183033454324539,
+      "lambdamart_ndcg_at_10": 0.9836095206536895
+    }
+  },
+  "inference_p95_ms": 0.7228099944768474,
+  "scope": "conditional on 28 judged candidates per query; recall@50 is not catalogue recall",
+  "queries": [
+    {
+      "query_id": "diverse-v1-case-00-023",
+      "query_group_id": "diverse-v1-case-00-023",
+      "category": "case",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 9,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.7210999901872128,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.27042490670952474,
+          "mrr": 0.5,
+          "recall_at_20": 0.6666666666666666,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.49043751273826075,
+          "mrr": 1.0,
+          "recall_at_20": 0.8888888888888888,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.445877335040439,
+          "mrr": 1.0,
+          "recall_at_20": 0.7777777777777778,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9749296172878347,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-case-00-024",
+      "query_group_id": "diverse-v1-case-00-024",
+      "category": "case",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 17,
+      "distinct_grade_count": 4,
+      "inference_ms": 0.5204000044614077,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.3857424026215931,
+          "mrr": 0.5,
+          "recall_at_20": 0.6470588235294118,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.12028922533412272,
+          "mrr": 0.5,
+          "recall_at_20": 0.7058823529411765,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.2685053939974182,
+          "mrr": 0.5,
+          "recall_at_20": 0.6470588235294118,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9881881401253481,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-case-00-030",
+      "query_group_id": "diverse-v1-case-00-030",
+      "category": "case",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.4526999837253243,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.5021963083411567,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.6558315703196822,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.6440470895500366,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.6555352734270236,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-case-01-005",
+      "query_group_id": "diverse-v1-case-01-005",
+      "category": "case",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4349999944679439,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.6178020882215236,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.5970853410708491,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5399540044939268,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.48710590590517494,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-002",
+      "query_group_id": "diverse-v1-cooler-00-002",
+      "category": "cooler",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 9,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.4394999996293336,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.23504554941448538,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.3712485146761126,
+          "mrr": 0.3333333333333333,
+          "recall_at_20": 0.8888888888888888,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.4882440809159566,
+          "mrr": 0.5,
+          "recall_at_20": 0.8888888888888888,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-008",
+      "query_group_id": "diverse-v1-cooler-00-008",
+      "category": "cooler",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 15,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4346999921835959,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.35042765035831197,
+          "mrr": 0.5,
+          "recall_at_20": 0.9333333333333333,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.4218518243119653,
+          "mrr": 1.0,
+          "recall_at_20": 0.9333333333333333,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.6286364914405463,
+          "mrr": 1.0,
+          "recall_at_20": 0.8666666666666667,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.7438126119726457,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-021",
+      "query_group_id": "diverse-v1-cooler-00-021",
+      "category": "cooler",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 1,
+      "inference_ms": 0.7582000107504427,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-022",
+      "query_group_id": "diverse-v1-cooler-00-022",
+      "category": "cooler",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 5,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.6458999996539205,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.02190734062623495,
+          "mrr": 0.1,
+          "recall_at_20": 0.6,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.5206524399375616,
+          "mrr": 0.5,
+          "recall_at_20": 0.8,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.126311578071091,
+          "mrr": 0.14285714285714285,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9945897267098686,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-026",
+      "query_group_id": "diverse-v1-cooler-00-026",
+      "category": "cooler",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 19,
+      "distinct_grade_count": 5,
+      "inference_ms": 0.5254999850876629,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.45370938078821454,
+          "mrr": 1.0,
+          "recall_at_20": 0.7368421052631579,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.4146736794976944,
+          "mrr": 1.0,
+          "recall_at_20": 0.6842105263157895,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5941946632620138,
+          "mrr": 1.0,
+          "recall_at_20": 0.631578947368421,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.7851507226534515,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-040",
+      "query_group_id": "diverse-v1-cooler-00-040",
+      "category": "cooler",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.47339999582618475,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.9575861412006988,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-008",
+      "query_group_id": "diverse-v1-cooler-01-008",
+      "category": "cooler",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 23,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.6469000072684139,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.49548240504886165,
+          "mrr": 1.0,
+          "recall_at_20": 0.6521739130434783,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.5354396881160303,
+          "mrr": 0.5,
+          "recall_at_20": 0.7391304347826086,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5528589406865921,
+          "mrr": 1.0,
+          "recall_at_20": 0.6956521739130435,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.5568812377691619,
+          "mrr": 1.0,
+          "recall_at_20": 0.7391304347826086,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-022",
+      "query_group_id": "diverse-v1-cooler-01-022",
+      "category": "cooler",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 24,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.4791999817825854,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.7663491917568948,
+          "mrr": 1.0,
+          "recall_at_20": 0.7083333333333334,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7916666666666666,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.8318477135310892,
+          "mrr": 1.0,
+          "recall_at_20": 0.7083333333333334,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.8333333333333334,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-024",
+      "query_group_id": "diverse-v1-cooler-01-024",
+      "category": "cooler",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 6,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.44609999167732894,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.27839258028034286,
+          "mrr": 0.5,
+          "recall_at_20": 0.6666666666666666,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.23811292043488155,
+          "mrr": 0.25,
+          "recall_at_20": 0.8333333333333334,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.24676163983887406,
+          "mrr": 0.3333333333333333,
+          "recall_at_20": 0.6666666666666666,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-006",
+      "query_group_id": "diverse-v1-cpu-00-006",
+      "category": "cpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 18,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.43330001062713563,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.45385191071502423,
+          "mrr": 0.25,
+          "recall_at_20": 0.8333333333333334,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.47938213678331176,
+          "mrr": 0.5,
+          "recall_at_20": 0.7222222222222222,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.38223600083875253,
+          "mrr": 0.25,
+          "recall_at_20": 0.6666666666666666,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9629700149670521,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-019",
+      "query_group_id": "diverse-v1-cpu-00-019",
+      "category": "cpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 19,
+      "distinct_grade_count": 5,
+      "inference_ms": 0.42719999328255653,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.12423302992674073,
+          "mrr": 1.0,
+          "recall_at_20": 0.5789473684210527,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.95818758987804,
+          "mrr": 1.0,
+          "recall_at_20": 0.8421052631578947,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5697489338648943,
+          "mrr": 1.0,
+          "recall_at_20": 0.7368421052631579,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.882617724641024,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-022",
+      "query_group_id": "diverse-v1-cpu-00-022",
+      "category": "cpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 14,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.4276999970898032,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.32730659600127,
+          "mrr": 0.5,
+          "recall_at_20": 0.6428571428571429,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.4615890699208637,
+          "mrr": 0.5,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.420217226795578,
+          "mrr": 0.3333333333333333,
+          "recall_at_20": 0.5714285714285714,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-033",
+      "query_group_id": "diverse-v1-cpu-00-033",
+      "category": "cpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4321000014897436,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.3610407712267702,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.7199335990711243,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.4814543828597122,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9032068980704394,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-037",
+      "query_group_id": "diverse-v1-cpu-00-037",
+      "category": "cpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.4262999864295125,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.773122735452171,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.84141959741526,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.773122735452171,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.773122735452171,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-008",
+      "query_group_id": "diverse-v1-gpu-00-008",
+      "category": "gpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 14,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.42719999328255653,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.1736666713479918,
+          "mrr": 0.3333333333333333,
+          "recall_at_20": 0.8571428571428571,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.8643145546088338,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.9646644141576591,
+          "mrr": 1.0,
+          "recall_at_20": 0.9285714285714286,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.949446205669573,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-011",
+      "query_group_id": "diverse-v1-gpu-00-011",
+      "category": "gpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 18,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4476999747566879,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.3312392961638528,
+          "mrr": 0.3333333333333333,
+          "recall_at_20": 0.7777777777777778,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.9266360779006401,
+          "mrr": 1.0,
+          "recall_at_20": 0.8333333333333334,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5302442049991307,
+          "mrr": 0.5,
+          "recall_at_20": 0.7222222222222222,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9629700149670521,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-016",
+      "query_group_id": "diverse-v1-gpu-00-016",
+      "category": "gpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 24,
+      "distinct_grade_count": 4,
+      "inference_ms": 0.4322999739088118,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.7799082337019199,
+          "mrr": 0.5,
+          "recall_at_20": 0.75,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.44608302262859634,
+          "mrr": 1.0,
+          "recall_at_20": 0.7083333333333334,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5483161431660191,
+          "mrr": 1.0,
+          "recall_at_20": 0.6666666666666666,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9228520040356991,
+          "mrr": 1.0,
+          "recall_at_20": 0.8333333333333334,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-021",
+      "query_group_id": "diverse-v1-gpu-00-021",
+      "category": "gpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 19,
+      "distinct_grade_count": 4,
+      "inference_ms": 0.43730001198127866,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.32106832935372887,
+          "mrr": 1.0,
+          "recall_at_20": 0.7368421052631579,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.6913390669973937,
+          "mrr": 1.0,
+          "recall_at_20": 0.7368421052631579,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.7520567918780658,
+          "mrr": 1.0,
+          "recall_at_20": 0.7368421052631579,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.6562619169318697,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-022",
+      "query_group_id": "diverse-v1-gpu-00-022",
+      "category": "gpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 12,
+      "distinct_grade_count": 5,
+      "inference_ms": 0.42669998947530985,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.37337213791339385,
+          "mrr": 0.3333333333333333,
+          "recall_at_20": 0.5,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.17108782836582614,
+          "mrr": 1.0,
+          "recall_at_20": 0.8333333333333334,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.2844823314159428,
+          "mrr": 1.0,
+          "recall_at_20": 0.5833333333333334,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9716741295219415,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-033",
+      "query_group_id": "diverse-v1-gpu-00-033",
+      "category": "gpu",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 4,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.44150001485832036,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.3633175612671683,
+          "mrr": 0.3333333333333333,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.24764278808712772,
+          "mrr": 0.14285714285714285,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.2532778777010656,
+          "mrr": 0.14285714285714285,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-memory-00-003",
+      "query_group_id": "diverse-v1-memory-00-003",
+      "category": "memory",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 11,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4336999845691025,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.5026455539791829,
+          "mrr": 0.25,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.08115183909439805,
+          "mrr": 0.16666666666666666,
+          "recall_at_20": 0.6363636363636364,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.4374170338175849,
+          "mrr": 1.0,
+          "recall_at_20": 0.7272727272727273,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-memory-00-035",
+      "query_group_id": "diverse-v1-memory-00-035",
+      "category": "memory",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.42830000165849924,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.92663607790064,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-memory-01-000",
+      "query_group_id": "diverse-v1-memory-01-000",
+      "category": "memory",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 4,
+      "inference_ms": 0.4333999822847545,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.6405944532560961,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.47785251280003616,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5525443363479161,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.433136496701751,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-memory-01-003",
+      "query_group_id": "diverse-v1-memory-01-003",
+      "category": "memory",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4296999832149595,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.7302835459100889,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.6885586631966648,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.6971521009772017,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.6239646712917846,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-001",
+      "query_group_id": "diverse-v1-motherboard-00-001",
+      "category": "motherboard",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 9,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.43089999235235155,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.23504554941448538,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.323652683850865,
+          "mrr": 0.25,
+          "recall_at_20": 0.8888888888888888,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.7767471075223498,
+          "mrr": 1.0,
+          "recall_at_20": 0.8888888888888888,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-007",
+      "query_group_id": "diverse-v1-motherboard-00-007",
+      "category": "motherboard",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 11,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.42520000715740025,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.32776097292662437,
+          "mrr": 0.25,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.5621931439243356,
+          "mrr": 1.0,
+          "recall_at_20": 0.8181818181818182,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.4505655760587973,
+          "mrr": 1.0,
+          "recall_at_20": 0.8181818181818182,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-022",
+      "query_group_id": "diverse-v1-motherboard-00-022",
+      "category": "motherboard",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 16,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4278999986127019,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.19972060373394881,
+          "mrr": 0.25,
+          "recall_at_20": 0.75,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.7239360576481743,
+          "mrr": 1.0,
+          "recall_at_20": 0.9375,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.7073564366516834,
+          "mrr": 1.0,
+          "recall_at_20": 0.875,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.477363549951396,
+          "mrr": 1.0,
+          "recall_at_20": 0.5625,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-033",
+      "query_group_id": "diverse-v1-motherboard-00-033",
+      "category": "motherboard",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 7,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.4262000147718936,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.3753321301177287,
+          "mrr": 0.2,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0.09090909090909091,
+          "recall_at_20": 0.8571428571428571,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.08274602130532004,
+          "mrr": 0.1111111111111111,
+          "recall_at_20": 0.5714285714285714,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-009",
+      "query_group_id": "diverse-v1-power_supply-00-009",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 7,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.43059999006800354,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.11838279295536293,
+          "mrr": 0.25,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.7715359168226731,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.39909093959567643,
+          "mrr": 0.25,
+          "recall_at_20": 0.8571428571428571,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-013",
+      "query_group_id": "diverse-v1-power_supply-00-013",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 17,
+      "distinct_grade_count": 4,
+      "inference_ms": 0.42490000487305224,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.13510156291858577,
+          "mrr": 0.16666666666666666,
+          "recall_at_20": 0.7647058823529411,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.9073777752810711,
+          "mrr": 1.0,
+          "recall_at_20": 0.9411764705882353,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.9076337955476128,
+          "mrr": 1.0,
+          "recall_at_20": 0.8823529411764706,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.95818758987804,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-023",
+      "query_group_id": "diverse-v1-power_supply-00-023",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 16,
+      "distinct_grade_count": 5,
+      "inference_ms": 0.42860000394284725,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.41219288220479433,
+          "mrr": 0.5,
+          "recall_at_20": 0.875,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.7047591093168577,
+          "mrr": 1.0,
+          "recall_at_20": 0.8125,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.4526778280115119,
+          "mrr": 1.0,
+          "recall_at_20": 0.875,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.6980786597602403,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-029",
+      "query_group_id": "diverse-v1-power_supply-00-029",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 27,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.42699999175965786,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.870687400055453,
+          "mrr": 1.0,
+          "recall_at_20": 0.7037037037037037,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.806984674510095,
+          "mrr": 1.0,
+          "recall_at_20": 0.7407407407407407,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.9477344873475498,
+          "mrr": 1.0,
+          "recall_at_20": 0.7037037037037037,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.8043628744017065,
+          "mrr": 1.0,
+          "recall_at_20": 0.7407407407407407,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-001",
+      "query_group_id": "diverse-v1-power_supply-01-001",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 1,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.43539999751374125,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0.07142857142857142,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5,
+          "mrr": 0.3333333333333333,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-005",
+      "query_group_id": "diverse-v1-power_supply-01-005",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.42729999404400587,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.9458352203602567,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.5475847317897234,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.8646255378744822,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.8646255378744822,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-006",
+      "query_group_id": "diverse-v1-power_supply-01-006",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 18,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4889999981969595,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.25706461292672095,
+          "mrr": 0.25,
+          "recall_at_20": 0.7777777777777778,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.8340179516579498,
+          "mrr": 1.0,
+          "recall_at_20": 0.8333333333333334,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.6354790233172455,
+          "mrr": 1.0,
+          "recall_at_20": 0.7222222222222222,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-007",
+      "query_group_id": "diverse-v1-power_supply-01-007",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 11,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4530999867711216,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.039143221900198436,
+          "mrr": 0.1,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.40803616210353066,
+          "mrr": 0.5,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.6926359448514581,
+          "mrr": 1.0,
+          "recall_at_20": 0.9090909090909091,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.8101586815431773,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-015",
+      "query_group_id": "diverse-v1-power_supply-01-015",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 8,
+      "distinct_grade_count": 4,
+      "inference_ms": 0.43420001748017967,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0.08333333333333333,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.45951218814010325,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.6578138536776812,
+          "mrr": 1.0,
+          "recall_at_20": 0.75,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-017",
+      "query_group_id": "diverse-v1-power_supply-01-017",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 27,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.5015000060666353,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.4915960125196334,
+          "mrr": 1.0,
+          "recall_at_20": 0.7037037037037037,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.7868181124946129,
+          "mrr": 1.0,
+          "recall_at_20": 0.7407407407407407,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.8618811734474674,
+          "mrr": 1.0,
+          "recall_at_20": 0.7037037037037037,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9350223090311036,
+          "mrr": 1.0,
+          "recall_at_20": 0.7407407407407407,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-022",
+      "query_group_id": "diverse-v1-power_supply-01-022",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 27,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.44490001164376736,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.8611375561264454,
+          "mrr": 1.0,
+          "recall_at_20": 0.7037037037037037,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7037037037037037,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.9052116356304492,
+          "mrr": 1.0,
+          "recall_at_20": 0.7037037037037037,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 0.7037037037037037,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-024",
+      "query_group_id": "diverse-v1-power_supply-01-024",
+      "category": "power_supply",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 27,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.43769998592324555,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.43332320239731226,
+          "mrr": 1.0,
+          "recall_at_20": 0.7037037037037037,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.6387932868127527,
+          "mrr": 1.0,
+          "recall_at_20": 0.7407407407407407,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5199533695545594,
+          "mrr": 1.0,
+          "recall_at_20": 0.7407407407407407,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.5739633530405719,
+          "mrr": 1.0,
+          "recall_at_20": 0.7407407407407407,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-storage-00-009",
+      "query_group_id": "diverse-v1-storage-00-009",
+      "category": "storage",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 16,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4870999837294221,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.19930623359011804,
+          "mrr": 0.125,
+          "recall_at_20": 0.75,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.9307333271182184,
+          "mrr": 1.0,
+          "recall_at_20": 0.875,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.58874982024632,
+          "mrr": 1.0,
+          "recall_at_20": 0.8125,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9192547514154614,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-storage-01-003",
+      "query_group_id": "diverse-v1-storage-01-003",
+      "category": "storage",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.7268000044859946,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.6463624880697257,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.7728608459324333,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.504601148648988,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.71869606629269,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-storage-01-010",
+      "query_group_id": "diverse-v1-storage-01-010",
+      "category": "storage",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.8375000033993274,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.6447329523198223,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.6684922207515538,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.6083705066284847,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.703649893920615,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-storage-01-041",
+      "query_group_id": "diverse-v1-storage-01-041",
+      "category": "storage",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.43689997983165085,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.7796273924160755,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.48710590590517494,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.7417634598022077,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.5708681604027612,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "diverse-v1-storage-01-045",
+      "query_group_id": "diverse-v1-storage-01-045",
+      "category": "storage",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 28,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.44299999717622995,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.9602561773067416,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.7470085431665051,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.9373903617480912,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9345255018167722,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "fresh-v1-case-gpu-drive-bays-07",
+      "query_group_id": "intent-644af9d124a90508",
+      "category": "case",
+      "judge_model": "gpt-6-luna",
+      "relevant_count": 5,
+      "distinct_grade_count": 2,
+      "inference_ms": 0.4301999870222062,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.3551588773328818,
+          "mrr": 0.25,
+          "recall_at_20": 0.6,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.21398626473452756,
+          "mrr": 0.5,
+          "recall_at_20": 0.8,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.4371994911049732,
+          "mrr": 1.0,
+          "recall_at_20": 0.6,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "fresh-v1-cooler-radiator-fans-04",
+      "query_group_id": "intent-3d1875b7c2c5c1c8",
+      "category": "cooler",
+      "judge_model": "gpt-6-luna",
+      "relevant_count": 9,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4810999962501228,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.6503876081807464,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.1845167853411849,
+          "mrr": 0.5,
+          "recall_at_20": 0.8888888888888888,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5994071997599347,
+          "mrr": 1.0,
+          "recall_at_20": 0.7777777777777778,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.9672190413073788,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "fresh-v1-memory-clearance-07",
+      "query_group_id": "intent-31ed7687fc1015c5",
+      "category": "memory",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 8,
+      "distinct_grade_count": 4,
+      "inference_ms": 0.4621999978553504,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.5518881526142595,
+          "mrr": 0.25,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0.06666666666666667,
+          "recall_at_20": 0.5,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.22279051401230282,
+          "mrr": 0.125,
+          "recall_at_20": 0.75,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.8106065289866565,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "fresh-v1-memory-type-capacity-07",
+      "query_group_id": "intent-27fcef7ddaff657a",
+      "category": "memory",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 7,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4545999981928617,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.35803861187920716,
+          "mrr": 0.14285714285714285,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0.08333333333333333,
+          "recall_at_20": 0.8571428571428571,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.3740898522682601,
+          "mrr": 1.0,
+          "recall_at_20": 0.7142857142857143,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 1.0,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "fresh-v1-motherboard-case-slots-07",
+      "query_group_id": "intent-5dd66012346409c6",
+      "category": "motherboard",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 8,
+      "distinct_grade_count": 3,
+      "inference_ms": 0.4309999931138009,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.7262602745007026,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        },
+        "vector": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0.08333333333333333,
+          "recall_at_20": 0.5,
+          "recall_at_50": 1.0
+        },
+        "rrf": {
+          "ndcg_at_10": 0.5714875355153191,
+          "mrr": 1.0,
+          "recall_at_20": 0.875,
+          "recall_at_50": 1.0
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.93896935394524,
+          "mrr": 1.0,
+          "recall_at_20": 1.0,
+          "recall_at_50": 1.0
+        }
+      }
+    },
+    {
+      "query_id": "fresh-v1-motherboard-socket-memory-07",
+      "query_group_id": "intent-6ae4a72089cb8d79",
+      "category": "motherboard",
+      "judge_model": "gpt-5.6-luna",
+      "relevant_count": 0,
+      "distinct_grade_count": 1,
+      "inference_ms": 0.42779999785125256,
+      "metrics": {
+        "bm25": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0,
+          "recall_at_20": null,
+          "recall_at_50": null
+        },
+        "vector": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0,
+          "recall_at_20": null,
+          "recall_at_50": null
+        },
+        "rrf": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0,
+          "recall_at_20": null,
+          "recall_at_50": null
+        },
+        "lambdamart": {
+          "ndcg_at_10": 0.0,
+          "mrr": 0,
+          "recall_at_20": null,
+          "recall_at_50": null
+        }
+      }
+    }
+  ]
+}
