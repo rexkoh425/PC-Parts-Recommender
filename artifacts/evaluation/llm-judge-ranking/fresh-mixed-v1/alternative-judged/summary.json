@@ -1,0 +1,106 @@
+{
+  "schema_version": "pc-build-recommender.llm-weak-judgments.v1",
+  "label_source": "llm_weak",
+  "eligible_for_production_or_human_quality_claims": false,
+  "model_id": "gpt-5.6-luna",
+  "prompt_version": "pcbr-llm-relevance-rubric-v2",
+  "rubric_sha256": "f3a603fc5bc89393ef50bb91162cd4a75f06d67701415c7e060d9969de5819d5",
+  "input_sha256": "b827a517414915478b049f0024a9eb754aedbdc0df7d9a36fc0b8347c5c83525",
+  "judgments_sha256": "5e2acb1c41517e7bd26d75db883bbcdd681057aae8bb2caf0e0a8daa9bf9c9e0",
+  "ranking_dataset_sha256": "27501a44912c8cc6761d0ea5e07280741d0823edd10ef6313afb615f4c73001f",
+  "task_count": 7588,
+  "input_task_count": 7588,
+  "unresolved_task_count": 0,
+  "attempted_this_run": 1242,
+  "failed_this_run": 0,
+  "circuit_breaker_tripped": false,
+  "not_attempted_this_run": 0,
+  "schedule_snapshot_sha256": "f3700c3e04f695462f1aebdfb0642d0d11340979143f514d11fb52a8d4120f03",
+  "training_dataset_ready": true,
+  "incomplete_query_count": 0,
+  "query_count": 271,
+  "query_group_count": 270,
+  "grade_counts": {
+    "0": 2963,
+    "1": 284,
+    "2": 2168,
+    "3": 838,
+    "4": 1335
+  },
+  "grade_counts_by_category": {
+    "case": {
+      "0": 121,
+      "1": 42,
+      "2": 307,
+      "3": 95,
+      "4": 79
+    },
+    "cooler": {
+      "0": 386,
+      "1": 26,
+      "2": 281,
+      "3": 108,
+      "4": 151
+    },
+    "cpu": {
+      "0": 254,
+      "1": 94,
+      "2": 360,
+      "3": 179,
+      "4": 149
+    },
+    "gpu": {
+      "0": 494,
+      "1": 14,
+      "2": 161,
+      "3": 103,
+      "4": 264
+    },
+    "memory": {
+      "0": 496,
+      "1": 13,
+      "2": 242,
+      "3": 122,
+      "4": 163
+    },
+    "motherboard": {
+      "0": 606,
+      "1": 29,
+      "2": 203,
+      "3": 40,
+      "4": 158
+    },
+    "power_supply": {
+      "0": 420,
+      "1": 61,
+      "2": 212,
+      "3": 101,
+      "4": 242
+    },
+    "storage": {
+      "0": 186,
+      "1": 5,
+      "2": 402,
+      "3": 90,
+      "4": 129
+    }
+  },
+  "confidence_buckets": {
+    "below_0.5": 0,
+    "0.5_to_below_0.8": 0,
+    "0.8_to_1.0": 7588
+  },
+  "missing_evidence_count": 7560,
+  "raw_hard_requirement_contradiction_count": 328,
+  "raw_high_grade_hard_contradiction_count": 3,
+  "raw_grade_recorded_count": 7588,
+  "final_hard_requirement_contradiction_count": 0,
+  "low_confidence_count": 0,
+  "hard_requirement_violation_count": 2758,
+  "hard_requirement_unknown_count": 311,
+  "prompt_tokens": 6683885,
+  "completion_tokens": 1733691,
+  "estimated_cost_usd": null,
+  "checkpoint": "judgments.checkpoint.jsonl",
+  "ranking_dataset": "ranking_dataset.llm_weak.jsonl"
+}

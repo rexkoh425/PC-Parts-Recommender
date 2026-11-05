@@ -1,0 +1,28 @@
+{
+  "schema_version": "pcbr.mixed-judge-queue.v1",
+  "seed": 20261108,
+  "source_queue_sha256": "3365fbbc4550107d0e1399ac6b0811fb9d2d9213539e99071e198272d0aeaec8",
+  "source_checkpoint_sha256": "8c6653f1588c20ac10cba60d0439fa287cd057a6ec9ee76ed82b08552c9e03dd",
+  "tasks_sha256": "71e7e117b9908c87f2b19deb075abe6e863c459d48384024cfb8ba5c9c11b6de",
+  "snapshot_sha256": "f3700c3e04f695462f1aebdfb0642d0d11340979143f514d11fb52a8d4120f03",
+  "alternative_tasks_sha256": "b827a517414915478b049f0024a9eb754aedbdc0df7d9a36fc0b8347c5c83525",
+  "original_judgments_sha256": "d10ec1c826e5178f2ec815cd822f0d7658d075e71d3579e98ad16ebadc270068",
+  "judge_assignments_sha256": "4ee52d65f0b500509950feccf1adabf52c501fb04aed41e555f641010870411c",
+  "query_count": 282,
+  "query_group_count": 281,
+  "task_count": 7896,
+  "original_model": "gpt-6-luna",
+  "alternative_model": "gpt-5.6-luna",
+  "original_model_group_count": 11,
+  "excluded_partial_group_ids": [
+    "diverse-v1-case-00-002",
+    "diverse-v1-case-00-016"
+  ],
+  "excluded_partial_judgment_count": 48,
+  "split_group_counts": {
+    "train": 169,
+    "validation": 57,
+    "test": 55
+  },
+  "purpose": "LLM-only diagnostic with frozen group split and per-query judge provenance"
+}

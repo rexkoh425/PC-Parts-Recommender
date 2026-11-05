@@ -1,0 +1,36 @@
+{
+  "schema_version": "pcbr.llm-ranking-environment.v1",
+  "recorded_at_utc": "2026-11-08T12:01:37.510394+00:00",
+  "git_revision": "5ae6cb0f3475baa090ce3ca4d5accfff4687ce61",
+  "git_worktree_dirty": true,
+  "python": "3.12.9",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "software_versions": {
+    "numpy": "2.5.1",
+    "lightgbm": "4.7.0",
+    "sentence-transformers": "5.6.0",
+    "torch": "2.13.0+cu130",
+    "scikit-learn": "1.9.0"
+  },
+  "cuda_available": true,
+  "cuda_device": "NVIDIA GeForce RTX 5070 Ti",
+  "source_sha256": {
+    "training/llm_judge.py": "dd89c3aa595070292006d5b57e27a587f4537ce5399bda44f4687e369ce49755",
+    "packages/core/src/pc_build_recommender/ranking/features.py": "b75a333e386d9fd628b8671b3c6fe1a620423a6406c05aa3a0965dfdb86e8ead",
+    "packages/core/src/pc_build_recommender/ranking/lambdamart.py": "3ad96386d1d969e89c0ea48a80f3e16eff7d2ec532fd1f87c0edcc54ec8331bf",
+    "packages/core/src/pc_build_recommender/ranking/models.py": "3ec3a6f5ad362b533e150f0cfa4a7929722e9ad93cb590976b9b704ad1a442af",
+    "scripts/build_llm_judge_queue.py": "cac18775012562048a83b58797bebcbf0b94d7a1c4c69cf4ec197ccadb078a60",
+    "scripts/audit_llm_query_split.py": "d61a809460dc76505419f709de3d92e0ff0ec06af2ff536daaec9079c56578e8",
+    "scripts/audit_llm_judge_pilot.py": "54193dd0a2bcaf773c0a5a4f88823a710a51cff5ed12aa1a3b1de3378a51eb0b",
+    "scripts/audit_mixed_llm_judgments.py": "ca8ecdb0c2232767ee93a73475fdaf1a96fcea7cd9fa51c23b58229d8eeb60cf",
+    "scripts/evaluate_llm_pilot_validation.py": "c6a1c36477d09b5ccc85cf05e6e2bc9c9b5701fd5f02e475f4dc87855344d17d",
+    "scripts/generate_diverse_llm_intents.py": "bbc0ceccb3dd5eca3f6a711ec970287e074028992dbad715b4ef38fd641e34ff",
+    "scripts/select_diverse_llm_intents.py": "be195fb19f39beaf987eadbc4658f7698fb79971a45c057beac282b7790261b0",
+    "scripts/prepare_mixed_judge_queue.py": "0431f400dbb085a80c366cfb59d9e4bab0c3b554d7c7f6394c3fea3f2e7aa70b",
+    "scripts/reuse_llm_judgments.py": "6dee895f5f0cc4248f5d179fa880c8fd7218ae1915c77d2cee473cabba11a064",
+    "scripts/combine_mixed_judgments.py": "10b729f3d1fb909b45d6cff117f574f26912f509ececb89deb59005d91e63e53",
+    "scripts/snapshot_llm_ranking_features.py": "861910065837764801e84582f0a2562e641ab80115483f7511bc7e5ad38169de",
+    "scripts/materialize_llm_ranking_features.py": "65944937332b43546d45916238793331b34fcbe2f6242c48edca562f68b02daa",
+    "scripts/llm_ranking_experiment.py": "e38f089e8f9359e86a0255e09534bee82eb76f29fce9e2a0efb48b5938e25168"
+  }
+}
