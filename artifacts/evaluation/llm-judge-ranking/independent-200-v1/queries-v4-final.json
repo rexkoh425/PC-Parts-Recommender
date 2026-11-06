@@ -1,0 +1,2910 @@
+{
+  "schema_version": "pcbr.independent-heldout-query-cohort.v3",
+  "seed": 20261110,
+  "query_count": 200,
+  "quotas": {
+    "gaming_gpu": 35,
+    "cpu_productivity": 30,
+    "budget": 30,
+    "compatibility_upgrade": 35,
+    "specific_specifications": 25,
+    "ambiguous_natural_language": 25,
+    "complex_multi_constraint": 20
+  },
+  "queries": [
+    {
+      "query_id": "diverse-v1-cpu-00-000",
+      "query_group_id": "diverse-v1-cpu-00-000",
+      "category": "cpu",
+      "query_text": "CPU for competitive esports gaming with very high frame rates and a modern AM5 motherboard",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        }
+      ],
+      "family": "competitive_esports_cpu_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-001",
+      "query_group_id": "diverse-v1-cpu-00-001",
+      "category": "cpu",
+      "query_text": "CPU for a 4K single-player gaming PC that also handles background streaming",
+      "must": [],
+      "family": "high_resolution_gaming_and_streaming_cpu",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-002",
+      "query_group_id": "diverse-v1-cpu-00-002",
+      "category": "cpu",
+      "query_text": "CPU for a quiet gaming build using a 65 W processor",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 65
+        }
+      ],
+      "family": "quiet_gaming_power_limit",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-007",
+      "query_group_id": "diverse-v1-cpu-00-007",
+      "category": "cpu",
+      "query_text": "CPU for professional video editing with frequent 4K timeline exports",
+      "must": [],
+      "family": "professional_video_editing_cpu",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-012",
+      "query_group_id": "diverse-v1-cpu-00-012",
+      "category": "cpu",
+      "query_text": "CPU for a heavily modded simulation game where simulation throughput matters more than graphics",
+      "must": [],
+      "family": "simulation_game_processing_cpu",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-014",
+      "query_group_id": "diverse-v1-cpu-00-014",
+      "category": "cpu",
+      "query_text": "CPU for a dual-purpose gaming and music-production PC with low-latency workloads",
+      "must": [],
+      "family": "gaming_and_music_production_cpu",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-000",
+      "query_group_id": "diverse-v1-gpu-00-000",
+      "category": "gpu",
+      "query_text": "I need a GPU for 4K gaming with at least 16GB of VRAM.",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ],
+      "family": "high-resolution gaming capacity",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-001",
+      "query_group_id": "diverse-v1-gpu-00-001",
+      "category": "gpu",
+      "query_text": "Looking for a graphics card focused on competitive 1080p gaming at very high refresh rates.",
+      "must": [],
+      "family": "competitive gaming responsiveness",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-003",
+      "query_group_id": "diverse-v1-gpu-00-003",
+      "category": "gpu",
+      "query_text": "I want a GPU for ultrawide 3440x1440 gaming and occasional recording.",
+      "must": [],
+      "family": "ultrawide gaming and capture",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-004",
+      "query_group_id": "diverse-v1-gpu-00-004",
+      "category": "gpu",
+      "query_text": "Find a graphics card for 4K gaming that uses GDDR6X memory.",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR6X"
+        }
+      ],
+      "family": "high-resolution gaming with specified memory technology",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-006",
+      "query_group_id": "diverse-v1-gpu-00-006",
+      "category": "gpu",
+      "query_text": "Looking for a graphics card for a 240 Hz 1080p gaming setup.",
+      "must": [],
+      "family": "high-refresh gaming display support",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-008",
+      "query_group_id": "diverse-v1-gpu-00-008",
+      "category": "gpu",
+      "query_text": "I need a graphics card with at least 20GB of VRAM for editing high-resolution footage.",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 20
+        }
+      ],
+      "family": "high-resolution video editing memory capacity",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-011",
+      "query_group_id": "diverse-v1-gpu-00-011",
+      "category": "gpu",
+      "query_text": "What graphics card should I choose for local AI image generation?",
+      "must": [],
+      "family": "local generative ai acceleration",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-013",
+      "query_group_id": "diverse-v1-gpu-00-013",
+      "category": "gpu",
+      "query_text": "Looking for a graphics card with at least 24GB of VRAM for local model experimentation.",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 24
+        }
+      ],
+      "family": "local ai model memory capacity",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-015",
+      "query_group_id": "diverse-v1-gpu-00-015",
+      "category": "gpu",
+      "query_text": "I need a graphics card for livestreaming and gaming on the same PC.",
+      "must": [],
+      "family": "gaming and livestreaming combination",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-016",
+      "query_group_id": "diverse-v1-gpu-00-016",
+      "category": "gpu",
+      "query_text": "Find a GPU for video playback, light editing, and occasional gaming in a home PC.",
+      "must": [],
+      "family": "home multimedia and casual gaming",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-017",
+      "query_group_id": "diverse-v1-gpu-00-017",
+      "category": "gpu",
+      "query_text": "I want a graphics card with a board power rating no higher than 200 watts for a balanced gaming build.",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 200
+        }
+      ],
+      "family": "moderate-power gaming selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-018",
+      "query_group_id": "diverse-v1-gpu-00-018",
+      "category": "gpu",
+      "query_text": "Looking for a GPU rated at 250 watts or less for a gaming and editing system.",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 250
+        }
+      ],
+      "family": "power-bounded mixed workload selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-021",
+      "query_group_id": "diverse-v1-gpu-00-021",
+      "category": "gpu",
+      "query_text": "I need a graphics card no longer than 220 mm for a small custom-built PC.",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 220
+        }
+      ],
+      "family": "short-card custom pc fit",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-023",
+      "query_group_id": "diverse-v1-gpu-00-023",
+      "category": "gpu",
+      "query_text": "What graphics card can I use in a case with room for a card up to 280 mm long?",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 280
+        }
+      ],
+      "family": "case-length-constrained selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-025",
+      "query_group_id": "diverse-v1-gpu-00-025",
+      "category": "gpu",
+      "query_text": "Find a graphics card with a memory bus of at least 192 bits for a gaming upgrade.",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 192
+        }
+      ],
+      "family": "gaming memory-interface upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-026",
+      "query_group_id": "diverse-v1-gpu-00-026",
+      "category": "gpu",
+      "query_text": "I want to upgrade an older gaming PC to support current games, but I am unsure which GPU class fits.",
+      "must": [],
+      "family": "ambiguous aging-gaming-pc upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-029",
+      "query_group_id": "diverse-v1-gpu-00-029",
+      "category": "gpu",
+      "query_text": "Looking for a GPU for a living-room PC connected to a 4K television.",
+      "must": [],
+      "family": "living-room 4k gaming and media",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-030",
+      "query_group_id": "diverse-v1-gpu-00-030",
+      "category": "gpu",
+      "query_text": "What graphics card is suitable for a first-time gaming PC builder who has not chosen the rest of the parts yet?",
+      "must": [],
+      "family": "early-stage gaming build selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-032",
+      "query_group_id": "diverse-v1-gpu-00-032",
+      "category": "gpu",
+      "query_text": "Find a graphics card using GDDR7 memory for a new enthusiast gaming PC.",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR7"
+        }
+      ],
+      "family": "new-generation gaming memory technology",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-033",
+      "query_group_id": "diverse-v1-gpu-00-033",
+      "category": "gpu",
+      "query_text": "I want a GPU with a 128-bit memory bus for a compact casual gaming system.",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "eq",
+          "value": 128
+        }
+      ],
+      "family": "entry-level memory-interface matching",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-034",
+      "query_group_id": "diverse-v1-gpu-00-034",
+      "category": "gpu",
+      "query_text": "Which graphics card is appropriate for a desktop used for CAD-free 3D modeling and occasional games?",
+      "must": [],
+      "family": "3d modeling and gaming workstation selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-036",
+      "query_group_id": "diverse-v1-gpu-00-036",
+      "category": "gpu",
+      "query_text": "Looking for a graphics card for a home server that will sometimes run a graphical desktop.",
+      "must": [],
+      "family": "occasional graphical server workload",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-002",
+      "query_group_id": "diverse-v1-gpu-00-002",
+      "category": "gpu",
+      "query_text": "What GPU would suit 1440p gaming with ray tracing enabled?",
+      "must": [],
+      "family": "ray-traced gaming selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-007",
+      "query_group_id": "diverse-v1-gpu-00-007",
+      "category": "gpu",
+      "query_text": "Which GPU is appropriate for a mixed gaming and video-editing PC?",
+      "must": [],
+      "family": "mixed gaming and content-creation selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-020",
+      "query_group_id": "diverse-v1-gpu-00-020",
+      "category": "gpu",
+      "query_text": "Find a GPU no longer than 270 mm for a compact gaming case.",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 270
+        }
+      ],
+      "family": "compact-case gaming fit",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-004",
+      "query_group_id": "diverse-v1-memory-00-004",
+      "category": "memory",
+      "query_text": "What memory is a sensible upgrade for a modern AAA gaming PC that currently has 16GB? I want 64GB of DDR5 without choosing an extreme enthusiast kit.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ],
+      "family": "aaa_gaming_capacity_upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-009",
+      "query_group_id": "diverse-v1-memory-00-009",
+      "category": "memory",
+      "query_text": "What memory should I research for a home NAS where data integrity matters more than gaming performance? The system may support ECC, but the board specification is unclear.",
+      "must": [],
+      "family": "nas_ecc_memory_research",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-028",
+      "query_group_id": "diverse-v1-memory-00-028",
+      "category": "memory",
+      "query_text": "For competitive gaming, should I buy a 32GB low-latency DDR5 kit or 64GB with looser timings? I want a decision based on gaming responsiveness rather than maximum capacity.",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ],
+      "family": "gaming_latency_capacity_tradeoff",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-008",
+      "query_group_id": "diverse-v1-motherboard-00-008",
+      "category": "motherboard",
+      "query_text": "Search for a motherboard suitable for a dual-graphics-card workstation; I am unsure which socket and board size are appropriate.",
+      "must": [],
+      "family": "multi-gpu workstation platform discovery under unresolved compatibility constraints",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "gaming_gpu"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-004",
+      "query_group_id": "diverse-v1-cpu-00-004",
+      "category": "cpu",
+      "query_text": "CPU for a workstation that runs several large virtual machines simultaneously",
+      "must": [],
+      "family": "high_density_virtualization_workstation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-006",
+      "query_group_id": "diverse-v1-cpu-00-006",
+      "category": "cpu",
+      "query_text": "CPU for a 3D rendering workstation focused on CPU-based rendering",
+      "must": [],
+      "family": "cpu_3d_rendering_workstation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-015",
+      "query_group_id": "diverse-v1-cpu-00-015",
+      "category": "cpu",
+      "query_text": "CPU for a digital audio workstation using many software instruments and effects",
+      "must": [],
+      "family": "large_daw_project_cpu",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-030",
+      "query_group_id": "diverse-v1-cpu-00-030",
+      "category": "cpu",
+      "query_text": "CPU with at least 24 threads for a multitasking workstation",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 24
+        }
+      ],
+      "family": "high_thread_count_multitasking",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-017",
+      "query_group_id": "diverse-v1-cpu-00-017",
+      "category": "cpu",
+      "query_text": "CPU for a machine-learning development workstation that does not require local model generation",
+      "must": [],
+      "family": "machine_learning_development_host",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-009",
+      "query_group_id": "diverse-v1-gpu-00-009",
+      "category": "gpu",
+      "query_text": "Find a GPU with GDDR6 memory for a general-purpose content-creation workstation.",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR6"
+        }
+      ],
+      "family": "content-creation memory technology selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-032",
+      "query_group_id": "diverse-v1-cpu-00-032",
+      "category": "cpu",
+      "query_text": "CPU that supports up to 128 GB of memory for a memory-intensive workstation",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ],
+      "family": "large_memory_workstation_platform",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-022",
+      "query_group_id": "diverse-v1-gpu-00-022",
+      "category": "gpu",
+      "query_text": "Looking for a GPU under 300 mm long for a compact workstation that will also be used for games.",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "lt",
+          "value": 300
+        }
+      ],
+      "family": "compact workstation gaming fit",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-014",
+      "query_group_id": "diverse-v1-gpu-00-014",
+      "category": "gpu",
+      "query_text": "Which GPU makes sense for GPU-accelerated computational workloads on a personal workstation?",
+      "must": [],
+      "family": "personal workstation acceleration",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-008",
+      "query_group_id": "diverse-v1-memory-00-008",
+      "category": "memory",
+      "query_text": "I need ECC-capable memory for a professional workstation, but I do not know whether the motherboard supports unbuffered or registered modules.",
+      "must": [],
+      "family": "ecc_workstation_memory_research",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-012",
+      "query_group_id": "diverse-v1-memory-00-012",
+      "category": "memory",
+      "query_text": "What RAM is suitable for a CAD workstation handling large assemblies? I am considering 64GB of DDR4 and want four modules only if the platform supports them.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ],
+      "family": "cad_assembly_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-013",
+      "query_group_id": "diverse-v1-memory-00-013",
+      "category": "memory",
+      "query_text": "I am building a game-development workstation for an engine editor, asset tools, and frequent test builds. Should I choose 64GB or 96GB of DDR5?",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ],
+      "family": "game_development_workstation_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-030",
+      "query_group_id": "diverse-v1-memory-00-030",
+      "category": "memory",
+      "query_text": "I am building a workstation that will use part of its RAM as a temporary RAM disk for scratch files. What capacity and memory type should I consider?",
+      "must": [],
+      "family": "ram_disk_scratch_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-032",
+      "query_group_id": "diverse-v1-memory-00-032",
+      "category": "memory",
+      "query_text": "What RAM is suitable for a workstation that frequently performs large file compression and decompression jobs? I want to compare high-capacity and high-speed options.",
+      "must": [],
+      "family": "file_compression_workstation_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-memory-01-002",
+      "query_group_id": "diverse-v1-memory-01-002",
+      "category": "memory",
+      "query_text": "Find memory for compiling large software projects and running multiple development tools at once; 64GB is preferred.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ],
+      "family": "software_compilation_memory_capacity_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-026",
+      "query_group_id": "diverse-v1-memory-00-026",
+      "category": "memory",
+      "query_text": "I am deciding between ECC and non-ECC memory for a workstation used for important calculations, and I want to understand the reliability and compatibility tradeoff before choosing.",
+      "must": [],
+      "family": "ecc_non_ecc_workstation_tradeoff",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-031",
+      "query_group_id": "diverse-v1-memory-00-031",
+      "category": "memory",
+      "query_text": "I need memory for a GIS workstation handling map layers, spatial analysis, and desktop visualization, but I am unsure whether capacity or speed is more important.",
+      "must": [],
+      "family": "gis_workstation_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-033",
+      "query_group_id": "diverse-v1-memory-00-033",
+      "category": "memory",
+      "query_text": "I am choosing memory for a local AI inference workstation that loads models into system RAM, but the model sizes and motherboard platform are not finalized.",
+      "must": [],
+      "family": "local_ai_inference_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-003",
+      "query_group_id": "diverse-v1-motherboard-00-003",
+      "category": "motherboard",
+      "query_text": "Looking for a motherboard for a professional audio workstation where low fan noise matters and I need two M.2 drives.",
+      "must": [
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ],
+      "family": "quiet audio workstation storage selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-035",
+      "query_group_id": "diverse-v1-motherboard-00-035",
+      "category": "motherboard",
+      "query_text": "Which motherboard should I consider for a repairable workstation that may use either DDR4 or DDR5, with no processor selected yet?",
+      "must": [],
+      "family": "memory-generation uncertainty during modular workstation planning",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-016",
+      "query_group_id": "diverse-v1-motherboard-01-016",
+      "category": "motherboard",
+      "query_text": "What motherboard should I use for an LGA1851 office workstation if I need a compact case but am unsure whether Micro-ATX or Mini-ITX will fit?",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1851"
+        }
+      ],
+      "family": "small intel office platform selection before finalizing chassis size",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-010",
+      "query_group_id": "diverse-v1-power_supply-00-010",
+      "category": "power_supply",
+      "query_text": "I need an SFX-L PSU for a compact workstation with a target capacity of at least 750W.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx_l"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        }
+      ],
+      "family": "compact workstation capacity requirement",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-021",
+      "query_group_id": "diverse-v1-power_supply-01-021",
+      "category": "power_supply",
+      "query_text": "I am converting an old workstation into a laboratory instrument computer and need to know whether its original proprietary PSU can be replaced.",
+      "must": [],
+      "family": "proprietary workstation power replacement investigation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-028",
+      "query_group_id": "diverse-v1-power_supply-01-028",
+      "category": "power_supply",
+      "query_text": "What PSU would be suitable for a compact CAD workstation if I know it needs 700 watts but have not finalized the case?",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 700
+        }
+      ],
+      "family": "cad workstation capacity before chassis selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-034",
+      "query_group_id": "diverse-v1-storage-01-034",
+      "category": "storage",
+      "query_text": "Which internal drive is appropriate for a workstation that keeps large language-model checkpoints and training outputs locally?",
+      "must": [],
+      "family": "machine-learning checkpoint repository",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-018",
+      "query_group_id": "diverse-v1-storage-00-018",
+      "category": "storage",
+      "query_text": "Find an internal SSD for a workstation used for large layered image files and frequent exports.",
+      "must": [],
+      "family": "raster graphics workstation storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-007",
+      "query_group_id": "diverse-v1-storage-01-007",
+      "category": "storage",
+      "query_text": "I want a fast scratch drive for 3D rendering caches and temporary scene data, but I have not decided on the capacity.",
+      "must": [],
+      "family": "3d rendering scratch storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-016",
+      "query_group_id": "diverse-v1-cooler-00-016",
+      "category": "cooler",
+      "query_text": "I am building an AM5 productivity PC and want a liquid cooler, but radiator placement is not decided yet.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        }
+      ],
+      "family": "amd productivity liquid-cooling selection before chassis layout is known",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-035",
+      "query_group_id": "diverse-v1-cooler-01-035",
+      "category": "cooler",
+      "query_text": "Search for a compact air cooler for an AM4 CPU in a small office workstation where memory and case clearances are still unknown.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        }
+      ],
+      "family": "amd compact workstation cooling with unresolved clearance tradeoffs",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-023",
+      "query_group_id": "diverse-v1-storage-00-023",
+      "category": "storage",
+      "query_text": "Suggest a storage drive for a PC used to capture and trim long gameplay sessions, without assuming a particular budget.",
+      "must": [],
+      "family": "gameplay capture workspace storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-023",
+      "query_group_id": "diverse-v1-cpu-00-023",
+      "category": "cpu",
+      "query_text": "CPU upgrade from an older quad-core system while keeping the existing motherboard socket",
+      "must": [],
+      "family": "legacy_quad_core_platform_upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-033",
+      "query_group_id": "diverse-v1-cpu-00-033",
+      "category": "cpu",
+      "query_text": "CPU replacement for a system whose motherboard model and socket are unknown",
+      "must": [],
+      "family": "unknown_platform_cpu_identification",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-025",
+      "query_group_id": "diverse-v1-memory-00-025",
+      "category": "memory",
+      "query_text": "My motherboard documentation is missing and I cannot tell whether it uses DDR3, DDR4, or DDR5. How should I search for compatible memory without guessing?",
+      "must": [],
+      "family": "unknown_memory_generation_identification",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-memory-01-003",
+      "query_group_id": "diverse-v1-memory-01-003",
+      "category": "memory",
+      "query_text": "I need a 32GB DDR4 upgrade for a general-purpose desktop used for office work, browsing, and multitasking.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ],
+      "family": "general_productivity_memory_upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-024",
+      "query_group_id": "diverse-v1-memory-00-024",
+      "category": "memory",
+      "query_text": "I bought a prebuilt desktop and want to identify compatible replacement memory from limited information: it uses desktop DIMMs, but I do not know whether it takes DDR4 or DDR5.",
+      "must": [],
+      "family": "prebuilt_memory_identification",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-034",
+      "query_group_id": "diverse-v1-memory-00-034",
+      "category": "memory",
+      "query_text": "I need a spare memory module for diagnosing whether a desktop will POST, and I want a basic compatible module rather than a performance-oriented kit.",
+      "must": [],
+      "family": "memory_diagnostic_spare_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-018",
+      "query_group_id": "diverse-v1-motherboard-00-018",
+      "category": "motherboard",
+      "query_text": "I am replacing a failed motherboard but do not know whether my existing processor is Intel or AMD, so help me identify suitable options.",
+      "must": [],
+      "family": "replacement motherboard identification with unknown processor platform",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-031",
+      "query_group_id": "diverse-v1-motherboard-01-031",
+      "category": "motherboard",
+      "query_text": "I am choosing between Intel sockets for a replacement board and need help because the processor label is partially unreadable.",
+      "must": [],
+      "family": "uncertain intel socket identification before motherboard replacement",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-036",
+      "query_group_id": "diverse-v1-motherboard-01-036",
+      "category": "motherboard",
+      "query_text": "I need a board for an older AMD processor, but I do not know whether it is AM3 or AM4 and want to avoid buying incompatible memory.",
+      "must": [],
+      "family": "legacy amd platform identification before selecting socket and memory generation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-022",
+      "query_group_id": "diverse-v1-power_supply-00-022",
+      "category": "power_supply",
+      "query_text": "Find an SFX power supply for a compact PC upgrade where I want to maximize wattage without moving to a larger case.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        }
+      ],
+      "family": "maximum compact-case upgrade capacity",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-019",
+      "query_group_id": "diverse-v1-power_supply-01-019",
+      "category": "power_supply",
+      "query_text": "What PSU fits a compact virtualization box if I need at least 500 watts but have not chosen between SFX and SFX-L yet?",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 500
+        }
+      ],
+      "family": "virtualization host capacity before form-factor choice",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-024",
+      "query_group_id": "diverse-v1-power_supply-01-024",
+      "category": "power_supply",
+      "query_text": "I need a compact ATX-compatible power supply for a kiosk computer, but the kiosk builder has not confirmed the available wattage or clearance.",
+      "must": [],
+      "family": "kiosk integration under mechanical uncertainty",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-019",
+      "query_group_id": "diverse-v1-power_supply-00-019",
+      "category": "power_supply",
+      "query_text": "What power supply fits a compact case when I need 750W, but I have not confirmed whether SFX or SFX-L is supported?",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        }
+      ],
+      "family": "compact high-capacity form-factor ambiguity",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-004",
+      "query_group_id": "diverse-v1-storage-00-004",
+      "category": "storage",
+      "query_text": "Need an SSD for a laptop upgrade, but I am unsure whether it takes M.2 NVMe or 2.5-inch SATA.",
+      "must": [],
+      "family": "uncertain laptop storage compatibility",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-032",
+      "query_group_id": "diverse-v1-storage-00-032",
+      "category": "storage",
+      "query_text": "Looking for a 500GB SATA SSD for a basic desktop upgrade from a mechanical hard drive.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ],
+      "family": "entry-level desktop responsiveness upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-002",
+      "query_group_id": "diverse-v1-cooler-00-002",
+      "category": "cooler",
+      "query_text": "I need a cooler for an AM4 office PC upgrade, but I have not measured the case or decided between air and liquid.",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        }
+      ],
+      "family": "compatibility-led legacy amd office upgrade with unresolved physical constraints",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-020",
+      "query_group_id": "diverse-v1-cooler-00-020",
+      "category": "cooler",
+      "query_text": "Find a cooler compatible with both AM4 and AM5 for a gradual AMD platform transition.",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        }
+      ],
+      "family": "cross-generation amd socket support for a staged upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-031",
+      "query_group_id": "diverse-v1-cooler-00-031",
+      "category": "cooler",
+      "query_text": "Search for a cooler that supports LGA1150 and fits below 145 mm for an older compact Intel PC.",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "lt",
+          "value": 145
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1150"
+        }
+      ],
+      "family": "legacy intel compact replacement cooling with a strict height limit",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-005",
+      "query_group_id": "diverse-v1-cooler-01-005",
+      "category": "cooler",
+      "query_text": "Find a cooler compatible with both LGA1200 and LGA1700 for an Intel system being upgraded over time.",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1700"
+        }
+      ],
+      "family": "intel socket-transition compatibility for a staged platform upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-019",
+      "query_group_id": "diverse-v1-cooler-00-019",
+      "category": "cooler",
+      "query_text": "Need an inexpensive-looking basic cooler for an unspecified replacement PC; I have no socket or clearance information yet.",
+      "must": [],
+      "family": "unspecified replacement cooling search before compatibility data is available",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-023",
+      "query_group_id": "diverse-v1-cooler-00-023",
+      "category": "cooler",
+      "query_text": "Which cooler fits a dual-socket Xeon board for a home lab? I have not chosen air or liquid and do not know the chassis limits.",
+      "must": [],
+      "family": "dual-socket server cooling discovery with unresolved cooler and chassis requirements",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-case-01-003",
+      "query_group_id": "diverse-v1-case-01-003",
+      "category": "case",
+      "query_text": "I want a case for a vertical GPU setup, but I am not sure whether my motherboard and riser arrangement will fit.",
+      "must": [],
+      "family": "vertical graphics card layout compatibility",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-008",
+      "query_group_id": "diverse-v1-cpu-00-008",
+      "category": "cpu",
+      "query_text": "CPU for a home media server that performs multiple simultaneous video transcodes",
+      "must": [],
+      "family": "multi_stream_media_transcoding",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-009",
+      "query_group_id": "diverse-v1-cpu-00-009",
+      "category": "cpu",
+      "query_text": "CPU for a low-power NAS with a processor under 45 W TDP",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "lt",
+          "value": 45
+        }
+      ],
+      "family": "low_power_nas_processor",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-010",
+      "query_group_id": "diverse-v1-cpu-00-010",
+      "category": "cpu",
+      "query_text": "CPU for a silent fanless-style office build with no more than 35 W TDP",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 35
+        }
+      ],
+      "family": "ultra_low_power_silent_build",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-011",
+      "query_group_id": "diverse-v1-cpu-00-011",
+      "category": "cpu",
+      "query_text": "CPU for a dedicated game server hosting several players at once",
+      "must": [],
+      "family": "dedicated_multiplayer_server_cpu",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-016",
+      "query_group_id": "diverse-v1-cpu-00-016",
+      "category": "cpu",
+      "query_text": "CPU for software-defined radio signal processing and decoding",
+      "must": [],
+      "family": "software_defined_radio_processing",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-019",
+      "query_group_id": "diverse-v1-cpu-00-019",
+      "category": "cpu",
+      "query_text": "CPU for finite element and engineering simulation software",
+      "must": [],
+      "family": "engineering_simulation_cpu",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-020",
+      "query_group_id": "diverse-v1-cpu-00-020",
+      "category": "cpu",
+      "query_text": "CPU for GIS processing of large geographic datasets",
+      "must": [],
+      "family": "geospatial_processing_workstation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-022",
+      "query_group_id": "diverse-v1-cpu-00-022",
+      "category": "cpu",
+      "query_text": "CPU for a home lab with many containers and several always-on services",
+      "must": [],
+      "family": "dense_home_lab_server",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-024",
+      "query_group_id": "diverse-v1-cpu-00-024",
+      "category": "cpu",
+      "query_text": "CPU for a motherboard that supports both AM4 and AM5 processors",
+      "must": [],
+      "family": "cross_generation_socket_compatibility",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-025",
+      "query_group_id": "diverse-v1-cpu-00-025",
+      "category": "cpu",
+      "query_text": "CPU for a compact mini-ITX build with a 45 W thermal target",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 45
+        }
+      ],
+      "family": "mini_itx_low_thermal_build",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-027",
+      "query_group_id": "diverse-v1-cpu-00-027",
+      "category": "cpu",
+      "query_text": "CPU for a rackmount server chassis with a maximum of 95 W TDP",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 95
+        }
+      ],
+      "family": "rackmount_server_power_budget",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-028",
+      "query_group_id": "diverse-v1-cpu-00-028",
+      "category": "cpu",
+      "query_text": "CPU with an included cooler for a straightforward first-time build",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ],
+      "family": "included_cooler_first_build",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-029",
+      "query_group_id": "diverse-v1-cpu-00-029",
+      "category": "cpu",
+      "query_text": "CPU with at least 16 cores for batch processing jobs that can run in parallel",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 16
+        }
+      ],
+      "family": "parallel_batch_processing_cpu",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-031",
+      "query_group_id": "diverse-v1-cpu-00-031",
+      "category": "cpu",
+      "query_text": "CPU with a base clock of at least 3.5 GHz for consistently responsive desktop work",
+      "must": [
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 3.5
+        }
+      ],
+      "family": "high_base_clock_responsiveness",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-005",
+      "query_group_id": "diverse-v1-cpu-00-005",
+      "category": "cpu",
+      "query_text": "CPU for compiling large software projects in the shortest practical time",
+      "must": [],
+      "family": "large_scale_software_compilation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-013",
+      "query_group_id": "diverse-v1-cpu-00-013",
+      "category": "cpu",
+      "query_text": "CPU for flight simulation with complex scenery and many background applications",
+      "must": [],
+      "family": "flight_simulation_desktop",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-018",
+      "query_group_id": "diverse-v1-cpu-00-018",
+      "category": "cpu",
+      "query_text": "CPU for photogrammetry and structure-from-motion processing",
+      "must": [],
+      "family": "photogrammetry_processing_workstation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-cpu-00-021",
+      "query_group_id": "diverse-v1-cpu-00-021",
+      "category": "cpu",
+      "query_text": "CPU for a server running containerized business applications around the clock",
+      "must": [],
+      "family": "containerized_business_server_cpu",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-027",
+      "query_group_id": "diverse-v1-gpu-00-027",
+      "category": "gpu",
+      "query_text": "Which GPU should I buy to improve performance in older 1080p games without rebuilding the whole computer?",
+      "must": [],
+      "family": "incremental gaming system upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-006",
+      "query_group_id": "diverse-v1-memory-00-006",
+      "category": "memory",
+      "query_text": "Find memory for an OEM desktop where I want standard JEDEC operation rather than overclocking profiles, but the exact motherboard model is not available.",
+      "must": [],
+      "family": "oem_jedec_compatibility_memory_search",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-007",
+      "query_group_id": "diverse-v1-memory-00-007",
+      "category": "memory",
+      "query_text": "I want DDR5 memory for manual timing and voltage tuning on an enthusiast desktop, and I am deciding between a lower-latency 32GB kit and a higher-capacity option.",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ],
+      "family": "manual_memory_tuning_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-memory-01-001",
+      "query_group_id": "diverse-v1-memory-01-001",
+      "category": "memory",
+      "query_text": "Looking for 64GB RAM for a large music production project with orchestral sample libraries.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        }
+      ],
+      "family": "music_production_memory_capacity_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-memory-01-005",
+      "query_group_id": "diverse-v1-memory-01-005",
+      "category": "memory",
+      "query_text": "Looking for 128GB RAM for processing large scientific datasets and running memory-intensive numerical workloads.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 128
+        }
+      ],
+      "family": "scientific_computing_memory_capacity_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-015",
+      "query_group_id": "diverse-v1-memory-00-015",
+      "category": "memory",
+      "query_text": "What RAM should I use for a local database testing machine that will work with large temporary datasets and multiple database instances?",
+      "must": [],
+      "family": "database_testing_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-020",
+      "query_group_id": "diverse-v1-memory-00-020",
+      "category": "memory",
+      "query_text": "I am looking for desktop memory for a no-RGB build with a plain appearance. The motherboard and required capacity are not decided yet.",
+      "must": [],
+      "family": "non_rgb_memory_search",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "specific_specifications"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-012",
+      "query_group_id": "diverse-v1-gpu-00-012",
+      "category": "gpu",
+      "query_text": "I need a GPU for machine-learning experiments with a memory bus of at least 256 bits.",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 256
+        }
+      ],
+      "family": "local machine-learning memory bandwidth",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-gpu-00-024",
+      "query_group_id": "diverse-v1-gpu-00-024",
+      "category": "gpu",
+      "query_text": "I need a GPU that occupies no more than 2.5 slots in my case.",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2.5
+        }
+      ],
+      "family": "limited vertical expansion clearance",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-017",
+      "query_group_id": "diverse-v1-memory-00-017",
+      "category": "memory",
+      "query_text": "Find memory for a virtual desktop infrastructure host serving several office users. I prefer 128GB of DDR4, but the exact DIMM layout is undecided.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 128
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ],
+      "family": "virtual_desktop_host_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-018",
+      "query_group_id": "diverse-v1-memory-00-018",
+      "category": "memory",
+      "query_text": "I need memory for a low-power desktop that will run continuously for office and web tasks. I care about modest power use but have no fixed speed or capacity requirement.",
+      "must": [],
+      "family": "low_power_desktop_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-019",
+      "query_group_id": "diverse-v1-memory-00-019",
+      "category": "memory",
+      "query_text": "What RAM is appropriate for a quiet PC where reducing heat and fan noise matters more than maximum performance?",
+      "must": [],
+      "family": "quiet_pc_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-029",
+      "query_group_id": "diverse-v1-memory-00-029",
+      "category": "memory",
+      "query_text": "I want to verify a memory kit against my motherboard's qualified vendor list before buying. The board uses DDR4, but I have no preferred capacity or speed yet.",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ],
+      "family": "motherboard_qvl_memory_validation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-010",
+      "query_group_id": "diverse-v1-memory-00-010",
+      "category": "memory",
+      "query_text": "I am choosing memory for a rack server and need to understand whether registered DIMMs are appropriate, since the processor and motherboard model are not yet selected.",
+      "must": [],
+      "family": "registered_server_memory_research",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-014",
+      "query_group_id": "diverse-v1-memory-00-014",
+      "category": "memory",
+      "query_text": "I need memory for a cybersecurity lab running isolated analysis tools and several test environments, but I am unsure whether 64GB is enough or 128GB is more appropriate.",
+      "must": [],
+      "family": "cybersecurity_lab_memory_capacity_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-016",
+      "query_group_id": "diverse-v1-memory-00-016",
+      "category": "memory",
+      "query_text": "I am assembling a dense virtualization host for many simultaneous guest systems and need help balancing high capacity, module count, and memory speed.",
+      "must": [],
+      "family": "dense_virtualization_host_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-023",
+      "query_group_id": "diverse-v1-memory-00-023",
+      "category": "memory",
+      "query_text": "I need RAM for a computer that must run a legacy 32-bit operating system, but I do not know whether modern high-capacity kits will be useful in that environment.",
+      "must": [],
+      "family": "legacy_operating_system_memory_compatibility",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-027",
+      "query_group_id": "diverse-v1-motherboard-00-027",
+      "category": "motherboard",
+      "query_text": "Which motherboard should I choose for a quiet small business server where I need mirrored boot drives but have not decided on the processor?",
+      "must": [],
+      "family": "quiet small-server platform selection with mirrored boot-storage planning",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-011",
+      "query_group_id": "diverse-v1-motherboard-01-011",
+      "category": "motherboard",
+      "query_text": "I need a standard ATX board for an Intel home-theater PC, but I have not decided whether the processor will be DDR4 or DDR5.",
+      "must": [],
+      "family": "intel media pc discovery before resolving the memory generation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-009",
+      "query_group_id": "diverse-v1-power_supply-00-009",
+      "category": "power_supply",
+      "query_text": "Find a quiet-oriented power supply for a content-creation tower, but I do not know how much wattage the final parts will require.",
+      "must": [],
+      "family": "content-creation system sizing uncertainty",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-018",
+      "query_group_id": "diverse-v1-power_supply-00-018",
+      "category": "power_supply",
+      "query_text": "I need an ATX PSU with at least 650W for a developer desktop that will also run occasional GPU workloads.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        }
+      ],
+      "family": "developer desktop with intermittent graphics demand",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-004",
+      "query_group_id": "diverse-v1-power_supply-01-004",
+      "category": "power_supply",
+      "query_text": "Need an SFX PSU for an external GPU enclosure used with a laptop, with at least 650 watts available.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        }
+      ],
+      "family": "external graphics enclosure power replacement",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-008",
+      "query_group_id": "diverse-v1-power_supply-01-008",
+      "category": "power_supply",
+      "query_text": "I am restoring a retro ATX computer and want a conventional ATX PSU under 500 watts rather than a large modern unit.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "lt",
+          "value": 500
+        }
+      ],
+      "family": "low-power vintage atx restoration",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-011",
+      "query_group_id": "diverse-v1-power_supply-01-011",
+      "category": "power_supply",
+      "query_text": "I need an SFX-L unit for a portable event PC, with no more than 600 watts.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx_l"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "le",
+          "value": 600
+        }
+      ],
+      "family": "portable event computer power constraint",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-035",
+      "query_group_id": "diverse-v1-power_supply-00-035",
+      "category": "power_supply",
+      "query_text": "I am assembling a multi-purpose desktop and need to decide between fully modular and simpler cabling, while the final component list is still undecided.",
+      "must": [],
+      "family": "modularity decision during evolving desktop assembly",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-002",
+      "query_group_id": "diverse-v1-power_supply-01-002",
+      "category": "power_supply",
+      "query_text": "Looking for a very quiet PSU for a music-production computer; acoustic behavior is more important than modular cables.",
+      "must": [],
+      "family": "low-noise audio workstation selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-009",
+      "query_group_id": "diverse-v1-power_supply-01-009",
+      "category": "power_supply",
+      "query_text": "Need a non-modular PSU for a simple repair build where permanently attached cables are preferred.",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "non_modular"
+        }
+      ],
+      "family": "fixed-cable repair simplicity",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-010",
+      "query_group_id": "diverse-v1-power_supply-01-010",
+      "category": "power_supply",
+      "query_text": "What PSU should I use for a small home-theater computer with modest power needs?",
+      "must": [],
+      "family": "non-gaming living-room computer power selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-014",
+      "query_group_id": "diverse-v1-power_supply-01-014",
+      "category": "power_supply",
+      "query_text": "I am assembling a low-power router and firewall appliance and want the smallest suitable PSU, but the enclosure model is undecided.",
+      "must": [],
+      "family": "network appliance power planning under enclosure uncertainty",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-032",
+      "query_group_id": "diverse-v1-power_supply-01-032",
+      "category": "power_supply",
+      "query_text": "I need an SFX PSU for a compact data-logging computer, but the processor and storage count are still undecided.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        }
+      ],
+      "family": "compact data-logger power planning",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-010",
+      "query_group_id": "diverse-v1-storage-01-010",
+      "category": "storage",
+      "query_text": "What internal storage is suitable for keeping encrypted legal and financial records on a personal computer?",
+      "must": [],
+      "family": "sensitive records storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-017",
+      "query_group_id": "diverse-v1-storage-01-017",
+      "category": "storage",
+      "query_text": "I need a drive for write-heavy application logs in a small always-on server, but I am unsure whether SSD or HDD is better.",
+      "must": [],
+      "family": "write-intensive server logging",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "ambiguous_natural_language"
+    },
+    {
+      "query_id": "diverse-v1-memory-01-009",
+      "query_group_id": "diverse-v1-memory-01-009",
+      "category": "memory",
+      "query_text": "Need 32GB DDR5 memory with a speed of at least 6000 MT/s for a high-performance desktop build.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6000
+        }
+      ],
+      "family": "high_frequency_desktop_memory_selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-000",
+      "query_group_id": "diverse-v1-motherboard-01-000",
+      "category": "motherboard",
+      "query_text": "I need an AM4 motherboard for a Ryzen 5000 upgrade that still uses my DDR4 DIMMs and has two M.2 slots.",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ],
+      "family": "am4 processor upgrade with retained ddr4 and dual fast-storage support",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-005",
+      "query_group_id": "diverse-v1-motherboard-01-005",
+      "category": "motherboard",
+      "query_text": "I want a Micro-ATX motherboard for an entry-level gaming PC with DDR4 support and at least four SATA connections.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        }
+      ],
+      "family": "budget compact gaming board combining older memory with conventional storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-010",
+      "query_group_id": "diverse-v1-motherboard-00-010",
+      "category": "motherboard",
+      "query_text": "Find an AM5 motherboard for a simulation workstation that can eventually use 192GB of DDR5 memory.",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 192
+        }
+      ],
+      "family": "am5 workstation planning around unusually high memory capacity",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-015",
+      "query_group_id": "diverse-v1-motherboard-01-015",
+      "category": "motherboard",
+      "query_text": "I need an AM4 motherboard for a budget upgrade where the existing DDR4 kit has two modules and I do not need more than two M.2 drives.",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ],
+      "family": "cost-conscious am4 refresh centered on existing dual-module ddr4",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-021",
+      "query_group_id": "diverse-v1-motherboard-01-021",
+      "category": "motherboard",
+      "query_text": "Which LGA1200 motherboard is best for a refurbished school computer that should accept 32GB of DDR4 across four slots?",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ],
+      "family": "refurbished intel education desktop with broad ddr4 module flexibility",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-022",
+      "query_group_id": "diverse-v1-motherboard-01-022",
+      "category": "motherboard",
+      "query_text": "I am building an AM5 media-encoding PC and need at least 96GB of memory capacity plus two M.2 slots.",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 96
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ],
+      "family": "am5 media-processing workstation with high memory capacity and fast scratch storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-024",
+      "query_group_id": "diverse-v1-motherboard-01-024",
+      "category": "motherboard",
+      "query_text": "I need an ATX motherboard for an AM4 machine that will run several operating systems from separate SATA SSDs.",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        }
+      ],
+      "family": "am4 multi-boot workstation using multiple conventional ssds",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-027",
+      "query_group_id": "diverse-v1-motherboard-01-027",
+      "category": "motherboard",
+      "query_text": "Find an LGA1851 motherboard for a home programming workstation with two M.2 slots and at least 64GB maximum memory support.",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA 1851"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ],
+      "family": "new intel coding workstation with balanced memory and nvme capability",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-030",
+      "query_group_id": "diverse-v1-motherboard-01-030",
+      "category": "motherboard",
+      "query_text": "Find an AM4 motherboard that supports DDR4 and at least 128GB for a long-running engineering simulation workstation.",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ],
+      "family": "high-capacity am4 engineering workstation using mature memory technology",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-008",
+      "query_group_id": "diverse-v1-cooler-00-008",
+      "category": "cooler",
+      "query_text": "Find an air cooler no taller than 165 mm for an AM4 gaming upgrade, with support for the existing socket.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 165
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        }
+      ],
+      "family": "height-conscious air cooling for an am4 gaming refresh",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-022",
+      "query_group_id": "diverse-v1-cooler-00-022",
+      "category": "cooler",
+      "query_text": "Search for an air cooler under 95 mm tall that works with an AM4 board in a compact office tower.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "lt",
+          "value": 95
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        }
+      ],
+      "family": "very short amd air cooling for a compact office tower",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-001",
+      "query_group_id": "diverse-v1-cooler-01-001",
+      "category": "cooler",
+      "query_text": "Find an AM5-compatible liquid cooler for a quiet gaming PC with a 280 mm radiator mount.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        }
+      ],
+      "family": "quiet amd gaming cooling with a specific radiator footprint",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-008",
+      "query_group_id": "diverse-v1-cooler-01-008",
+      "category": "cooler",
+      "query_text": "Search for a 360 mm liquid cooler that supports AM5 and can be used in a high-performance desktop.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 360
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        }
+      ],
+      "family": "large-radiator amd performance cooling with explicit platform support",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-022",
+      "query_group_id": "diverse-v1-cooler-01-022",
+      "category": "cooler",
+      "query_text": "Find a 280 mm liquid cooler for an AM4 workstation that alternates between compiling and gaming.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        }
+      ],
+      "family": "mixed-use amd cooling with a shared mid-large radiator format",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-033",
+      "query_group_id": "diverse-v1-cooler-01-033",
+      "category": "cooler",
+      "query_text": "Find an AM5 air cooler with a maximum height of 165 mm for a general-purpose home computer.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 165
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        }
+      ],
+      "family": "standard-height amd air cooling for a general home desktop",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-025",
+      "query_group_id": "diverse-v1-cooler-00-025",
+      "category": "cooler",
+      "query_text": "Find an air cooler no taller than 180 mm for an LGA1700 CPU in a full-size case.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 180
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1700"
+        }
+      ],
+      "family": "tall-clearance intel air cooling for a full-size desktop",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-030",
+      "query_group_id": "diverse-v1-cooler-00-030",
+      "category": "cooler",
+      "query_text": "I want a 360 mm liquid cooler for an LGA1700 workstation, but the workload may range from office tasks to occasional rendering.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 360
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1700"
+        }
+      ],
+      "family": "flexible large-radiator intel workstation cooling under uncertain workload intensity",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-035",
+      "query_group_id": "diverse-v1-cooler-00-035",
+      "category": "cooler",
+      "query_text": "I need a 240 mm liquid cooler that supports both LGA1200 and LGA1700 for an Intel upgrade path.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 240
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1200"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "LGA 1700"
+        }
+      ],
+      "family": "multi-generation intel liquid cooling for an upgrade path",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-cooler-01-004",
+      "query_group_id": "diverse-v1-cooler-01-004",
+      "category": "cooler",
+      "query_text": "Need a 120 mm liquid cooler for an AM4 CPU in a small gaming case.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "aio"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 120
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM4"
+        }
+      ],
+      "family": "compact amd gaming liquid cooling around a small radiator mount",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "complex_multi_constraint"
+    },
+    {
+      "query_id": "diverse-v1-memory-00-021",
+      "query_group_id": "diverse-v1-memory-00-021",
+      "category": "memory",
+      "query_text": "Find memory for a white-themed PC build. I have not selected the platform yet and mainly want visually matching desktop modules.",
+      "must": [],
+      "family": "white_theme_memory_search",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-00-024",
+      "query_group_id": "diverse-v1-motherboard-00-024",
+      "category": "motherboard",
+      "query_text": "Search for a motherboard that supports both AM4 and AM5 processors so I can postpone the CPU decision.",
+      "must": [],
+      "family": "cross-generation amd platform compatibility discovery",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-motherboard-01-034",
+      "query_group_id": "diverse-v1-motherboard-01-034",
+      "category": "motherboard",
+      "query_text": "I want an AM5 board for a personal finance and document PC, but I cannot tell whether my case requires ATX or Micro-ATX.",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        }
+      ],
+      "family": "am5 general-purpose desktop selection with unresolved enclosure compatibility",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-003",
+      "query_group_id": "diverse-v1-power_supply-00-003",
+      "category": "power_supply",
+      "query_text": "I am upgrading a midrange gaming computer and need a replacement PSU rated for at least 650W.",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        }
+      ],
+      "family": "midrange gaming replacement sizing",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-006",
+      "query_group_id": "diverse-v1-power_supply-00-006",
+      "category": "power_supply",
+      "query_text": "I need a compact power supply for a Mini-ITX gaming build, but I am not sure whether the case takes SFX or SFX-L.",
+      "must": [],
+      "family": "ambiguous compact gaming form-factor selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-013",
+      "query_group_id": "diverse-v1-power_supply-00-013",
+      "category": "power_supply",
+      "query_text": "Find a power supply for a gaming upgrade where the case is compact but the exact supported PSU format is unclear.",
+      "must": [],
+      "family": "case-dependent upgrade compatibility uncertainty",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-029",
+      "query_group_id": "diverse-v1-power_supply-00-029",
+      "category": "power_supply",
+      "query_text": "What PSU should I choose for a graphics-card upgrade when I know the new card needs more power but I have not calculated a total system wattage?",
+      "must": [],
+      "family": "graphics-card upgrade sizing uncertainty",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-006",
+      "query_group_id": "diverse-v1-power_supply-01-006",
+      "category": "power_supply",
+      "query_text": "I want a power supply for a bedroom recording PC where fan noise and electrical noise are concerns.",
+      "must": [],
+      "family": "noise-sensitive studio computer power selection",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-017",
+      "query_group_id": "diverse-v1-power_supply-01-017",
+      "category": "power_supply",
+      "query_text": "Find a compact PSU for a slim office PC that must use the SFX form factor and stay below 450 watts.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "lt",
+          "value": 450
+        }
+      ],
+      "family": "slim office desktop power limitation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-022",
+      "query_group_id": "diverse-v1-power_supply-01-022",
+      "category": "power_supply",
+      "query_text": "Looking for a semi-modular PSU for a repair bench computer so the main cables stay attached but optional leads can be removed.",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "semi_modular"
+        }
+      ],
+      "family": "selective cable removability for service work",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-002",
+      "query_group_id": "diverse-v1-power_supply-00-002",
+      "category": "power_supply",
+      "query_text": "Looking for an SFX power supply for a small-form-factor gaming PC, preferably around 600W or more.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 600
+        }
+      ],
+      "family": "small-form-factor gaming capacity",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-005",
+      "query_group_id": "diverse-v1-power_supply-00-005",
+      "category": "power_supply",
+      "query_text": "Find an ATX power supply with at least 1000W for a future-proof enthusiast gaming upgrade.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1000
+        }
+      ],
+      "family": "future-proof enthusiast upgrade",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-016",
+      "query_group_id": "diverse-v1-power_supply-00-016",
+      "category": "power_supply",
+      "query_text": "I am converting an office desktop into a gaming PC and need a PSU rated at least 700W, but I do not know whether the original case uses ATX or SFX.",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 700
+        }
+      ],
+      "family": "office-to-gaming conversion compatibility uncertainty",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-026",
+      "query_group_id": "diverse-v1-power_supply-00-026",
+      "category": "power_supply",
+      "query_text": "I need an ATX power supply for a PC refresh, but I am balancing lower wattage against keeping enough room for a later graphics-card upgrade.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        }
+      ],
+      "family": "incremental pc refresh with future expansion tradeoff",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-00-032",
+      "query_group_id": "diverse-v1-power_supply-00-032",
+      "category": "power_supply",
+      "query_text": "Search for a 1200W or higher ATX PSU for an enthusiast PC that may receive additional high-power components later.",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1200
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        }
+      ],
+      "family": "large-capacity enthusiast expansion planning",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-012",
+      "query_group_id": "diverse-v1-power_supply-01-012",
+      "category": "power_supply",
+      "query_text": "Looking for a PSU for a workstation that has two CPU sockets and several capture cards, but I do not know the final graphics configuration yet.",
+      "must": [],
+      "family": "unfinished professional workstation planning",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-power_supply-01-023",
+      "query_group_id": "diverse-v1-power_supply-01-023",
+      "category": "power_supply",
+      "query_text": "What power supply should I consider for a computer running several PCIe data-acquisition cards and an unknown number of future expansion cards?",
+      "must": [],
+      "family": "specialized pcie expansion planning",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-019",
+      "query_group_id": "diverse-v1-storage-01-019",
+      "category": "storage",
+      "query_text": "I need a replacement disk for a failed member of my desktop RAID array, matching a 3.5-inch SATA configuration.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ],
+      "family": "desktop raid member replacement",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-026",
+      "query_group_id": "diverse-v1-storage-01-026",
+      "category": "storage",
+      "query_text": "Which internal drive should I use for local machine-learning training data when the workload includes many small files?",
+      "must": [],
+      "family": "machine-learning training dataset storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-028",
+      "query_group_id": "diverse-v1-storage-01-028",
+      "category": "storage",
+      "query_text": "Find a 500GB drive for a dedicated Linux boot and recovery installation in a desktop PC.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 500
+        }
+      ],
+      "family": "dedicated linux boot and recovery drive",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-029",
+      "query_group_id": "diverse-v1-storage-01-029",
+      "category": "storage",
+      "query_text": "I am building a PC for local database testing and need storage for database files and temporary tables, but I am unsure which type is appropriate.",
+      "must": [],
+      "family": "database testing workspace",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-032",
+      "query_group_id": "diverse-v1-storage-01-032",
+      "category": "storage",
+      "query_text": "Recommend a drive for a PC used to host a local wiki and internal knowledge base.",
+      "must": [],
+      "family": "local knowledge base hosting",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-036",
+      "query_group_id": "diverse-v1-storage-01-036",
+      "category": "storage",
+      "query_text": "What storage should I choose for a PC that records industrial sensor data around the clock?",
+      "must": [],
+      "family": "industrial sensor data logging",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-005",
+      "query_group_id": "diverse-v1-storage-00-005",
+      "category": "storage",
+      "query_text": "What storage should I buy for a small-form-factor PC where heat and physical clearance are concerns?",
+      "must": [],
+      "family": "small-form-factor thermal and clearance tradeoff",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-006",
+      "query_group_id": "diverse-v1-storage-00-006",
+      "category": "storage",
+      "query_text": "Looking for a 500GB SSD dedicated to Windows applications and frequently used tools.",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 500
+        }
+      ],
+      "family": "application-drive separation",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-008",
+      "query_group_id": "diverse-v1-storage-00-008",
+      "category": "storage",
+      "query_text": "Find a 2.5-inch SATA SSD for an older laptop that cannot use NVMe.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ],
+      "family": "older laptop interface replacement",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-010",
+      "query_group_id": "diverse-v1-storage-00-010",
+      "category": "storage",
+      "query_text": "Suggest storage for a PC used to edit 4K video, balancing capacity, sustained workload, and budget.",
+      "must": [],
+      "family": "video-editing storage tradeoff",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-013",
+      "query_group_id": "diverse-v1-storage-00-013",
+      "category": "storage",
+      "query_text": "What is a good storage setup for a PC that runs several large games and records gameplay locally?",
+      "must": [],
+      "family": "game recording and library storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-016",
+      "query_group_id": "diverse-v1-storage-00-016",
+      "category": "storage",
+      "query_text": "Need storage for a home PC that will hold a large collection of downloaded films and TV episodes.",
+      "must": [],
+      "family": "home video collection storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "budget"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-020",
+      "query_group_id": "diverse-v1-storage-00-020",
+      "category": "storage",
+      "query_text": "What storage works best for a family desktop shared by multiple users with separate files and applications?",
+      "must": [],
+      "family": "multi-user household desktop storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-025",
+      "query_group_id": "diverse-v1-storage-00-025",
+      "category": "storage",
+      "query_text": "Find storage for a retro-gaming PC that will hold many ROM files and emulator software.",
+      "must": [],
+      "family": "retro-gaming library storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-027",
+      "query_group_id": "diverse-v1-storage-00-027",
+      "category": "storage",
+      "query_text": "What drive should I choose for a desktop that needs both a responsive system volume and substantial local media storage?",
+      "must": [],
+      "family": "tiered system and media storage planning",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-030",
+      "query_group_id": "diverse-v1-storage-00-030",
+      "category": "storage",
+      "query_text": "I need storage for a PC that will keep a large collection of downloaded game installers and mods.",
+      "must": [],
+      "family": "game installer and mod archive storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-031",
+      "query_group_id": "diverse-v1-storage-00-031",
+      "category": "storage",
+      "query_text": "Suggest an internal drive for a digital art PC where project sizes vary from small sketches to very large canvases.",
+      "must": [],
+      "family": "digital art capacity planning",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-033",
+      "query_group_id": "diverse-v1-storage-00-033",
+      "category": "storage",
+      "query_text": "What storage should I use in a PC that will serve as a local backup target for family laptops?",
+      "must": [],
+      "family": "household laptop backup target",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-035",
+      "query_group_id": "diverse-v1-storage-00-035",
+      "category": "storage",
+      "query_text": "Find the right internal storage for a refurbished desktop when the motherboard model and available slots are unknown.",
+      "must": [],
+      "family": "unknown refurbished pc compatibility",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-00-037",
+      "query_group_id": "diverse-v1-storage-00-037",
+      "category": "storage",
+      "query_text": "Looking for storage for a PC used to download, organize, and transcode personal video files.",
+      "must": [],
+      "family": "personal video processing storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-002",
+      "query_group_id": "diverse-v1-storage-01-002",
+      "category": "storage",
+      "query_text": "What drive should I use as a local workspace for large CAD assemblies and engineering project files?",
+      "must": [],
+      "family": "cad project workspace",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-005",
+      "query_group_id": "diverse-v1-storage-01-005",
+      "category": "storage",
+      "query_text": "I need a drive for a large music sample library in a desktop with a free 2.5-inch SATA bay.",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ],
+      "family": "music production sample library",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-006",
+      "query_group_id": "diverse-v1-storage-01-006",
+      "category": "storage",
+      "query_text": "Which storage component makes sense for recording and editing multitrack audio sessions on a PC?",
+      "must": [],
+      "family": "multitrack audio project storage",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-036",
+      "query_group_id": "diverse-v1-cooler-00-036",
+      "category": "cooler",
+      "query_text": "Looking for a compact air cooler for an AM5 small-form-factor workstation, but I have not measured the case height.",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "AM5"
+        }
+      ],
+      "family": "small-form-factor amd workstation cooling with unresolved clearance",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "cpu_productivity"
+    },
+    {
+      "query_id": "diverse-v1-storage-01-012",
+      "query_group_id": "diverse-v1-storage-01-012",
+      "category": "storage",
+      "query_text": "Looking for a large internal drive for a home server that will store shared files and backups from several PCs.",
+      "must": [],
+      "family": "home server shared-file datastore",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    },
+    {
+      "query_id": "diverse-v1-cooler-00-006",
+      "query_group_id": "diverse-v1-cooler-00-006",
+      "category": "cooler",
+      "query_text": "Which cooler should I choose for a new gaming and streaming PC if I only know that it uses an Intel desktop socket?",
+      "must": [],
+      "family": "intel gaming-streaming cooling discovery with incomplete platform details",
+      "query_generation": "gpt-5.6-luna",
+      "evaluation_category": "compatibility_upgrade"
+    }
+  ],
+  "replaced_query_ids": [
+    "diverse-v1-cpu-00-003",
+    "diverse-v1-cpu-00-032",
+    "diverse-v1-gpu-00-010",
+    "diverse-v1-power_supply-01-013"
+  ],
+  "source_sha256": "18d28dba1a9ed41b52574f7f5697b3d66be616153d92883f31a77d4c3486df71",
+  "prior_manifest_sha256": "96517bb5813cb82c0e844efced39f75206b3ab626caefa095ea12d89cfc2d377",
+  "audit_sha256": "b690a91b4c1968a1af51b1560b95675059b00c7761373ae873bddbb3a979311f",
+  "limitation": "synthetic model-authored queries; independence is subject to the strict automated audit",
+  "replacement_source_sha256": "18d28dba1a9ed41b52574f7f5697b3d66be616153d92883f31a77d4c3486df71"
+}
