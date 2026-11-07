@@ -1,0 +1,328 @@
+{
+  "category": "gpu",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2189,
+    "total_tokens": 2969,
+    "prompt_tokens": 780,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 516
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a GPU for 4K gaming with at least 16GB of VRAM.",
+      "intent_family": "high-resolution gaming capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a graphics card focused on competitive 1080p gaming at very high refresh rates.",
+      "intent_family": "competitive gaming responsiveness",
+      "must": []
+    },
+    {
+      "query_text": "What GPU would suit 1440p gaming with ray tracing enabled?",
+      "intent_family": "ray-traced gaming selection",
+      "must": []
+    },
+    {
+      "query_text": "I want a GPU for ultrawide 3440x1440 gaming and occasional recording.",
+      "intent_family": "ultrawide gaming and capture",
+      "must": []
+    },
+    {
+      "query_text": "Find a graphics card for 4K gaming that uses GDDR6X memory.",
+      "intent_family": "high-resolution gaming with specified memory technology",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr6x"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a GPU with at least 12GB of VRAM for modern games and texture-heavy settings.",
+      "intent_family": "texture-heavy gaming capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a graphics card for a 240 Hz 1080p gaming setup.",
+      "intent_family": "high-refresh gaming display support",
+      "must": []
+    },
+    {
+      "query_text": "Which GPU is appropriate for a mixed gaming and video-editing PC?",
+      "intent_family": "mixed gaming and content-creation selection",
+      "must": []
+    },
+    {
+      "query_text": "I need a graphics card with at least 20GB of VRAM for editing high-resolution footage.",
+      "intent_family": "high-resolution video editing memory capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 20
+        }
+      ]
+    },
+    {
+      "query_text": "Find a GPU with GDDR6 memory for a general-purpose content-creation workstation.",
+      "intent_family": "content-creation memory technology selection",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr6"
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a PC for Blender rendering and want a GPU with at least 16GB of VRAM.",
+      "intent_family": "3D rendering memory capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "What graphics card should I choose for local AI image generation?",
+      "intent_family": "local generative AI acceleration",
+      "must": []
+    },
+    {
+      "query_text": "I need a GPU for machine-learning experiments with a memory bus of at least 256 bits.",
+      "intent_family": "local machine-learning memory bandwidth",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 256
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a graphics card with at least 24GB of VRAM for local model experimentation.",
+      "intent_family": "local AI model memory capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_text": "Which GPU makes sense for GPU-accelerated computational workloads on a personal workstation?",
+      "intent_family": "personal workstation acceleration",
+      "must": []
+    },
+    {
+      "query_text": "I need a graphics card for livestreaming and gaming on the same PC.",
+      "intent_family": "gaming and livestreaming combination",
+      "must": []
+    },
+    {
+      "query_text": "Find a GPU for video playback, light editing, and occasional gaming in a home PC.",
+      "intent_family": "home multimedia and casual gaming",
+      "must": []
+    },
+    {
+      "query_text": "I want a graphics card with a board power rating no higher than 200 watts for a balanced gaming build.",
+      "intent_family": "moderate-power gaming selection",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 200
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a GPU rated at 250 watts or less for a gaming and editing system.",
+      "intent_family": "power-bounded mixed workload selection",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 250
+        }
+      ]
+    },
+    {
+      "query_text": "I need a graphics card with a board power rating of at least 300 watts for a high-performance desktop.",
+      "intent_family": "high-power desktop graphics selection",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "ge",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_text": "Find a GPU no longer than 270 mm for a compact gaming case.",
+      "intent_family": "compact-case gaming fit",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 270
+        }
+      ]
+    },
+    {
+      "query_text": "I need a graphics card no longer than 220 mm for a small custom-built PC.",
+      "intent_family": "short-card custom PC fit",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a GPU under 300 mm long for a compact workstation that will also be used for games.",
+      "intent_family": "compact workstation gaming fit",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 300
+        }
+      ]
+    },
+    {
+      "query_text": "What graphics card can I use in a case with room for a card up to 280 mm long?",
+      "intent_family": "case-length-constrained selection",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 280
+        }
+      ]
+    },
+    {
+      "query_text": "I need a GPU that occupies no more than 2.5 slots in my case.",
+      "intent_family": "limited vertical expansion clearance",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_text": "Find a graphics card with a memory bus of at least 192 bits for a gaming upgrade.",
+      "intent_family": "gaming memory-interface upgrade",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 192
+        }
+      ]
+    },
+    {
+      "query_text": "I want to upgrade an older gaming PC to support current games, but I am unsure which GPU class fits.",
+      "intent_family": "ambiguous aging-gaming-PC upgrade",
+      "must": []
+    },
+    {
+      "query_text": "Which GPU should I buy to improve performance in older 1080p games without rebuilding the whole computer?",
+      "intent_family": "incremental gaming system upgrade",
+      "must": []
+    },
+    {
+      "query_text": "I need a graphics card for a dual-purpose PC used for gaming and music production.",
+      "intent_family": "gaming and audio-production system selection",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a GPU for a living-room PC connected to a 4K television.",
+      "intent_family": "living-room 4K gaming and media",
+      "must": []
+    },
+    {
+      "query_text": "What graphics card is suitable for a first-time gaming PC builder who has not chosen the rest of the parts yet?",
+      "intent_family": "early-stage gaming build selection",
+      "must": []
+    },
+    {
+      "query_text": "I need a GPU with at least 8GB of VRAM for a budget-conscious 1440p gaming build.",
+      "intent_family": "value-oriented 1440p gaming capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "Find a graphics card using GDDR7 memory for a new enthusiast gaming PC.",
+      "intent_family": "new-generation gaming memory technology",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "gddr7"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a GPU with a 128-bit memory bus for a compact casual gaming system.",
+      "intent_family": "entry-level memory-interface matching",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "eq",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "Which graphics card is appropriate for a desktop used for CAD-free 3D modeling and occasional games?",
+      "intent_family": "3D modeling and gaming workstation selection",
+      "must": []
+    },
+    {
+      "query_text": "I need a GPU for color grading and motion graphics, but I do not know how much VRAM is necessary.",
+      "intent_family": "uncertain post-production graphics selection",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a graphics card for a home server that will sometimes run a graphical desktop.",
+      "intent_family": "occasional graphical server workload",
+      "must": []
+    },
+    {
+      "query_text": "What GPU should I choose for a PC that will alternate between gaming, photo editing, and video calls?",
+      "intent_family": "general mixed-use desktop graphics selection",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

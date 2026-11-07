@@ -1,0 +1,403 @@
+{
+  "category": "memory",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 4657,
+    "total_tokens": 5533,
+    "prompt_tokens": 876,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2311
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need low-latency DDR5 memory for a competitive esports gaming PC, preferably 32GB in a two-module kit with at least 6000 MT/s and CAS latency no higher than 30.",
+      "intent_family": "esports_low_latency_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6000
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 30
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "What memory should I use with integrated graphics to maximize shared-memory bandwidth? I want 16GB of DDR4 in two modules running at least 3200 MT/s.",
+      "intent_family": "integrated_graphics_bandwidth_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 3200
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for 32GB of DDR5 memory for a VR gaming system, with two modules and at least 5600 MT/s.",
+      "intent_family": "virtual_reality_gaming_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 5600
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a PC for live game streaming and want 32GB of DDR5 memory in a two-module kit, but I am unsure whether to prioritize capacity or speed.",
+      "intent_family": "live_game_streaming_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "What memory is a sensible upgrade for a modern AAA gaming PC that currently has 16GB? I want 64GB of DDR5 without choosing an extreme enthusiast kit.",
+      "intent_family": "aaa_gaming_capacity_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "I am moving from an older DDR4 platform to DDR5 and need a 32GB two-module kit at 5200 MT/s or faster for a general-purpose desktop.",
+      "intent_family": "ddr4_to_ddr5_platform_transition",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 5200
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find memory for an OEM desktop where I want standard JEDEC operation rather than overclocking profiles, but the exact motherboard model is not available.",
+      "intent_family": "oem_jedec_compatibility_memory_search",
+      "must": []
+    },
+    {
+      "query_text": "I want DDR5 memory for manual timing and voltage tuning on an enthusiast desktop, and I am deciding between a lower-latency 32GB kit and a higher-capacity option.",
+      "intent_family": "manual_memory_tuning_selection",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "I need ECC-capable memory for a professional workstation, but I do not know whether the motherboard supports unbuffered or registered modules.",
+      "intent_family": "ecc_workstation_memory_research",
+      "must": []
+    },
+    {
+      "query_text": "What memory should I research for a home NAS where data integrity matters more than gaming performance? The system may support ECC, but the board specification is unclear.",
+      "intent_family": "nas_ecc_memory_research",
+      "must": []
+    },
+    {
+      "query_text": "I am choosing memory for a rack server and need to understand whether registered DIMMs are appropriate, since the processor and motherboard model are not yet selected.",
+      "intent_family": "registered_server_memory_research",
+      "must": []
+    },
+    {
+      "query_text": "I need 64GB of DDR5 memory for CPU-based 3D rendering, with two modules and at least 5600 MT/s, but I am weighing capacity against latency.",
+      "intent_family": "three_dimensional_rendering_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 5600
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "What RAM is suitable for a CAD workstation handling large assemblies? I am considering 64GB of DDR4 and want four modules only if the platform supports them.",
+      "intent_family": "cad_assembly_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a game-development workstation for an engine editor, asset tools, and frequent test builds. Should I choose 64GB or 96GB of DDR5?",
+      "intent_family": "game_development_workstation_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "I need memory for a cybersecurity lab running isolated analysis tools and several test environments, but I am unsure whether 64GB is enough or 128GB is more appropriate.",
+      "intent_family": "cybersecurity_lab_memory_capacity_selection",
+      "must": []
+    },
+    {
+      "query_text": "What RAM should I use for a local database testing machine that will work with large temporary datasets and multiple database instances?",
+      "intent_family": "database_testing_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I am assembling a dense virtualization host for many simultaneous guest systems and need help balancing high capacity, module count, and memory speed.",
+      "intent_family": "dense_virtualization_host_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "Find memory for a virtual desktop infrastructure host serving several office users. I prefer 128GB of DDR4, but the exact DIMM layout is undecided.",
+      "intent_family": "virtual_desktop_host_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 128
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "I need memory for a low-power desktop that will run continuously for office and web tasks. I care about modest power use but have no fixed speed or capacity requirement.",
+      "intent_family": "low_power_desktop_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "What RAM is appropriate for a quiet PC where reducing heat and fan noise matters more than maximum performance?",
+      "intent_family": "quiet_pc_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I am looking for desktop memory for a no-RGB build with a plain appearance. The motherboard and required capacity are not decided yet.",
+      "intent_family": "non_rgb_memory_search",
+      "must": []
+    },
+    {
+      "query_text": "Find memory for a white-themed PC build. I have not selected the platform yet and mainly want visually matching desktop modules.",
+      "intent_family": "white_theme_memory_search",
+      "must": []
+    },
+    {
+      "query_text": "I want 32GB of DDR4 in two modules for an APU desktop, with at least 3600 MT/s to support integrated graphics performance.",
+      "intent_family": "apu_dual_channel_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 3600
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I need RAM for a computer that must run a legacy 32-bit operating system, but I do not know whether modern high-capacity kits will be useful in that environment.",
+      "intent_family": "legacy_operating_system_memory_compatibility",
+      "must": []
+    },
+    {
+      "query_text": "I bought a prebuilt desktop and want to identify compatible replacement memory from limited information: it uses desktop DIMMs, but I do not know whether it takes DDR4 or DDR5.",
+      "intent_family": "prebuilt_memory_identification",
+      "must": []
+    },
+    {
+      "query_text": "My motherboard documentation is missing and I cannot tell whether it uses DDR3, DDR4, or DDR5. How should I search for compatible memory without guessing?",
+      "intent_family": "unknown_memory_generation_identification",
+      "must": []
+    },
+    {
+      "query_text": "I am deciding between ECC and non-ECC memory for a workstation used for important calculations, and I want to understand the reliability and compatibility tradeoff before choosing.",
+      "intent_family": "ecc_non_ecc_workstation_tradeoff",
+      "must": []
+    },
+    {
+      "query_text": "For a workstation running large engineering applications, should I choose 64GB of faster DDR5 or 128GB of slower DDR5? I need help evaluating the capacity-versus-speed tradeoff.",
+      "intent_family": "workstation_capacity_speed_tradeoff",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "For competitive gaming, should I buy a 32GB low-latency DDR5 kit or 64GB with looser timings? I want a decision based on gaming responsiveness rather than maximum capacity.",
+      "intent_family": "gaming_latency_capacity_tradeoff",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "I want to verify a memory kit against my motherboard's qualified vendor list before buying. The board uses DDR4, but I have no preferred capacity or speed yet.",
+      "intent_family": "motherboard_qvl_memory_validation",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a workstation that will use part of its RAM as a temporary RAM disk for scratch files. What capacity and memory type should I consider?",
+      "intent_family": "ram_disk_scratch_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I need memory for a GIS workstation handling map layers, spatial analysis, and desktop visualization, but I am unsure whether capacity or speed is more important.",
+      "intent_family": "gis_workstation_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "What RAM is suitable for a workstation that frequently performs large file compression and decompression jobs? I want to compare high-capacity and high-speed options.",
+      "intent_family": "file_compression_workstation_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I am choosing memory for a local AI inference workstation that loads models into system RAM, but the model sizes and motherboard platform are not finalized.",
+      "intent_family": "local_ai_inference_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "I need a spare memory module for diagnosing whether a desktop will POST, and I want a basic compatible module rather than a performance-oriented kit.",
+      "intent_family": "memory_diagnostic_spare_selection",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

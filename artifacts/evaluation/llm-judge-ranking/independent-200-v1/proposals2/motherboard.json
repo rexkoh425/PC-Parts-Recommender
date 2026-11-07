@@ -1,0 +1,752 @@
+{
+  "category": "motherboard",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 3814,
+    "total_tokens": 4744,
+    "prompt_tokens": 930,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 311
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need an AM4 motherboard for a Ryzen 5000 upgrade that still uses my DDR4 DIMMs and has two M.2 slots.",
+      "intent_family": "AM4 processor upgrade with retained DDR4 and dual fast-storage support",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find an LGA1700 motherboard for a quiet productivity PC with four SATA ports and room for a second NVMe drive.",
+      "intent_family": "quiet Intel productivity system with mixed storage expansion",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1700"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a Mini-ITX AM5 travel PC and need a board that fits the small chassis without giving up both memory slots.",
+      "intent_family": "portable AM5 system requiring small form factor and full two-slot memory layout",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Which motherboard should I choose for an LGA1851 gaming build if I want DDR5 and at least three M.2 slots?",
+      "intent_family": "new Intel gaming platform with DDR5 and multiple NVMe positions",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1851"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a board for a Ryzen 7000 home lab that can start with 32GB and later reach 128GB using four DIMM slots.",
+      "intent_family": "AM5 home-lab platform planned around staged memory population",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "I want a Micro-ATX motherboard for an entry-level gaming PC with DDR4 support and at least four SATA connections.",
+      "intent_family": "budget compact gaming board combining older memory with conventional storage",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Find a full-size AMD motherboard for a dual-boot workstation where I can keep separate NVMe drives for each operating system.",
+      "intent_family": "AMD dual-boot workstation needing separated boot storage",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I need an Intel motherboard for a photography workstation with 128GB of DDR5 memory and four DIMM slots.",
+      "intent_family": "Intel content-creation platform with high-capacity DDR5 memory planning",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1700"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "What motherboard works for a compact Ryzen 5000 emulation machine if I need two SATA drives and one M.2 boot drive?",
+      "intent_family": "compact AM4 emulation system with simple hybrid storage",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am reusing an LGA1200 processor in a home office PC and need a board with four memory slots.",
+      "intent_family": "retained Intel processor reuse with expanded DIMM flexibility",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1200"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Find an AM5 motherboard for a game-development workstation that supports at least 64GB and three NVMe drives.",
+      "intent_family": "AM5 game-development workstation with moderate high-speed project storage",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "I need a standard ATX board for an Intel home-theater PC, but I have not decided whether the processor will be DDR4 or DDR5.",
+      "intent_family": "Intel media PC discovery before resolving the memory generation",
+      "must": []
+    },
+    {
+      "query_text": "Which Mini-ITX motherboard is suitable for a low-power file server using two SATA hard drives and one NVMe boot device?",
+      "intent_family": "small low-power file server with modest mixed storage",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am planning an AM5 machine for software testing with 64GB now and a second pair of DIMMs later.",
+      "intent_family": "AM5 development system designed for incremental memory expansion",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "Find a Micro-ATX LGA1700 board for a family PC that needs one NVMe drive and six SATA ports for existing disks.",
+      "intent_family": "compact Intel family computer retaining a larger SATA disk set",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1700"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "I need an AM4 motherboard for a budget upgrade where the existing DDR4 kit has two modules and I do not need more than two M.2 drives.",
+      "intent_family": "cost-conscious AM4 refresh centered on existing dual-module DDR4",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "What motherboard should I use for an LGA1851 office workstation if I need a compact case but am unsure whether Micro-ATX or Mini-ITX will fit?",
+      "intent_family": "small Intel office platform selection before finalizing chassis size",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1851"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for an ATX AM5 board with six SATA ports because my editing workflow uses several large archive drives.",
+      "intent_family": "AM5 editing workstation with archive-oriented SATA expansion",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "I want an LGA1700 motherboard for a dedicated music composition PC with two M.2 slots and four memory slots.",
+      "intent_family": "Intel music-production platform balancing fast storage and memory flexibility",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1700"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Find a board that lets me use either AM4 or AM5 because I have not chosen between two AMD processors yet.",
+      "intent_family": "AMD socket decision support before committing to a processor generation",
+      "must": []
+    },
+    {
+      "query_text": "I need a Mini-ITX motherboard for an AM4 router and backup appliance with one M.2 slot and two SATA ports.",
+      "intent_family": "ultra-compact AM4 appliance board with basic local storage",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Which LGA1200 motherboard is best for a refurbished school computer that should accept 32GB of DDR4 across four slots?",
+      "intent_family": "refurbished Intel education desktop with broad DDR4 module flexibility",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1200"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I am building an AM5 media-encoding PC and need at least 96GB of memory capacity plus two M.2 slots.",
+      "intent_family": "AM5 media-processing workstation with high memory capacity and fast scratch storage",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 96
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find an LGA1700 board for a compact esports PC where the case accepts Micro-ATX and I want four SATA ports for game libraries.",
+      "intent_family": "compact Intel gaming build constrained by case size and secondary storage",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1700"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I need an ATX motherboard for an AM4 machine that will run several operating systems from separate SATA SSDs.",
+      "intent_family": "AM4 multi-boot workstation using multiple conventional SSDs",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "What board should I consider for a DDR5 Intel build if the main priority is four DIMM slots rather than maximum expansion?",
+      "intent_family": "Intel DDR5 platform prioritizing flexible memory population over other features",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I am making a compact AM5 backup server and need three SATA ports, but the exact case size is still undecided.",
+      "intent_family": "AM5 backup-server storage planning before selecting the chassis",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "Find an LGA1851 motherboard for a home programming workstation with two M.2 slots and at least 64GB maximum memory support.",
+      "intent_family": "new Intel coding workstation with balanced memory and NVMe capability",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1851"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "Which AM5 board fits a quiet office machine that will use only one memory module initially but should support four slots later?",
+      "intent_family": "quiet AM5 office build allowing future transition from minimal to expanded memory",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "I need a Micro-ATX LGA1700 motherboard for a small backup workstation with one M.2 drive and three SATA drives.",
+      "intent_family": "compact Intel backup workstation with balanced boot and archive storage",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1700"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "Find an AM4 motherboard that supports DDR4 and at least 128GB for a long-running engineering simulation workstation.",
+      "intent_family": "high-capacity AM4 engineering workstation using mature memory technology",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "I am choosing between Intel sockets for a replacement board and need help because the processor label is partially unreadable.",
+      "intent_family": "uncertain Intel socket identification before motherboard replacement",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a full ATX AM5 motherboard for a video-editing system with four M.2 slots and four memory slots.",
+      "intent_family": "large AM5 editing platform combining dense NVMe storage with memory expandability",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Which Mini-ITX LGA1700 board works for a small developer PC with DDR4, one M.2 slot, and two SATA ports?",
+      "intent_family": "compact Intel development machine retaining DDR4 with minimal hybrid storage",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1700"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "mini_itx"
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I want an AM5 board for a personal finance and document PC, but I cannot tell whether my case requires ATX or Micro-ATX.",
+      "intent_family": "AM5 general-purpose desktop selection with unresolved enclosure compatibility",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an Intel motherboard for a machine-learning data preparation workstation with four DIMM slots, 128GB capacity, and three M.2 slots.",
+      "intent_family": "Intel data-preparation workstation with substantial memory and scratch-storage expansion",
+      "must": [
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        },
+        {
+          "field": "category_attributes.m2_slots",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "I need a board for an older AMD processor, but I do not know whether it is AM3 or AM4 and want to avoid buying incompatible memory.",
+      "intent_family": "legacy AMD platform identification before selecting socket and memory generation",
+      "must": []
+    },
+    {
+      "query_text": "Which ATX LGA1851 motherboard is appropriate for a local container-development system with four SATA ports and four memory slots?",
+      "intent_family": "new Intel container-development host balancing conventional storage and memory population",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "lga1851"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.sata_ports",
+          "operator": "ge",
+          "value": 4
+        },
+        {
+          "field": "category_attributes.memory_slots",
+          "operator": "ge",
+          "value": 4
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

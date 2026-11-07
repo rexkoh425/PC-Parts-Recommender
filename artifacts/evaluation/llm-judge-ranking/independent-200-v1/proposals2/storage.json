@@ -1,0 +1,383 @@
+{
+  "category": "storage",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 3723,
+    "total_tokens": 4465,
+    "prompt_tokens": 742,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 900
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need an internal drive to replace a failing boot disk and reinstall Windows, preferably at least 1TB in M.2 NVMe format.",
+      "intent_family": "operating system replacement after drive failure",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for storage for a home virtualization lab with several virtual machines and at least 2TB of capacity.",
+      "intent_family": "virtual machine datastore expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "What drive should I use as a local workspace for large CAD assemblies and engineering project files?",
+      "intent_family": "CAD project workspace",
+      "must": []
+    },
+    {
+      "query_text": "I need a high-capacity drive for analyzing large scientific datasets on my workstation, with 4TB or more.",
+      "intent_family": "scientific dataset analysis storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_text": "Recommend storage for keeping local AI models and datasets on a desktop PC. I want at least 2TB.",
+      "intent_family": "local AI model repository",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "I need a drive for a large music sample library in a desktop with a free 2.5-inch SATA bay.",
+      "intent_family": "music production sample library",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Which storage component makes sense for recording and editing multitrack audio sessions on a PC?",
+      "intent_family": "multitrack audio project storage",
+      "must": []
+    },
+    {
+      "query_text": "I want a fast scratch drive for 3D rendering caches and temporary scene data, but I have not decided on the capacity.",
+      "intent_family": "3D rendering scratch storage",
+      "must": []
+    },
+    {
+      "query_text": "Find an internal drive for a GIS workstation storing offline map layers and geospatial datasets, preferably 2TB or larger.",
+      "intent_family": "geospatial dataset workspace",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "I need a storage drive for a local mail archive and document repository on my office workstation, with exactly 4TB.",
+      "intent_family": "local business records repository",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_text": "What internal storage is suitable for keeping encrypted legal and financial records on a personal computer?",
+      "intent_family": "sensitive records storage",
+      "must": []
+    },
+    {
+      "query_text": "I need a secondary drive to hold raw disk images and system snapshots, with at least 6TB of capacity.",
+      "intent_family": "disk image and snapshot repository",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 6000
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a large internal drive for a home server that will store shared files and backups from several PCs.",
+      "intent_family": "home server shared-file datastore",
+      "must": []
+    },
+    {
+      "query_text": "I need a 3.5-inch SATA drive with 8TB for a desktop-based network storage server.",
+      "intent_family": "desktop network storage server capacity",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 8000
+        }
+      ]
+    },
+    {
+      "query_text": "Which drive should I choose for continuously written security-camera footage on a small home server?",
+      "intent_family": "continuous surveillance recording storage",
+      "must": []
+    },
+    {
+      "query_text": "I need a drive for a large lossless music collection and want 6TB or more in a 3.5-inch form factor.",
+      "intent_family": "lossless music collection storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 6000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        }
+      ]
+    },
+    {
+      "query_text": "Recommend storage for finite-element simulation scratch files and temporary engineering calculations.",
+      "intent_family": "engineering simulation scratch storage",
+      "must": []
+    },
+    {
+      "query_text": "I need a drive for write-heavy application logs in a small always-on server, but I am unsure whether SSD or HDD is better.",
+      "intent_family": "write-intensive server logging",
+      "must": []
+    },
+    {
+      "query_text": "What storage should I buy as a target for cloning my current PC drive before migrating to a new system?",
+      "intent_family": "system drive migration target",
+      "must": []
+    },
+    {
+      "query_text": "I need a replacement disk for a failed member of my desktop RAID array, matching a 3.5-inch SATA configuration.",
+      "intent_family": "desktop RAID member replacement",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "3_5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an internal storage drive for an offline software installer repository with at least 3TB.",
+      "intent_family": "offline software distribution repository",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 3000
+        }
+      ]
+    },
+    {
+      "query_text": "I want storage for container images and virtual machine templates in a home lab, but I am not sure what interface my system supports.",
+      "intent_family": "home lab image repository",
+      "must": []
+    },
+    {
+      "query_text": "What drive works well for storing large genome sequencing datasets on a research workstation?",
+      "intent_family": "genomic research dataset storage",
+      "must": []
+    },
+    {
+      "query_text": "I need an M.2 drive with at least 1TB for a Linux workstation used for compiling large software projects.",
+      "intent_family": "Linux workstation build workspace",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m_2"
+        },
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "Recommend an internal drive for a quiet living-room PC that stores a local music and document collection.",
+      "intent_family": "quiet living-room PC storage",
+      "must": []
+    },
+    {
+      "query_text": "I need a low-power storage drive for an always-on home automation server with 2TB of capacity.",
+      "intent_family": "always-on home automation server storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "Which internal drive should I use for local machine-learning training data when the workload includes many small files?",
+      "intent_family": "machine-learning training dataset storage",
+      "must": []
+    },
+    {
+      "query_text": "I need a storage device for storing virtual machine snapshots on a workstation, with a 2.5-inch SATA connection.",
+      "intent_family": "workstation virtual machine snapshot storage",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 500GB drive for a dedicated Linux boot and recovery installation in a desktop PC.",
+      "intent_family": "dedicated Linux boot and recovery drive",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 500
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a PC for local database testing and need storage for database files and temporary tables, but I am unsure which type is appropriate.",
+      "intent_family": "database testing workspace",
+      "must": []
+    },
+    {
+      "query_text": "What storage component should I use for a large collection of scanned books and searchable OCR files?",
+      "intent_family": "scanned book archive",
+      "must": []
+    },
+    {
+      "query_text": "I need a 4TB internal drive for storing CAD backups and older engineering deliverables in a desktop tower.",
+      "intent_family": "engineering deliverable archive",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_text": "Recommend a drive for a PC used to host a local wiki and internal knowledge base.",
+      "intent_family": "local knowledge base hosting",
+      "must": []
+    },
+    {
+      "query_text": "I need at least 10TB of internal storage for a desktop that serves as a file archive for a small organization.",
+      "intent_family": "small organization file archive",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 10000
+        }
+      ]
+    },
+    {
+      "query_text": "Which internal drive is appropriate for a workstation that keeps large language-model checkpoints and training outputs locally?",
+      "intent_family": "machine-learning checkpoint repository",
+      "must": []
+    },
+    {
+      "query_text": "I want a 2TB SATA drive in a 2.5-inch form factor for a thin desktop case with only a standard drive bay.",
+      "intent_family": "thin desktop bay-constrained storage upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2_5_inch"
+        }
+      ]
+    },
+    {
+      "query_text": "What storage should I choose for a PC that records industrial sensor data around the clock?",
+      "intent_family": "industrial sensor data logging",
+      "must": []
+    },
+    {
+      "query_text": "I need an internal drive for keeping offline copies of tax filings, invoices, and scanned receipts, with at least 1TB.",
+      "intent_family": "personal financial document archive",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

@@ -1,0 +1,410 @@
+{
+  "category": "power_supply",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 3268,
+    "total_tokens": 4051,
+    "prompt_tokens": 783,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1163
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a power supply for a 24/7 home NAS where low energy waste matters more than gaming performance.",
+      "intent_family": "always-on storage efficiency",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "ge",
+          "value": "80_plus_gold"
+        }
+      ]
+    },
+    {
+      "query_text": "What PSU would suit a machine-learning workstation with two graphics cards and enough EPS connectivity for a high-core-count platform?",
+      "intent_family": "multi-accelerator compute platform support",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a very quiet PSU for a music-production computer; acoustic behavior is more important than modular cables.",
+      "intent_family": "low-noise audio workstation selection",
+      "must": []
+    },
+    {
+      "query_text": "I am building a low-profile office desktop and need a TFX power supply.",
+      "intent_family": "slim OEM-style desktop compatibility",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "tfx"
+        }
+      ]
+    },
+    {
+      "query_text": "Need an SFX PSU for an external GPU enclosure used with a laptop, with at least 650 watts available.",
+      "intent_family": "external graphics enclosure power replacement",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        }
+      ]
+    },
+    {
+      "query_text": "Which PSU makes sense for a dual-socket virtualization server with two motherboard CPU power inputs?",
+      "intent_family": "dual-socket server CPU power support",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I want a power supply for a bedroom recording PC where fan noise and electrical noise are concerns.",
+      "intent_family": "noise-sensitive studio computer power selection",
+      "must": []
+    },
+    {
+      "query_text": "Find an efficient PSU for a home lab that will run continuously and has no discrete graphics card.",
+      "intent_family": "continuous home-lab operation",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "ge",
+          "value": "80_plus_platinum"
+        }
+      ]
+    },
+    {
+      "query_text": "I am restoring a retro ATX computer and want a conventional ATX PSU under 500 watts rather than a large modern unit.",
+      "intent_family": "low-power vintage ATX restoration",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "le",
+          "value": 500
+        }
+      ]
+    },
+    {
+      "query_text": "Need a non-modular PSU for a simple repair build where permanently attached cables are preferred.",
+      "intent_family": "fixed-cable repair simplicity",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "non_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "What PSU should I use for a small home-theater computer with modest power needs?",
+      "intent_family": "non-gaming living-room computer power selection",
+      "must": []
+    },
+    {
+      "query_text": "I need an SFX-L unit for a portable event PC, with no more than 600 watts.",
+      "intent_family": "portable event computer power constraint",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx_l"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "le",
+          "value": 600
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a PSU for a workstation that has two CPU sockets and several capture cards, but I do not know the final graphics configuration yet.",
+      "intent_family": "unfinished professional workstation planning",
+      "must": []
+    },
+    {
+      "query_text": "Need an ATX power supply rated at exactly 750 watts for a replacement in an existing standard desktop.",
+      "intent_family": "exact-capacity standard desktop replacement",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "eq",
+          "value": 750
+        }
+      ]
+    },
+    {
+      "query_text": "I am assembling a low-power router and firewall appliance and want the smallest suitable PSU, but the enclosure model is undecided.",
+      "intent_family": "network appliance power planning under enclosure uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "Which power supply is appropriate for a computer with two EPS motherboard sockets and no need for detachable peripheral cables?",
+      "intent_family": "dual-EPS workstation with fixed cabling",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "non_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a fully modular PSU because I will replace the stock cables with a custom sleeved set.",
+      "intent_family": "custom cable replacement compatibility",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a compact PSU for a slim office PC that must use the SFX form factor and stay below 450 watts.",
+      "intent_family": "slim office desktop power limitation",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "le",
+          "value": 450
+        }
+      ]
+    },
+    {
+      "query_text": "I want a high-efficiency power supply for a scientific workstation that will spend most of its time under sustained CPU load.",
+      "intent_family": "sustained scientific compute efficiency",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "ge",
+          "value": "80_plus_titanium"
+        }
+      ]
+    },
+    {
+      "query_text": "What PSU fits a compact virtualization box if I need at least 500 watts but have not chosen between SFX and SFX-L yet?",
+      "intent_family": "virtualization host capacity before form-factor choice",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 500
+        }
+      ]
+    },
+    {
+      "query_text": "Need an ATX PSU for a basic file server, with efficiency at least 80 Plus Bronze and no special graphics requirements.",
+      "intent_family": "entry-level file server efficiency",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "ge",
+          "value": "80_plus_bronze"
+        }
+      ]
+    },
+    {
+      "query_text": "I am converting an old workstation into a laboratory instrument computer and need to know whether its original proprietary PSU can be replaced.",
+      "intent_family": "proprietary workstation power replacement investigation",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a semi-modular PSU for a repair bench computer so the main cables stay attached but optional leads can be removed.",
+      "intent_family": "selective cable removability for service work",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "semi_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "What power supply should I consider for a computer running several PCIe data-acquisition cards and an unknown number of future expansion cards?",
+      "intent_family": "specialized PCIe expansion planning",
+      "must": []
+    },
+    {
+      "query_text": "I need a compact ATX-compatible power supply for a kiosk computer, but the kiosk builder has not confirmed the available wattage or clearance.",
+      "intent_family": "kiosk integration under mechanical uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "Find a PSU with at least two EPS connectors for a high-memory workstation motherboard.",
+      "intent_family": "high-memory workstation motherboard connectivity",
+      "must": [
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a small digital-signage player and want an efficient power supply rather than maximum capacity.",
+      "intent_family": "digital-signage energy-conscious selection",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "ge",
+          "value": "80_plus_bronze"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a power supply for a test-bench PC where I frequently swap motherboards and want every cable detachable.",
+      "intent_family": "hardware test-bench reconfiguration",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "What PSU would be suitable for a compact CAD workstation if I know it needs 700 watts but have not finalized the case?",
+      "intent_family": "CAD workstation capacity before chassis selection",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 700
+        }
+      ]
+    },
+    {
+      "query_text": "I need a TFX power supply for a thin client converted into a light-duty Linux workstation.",
+      "intent_family": "thin-client workstation conversion",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "tfx"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a standard ATX PSU capped at 400 watts for a low-power educational computer lab build.",
+      "intent_family": "restricted-capacity educational desktop deployment",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "le",
+          "value": 400
+        }
+      ]
+    },
+    {
+      "query_text": "Which power supply should I choose for a computer that will run from a battery backup and has strict efficiency requirements, without knowing its final load yet?",
+      "intent_family": "battery-backed computer efficiency planning",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "ge",
+          "value": "80_plus_gold"
+        }
+      ]
+    },
+    {
+      "query_text": "I need an SFX PSU for a compact data-logging computer, but the processor and storage count are still undecided.",
+      "intent_family": "compact data-logger power planning",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a fully modular ATX PSU for a system assembled in a test laboratory where components will be changed frequently.",
+      "intent_family": "laboratory platform reconfiguration",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "I am replacing a failed PSU in a workstation and want to reuse the old modular cables if possible, but I do not know their compatibility.",
+      "intent_family": "modular cable reuse risk assessment",
+      "must": []
+    },
+    {
+      "query_text": "Need an efficient PSU for a point-of-sale desktop that runs long shifts and has modest, predictable power needs.",
+      "intent_family": "commercial desktop operating-cost efficiency",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "ge",
+          "value": "80_plus_gold"
+        }
+      ]
+    },
+    {
+      "query_text": "What power supply is appropriate for a compact robotics-control PC when the enclosure may require either SFX or TFX?",
+      "intent_family": "industrial controller form-factor ambiguity",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

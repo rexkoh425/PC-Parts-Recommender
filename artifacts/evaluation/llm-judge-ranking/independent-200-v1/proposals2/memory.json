@@ -1,0 +1,528 @@
+{
+  "category": "memory",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2776,
+    "total_tokens": 3561,
+    "prompt_tokens": 785,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 294
+    }
+  },
+  "queries": [
+    {
+      "query_text": "Need 32GB of DDR5 memory for 4K video editing and color grading, preferably as a matched two-module kit.",
+      "intent_family": "video_editing_memory_capacity_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for 64GB RAM for a large music production project with orchestral sample libraries.",
+      "intent_family": "music_production_memory_capacity_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "Find memory for compiling large software projects and running multiple development tools at once; 64GB is preferred.",
+      "intent_family": "software_compilation_memory_capacity_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "ge",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 32GB DDR4 upgrade for a general-purpose desktop used for office work, browsing, and multitasking.",
+      "intent_family": "general_productivity_memory_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "What memory should I choose for a home PC that will run many browser tabs, spreadsheets, and video calls?",
+      "intent_family": "heavy_everyday_multitasking_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "Looking for 128GB RAM for processing large scientific datasets and running memory-intensive numerical workloads.",
+      "intent_family": "scientific_computing_memory_capacity_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "Need 64GB of DDR5 memory for a professional photo workflow involving large RAW files and batch exports.",
+      "intent_family": "photo_editing_memory_capacity_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a compact-height 32GB DDR5 kit that will fit beneath a large CPU air cooler.",
+      "intent_family": "cpu_cooler_clearance_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 35
+        }
+      ]
+    },
+    {
+      "query_text": "I want 16GB of DDR4 memory in two modules for a basic dual-channel desktop upgrade.",
+      "intent_family": "dual_channel_entry_level_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Need 32GB DDR5 memory with a speed of at least 6000 MT/s for a high-performance desktop build.",
+      "intent_family": "high_frequency_desktop_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 6000
+        }
+      ]
+    },
+    {
+      "query_text": "Find DDR5 RAM rated at 5600 MT/s or faster for a new desktop, but capacity can be flexible.",
+      "intent_family": "speed_first_ddr5_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 5600
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for the lowest-latency 32GB DDR5 kit I can use for a responsive desktop system; prioritize CAS latency over capacity beyond 32GB.",
+      "intent_family": "low_cas_desktop_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Need 16GB of DDR4 memory with CAS latency 16 or lower for an older performance-oriented desktop.",
+      "intent_family": "low_latency_ddr4_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "What RAM should I buy to expand an existing 16GB system to 32GB without knowing the exact specifications of the installed modules?",
+      "intent_family": "uncertain_existing_memory_expansion",
+      "must": []
+    },
+    {
+      "query_text": "I have two open memory slots and want the largest practical capacity upgrade for a desktop, but I do not know whether it uses DDR4 or DDR5.",
+      "intent_family": "unknown_platform_capacity_upgrade",
+      "must": []
+    },
+    {
+      "query_text": "Find a 32GB memory kit for a small-form-factor PC where module height must stay at or below 32mm.",
+      "intent_family": "small_form_factor_clearance_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.module_height_mm",
+          "operator": "le",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "Need 64GB of DDR5 RAM for running several local containers and developer services simultaneously.",
+      "intent_family": "containerized_development_memory_capacity_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for 32GB memory for large spreadsheet models and financial analysis, with no particular gaming focus.",
+      "intent_family": "financial_modeling_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "Find 64GB RAM for professional audio recording with many tracks and effect plug-ins running together.",
+      "intent_family": "audio_recording_memory_capacity_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "I need 32GB of DDR4 memory for running several virtual machines on a personal workstation, but not a server platform.",
+      "intent_family": "personal_virtual_machine_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "What memory is suitable for a home lab used for containers, Linux services, and occasional virtual machines?",
+      "intent_family": "home_lab_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "Looking for 128GB of RAM for large-scale spreadsheet, browser, and document multitasking in a professional office workstation.",
+      "intent_family": "professional_office_high_capacity_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "Need 32GB DDR5 memory for running a photo editor, video editor, and web browser concurrently.",
+      "intent_family": "creative_app_multitasking_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a two-module 64GB DDR5 kit for a desktop upgrade, with no need for RGB or overclocking features.",
+      "intent_family": "mainstream_high_capacity_ddr5_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I need 16GB of memory for an inexpensive everyday PC, and I want the simplest compatible option rather than maximum speed.",
+      "intent_family": "budget_everyday_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for 32GB RAM for a dual-boot Windows and Linux workstation used for programming and testing applications.",
+      "intent_family": "dual_boot_development_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "What memory should I use for a desktop that will frequently hibernate and resume while retaining many open applications?",
+      "intent_family": "sleep_resume_multitasking_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "Find 64GB DDR5 memory for manipulating large text corpora and running data-cleaning scripts locally.",
+      "intent_family": "text_data_processing_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Need 32GB memory for a home media server that also handles light desktop use; platform generation is unknown.",
+      "intent_family": "mixed_media_server_desktop_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "I want 96GB of DDR5 RAM for a workstation where capacity matters more than achieving the highest memory frequency.",
+      "intent_family": "nonstandard_capacity_workstation_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 96
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 2x8GB DDR4 kit with CAS latency 18 or lower for a modest desktop refresh.",
+      "intent_family": "entry_level_latency_aware_memory_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.cas_latency",
+          "operator": "le",
+          "value": 18
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for memory that balances high capacity and reasonable speed for editing long documents and large PDFs, but I have not chosen a platform yet.",
+      "intent_family": "platform_agnostic_capacity_speed_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "Need 32GB of DDR5 memory with two modules and a rated speed of at least 5200 MT/s for a new office workstation.",
+      "intent_family": "office_workstation_ddr5_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr5"
+        },
+        {
+          "field": "category_attributes.module_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.speed_mt_s",
+          "operator": "ge",
+          "value": 5200
+        }
+      ]
+    },
+    {
+      "query_text": "What RAM should I choose for occasional 3D modeling and general design software when I do not know whether capacity or speed is more important?",
+      "intent_family": "general_design_workstation_memory_selection",
+      "must": []
+    },
+    {
+      "query_text": "Find 64GB RAM for running multiple browser-based development environments, documentation windows, and local build tools at once.",
+      "intent_family": "browser_based_development_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 64
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 16GB DDR4 replacement for a failed desktop memory kit, but I only know the required generation and total capacity.",
+      "intent_family": "failed_memory_kit_replacement",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 16
+        },
+        {
+          "field": "category_attributes.memory_type",
+          "operator": "eq",
+          "value": "ddr4"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for 32GB memory for a family PC shared between schoolwork, office applications, media playback, and occasional games.",
+      "intent_family": "shared_family_pc_memory_selection",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 32
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

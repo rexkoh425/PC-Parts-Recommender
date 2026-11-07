@@ -1,0 +1,378 @@
+{
+  "category": "gpu",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2526,
+    "total_tokens": 3308,
+    "prompt_tokens": 782,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 767
+    }
+  },
+  "queries": [
+    {
+      "query_text": "GPU for driving a PC virtual-reality headset with low-latency stereoscopic rendering",
+      "intent_family": "PC virtual-reality graphics selection",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a workstation with three 4K monitors and at least 8GB of VRAM",
+      "intent_family": "multi-monitor productivity display support",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for CAD viewport work on large mechanical assemblies",
+      "intent_family": "professional CAD viewport acceleration",
+      "must": []
+    },
+    {
+      "query_text": "GPU for BIM and architectural visualization workflows with a focus on stable viewport operation",
+      "intent_family": "architectural design visualization selection",
+      "must": []
+    },
+    {
+      "query_text": "GPU for Blender viewport navigation and material previews rather than final rendering",
+      "intent_family": "3D authoring viewport acceleration",
+      "must": []
+    },
+    {
+      "query_text": "GPU for game-engine editor work including shader previews, lighting previews, and asset inspection",
+      "intent_family": "game development editor acceleration",
+      "must": []
+    },
+    {
+      "query_text": "GPU for heavily upscaled retro-game emulation across multiple console generations",
+      "intent_family": "advanced emulation graphics selection",
+      "must": []
+    },
+    {
+      "query_text": "GPU for flight simulation with detailed cockpit instruments and multiple display outputs",
+      "intent_family": "flight simulation graphics selection",
+      "must": []
+    },
+    {
+      "query_text": "GPU for modded simulation games with large asset packs and at least 12GB of VRAM",
+      "intent_family": "modded simulation workload capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for driving a 5K productivity display while keeping board power under 200W",
+      "intent_family": "high-resolution productivity within a power limit",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 200
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for an office workstation that cannot use an auxiliary power connector, with board power no higher than 75W",
+      "intent_family": "auxiliary-power-free workstation graphics",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 75
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for an OEM desktop with a 150W graphics power budget",
+      "intent_family": "OEM power-budget replacement selection",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 150
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a quiet editing workstation where board power must stay below 180W",
+      "intent_family": "low-thermal-noise workstation graphics",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 180
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a PCIe expansion layout that allows only a single-slot card",
+      "intent_family": "single-slot expansion planning",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a dual-slot workstation chassis with no room for a thicker cooler",
+      "intent_family": "standard-dual-slot chassis compatibility",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a system that can accept a 2.5-slot graphics card but not a three-slot design",
+      "intent_family": "intermediate-thickness graphics card fit",
+      "must": [
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2.5
+        }
+      ]
+    },
+    {
+      "query_text": "GPU shorter than 170mm for a compact office PC upgrade",
+      "intent_family": "ultra-short office PC graphics fit",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 170
+        }
+      ]
+    },
+    {
+      "query_text": "GPU no longer than 220mm for a small tower with a front-mounted drive cage",
+      "intent_family": "drive-cage-constrained graphics fit",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 220
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with a maximum length of 250mm for a compact workstation enclosure",
+      "intent_family": "compact workstation enclosure compatibility",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 250
+        }
+      ]
+    },
+    {
+      "query_text": "GPU that is exactly 8GB for software with a fixed graphics-memory requirement",
+      "intent_family": "fixed-memory-capacity compatibility",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "eq",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with at least 16GB of VRAM for large CAD textures and engineering assets",
+      "intent_family": "engineering asset memory capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with at least 24GB of VRAM for large scientific visualization datasets",
+      "intent_family": "scientific visualization dataset capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with at least 6GB of VRAM for a digital signage controller driving several displays",
+      "intent_family": "digital signage graphics capacity",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "query_text": "GPU using GDDR6 memory for a workstation application that documents that memory type",
+      "intent_family": "documented GDDR6 software compatibility",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR6"
+        }
+      ]
+    },
+    {
+      "query_text": "GPU using GDDR6X memory for a high-bandwidth desktop graphics build",
+      "intent_family": "GDDR6X memory technology selection",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "GDDR6X"
+        }
+      ]
+    },
+    {
+      "query_text": "GPU using HBM2 memory for a professional compute workstation",
+      "intent_family": "HBM2 workstation memory selection",
+      "must": [
+        {
+          "field": "category_attributes.vram_type",
+          "operator": "eq",
+          "value": "HBM2"
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with a 128-bit memory bus for a balanced small-form-factor build",
+      "intent_family": "narrow-bus small-system graphics selection",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "eq",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with at least a 192-bit memory bus for a graphics application that is bandwidth sensitive",
+      "intent_family": "bandwidth-oriented graphics selection",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "ge",
+          "value": 192
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with a 256-bit memory bus for a professional visualization workstation",
+      "intent_family": "wide-bus professional visualization selection",
+      "must": [
+        {
+          "field": "category_attributes.memory_bus_bits",
+          "operator": "eq",
+          "value": 256
+        }
+      ]
+    },
+    {
+      "query_text": "GPU under 160W with at least 8GB of VRAM for a small home server used for display output and light acceleration",
+      "intent_family": "low-power server display acceleration",
+      "must": [
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 160
+        },
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "GPU no longer than 200mm and no wider than two slots for a compact dual-purpose desktop",
+      "intent_family": "tight two-dimensional desktop fit",
+      "must": [
+        {
+          "field": "category_attributes.length_mm",
+          "operator": "le",
+          "value": 200
+        },
+        {
+          "field": "category_attributes.slot_width",
+          "operator": "le",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "GPU with at least 12GB of VRAM and a board power limit of 225W for a long-running visualization workstation",
+      "intent_family": "sustained visualization capacity within a power envelope",
+      "must": [
+        {
+          "field": "category_attributes.vram_gb",
+          "operator": "ge",
+          "value": 12
+        },
+        {
+          "field": "category_attributes.board_power_watts",
+          "operator": "le",
+          "value": 225
+        }
+      ]
+    },
+    {
+      "query_text": "GPU for a Linux workstation where driver support, display compatibility, and compute software all matter",
+      "intent_family": "Linux professional graphics compatibility",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a computer-vision development workstation handling camera feeds and image-processing experiments",
+      "intent_family": "computer-vision development acceleration",
+      "must": []
+    },
+    {
+      "query_text": "GPU for photogrammetry reconstruction of large outdoor scans",
+      "intent_family": "photogrammetry reconstruction acceleration",
+      "must": []
+    },
+    {
+      "query_text": "GPU for GIS map rendering and 3D terrain exploration on a professional desktop",
+      "intent_family": "geospatial visualization acceleration",
+      "must": []
+    },
+    {
+      "query_text": "GPU for scientific molecular visualization and interactive volumetric data exploration",
+      "intent_family": "scientific interactive visualization",
+      "must": []
+    },
+    {
+      "query_text": "GPU for a legacy workstation replacement where application certification and long-term driver stability are more important than gaming features",
+      "intent_family": "certified legacy workstation replacement",
+      "must": []
+    },
+    {
+      "query_text": "GPU for digital art software with large canvases, many layers, and pen-display output",
+      "intent_family": "digital illustration workstation graphics",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

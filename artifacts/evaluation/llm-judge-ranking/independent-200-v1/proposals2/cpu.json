@@ -1,0 +1,246 @@
+{
+  "category": "cpu",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2812,
+    "total_tokens": 3590,
+    "prompt_tokens": 778,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 1462
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a balanced CPU for everyday office work, web browsing, and video calls on a modern desktop.",
+      "intent_family": "mainstream_home_productivity",
+      "must": []
+    },
+    {
+      "query_text": "What CPU should I choose for a normal 1080p gaming PC, without prioritizing esports performance?",
+      "intent_family": "entry_level_1080p_gaming",
+      "must": []
+    },
+    {
+      "query_text": "I am building a VR gaming desktop and want a CPU with at least 8 cores.",
+      "intent_family": "vr_gaming_cpu_selection",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "Which CPU is suitable for working in a game engine editor and testing small projects?",
+      "intent_family": "game_development_editor_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I need a desktop CPU for RAW photo editing and organizing a large photo library.",
+      "intent_family": "photo_editing_and_catalog_cpu",
+      "must": []
+    },
+    {
+      "query_text": "Recommend a CPU for desktop publishing, page layout, and occasional image placement.",
+      "intent_family": "desktop_publishing_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I want a CPU for interactive CAD modeling where viewport responsiveness matters more than long simulations.",
+      "intent_family": "cad_viewport_modeling_cpu",
+      "must": []
+    },
+    {
+      "query_text": "Which CPU fits an architecture workstation used for BIM models and design applications?",
+      "intent_family": "architecture_bim_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I need a CPU for low-latency home audio recording with several software instruments.",
+      "intent_family": "home_recording_low_latency_cpu",
+      "must": []
+    },
+    {
+      "query_text": "What CPU is appropriate for editing podcasts, cleaning voice recordings, and exporting audio?",
+      "intent_family": "podcast_production_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I am building a living-room media center and need a CPU no higher than 65 watts.",
+      "intent_family": "media_center_cpu",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "query_text": "Which CPU is best for emulating older consoles and running a broad range of emulators?",
+      "intent_family": "emulation_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I need a CPU for playing large online role-playing games at high settings.",
+      "intent_family": "mmo_gaming_cpu",
+      "must": []
+    },
+    {
+      "query_text": "What CPU should I use for modern open-world games on a standard desktop monitor?",
+      "intent_family": "open_world_gaming_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I need a CPU for local application development with a test database and development tools.",
+      "intent_family": "local_database_development_cpu",
+      "must": []
+    },
+    {
+      "query_text": "Which CPU would work well for a small cybersecurity practice lab with several tools running locally?",
+      "intent_family": "cybersecurity_lab_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I need a CPU for batch OCR of scanned documents and searchable PDF creation.",
+      "intent_family": "document_ocr_processing_cpu",
+      "must": []
+    },
+    {
+      "query_text": "What CPU should I select for running local computer-vision inference on images without building a machine-learning development workstation?",
+      "intent_family": "computer_vision_inference_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I want a responsive CPU for code editing, scripting, and occasional small builds.",
+      "intent_family": "code_editor_and_light_build_cpu",
+      "must": []
+    },
+    {
+      "query_text": "Which CPU is suitable for full-stack web development using local services and browser testing?",
+      "intent_family": "web_app_development_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I need a CPU for complex spreadsheets, financial models, and office automation.",
+      "intent_family": "spreadsheet_finance_cpu",
+      "must": []
+    },
+    {
+      "query_text": "What CPU should I use to host a few remote desktop sessions for household users?",
+      "intent_family": "remote_desktop_host_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I need a desktop CPU for a home file server that is used mainly for shared documents and backups.",
+      "intent_family": "personal_file_server_cpu",
+      "must": []
+    },
+    {
+      "query_text": "Which CPU is appropriate for a home-automation controller with a small local dashboard?",
+      "intent_family": "home_automation_controller_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I am building a digital-signage player and want a CPU with an included cooler.",
+      "intent_family": "digital_signage_player_cpu",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "What CPU fits a point-of-sale desktop that runs a few business applications all day?",
+      "intent_family": "retail_pos_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I need a reliable CPU for an unattended information kiosk with a modest application workload.",
+      "intent_family": "kiosk_cpu",
+      "must": []
+    },
+    {
+      "query_text": "Which CPU would suit a classroom computer used for programming exercises and general coursework?",
+      "intent_family": "educational_lab_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I need a CPU for a shared family desktop used for browsing, schoolwork, and occasional games.",
+      "intent_family": "family_shared_desktop_cpu",
+      "must": []
+    },
+    {
+      "query_text": "I want to refresh an AM4 desktop while keeping the same socket platform.",
+      "intent_family": "am4_same_socket_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM4"
+        }
+      ]
+    },
+    {
+      "query_text": "Which CPU should replace an older processor in an existing LGA1200 desktop without changing the socket?",
+      "intent_family": "lga1200_same_socket_replacement",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA1200"
+        }
+      ]
+    },
+    {
+      "query_text": "I need an ATX desktop CPU for a general workstation, but I have not chosen a specific workload yet.",
+      "intent_family": "general_atx_workstation_cpu",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "What CPU should I choose when I need more than 16 threads for a mixture of creative and technical applications?",
+      "intent_family": "moderate_threaded_creator_workstation",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "I need a CPU with at least 32 GB of supported memory for a desktop application workstation.",
+      "intent_family": "higher_memory_application_desktop",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "query_text": "Which CPU is a sensible replacement for a failed desktop processor when I want the simplest possible installation?",
+      "intent_family": "straightforward_cpu_replacement",
+      "must": []
+    },
+    {
+      "query_text": "I am unsure whether I need a gaming CPU or a workstation CPU for occasional games, office work, and photo tasks.",
+      "intent_family": "ambiguous_general_desktop_selection",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

@@ -1,0 +1,281 @@
+{
+  "category": "cpu",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 1645,
+    "total_tokens": 2458,
+    "prompt_tokens": 813,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 320
+    }
+  },
+  "queries": [
+    {
+      "query_text": "CPU for competitive esports gaming with very high frame rates and a modern AM5 motherboard",
+      "intent_family": "competitive_esports_cpu_selection",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "AM5"
+        }
+      ]
+    },
+    {
+      "query_text": "CPU for a 4K single-player gaming PC that also handles background streaming",
+      "intent_family": "high_resolution_gaming_and_streaming_cpu",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a quiet gaming build using a 65 W processor",
+      "intent_family": "quiet_gaming_power_limit",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 65
+        }
+      ]
+    },
+    {
+      "query_text": "CPU upgrade for an existing LGA1700 motherboard with at least 8 cores",
+      "intent_family": "lga1700_multicore_upgrade",
+      "must": [
+        {
+          "field": "category_attributes.socket",
+          "operator": "eq",
+          "value": "LGA1700"
+        },
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 8
+        }
+      ]
+    },
+    {
+      "query_text": "CPU for a workstation that runs several large virtual machines simultaneously",
+      "intent_family": "high_density_virtualization_workstation",
+      "must": []
+    },
+    {
+      "query_text": "CPU for compiling large software projects in the shortest practical time",
+      "intent_family": "large_scale_software_compilation",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a 3D rendering workstation focused on CPU-based rendering",
+      "intent_family": "cpu_3d_rendering_workstation",
+      "must": []
+    },
+    {
+      "query_text": "CPU for professional video editing with frequent 4K timeline exports",
+      "intent_family": "professional_video_editing_cpu",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a home media server that performs multiple simultaneous video transcodes",
+      "intent_family": "multi_stream_media_transcoding",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a low-power NAS with a processor under 45 W TDP",
+      "intent_family": "low_power_nas_processor",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 45
+        }
+      ]
+    },
+    {
+      "query_text": "CPU for a silent fanless-style office build with no more than 35 W TDP",
+      "intent_family": "ultra_low_power_silent_build",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 35
+        }
+      ]
+    },
+    {
+      "query_text": "CPU for a dedicated game server hosting several players at once",
+      "intent_family": "dedicated_multiplayer_server_cpu",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a heavily modded simulation game where simulation throughput matters more than graphics",
+      "intent_family": "simulation_game_processing_cpu",
+      "must": []
+    },
+    {
+      "query_text": "CPU for flight simulation with complex scenery and many background applications",
+      "intent_family": "flight_simulation_desktop",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a dual-purpose gaming and music-production PC with low-latency workloads",
+      "intent_family": "gaming_and_music_production_cpu",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a digital audio workstation using many software instruments and effects",
+      "intent_family": "large_daw_project_cpu",
+      "must": []
+    },
+    {
+      "query_text": "CPU for software-defined radio signal processing and decoding",
+      "intent_family": "software_defined_radio_processing",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a machine-learning development workstation that does not require local model generation",
+      "intent_family": "machine_learning_development_host",
+      "must": []
+    },
+    {
+      "query_text": "CPU for photogrammetry and structure-from-motion processing",
+      "intent_family": "photogrammetry_processing_workstation",
+      "must": []
+    },
+    {
+      "query_text": "CPU for finite element and engineering simulation software",
+      "intent_family": "engineering_simulation_cpu",
+      "must": []
+    },
+    {
+      "query_text": "CPU for GIS processing of large geographic datasets",
+      "intent_family": "geospatial_processing_workstation",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a server running containerized business applications around the clock",
+      "intent_family": "containerized_business_server_cpu",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a home lab with many containers and several always-on services",
+      "intent_family": "dense_home_lab_server",
+      "must": []
+    },
+    {
+      "query_text": "CPU upgrade from an older quad-core system while keeping the existing motherboard socket",
+      "intent_family": "legacy_quad_core_platform_upgrade",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a motherboard that supports both AM4 and AM5 processors",
+      "intent_family": "cross_generation_socket_compatibility",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a compact mini-ITX build with a 45 W thermal target",
+      "intent_family": "mini_itx_low_thermal_build",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 45
+        }
+      ]
+    },
+    {
+      "query_text": "CPU for a micro-ATX workstation with at least 12 threads",
+      "intent_family": "micro_atx_thread_capacity_workstation",
+      "must": [
+        {
+          "field": "category_attributes.supported_motherboard_sizes",
+          "operator": "contains",
+          "value": "micro_atx"
+        },
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "query_text": "CPU for a rackmount server chassis with a maximum of 95 W TDP",
+      "intent_family": "rackmount_server_power_budget",
+      "must": [
+        {
+          "field": "category_attributes.tdp_watts",
+          "operator": "le",
+          "value": 95
+        }
+      ]
+    },
+    {
+      "query_text": "CPU with an included cooler for a straightforward first-time build",
+      "intent_family": "included_cooler_first_build",
+      "must": [
+        {
+          "field": "category_attributes.included_cooler",
+          "operator": "eq",
+          "value": true
+        }
+      ]
+    },
+    {
+      "query_text": "CPU with at least 16 cores for batch processing jobs that can run in parallel",
+      "intent_family": "parallel_batch_processing_cpu",
+      "must": [
+        {
+          "field": "category_attributes.core_count",
+          "operator": "ge",
+          "value": 16
+        }
+      ]
+    },
+    {
+      "query_text": "CPU with at least 24 threads for a multitasking workstation",
+      "intent_family": "high_thread_count_multitasking",
+      "must": [
+        {
+          "field": "category_attributes.thread_count",
+          "operator": "ge",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "query_text": "CPU with a base clock of at least 3.5 GHz for consistently responsive desktop work",
+      "intent_family": "high_base_clock_responsiveness",
+      "must": [
+        {
+          "field": "category_attributes.base_clock_ghz",
+          "operator": "ge",
+          "value": 3.5
+        }
+      ]
+    },
+    {
+      "query_text": "CPU that supports up to 128 GB of memory for a memory-intensive workstation",
+      "intent_family": "large_memory_workstation_platform",
+      "must": [
+        {
+          "field": "category_attributes.maximum_memory_gb",
+          "operator": "ge",
+          "value": 128
+        }
+      ]
+    },
+    {
+      "query_text": "CPU replacement for a system whose motherboard model and socket are unknown",
+      "intent_family": "unknown_platform_cpu_identification",
+      "must": []
+    },
+    {
+      "query_text": "CPU for a mixed workload involving gaming, streaming, compiling, and occasional rendering without a clearly dominant task",
+      "intent_family": "mixed_workload_cpu_selection",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

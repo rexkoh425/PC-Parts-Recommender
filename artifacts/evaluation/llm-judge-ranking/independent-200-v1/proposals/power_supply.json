@@ -1,0 +1,504 @@
+{
+  "category": "power_supply",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2785,
+    "total_tokens": 3620,
+    "prompt_tokens": 835,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 318
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a power supply for a high-end gaming PC with a modern graphics card and want at least 850W with native support for two EPS CPU power connectors.",
+      "intent_family": "high-end gaming system power headroom",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 850
+        },
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find a fully modular ATX power supply for a gaming build that makes cable routing easy and provides at least 750W.",
+      "intent_family": "clean-cabling gaming build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for an SFX power supply for a small-form-factor gaming PC, preferably around 600W or more.",
+      "intent_family": "small-form-factor gaming capacity",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 600
+        }
+      ]
+    },
+    {
+      "query_text": "I am upgrading a midrange gaming computer and need a replacement PSU rated for at least 650W.",
+      "intent_family": "midrange gaming replacement sizing",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        }
+      ]
+    },
+    {
+      "query_text": "What power supply should I use for a gaming PC with frequent overnight sessions if I want an 80 Plus Gold model?",
+      "intent_family": "gaming efficiency preference",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "gold"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an ATX power supply with at least 1000W for a future-proof enthusiast gaming upgrade.",
+      "intent_family": "future-proof enthusiast upgrade",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "I need a compact power supply for a Mini-ITX gaming build, but I am not sure whether the case takes SFX or SFX-L.",
+      "intent_family": "ambiguous compact gaming form-factor selection",
+      "must": []
+    },
+    {
+      "query_text": "Search for a power supply for a workstation used for 3D rendering that has at least 1200W and two EPS connectors.",
+      "intent_family": "single-GPU rendering workstation power delivery",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1200
+        },
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a video-editing PC and want a fully modular power supply rated at least 850W.",
+      "intent_family": "video-production upgrade with cable flexibility",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 850
+        }
+      ]
+    },
+    {
+      "query_text": "Find a quiet-oriented power supply for a content-creation tower, but I do not know how much wattage the final parts will require.",
+      "intent_family": "content-creation system sizing uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "I need an SFX-L PSU for a compact workstation with a target capacity of at least 750W.",
+      "intent_family": "compact workstation capacity requirement",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx_l"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        }
+      ]
+    },
+    {
+      "query_text": "Look for a power supply for a heavily upgraded desktop that has 1000W or more and is fully modular.",
+      "intent_family": "major desktop component upgrade",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "I want to replace an aging PSU in an ordinary ATX desktop with a new 80 Plus Bronze unit.",
+      "intent_family": "basic desktop PSU replacement",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "bronze"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a power supply for a gaming upgrade where the case is compact but the exact supported PSU format is unclear.",
+      "intent_family": "case-dependent upgrade compatibility uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "I need at least 850W for a PC with a power-hungry processor and graphics card, and I want two EPS connectors for CPU power.",
+      "intent_family": "high-draw enthusiast platform connectivity",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 850
+        },
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a fully modular power supply for a dual-purpose gaming and streaming PC, with at least 750W.",
+      "intent_family": "gaming and streaming system flexibility",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        }
+      ]
+    },
+    {
+      "query_text": "I am converting an office desktop into a gaming PC and need a PSU rated at least 700W, but I do not know whether the original case uses ATX or SFX.",
+      "intent_family": "office-to-gaming conversion compatibility uncertainty",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 700
+        }
+      ]
+    },
+    {
+      "query_text": "Find a compact SFX power supply with an 80 Plus Gold rating for a living-room gaming build.",
+      "intent_family": "efficient compact living-room gaming build",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "gold"
+        }
+      ]
+    },
+    {
+      "query_text": "I need an ATX PSU with at least 650W for a developer desktop that will also run occasional GPU workloads.",
+      "intent_family": "developer desktop with intermittent graphics demand",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 650
+        }
+      ]
+    },
+    {
+      "query_text": "What power supply fits a compact case when I need 750W, but I have not confirmed whether SFX or SFX-L is supported?",
+      "intent_family": "compact high-capacity form-factor ambiguity",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a fully modular 80 Plus Gold PSU for a premium gaming system, with at least 1000W available.",
+      "intent_family": "premium gaming efficiency and serviceability",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "gold"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "I am replacing a failed power supply in a standard tower and need at least 550W, with no preference about modular cabling.",
+      "intent_family": "urgent standard-tower replacement",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 550
+        }
+      ]
+    },
+    {
+      "query_text": "Find an SFX power supply for a compact PC upgrade where I want to maximize wattage without moving to a larger case.",
+      "intent_family": "maximum compact-case upgrade capacity",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a fully modular PSU for a custom gaming build, but I have not yet finalized the wattage requirement.",
+      "intent_family": "custom gaming build modularity before final sizing",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "Look for an 80 Plus Silver power supply for a home office PC that has been upgraded with a discrete graphics card.",
+      "intent_family": "office PC graphics upgrade efficiency choice",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "silver"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a power supply with at least 750W and three EPS connectors for a workstation motherboard with unusually high CPU power requirements.",
+      "intent_family": "high-CPU-power workstation connectivity",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 750
+        },
+        {
+          "field": "category_attributes.eps_connectors",
+          "operator": "ge",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "I need an ATX power supply for a PC refresh, but I am balancing lower wattage against keeping enough room for a later graphics-card upgrade.",
+      "intent_family": "incremental PC refresh with future expansion tradeoff",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a power supply rated at least 850W for a gaming and virtual-reality computer, with an 80 Plus Gold rating.",
+      "intent_family": "virtual-reality gaming system efficiency and headroom",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 850
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "gold"
+        }
+      ]
+    },
+    {
+      "query_text": "I am building a compact editing workstation and need an SFX-L unit with fully modular cables.",
+      "intent_family": "compact editing workstation cable management",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx_l"
+        },
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "What PSU should I choose for a graphics-card upgrade when I know the new card needs more power but I have not calculated a total system wattage?",
+      "intent_family": "graphics-card upgrade sizing uncertainty",
+      "must": []
+    },
+    {
+      "query_text": "Find an ATX power supply with at least 600W and an 80 Plus Bronze rating for a budget gaming build.",
+      "intent_family": "budget gaming build efficiency baseline",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 600
+        },
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "bronze"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a fully modular power supply for a small gaming case, but the case documentation does not clearly state which compact PSU format it accepts.",
+      "intent_family": "compact gaming cabling and compatibility uncertainty",
+      "must": [
+        {
+          "field": "category_attributes.modular_type",
+          "operator": "eq",
+          "value": "fully_modular"
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a 1200W or higher ATX PSU for an enthusiast PC that may receive additional high-power components later.",
+      "intent_family": "large-capacity enthusiast expansion planning",
+      "must": [
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 1200
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "atx"
+        }
+      ]
+    },
+    {
+      "query_text": "I need an 80 Plus Gold power supply for a computer used for both office work and occasional gaming, but the required wattage is uncertain.",
+      "intent_family": "mixed-use efficiency selection under sizing uncertainty",
+      "must": [
+        {
+          "field": "category_attributes.efficiency_rating",
+          "operator": "eq",
+          "value": "gold"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an SFX PSU rated at least 500W for a compact office-to-gaming conversion.",
+      "intent_family": "compact mixed-use conversion capacity",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "sfx"
+        },
+        {
+          "field": "category_attributes.wattage",
+          "operator": "ge",
+          "value": 500
+        }
+      ]
+    },
+    {
+      "query_text": "I am assembling a multi-purpose desktop and need to decide between fully modular and simpler cabling, while the final component list is still undecided.",
+      "intent_family": "modularity decision during evolving desktop assembly",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

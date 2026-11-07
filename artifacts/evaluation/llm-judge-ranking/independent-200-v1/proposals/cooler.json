@@ -1,0 +1,691 @@
+{
+  "category": "cooler",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 3429,
+    "total_tokens": 4434,
+    "prompt_tokens": 1005,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 202
+    }
+  },
+  "queries": [
+    {
+      "query_text": "Need a compact single-tower air cooler for a Ryzen 7 gaming PC, with a maximum height of 155 mm.",
+      "intent_family": "Compact AMD gaming air cooling within a defined case height",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 155
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 280 mm liquid cooler with two fans for a high-end Intel gaming build.",
+      "intent_family": "Dual-fan large radiator cooling for an Intel gaming system",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1700"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a cooler for an AM4 office PC upgrade, but I have not measured the case or decided between air and liquid.",
+      "intent_family": "Compatibility-led legacy AMD office upgrade with unresolved physical constraints",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am4"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a low-profile cooler under 70 mm for a compact Intel home theater PC.",
+      "intent_family": "Extremely shallow Intel cooling for a home theater chassis",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 70
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1200"
+        }
+      ]
+    },
+    {
+      "query_text": "Searching for a 360 mm liquid cooler with three fans for a CPU-heavy content creation workstation.",
+      "intent_family": "Large liquid cooling for sustained creator workloads",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 360
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "Need a cooler under 130 mm tall for an AM5 mini-ITX build used for travel.",
+      "intent_family": "Travel-friendly compact AMD cooling under strict height limits",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 130
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "Which cooler should I choose for a new gaming and streaming PC if I only know that it uses an Intel desktop socket?",
+      "intent_family": "Intel gaming-streaming cooling discovery with incomplete platform details",
+      "must": []
+    },
+    {
+      "query_text": "I want a two-fan 120 mm liquid cooler for a compact workstation enclosure.",
+      "intent_family": "Compact dual-fan liquid cooling for an unspecified workstation",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 120
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "query_text": "Find an air cooler no taller than 165 mm for an AM4 gaming upgrade, with support for the existing socket.",
+      "intent_family": "Height-conscious air cooling for an AM4 gaming refresh",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 165
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am4"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a cooler for an LGA2066 machine used for CAD, but the enclosure dimensions and preferred cooler style are undecided.",
+      "intent_family": "Workstation socket compatibility search with unresolved enclosure and form-factor choices",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga2066"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a single-fan air cooler below 100 mm tall for a small AM4 media system.",
+      "intent_family": "Single-fan compact AMD air cooling for a media computer",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 100
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am4"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a 240 mm liquid cooler for an Intel PC that will alternate between gaming and machine learning experiments.",
+      "intent_family": "Mid-size liquid cooling for mixed Intel enthusiast and compute use",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 240
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1700"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a cooler under 120 mm high for a Ryzen 5 system in a slim desktop case.",
+      "intent_family": "Slim-case AMD cooling under a tight vertical limit",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 120
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "I am replacing a failed cooler on an older LGA1151 gaming computer and need socket compatibility first.",
+      "intent_family": "Legacy Intel gaming repair focused on replacement compatibility",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1151"
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a four-fan liquid cooling setup for a multi-GPU workstation, without assuming a particular CPU socket.",
+      "intent_family": "High-fan-count liquid cooling for a multi-GPU workstation with open platform selection",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "query_text": "Need an air cooler between 140 and 150 mm tall for an Intel editing PC with limited vertical clearance.",
+      "intent_family": "Moderate-height Intel air cooling for an editing enclosure",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "ge",
+          "value": 140
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 150
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1700"
+        }
+      ]
+    },
+    {
+      "query_text": "I am building an AM5 productivity PC and want a liquid cooler, but radiator placement is not decided yet.",
+      "intent_family": "AMD productivity liquid-cooling selection before chassis layout is known",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a dual-fan air cooler for an LGA1200 desktop that will run long software builds.",
+      "intent_family": "Dual-fan Intel air cooling for sustained developer workloads",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1200"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 420 mm liquid cooler with three fans for a large case and a heavily loaded CPU.",
+      "intent_family": "Extra-wide liquid cooling for a spacious high-load desktop",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 420
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "Need an inexpensive-looking basic cooler for an unspecified replacement PC; I have no socket or clearance information yet.",
+      "intent_family": "Unspecified replacement cooling search before compatibility data is available",
+      "must": []
+    },
+    {
+      "query_text": "Find a cooler compatible with both AM4 and AM5 for a gradual AMD platform transition.",
+      "intent_family": "Cross-generation AMD socket support for a staged upgrade",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am4"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 120 mm single-fan liquid cooler for a narrow Intel gaming case.",
+      "intent_family": "Single-fan small-radiator liquid cooling for a narrow Intel gaming chassis",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 120
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1700"
+        }
+      ]
+    },
+    {
+      "query_text": "Search for an air cooler under 95 mm tall that works with an AM4 board in a compact office tower.",
+      "intent_family": "Very short AMD air cooling for a compact office tower",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 95
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am4"
+        }
+      ]
+    },
+    {
+      "query_text": "Which cooler fits a dual-socket Xeon board for a home lab? I have not chosen air or liquid and do not know the chassis limits.",
+      "intent_family": "Dual-socket server cooling discovery with unresolved cooler and chassis requirements",
+      "must": []
+    },
+    {
+      "query_text": "Need a 240 mm liquid cooler with two fans for an AM5 CPU used in a quiet music-production computer.",
+      "intent_family": "Dual-fan mid-size liquid cooling for an AMD audio-production system",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 240
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an air cooler no taller than 180 mm for an LGA1700 CPU in a full-size case.",
+      "intent_family": "Tall-clearance Intel air cooling for a full-size desktop",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 180
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1700"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a cooler supporting AM5 and LGA1700 because the final CPU platform has not been selected.",
+      "intent_family": "Cross-platform cooler flexibility for an undecided new build",
+      "must": [
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1700"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a three-fan 280 mm liquid cooler for a compact radiator mount in a demanding gaming system.",
+      "intent_family": "High-fan-count cooling around a constrained large-mid radiator mount",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "query_text": "Need a cooler below 80 mm for an Intel thin client used as a local development machine.",
+      "intent_family": "Ultra-short Intel cooling for a thin client development system",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 80
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1200"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an air cooler with one fan for an AM5 backup server where simplicity matters more than maximum performance.",
+      "intent_family": "Simple single-fan AMD air cooling for a backup server",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 1
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a 360 mm liquid cooler for an LGA1700 workstation, but the workload may range from office tasks to occasional rendering.",
+      "intent_family": "Flexible large-radiator Intel workstation cooling under uncertain workload intensity",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 360
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1700"
+        }
+      ]
+    },
+    {
+      "query_text": "Search for a cooler that supports LGA1150 and fits below 145 mm for an older compact Intel PC.",
+      "intent_family": "Legacy Intel compact replacement cooling with a strict height limit",
+      "must": [
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 145
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1150"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a 280 mm liquid cooler with two fans for an AM4 workstation used for photo processing and code compilation.",
+      "intent_family": "Dual-fan large-mid radiator cooling for mixed AMD workstation tasks",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 280
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am4"
+        }
+      ]
+    },
+    {
+      "query_text": "Which cooler should I consider for a compact gaming build where the CPU socket, case height, and radiator space are all unknown?",
+      "intent_family": "Open-ended compact gaming cooling discovery before measurements",
+      "must": []
+    },
+    {
+      "query_text": "Find a two-fan air cooler under 160 mm for a Ryzen 9 system in a standard tower.",
+      "intent_family": "Dual-fan AMD air cooling for a high-end standard-tower build",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.fan_count",
+          "operator": "eq",
+          "value": 2
+        },
+        {
+          "field": "category_attributes.height_mm",
+          "operator": "le",
+          "value": 160
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 240 mm liquid cooler that supports both LGA1200 and LGA1700 for an Intel upgrade path.",
+      "intent_family": "Multi-generation Intel liquid cooling for an upgrade path",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "liquid"
+        },
+        {
+          "field": "category_attributes.radiator_size_mm",
+          "operator": "eq",
+          "value": 240
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1200"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "lga1700"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a compact air cooler for an AM5 small-form-factor workstation, but I have not measured the case height.",
+      "intent_family": "Small-form-factor AMD workstation cooling with unresolved clearance",
+      "must": [
+        {
+          "field": "category_attributes.cooler_type",
+          "operator": "eq",
+          "value": "air"
+        },
+        {
+          "field": "category_attributes.supported_sockets",
+          "operator": "contains",
+          "value": "am5"
+        }
+      ]
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}

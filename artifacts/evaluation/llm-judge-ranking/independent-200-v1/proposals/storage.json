@@ -1,0 +1,426 @@
+{
+  "category": "storage",
+  "model_id": "gpt-5.6-luna",
+  "usage": {
+    "completion_tokens": 2313,
+    "total_tokens": 3090,
+    "prompt_tokens": 777,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 299
+    }
+  },
+  "queries": [
+    {
+      "query_text": "I need a 2TB NVMe SSD for a gaming PC with a large Steam library.",
+      "intent_family": "gaming library expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for a 1TB SATA SSD to replace the hard drive in an older desktop.",
+      "intent_family": "legacy desktop storage modernization",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 4TB internal drive for storing and editing family photos on my home PC.",
+      "intent_family": "personal photo-library storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_text": "I want a fast 2TB drive for a Windows gaming and everyday-use build.",
+      "intent_family": "mixed gaming and desktop storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "Need an SSD for a laptop upgrade, but I am unsure whether it takes M.2 NVMe or 2.5-inch SATA.",
+      "intent_family": "uncertain laptop storage compatibility",
+      "must": []
+    },
+    {
+      "query_text": "What storage should I buy for a small-form-factor PC where heat and physical clearance are concerns?",
+      "intent_family": "small-form-factor thermal and clearance tradeoff",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 500GB SSD dedicated to Windows applications and frequently used tools.",
+      "intent_family": "application-drive separation",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 500
+        }
+      ]
+    },
+    {
+      "query_text": "I need an 8TB internal drive for a large personal video collection on my desktop.",
+      "intent_family": "personal video-library expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 8000
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 2.5-inch SATA SSD for an older laptop that cannot use NVMe.",
+      "intent_family": "older laptop interface replacement",
+      "must": [
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2.5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "I need a 2TB drive for a dual-boot PC, with room for both operating systems and applications.",
+      "intent_family": "dual-boot system storage planning",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "Suggest storage for a PC used to edit 4K video, balancing capacity, sustained workload, and budget.",
+      "intent_family": "video-editing storage tradeoff",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 1TB M.2 NVMe SSD for a compact gaming build.",
+      "intent_family": "compact gaming build storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m.2"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a 4TB internal drive for a desktop used to store raw and exported photography projects.",
+      "intent_family": "photography project workspace storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_text": "What is a good storage setup for a PC that runs several large games and records gameplay locally?",
+      "intent_family": "game recording and library storage",
+      "must": []
+    },
+    {
+      "query_text": "Find a 2TB SATA drive for a desktop motherboard that has no available NVMe slot.",
+      "intent_family": "motherboard interface limitation",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "I want a 1TB SSD for a budget office PC that will mostly handle web apps, documents, and spreadsheets.",
+      "intent_family": "budget office PC storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "Need storage for a home PC that will hold a large collection of downloaded films and TV episodes.",
+      "intent_family": "home video collection storage",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 500GB M.2 NVMe drive for a very small desktop build.",
+      "intent_family": "entry-capacity compact system storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m.2"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Find an internal SSD for a workstation used for large layered image files and frequent exports.",
+      "intent_family": "raster graphics workstation storage",
+      "must": []
+    },
+    {
+      "query_text": "I need a 2TB drive for a PC that will host a large modded game installation.",
+      "intent_family": "modded game installation storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        }
+      ]
+    },
+    {
+      "query_text": "What storage works best for a family desktop shared by multiple users with separate files and applications?",
+      "intent_family": "multi-user household desktop storage",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 1TB 2.5-inch SATA SSD to upgrade an older all-in-one PC.",
+      "intent_family": "all-in-one PC storage upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2.5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "Need a 6TB internal drive for backing up photos, videos, and personal files from several computers.",
+      "intent_family": "centralized household backup storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 6000
+        }
+      ]
+    },
+    {
+      "query_text": "Suggest a storage drive for a PC used to capture and trim long gameplay sessions, without assuming a particular budget.",
+      "intent_family": "gameplay capture workspace storage",
+      "must": []
+    },
+    {
+      "query_text": "I need a 2TB SSD for a portable-style mini PC that supports M.2 NVMe drives.",
+      "intent_family": "mini PC storage expansion",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "m.2"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Find storage for a retro-gaming PC that will hold many ROM files and emulator software.",
+      "intent_family": "retro-gaming library storage",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 1TB internal SSD for a student laptop used for coursework, coding exercises, and general applications.",
+      "intent_family": "student laptop capacity upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 1000
+        }
+      ]
+    },
+    {
+      "query_text": "What drive should I choose for a desktop that needs both a responsive system volume and substantial local media storage?",
+      "intent_family": "tiered system and media storage planning",
+      "must": []
+    },
+    {
+      "query_text": "Need a 4TB drive for a PC used to store virtual machine disk images and development environments.",
+      "intent_family": "development environment storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 4000
+        }
+      ]
+    },
+    {
+      "query_text": "Find a 2TB 2.5-inch SATA SSD for a laptop with a standard drive bay.",
+      "intent_family": "laptop drive-bay upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.form_factor",
+          "operator": "eq",
+          "value": "2.5_inch"
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "I need storage for a PC that will keep a large collection of downloaded game installers and mods.",
+      "intent_family": "game installer and mod archive storage",
+      "must": []
+    },
+    {
+      "query_text": "Suggest an internal drive for a digital art PC where project sizes vary from small sketches to very large canvases.",
+      "intent_family": "digital art capacity planning",
+      "must": []
+    },
+    {
+      "query_text": "Looking for a 500GB SATA SSD for a basic desktop upgrade from a mechanical hard drive.",
+      "intent_family": "entry-level desktop responsiveness upgrade",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 500
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "sata"
+        }
+      ]
+    },
+    {
+      "query_text": "What storage should I use in a PC that will serve as a local backup target for family laptops?",
+      "intent_family": "household laptop backup target",
+      "must": []
+    },
+    {
+      "query_text": "Need a 2TB NVMe drive for a PC used to load large game worlds and store screenshots.",
+      "intent_family": "game asset and screenshot storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 2000
+        },
+        {
+          "field": "category_attributes.interface",
+          "operator": "eq",
+          "value": "nvme"
+        }
+      ]
+    },
+    {
+      "query_text": "Find the right internal storage for a refurbished desktop when the motherboard model and available slots are unknown.",
+      "intent_family": "unknown refurbished PC compatibility",
+      "must": []
+    },
+    {
+      "query_text": "I want an 8TB internal drive for long-term storage of personal photos, videos, and documents.",
+      "intent_family": "large personal archive storage",
+      "must": [
+        {
+          "field": "category_attributes.capacity_gb",
+          "operator": "eq",
+          "value": 8000
+        }
+      ]
+    },
+    {
+      "query_text": "Looking for storage for a PC used to download, organize, and transcode personal video files.",
+      "intent_family": "personal video processing storage",
+      "must": []
+    }
+  ],
+  "provenance": "synthetic LLM-authored query proposals; no relevance labels"
+}
