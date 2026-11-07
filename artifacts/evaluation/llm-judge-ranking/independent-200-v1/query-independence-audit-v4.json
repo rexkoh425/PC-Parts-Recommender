@@ -1,0 +1,20 @@
+{
+  "schema_version": "pcbr.query-split-audit.v1",
+  "snapshot_sha256": "b87b8258261a27e85d4bb4a0166b4c7e2bcf671b85fe98bb18b3152cc54d42ff",
+  "previous_queries_sha256": "22f33de98b3ce173eecc5086315c7f9b5bd05dfeb6efb25a566291a9f499e12a",
+  "query_count": 200,
+  "group_count": 200,
+  "threshold": 0.8,
+  "max_cross_split_similarity": 0.0,
+  "max_previous_similarity": 0.8115191459655762,
+  "cross_split_matches": [],
+  "previous_query_matches": [
+    [
+      "diverse-v1-cpu-00-032",
+      "fresh-v1-cpu-memory-support-03",
+      0.8115191459655762
+    ]
+  ],
+  "encoder_device": "cpu",
+  "limitation": "embedding similarity is an automated screen and cannot prove semantic independence"
+}

@@ -1,0 +1,121 @@
+{
+  "schema_version": "pcbr.query-split-audit.v1",
+  "snapshot_sha256": "617900a263ad03deeab7fd23a0f051c3d8a5fd7c889941a2e145ca0073130eb1",
+  "previous_queries_sha256": "22f33de98b3ce173eecc5086315c7f9b5bd05dfeb6efb25a566291a9f499e12a",
+  "query_count": 200,
+  "group_count": 200,
+  "threshold": 0.8,
+  "max_cross_split_similarity": 0.8484266996383667,
+  "max_previous_similarity": 0.8465547561645508,
+  "cross_split_matches": [
+    [
+      "diverse-v1-gpu-00-020",
+      "diverse-v1-gpu-00-022",
+      0.8074482083320618
+    ],
+    [
+      "diverse-v1-power_supply-00-010",
+      "diverse-v1-power_supply-00-019",
+      0.8096134662628174
+    ],
+    [
+      "diverse-v1-power_supply-00-010",
+      "diverse-v1-power_supply-01-017",
+      0.8020790815353394
+    ],
+    [
+      "diverse-v1-power_supply-00-010",
+      "diverse-v1-power_supply-00-002",
+      0.8020392060279846
+    ],
+    [
+      "diverse-v1-cooler-01-035",
+      "diverse-v1-cooler-00-022",
+      0.8050339221954346
+    ],
+    [
+      "diverse-v1-power_supply-00-022",
+      "diverse-v1-power_supply-00-002",
+      0.8274729251861572
+    ],
+    [
+      "diverse-v1-storage-00-004",
+      "diverse-v1-storage-00-008",
+      0.8436621427536011
+    ],
+    [
+      "diverse-v1-cooler-01-005",
+      "diverse-v1-cooler-00-035",
+      0.843578040599823
+    ],
+    [
+      "diverse-v1-motherboard-01-000",
+      "diverse-v1-motherboard-01-015",
+      0.8013420104980469
+    ],
+    [
+      "diverse-v1-motherboard-00-010",
+      "diverse-v1-motherboard-01-030",
+      0.8396719694137573
+    ],
+    [
+      "diverse-v1-cooler-01-001",
+      "diverse-v1-cooler-01-008",
+      0.8402261734008789
+    ],
+    [
+      "diverse-v1-cooler-01-001",
+      "diverse-v1-cooler-01-022",
+      0.8484266996383667
+    ],
+    [
+      "diverse-v1-cooler-01-022",
+      "diverse-v1-cooler-01-004",
+      0.8250914812088013
+    ],
+    [
+      "diverse-v1-power_supply-00-005",
+      "diverse-v1-power_supply-00-032",
+      0.8189729452133179
+    ]
+  ],
+  "previous_query_matches": [
+    [
+      "diverse-v1-cpu-00-032",
+      "fresh-v1-cpu-memory-support-03",
+      0.8115191459655762
+    ],
+    [
+      "diverse-v1-gpu-00-010",
+      "fresh-v1-gpu-compact-vram-05",
+      0.829766035079956
+    ],
+    [
+      "diverse-v1-cpu-00-003",
+      "fresh-v1-cpu-upgrade-socket-02",
+      0.8072049021720886
+    ],
+    [
+      "diverse-v1-cpu-00-003",
+      "fresh-v1-cpu-upgrade-socket-03",
+      0.8465547561645508
+    ],
+    [
+      "diverse-v1-cpu-00-003",
+      "fresh-v1-cpu-upgrade-socket-04",
+      0.8157418370246887
+    ],
+    [
+      "diverse-v1-cpu-00-003",
+      "fresh-v1-cpu-upgrade-socket-05",
+      0.832352876663208
+    ],
+    [
+      "diverse-v1-power_supply-01-013",
+      "fresh-v1-power_supply-size-wattage-04",
+      0.8241772651672363
+    ]
+  ],
+  "encoder_device": "cpu",
+  "limitation": "embedding similarity is an automated screen and cannot prove semantic independence"
+}

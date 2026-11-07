@@ -1,0 +1,45 @@
+{
+  "schema_version": "pcbr.query-split-audit.v1",
+  "snapshot_sha256": "6369164d69223d8dbc526244234bd84032f699b8ecac6b33ac6ad6dab41da798",
+  "previous_queries_sha256": "22f33de98b3ce173eecc5086315c7f9b5bd05dfeb6efb25a566291a9f499e12a",
+  "query_count": 200,
+  "group_count": 200,
+  "threshold": 0.8,
+  "max_cross_split_similarity": 0.7995893955230713,
+  "max_previous_similarity": 0.8465547561645508,
+  "cross_split_matches": [],
+  "previous_query_matches": [
+    [
+      "diverse-v1-cpu-00-032",
+      "fresh-v1-cpu-memory-support-03",
+      0.8115191459655762
+    ],
+    [
+      "diverse-v1-cpu-00-003",
+      "fresh-v1-cpu-upgrade-socket-02",
+      0.8072049021720886
+    ],
+    [
+      "diverse-v1-cpu-00-003",
+      "fresh-v1-cpu-upgrade-socket-03",
+      0.8465547561645508
+    ],
+    [
+      "diverse-v1-cpu-00-003",
+      "fresh-v1-cpu-upgrade-socket-04",
+      0.8157418370246887
+    ],
+    [
+      "diverse-v1-cpu-00-003",
+      "fresh-v1-cpu-upgrade-socket-05",
+      0.832352876663208
+    ],
+    [
+      "diverse-v1-power_supply-01-013",
+      "fresh-v1-power_supply-size-wattage-04",
+      0.8241772651672363
+    ]
+  ],
+  "encoder_device": "cpu",
+  "limitation": "embedding similarity is an automated screen and cannot prove semantic independence"
+}
