@@ -1,0 +1,15 @@
+﻿{
+    "schema_version":  "pcbr.independent-evaluation-provenance.v2",
+    "label_source":  "unjudged",
+    "query_file_sha256":  "79ac04a9554a45a735582eeaadf490041f3759d3f61c42d6c3bcae2ca51fe96a",
+    "tasks_sha256":  "4e665e077332d81b6145e909e513c70cad40bacf64d24927936741ba01b488d2",
+    "snapshot_sha256":  "1e95cacb3c23043d3eebdd1a5478d7a89075bb3ac3beb589333e87f2667c1323",
+    "test_snapshot_sha256":  "b5b6017ced64d1f5c246d2bf376c1160efee3d6b92be7a94f1ef9b490ddfe56a",
+    "independence_audit_sha256":  "37741db9e71e2b4ff0af1898ef287fc0ca7c8a1d5320a2157a57b270f8303271",
+    "seed":  20261110,
+    "query_count":  200,
+    "candidate_count":  5600,
+    "judge_model":  null,
+    "status":  "ready_for_blind_annotation",
+    "human_labels_obtained":  false
+}
